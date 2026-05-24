@@ -156,3 +156,17 @@ CREATE TABLE IF NOT EXISTS referrals (
   install_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   points_awarded BOOLEAN DEFAULT FALSE
 );
+
+-- 10. POST COMMENTS TABLE (for Bethak Community Comments)
+CREATE TABLE IF NOT EXISTS post_comments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  post_id UUID REFERENCES posts(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  user_name TEXT NOT NULL,
+  content TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Index for fast comment lookups per post
+CREATE INDEX IF NOT EXISTS idx_post_comments_post_id ON post_comments(post_id);
+
