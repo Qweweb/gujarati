@@ -112,12 +112,20 @@ const Community = () => {
 
   // Load data on state updates
   useEffect(() => {
-    if (userLocation) {
-      setPosts(getOtloPosts(feedFilter));
-      setDirectoryListings(getDirectoryListings());
-      setLeaderboard(getLeaderboard());
-      setRepData(getUserRepData());
-    }
+    const loadData = async () => {
+      if (userLocation) {
+        try {
+          const postsData = await getOtloPosts(feedFilter);
+          setPosts(postsData);
+        } catch (err) {
+          console.error("Error loading posts from Supabase:", err);
+        }
+        setDirectoryListings(getDirectoryListings());
+        setLeaderboard(getLeaderboard());
+        setRepData(getUserRepData());
+      }
+    };
+    loadData();
   }, [userLocation, feedFilter]);
 
   const reloadFollowed = () => {
@@ -327,7 +335,7 @@ const Community = () => {
   };
 
   // Feed Posting Action
-  const handleCreatePostSubmit = (e) => {
+  const handleCreatePostSubmit = async (e) => {
     e.preventDefault();
     if (!newPostText.trim()) return;
     
@@ -336,7 +344,7 @@ const Community = () => {
       return;
     }
     
-    createOtloPost(newPostText.trim(), newPostCategory, newPostVisibility, newPostMediaUrl);
+    await createOtloPost(newPostText.trim(), newPostCategory, newPostVisibility, newPostMediaUrl);
     setNewPostText("");
     setNewPostCategory("news");
     setNewPostVisibility("village");
@@ -345,18 +353,20 @@ const Community = () => {
     setShowCreatePost(false);
     
     // Reload state
-    setPosts(getOtloPosts(feedFilter));
+    const updatedPosts = await getOtloPosts(feedFilter);
+    setPosts(updatedPosts);
     setRepData(getUserRepData());
     setLeaderboard(getLeaderboard());
     triggerToast("🚀 તમારી નવી ચર્ચા સફળતાપૂર્વક શેર કરવામાં આવી છે!");
   };
 
   // Like Action
-  const handleLikePost = (postId) => {
+  const handleLikePost = async (postId) => {
     if (likedPosts[postId]) return;
-    likeOtloPost(postId);
+    await likeOtloPost(postId);
     setLikedPosts(prev => ({ ...prev, [postId]: true }));
-    setPosts(getOtloPosts(feedFilter));
+    const updatedPosts = await getOtloPosts(feedFilter);
+    setPosts(updatedPosts);
     triggerToast("❤️ પોસ્ટ લાઈક થઈ ગઈ છે!");
   };
 
@@ -365,13 +375,14 @@ const Community = () => {
     setShowCommentsPostId(postId);
   };
 
-  const handleAddComment = (e) => {
+  const handleAddComment = async (e) => {
     e.preventDefault();
     if (!newCommentText.trim() || !showCommentsPostId) return;
     
-    addOtloComment(showCommentsPostId, newCommentText.trim());
+    await addOtloComment(showCommentsPostId, newCommentText.trim());
     setNewCommentText("");
-    setPosts(getOtloPosts(feedFilter));
+    const updatedPosts = await getOtloPosts(feedFilter);
+    setPosts(updatedPosts);
     triggerToast("💬 તમારી ટિપ્પણી ઉમેરાઈ ગઈ છે!");
   };
 

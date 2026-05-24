@@ -2,6 +2,8 @@
 // Handles feed sorting, likes, comments, location follows, directory listings, and seed generation
 
 import { getDistrictName, getTalukaName, getVillageName } from './location_database';
+import { supabase } from '../supabaseClient';
+
 
 // 1. Post categories and visibilities
 export const POST_TYPES = [
@@ -226,142 +228,299 @@ const calculatePostScore = (post, userLoc) => {
   return (recency * 0.4) + (engagement * 0.3) + (locationRelevance * 0.2) + (repBonus * 0.1);
 };
 
-// Get ranked and filtered posts
-export const getOtloPosts = (filterLevel = 'all', followedLocationIds = []) => {
-  const userLoc = getOtloLocation();
-  if (!userLoc) return [];
-  
-  let posts = JSON.parse(localStorage.getItem('otlo_posts') || '[]');
-  
-  // If posts are not seeded or configured for a different location, make sure they are generated
-  if (posts.length === 0) {
-    initializePosts(userLoc);
-    posts = JSON.parse(localStorage.getItem('otlo_posts') || '[]');
+// Helper to convert string IDs to standard database integers
+export const stringToHash = (str) => {
+  if (!str) return null;
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
   }
+  return Math.abs(hash % 2147483647);
+};
+
+// Persistent User Supabase ID manager
+export const getOrCreateUserId = () => {
+  let userId = localStorage.getItem('supabase_user_id');
+  if (!userId) {
+    // Generate simple UUID
+    userId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0;
+      const v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+    localStorage.setItem('supabase_user_id', userId);
+  }
+  return userId;
+};
+
+// Sync local user profile to Supabase database
+export const syncUserProfile = async () => {
+  const userId = getOrCreateUserId();
+  const userLoc = getOtloLocation();
   
-  // Filter by level
+  const name = "નરેન્દ્રભાઈ પટેલ";
+  
+  let userMobile = localStorage.getItem('supabase_user_mobile');
+  if (!userMobile) {
+    userMobile = '99' + Math.floor(10000000 + Math.random() * 90000000);
+    localStorage.setItem('supabase_user_mobile', userMobile);
+  }
+
+  const district_id = userLoc ? stringToHash(userLoc.districtId) : null;
+  const taluka_id = userLoc ? stringToHash(userLoc.talukaId) : null;
+  const village_id = userLoc ? stringToHash(userLoc.villageId) : null;
+  const ward = userLoc ? userLoc.ward : null;
+
+  const { error } = await supabase
+    .from('users')
+    .upsert({
+      id: userId,
+      name: name,
+      mobile: userMobile,
+      district_id: district_id,
+      taluka_id: taluka_id,
+      village_id: village_id,
+      ward: ward,
+      last_active: new Date().toISOString().split('T')[0]
+    }, { onConflict: 'id' });
+
+  if (error) {
+    console.error("Error syncing user profile to Supabase:", error);
+  }
+  return userId;
+};
+
+// Get ranked and filtered posts from Supabase
+export const getOtloPosts = async (filterLevel = 'all', followedLocationIds = []) => {
+  const userLoc = getOtloLocation();
+  
+  let postsData = [];
+  // Try to query with comments
+  let { data, error } = await supabase
+    .from('posts')
+    .select(`
+      *,
+      users (
+        name,
+        photo_url,
+        is_representative,
+        rep_level
+      ),
+      post_comments (
+        id,
+        user_name,
+        content,
+        created_at
+      )
+    `)
+    .eq('status', 'active');
+
+  if (error) {
+    console.warn("Could not fetch comments from Supabase, attempting to fetch posts only:", error);
+    // Fallback: Query posts only
+    const fallbackResult = await supabase
+      .from('posts')
+      .select(`
+        *,
+        users (
+          name,
+          photo_url,
+          is_representative,
+          rep_level
+        )
+      `)
+      .eq('status', 'active');
+    
+    if (fallbackResult.error) {
+      console.error("Error fetching posts from Supabase:", fallbackResult.error);
+      return [];
+    }
+    postsData = fallbackResult.data || [];
+  } else {
+    postsData = data || [];
+  }
+
+  // Map to UI representation
+  const posts = postsData.map(post => {
+    const commentsList = (post.post_comments || []).map(c => ({
+      id: c.id,
+      userName: c.user_name,
+      content: c.content,
+      createdAt: c.created_at
+    }));
+
+    let locationLabel = "ગુજરાત";
+    if (post.visibility === 'village' && userLoc) {
+      locationLabel = userLoc.villageNameGu || getVillageName(userLoc.talukaId, userLoc.villageId);
+    } else if (post.visibility === 'taluka' && userLoc) {
+      locationLabel = getTalukaName(userLoc.districtId, userLoc.talukaId);
+    } else if (post.visibility === 'district' && userLoc) {
+      locationLabel = getDistrictName(userLoc.districtId);
+    }
+
+    return {
+      id: post.id,
+      userName: post.users?.name || "અજ્ઞાત યુઝર",
+      avatarUrl: post.users?.photo_url || "https://i.pravatar.cc/150?img=68",
+      postType: post.post_type,
+      content: post.content,
+      visibilityLevel: post.visibility,
+      villageId: post.village_id,
+      talukaId: post.taluka_id,
+      districtId: post.district_id,
+      locationLabel: locationLabel,
+      mediaUrl: post.media_urls?.[0] || "",
+      likes: post.likes || 0,
+      comments: commentsList,
+      shares: post.shares || 0,
+      isPinned: post.is_pinned || false,
+      isRep: post.users?.is_representative || false,
+      repLevel: post.users?.rep_level || "",
+      createdAt: post.created_at
+    };
+  });
+
+  // Filter posts
+  let filteredPosts = posts;
   if (filterLevel !== 'all') {
-    if (filterLevel === 'village') {
-      posts = posts.filter(p => p.villageId === userLoc.villageId);
-    } else if (filterLevel === 'taluka') {
-      posts = posts.filter(p => p.talukaId === userLoc.talukaId);
-    } else if (filterLevel === 'district') {
-      posts = posts.filter(p => p.districtId === userLoc.districtId);
+    if (filterLevel === 'village' && userLoc) {
+      const targetHash = stringToHash(userLoc.villageId);
+      filteredPosts = posts.filter(p => p.villageId === targetHash);
+    } else if (filterLevel === 'taluka' && userLoc) {
+      const targetHash = stringToHash(userLoc.talukaId);
+      filteredPosts = posts.filter(p => p.talukaId === targetHash);
+    } else if (filterLevel === 'district' && userLoc) {
+      const targetHash = stringToHash(userLoc.districtId);
+      filteredPosts = posts.filter(p => p.districtId === targetHash);
     } else if (filterLevel === 'state') {
-      posts = posts.filter(p => p.visibilityLevel === 'state');
+      filteredPosts = posts.filter(p => p.visibilityLevel === 'state');
     } else {
-      // It's a followed custom location ID (like a followed village/taluka)
-      posts = posts.filter(p => 
-        p.villageId === filterLevel || 
-        p.talukaId === filterLevel || 
-        p.districtId === filterLevel
+      // Followed custom location ID
+      const targetHash = stringToHash(filterLevel);
+      filteredPosts = posts.filter(p => 
+        p.villageId === targetHash || 
+        p.talukaId === targetHash || 
+        p.districtId === targetHash
       );
     }
   }
-  
+
   // Sort posts by their calculated score
-  return posts.map(post => ({
+  return filteredPosts.map(post => ({
     ...post,
-    score: calculatePostScore(post, userLoc)
+    score: calculatePostScore(post, userLoc || { villageId: "", talukaId: "", districtId: "" })
   })).sort((a, b) => {
-    // Pinned posts always stay at the top (top 3 priority)
     if (a.isPinned && !b.isPinned) return -1;
     if (!a.isPinned && b.isPinned) return 1;
     return b.score - a.score;
   });
 };
 
-// Create a new post
-export const createOtloPost = (postContent, type, visibility, mediaUrl = "") => {
+// Create a new post in Supabase
+export const createOtloPost = async (postContent, type, visibility, mediaUrl = "") => {
+  const userId = await syncUserProfile();
   const userLoc = getOtloLocation();
   if (!userLoc) return null;
-  
-  const posts = JSON.parse(localStorage.getItem('otlo_posts') || '[]');
-  
+
+  const village_id = visibility === 'village' ? stringToHash(userLoc.villageId) : null;
+  const taluka_id = (visibility === 'village' || visibility === 'taluka') ? stringToHash(userLoc.talukaId) : null;
+  const district_id = (visibility === 'village' || visibility === 'taluka' || visibility === 'district') ? stringToHash(userLoc.districtId) : null;
+
+  const { data, error } = await supabase
+    .from('posts')
+    .insert({
+      user_id: userId,
+      content: postContent,
+      post_type: type,
+      visibility: visibility,
+      village_id: village_id,
+      taluka_id: taluka_id,
+      district_id: district_id,
+      media_urls: mediaUrl ? [mediaUrl] : []
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error creating post on Supabase:", error);
+    return null;
+  }
+
   let locationLabel = "ગુજરાત";
-  let villageId = "";
-  let talukaId = "";
-  let districtId = "";
-  
   if (visibility === 'village') {
     locationLabel = userLoc.villageNameGu || getVillageName(userLoc.talukaId, userLoc.villageId);
-    villageId = userLoc.villageId;
-    talukaId = userLoc.talukaId;
-    districtId = userLoc.districtId;
   } else if (visibility === 'taluka') {
     locationLabel = getTalukaName(userLoc.districtId, userLoc.talukaId);
-    talukaId = userLoc.talukaId;
-    districtId = userLoc.districtId;
   } else if (visibility === 'district') {
     locationLabel = getDistrictName(userLoc.districtId);
-    districtId = userLoc.districtId;
   }
-  
-  const newPost = {
-    id: `post_${Date.now()}`,
+
+  updateRepScore(1);
+
+  return {
+    id: data.id,
     userName: "નરેન્દ્રભાઈ પટેલ (તમે)",
     avatarUrl: "https://i.pravatar.cc/150?img=68",
-    postType: type,
-    content: postContent,
-    visibilityLevel: visibility,
-    villageId,
-    talukaId,
-    districtId,
-    locationLabel,
-    mediaUrl,
-    likes: 0,
+    postType: data.post_type,
+    content: data.content,
+    visibilityLevel: data.visibility,
+    villageId: data.village_id,
+    talukaId: data.taluka_id,
+    districtId: data.district_id,
+    locationLabel: locationLabel,
+    mediaUrl: data.media_urls?.[0] || "",
+    likes: data.likes || 0,
     comments: [],
-    shares: 0,
-    isPinned: false,
-    isRep: false, // Default is not rep until leaderboard calculation
+    shares: data.shares || 0,
+    isPinned: data.is_pinned || false,
+    isRep: false,
     repLevel: "",
-    createdAt: new Date().toISOString()
+    createdAt: data.created_at
   };
-  
-  posts.unshift(newPost);
-  localStorage.setItem('otlo_posts', JSON.stringify(posts));
-  
-  // Contribute to Representative score
-  updateRepScore(1); // 1 post = points updated
-  return newPost;
 };
 
-// Like a post
-export const likeOtloPost = (postId) => {
-  const posts = JSON.parse(localStorage.getItem('otlo_posts') || '[]');
-  const updated = posts.map(p => {
-    if (p.id === postId) {
-      return { ...p, likes: p.likes + 1 };
-    }
-    return p;
-  });
-  localStorage.setItem('otlo_posts', JSON.stringify(updated));
+// Like a post on Supabase
+export const likeOtloPost = async (postId) => {
+  const { data, error } = await supabase
+    .from('posts')
+    .select('likes')
+    .eq('id', postId)
+    .single();
+
+  if (!error && data) {
+    const newLikes = (data.likes || 0) + 1;
+    await supabase
+      .from('posts')
+      .update({ likes: newLikes })
+      .eq('id', postId);
+  }
 };
 
-// Add a comment to a post
-export const addOtloComment = (postId, commentText) => {
+// Add a comment to a post on Supabase
+export const addOtloComment = async (postId, commentText) => {
   if (!commentText.trim()) return null;
-  const posts = JSON.parse(localStorage.getItem('otlo_posts') || '[]');
-  
-  const newComment = {
-    id: `c_${Date.now()}`,
-    userName: "નરેન્દ્રભાઈ પટેલ",
-    content: commentText,
-    createdAt: new Date().toISOString()
+
+  const { data, error } = await supabase
+    .from('post_comments')
+    .insert({
+      post_id: postId,
+      user_name: "નરેન્દ્રભાઈ પટેલ",
+      content: commentText
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error adding comment to Supabase:", error);
+    return null;
+  }
+
+  return {
+    id: data.id,
+    userName: data.user_name,
+    content: data.content,
+    createdAt: data.created_at
   };
-  
-  const updated = posts.map(p => {
-    if (p.id === postId) {
-      return {
-        ...p,
-        comments: [...p.comments, newComment]
-      };
-    }
-    return p;
-  });
-  
-  localStorage.setItem('otlo_posts', JSON.stringify(updated));
-  return newComment;
 };
 
 // Location Follow/Unfollow system
