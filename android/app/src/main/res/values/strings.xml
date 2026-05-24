@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Gujarati App</string>
+    <string name="title_activity_main">Gujarati App</string>
+    <string name="package_name">com.gujaratiapp.app</string>
+    <string name="custom_url_scheme">com.gujaratiapp.app</string>
+</resources>

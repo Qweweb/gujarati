@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+/* Force Tailwind v4 to use the .dark class instead of system settings Header */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-body: "Hind Vadodara", sans-serif;
+  --font-headline: "Be Vietnam Pro", sans-serif;
+  --font-gujarati: "Hind Vadodara", sans-serif;
+  --font-label: "Work Sans", sans-serif;
+
+  --color-primary: #994700;
+  --color-primary-container: #f47b20;
+  --color-background: #fef8f1;
+  --color-on-surface: #1d1b17;
+  
+  --color-teal: #004847;
+  --color-maroon: #75140c;
+  
+  --color-dark-bg: #1a0a00;
+  --color-dark-surface: #2b1400;
+  --color-dark-accent: #f47b20;
+  --color-dark-text: #ffffff;
+}
+
+/* Base resets to ensure smooth transition Header */
+@layer base {
+  body {
+    @apply transition-colors duration-500;
+    background-color: var(--color-background);
+    color: var(--color-on-surface);
+  }
+  
+  .dark body {
+    background-color: var(--color-dark-bg);
+    color: var(--color-dark-text);
+  }
+}
+
+/* Explicit Overrides Header */
+.dark .bg-background { background-color: #1a0a00 !important; }
+.dark .bg-white { background-color: #2b1400 !important; }
+.dark .text-on-surface { color: #ffffff !important; }
+
+@layer components {
+  .dark-glow {
+    @apply transition-shadow duration-300;
+  }
+  .dark .dark-glow {
+    box-shadow: 0 0 20px rgba(244, 123, 32, 0.2);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Custom print media query style overrides for high-fidelity PDF printing */
+@media print {
+  body, html {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 21cm !important;
+    height: 29.7cm !important;
+  }
+  
+  header, nav, footer, .print\:hidden {
+    display: none !important;
+  }
+  
+  main {
+    padding-top: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+  
+  #printable-biodata-card {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 29.7cm !important;
+    page-break-inside: avoid !important;
+    page-break-after: always !important;
+  }
+}
