@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AI_PROVIDERS, getAIConfig, saveAIConfig, testAIConnection } from '../utils/aiService';
 
 const DEFAULT_PIN = "1008";
 
@@ -34,6 +35,13 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState(MOCK_STATS);
   const [matajiSubmissions, setMatajiSubmissions] = useState(MOCK_MATAJI_SUBMISSIONS);
   const [reportedPosts, setReportedPosts] = useState(MOCK_REPORTED_POSTS);
+  
+  // AI Settings State
+  const [aiConfig, setAiConfig] = useState(() => getAIConfig());
+  const [aiTestResult, setAiTestResult] = useState(null);
+  const [aiTesting, setAiTesting] = useState(false);
+  const [aiSaved, setAiSaved] = useState(false);
+  const selectedProvider = AI_PROVIDERS.find(p => p.id === aiConfig.provider) || null;
   
   // Custom Quotes State
   const [customQuotes, setCustomQuotes] = useState(() => {
@@ -328,6 +336,20 @@ const AdminDashboard = () => {
             >
               <span className="material-symbols-outlined text-lg">card_membership</span>
               પ્રીમિયમ અને પ્રોમો કોડ
+            </button>
+            <button 
+              onClick={() => setActiveTab("ai")}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-gujarati font-bold text-sm transition-all ${
+                activeTab === "ai" 
+                  ? 'bg-violet-600 text-white shadow-md shadow-violet-500/20' 
+                  : 'text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900'
+              }`}
+            >
+              <span className="material-symbols-outlined text-lg">smart_toy</span>
+              🤖 AI સેટિંગ
+              {aiConfig.enabled && aiConfig.provider && (
+                <span className="ml-auto h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              )}
             </button>
           </div>
         </div>
@@ -711,6 +733,221 @@ const AdminDashboard = () => {
         </div>
 
       </div>
+
+      {/* TAB 6: AI SETTINGS */}
+      {activeTab === "ai" && (
+        <div className="space-y-6">
+
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-headline font-black text-lg text-stone-900 dark:text-stone-100 flex items-center gap-2">
+                🤖 AI Model Configuration
+              </h3>
+              <p className="font-gujarati text-xs text-stone-500 mt-1">દાદી-મા Chatbot માટે AI Provider અને API Key સેટ કરો.</p>
+            </div>
+            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-gujarati font-bold ${
+              aiConfig.enabled && aiConfig.provider
+                ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700'
+                : 'bg-stone-100 dark:bg-stone-900 text-stone-500'
+            }`}>
+              <span className={`h-2 w-2 rounded-full ${aiConfig.enabled && aiConfig.provider ? 'bg-emerald-500 animate-pulse' : 'bg-stone-400'}`}></span>
+              {aiConfig.enabled && aiConfig.provider ? '🟢 Active' : '🔴 Not Configured'}
+            </div>
+          </div>
+
+          {/* Provider Cards Grid */}
+          <div className="bg-white dark:bg-stone-900 rounded-[2rem] p-6 border border-stone-200/50 dark:border-stone-850 shadow-sm">
+            <h4 className="font-gujarati font-bold text-sm text-stone-700 dark:text-stone-300 mb-4">1. AI Provider પસંદ કરો</h4>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {AI_PROVIDERS.map(provider => (
+                <button
+                  key={provider.id}
+                  onClick={() => setAiConfig(prev => ({ ...prev, provider: provider.id, model: provider.models[0].id, baseUrl: provider.baseUrl || '' }))}
+                  className={`p-4 rounded-2xl border-2 text-left transition-all ${
+                    aiConfig.provider === provider.id
+                      ? 'border-violet-500 bg-violet-50 dark:bg-violet-950/20'
+                      : 'border-stone-200 dark:border-stone-800 hover:border-stone-300'
+                  }`}
+                >
+                  <div className="text-2xl mb-2">{provider.emoji}</div>
+                  <p className="font-headline font-bold text-xs text-stone-800 dark:text-stone-200 leading-tight">{provider.name}</p>
+                  <span className={`inline-block mt-1 text-[10px] font-bold px-1.5 py-0.5 rounded font-gujarati ${
+                    provider.tagColor === 'emerald' ? 'bg-emerald-100 text-emerald-700' :
+                    provider.tagColor === 'blue' ? 'bg-blue-100 text-blue-700' :
+                    provider.tagColor === 'orange' ? 'bg-orange-100 text-orange-700' :
+                    provider.tagColor === 'purple' ? 'bg-purple-100 text-purple-700' :
+                    'bg-stone-100 text-stone-600'
+                  }`}>{provider.tag}</span>
+                  <p className="font-gujarati text-[10px] text-stone-400 mt-1">{provider.costNote}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Model + Config */}
+          {selectedProvider && (
+            <div className="bg-white dark:bg-stone-900 rounded-[2rem] p-6 border border-stone-200/50 dark:border-stone-850 shadow-sm space-y-4">
+              <h4 className="font-gujarati font-bold text-sm text-stone-700 dark:text-stone-300">2. Model અને Configuration</h4>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Model Selector */}
+                <div>
+                  <label className="block text-xs font-gujarati font-bold text-stone-500 mb-1">AI Model</label>
+                  <select
+                    value={aiConfig.model}
+                    onChange={e => setAiConfig(prev => ({ ...prev, model: e.target.value }))}
+                    className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 font-gujarati text-sm"
+                  >
+                    {selectedProvider.models.map(m => (
+                      <option key={m.id} value={m.id}>{m.name}{m.recommended ? ' ⭐' : ''}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Custom Model ID (for custom provider) */}
+                {aiConfig.provider === 'custom' && (
+                  <div>
+                    <label className="block text-xs font-gujarati font-bold text-stone-500 mb-1">Custom Model ID</label>
+                    <input
+                      type="text"
+                      value={aiConfig.model}
+                      onChange={e => setAiConfig(prev => ({ ...prev, model: e.target.value }))}
+                      placeholder="e.g. llama3, gpt-4o-mini"
+                      className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 font-gujarati text-sm"
+                    />
+                  </div>
+                )}
+
+                {/* API Key */}
+                {selectedProvider.requiresApiKey && (
+                  <div>
+                    <label className="block text-xs font-gujarati font-bold text-stone-500 mb-1 flex items-center justify-between">
+                      API Key
+                      {selectedProvider.apiKeyUrl && (
+                        <a href={selectedProvider.apiKeyUrl} target="_blank" rel="noreferrer" className="text-violet-500 hover:underline">
+                          ← Key મળો
+                        </a>
+                      )}
+                    </label>
+                    <input
+                      type="password"
+                      value={aiConfig.apiKey || ''}
+                      onChange={e => setAiConfig(prev => ({ ...prev, apiKey: e.target.value }))}
+                      placeholder="Paste your API key here..."
+                      className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 font-gujarati text-sm font-mono"
+                    />
+                  </div>
+                )}
+
+                {/* Base URL (Ollama / Custom) */}
+                {(aiConfig.provider === 'ollama' || aiConfig.provider === 'custom') && (
+                  <div>
+                    <label className="block text-xs font-gujarati font-bold text-stone-500 mb-1">Base URL</label>
+                    <input
+                      type="text"
+                      value={aiConfig.baseUrl || ''}
+                      onChange={e => setAiConfig(prev => ({ ...prev, baseUrl: e.target.value }))}
+                      placeholder={aiConfig.provider === 'ollama' ? 'http://localhost:11434' : 'https://your-api.com/v1'}
+                      className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 font-gujarati text-sm font-mono"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Enable Toggle */}
+              <div className="flex items-center justify-between p-4 bg-stone-50 dark:bg-stone-950 rounded-xl border border-stone-200 dark:border-stone-800">
+                <div>
+                  <p className="font-gujarati font-bold text-sm text-stone-800 dark:text-stone-200">AI Fallback ચાલુ/બંધ</p>
+                  <p className="font-gujarati text-xs text-stone-400">Local DB માં ન મળ્યો તો AI ને call કરે</p>
+                </div>
+                <button
+                  onClick={() => setAiConfig(prev => ({ ...prev, enabled: !prev.enabled }))}
+                  className={`relative h-7 w-12 rounded-full transition-colors ${
+                    aiConfig.enabled ? 'bg-emerald-500' : 'bg-stone-300 dark:bg-stone-700'
+                  }`}
+                >
+                  <span className={`absolute top-1 h-5 w-5 bg-white rounded-full shadow transition-all ${
+                    aiConfig.enabled ? 'right-1' : 'left-1'
+                  }`}></span>
+                </button>
+              </div>
+
+              {/* Test + Save Buttons */}
+              <div className="flex flex-wrap gap-3">
+                <button
+                  onClick={async () => {
+                    setAiTesting(true);
+                    setAiTestResult(null);
+                    const result = await testAIConnection(aiConfig);
+                    setAiTestResult(result);
+                    setAiTesting(false);
+                  }}
+                  disabled={aiTesting}
+                  className="flex items-center gap-2 px-5 py-2.5 border-2 border-violet-500 text-violet-600 dark:text-violet-400 font-gujarati font-bold text-sm rounded-xl hover:bg-violet-50 dark:hover:bg-violet-950/20 transition active:scale-95 disabled:opacity-50"
+                >
+                  {aiTesting ? (
+                    <><span className="animate-spin material-symbols-outlined text-sm">sync</span> ટેસ્ટ ચાલુ...</>
+                  ) : (
+                    <><span className="material-symbols-outlined text-sm">wifi</span> Connection ટેસ્ટ કરો</>
+                  )}
+                </button>
+
+                <button
+                  onClick={() => {
+                    saveAIConfig(aiConfig);
+                    setAiSaved(true);
+                    setTimeout(() => setAiSaved(false), 3000);
+                  }}
+                  className="flex items-center gap-2 px-5 py-2.5 bg-violet-600 hover:bg-violet-700 text-white font-gujarati font-bold text-sm rounded-xl shadow-md shadow-violet-500/20 transition active:scale-95"
+                >
+                  <span className="material-symbols-outlined text-sm">save</span>
+                  {aiSaved ? '✅ સેવ થઈ ગયું!' : 'સેટિંગ સેવ કરો'}
+                </button>
+              </div>
+
+              {/* Test Result */}
+              {aiTestResult && (
+                <div className={`p-4 rounded-2xl border font-gujarati text-sm ${
+                  aiTestResult.success
+                    ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900 text-emerald-700'
+                    : 'bg-rose-50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900 text-rose-700'
+                }`}>
+                  {aiTestResult.success ? (
+                    <div>
+                      <p className="font-bold">✅ Connection Successful! AI ready.</p>
+                      <p className="text-xs mt-1 opacity-80">Response: {aiTestResult.response?.slice(0, 120)}...</p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p className="font-bold">❌ Connection Failed</p>
+                      <p className="text-xs mt-1 font-mono opacity-80">{aiTestResult.error}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+            </div>
+          )}
+
+          {/* Info Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900 p-4 rounded-2xl">
+              <p className="font-headline font-bold text-sm text-emerald-700">⚡ Free Options</p>
+              <p className="font-gujarati text-xs text-emerald-600 mt-1">Gemini Flash, Groq, OpenRouter free models — zero cost AI!</p>
+            </div>
+            <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 p-4 rounded-2xl">
+              <p className="font-headline font-bold text-sm text-blue-700">🏠 Ollama (Local)</p>
+              <p className="font-gujarati text-xs text-blue-600 mt-1">PC પર install કરો — 100% free, private, no internet needed!</p>
+            </div>
+            <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 p-4 rounded-2xl">
+              <p className="font-headline font-bold text-sm text-amber-700">📚 Hybrid Mode</p>
+              <p className="font-gujarati text-xs text-amber-600 mt-1">200+ DB answers = free. AI only for unknown questions = minimal cost!</p>
+            </div>
+          </div>
+
+        </div>
+      )}
 
     </div>
   );

@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ShareButton from './ShareButton';
+import { DADI_MA_DB, CATEGORIES, QUICK_SUGGESTIONS, searchDadiMaDB } from '../data/dadiMaDatabase';
+import { callDadiMaAI, isAIConfigured } from '../utils/aiService';
 
 const CONDITIONS_DATA = {
   "ડાયાબિટીસ (Type 2)": {
@@ -252,55 +254,107 @@ const VITAMINS_DATA = [
 ];
 
 export default function HealthAssistant() {
-  const [activeTab, setActiveTab] = useState("conditions"); // 'conditions' or 'vitamins'
+  const [activeTab, setActiveTab] = useState("conditions");
   const [activeCondition, setActiveCondition] = useState("ડાયાબિટીસ (Type 2)");
   const [showDadiChat, setShowDadiChat] = useState(false);
+
+  // Dadi-Ma Hybrid Chatbot State
   const [chatMessages, setChatMessages] = useState([
-    { sender: "dadi", text: "બેટા, રામ રામ! હું છું તારી દાદી-મા. તબિયત પાણી કેવા છે? તને કોઈ સ્વાસ્થ્યની સમસ્યા કે મૂંઝવણ હોય તો નીચેથી સવાલ પૂછ, હું તને આયુર્વેદિક ઉપચાર જણાવીશ! 👵✨" }
+    { id: Date.now(), sender: 'dadi', text: 'બેટા, રામ રામ! 👵\n\nહું છું તારી દાદી-મા. ૮૦ વર્ષના અનુભવ સાથે! 🌿\n\nકોઈ પણ સ્વાસ્થ્ય સમસ્યા ટાઈપ કરો — ઘરેલુ આયુર્વેદિક ઉપાય જણાવીશ!', isDB: false }
   ]);
+  const [chatInput, setChatInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [chatCategory, setChatCategory] = useState('all');
+  const [lastAnswer, setLastAnswer] = useState(null);
+  const chatEndRef = useRef(null);
 
   const currentCondition = CONDITIONS_DATA[activeCondition];
 
-  const dadiQuestions = [
-    { q: "મને એસિડિટી બહુ થાય છે, શું કરવું?", a: "બેટા, એસિડિટી માટે જમ્યા પછી અડધી ચમચી વરિયાળી અને સાકર ચાવીને ખાવા. અથવા ઠંડું મોળું દૂધ અડધો કપ પીવું, તરત જ રાહત મળશે!" },
-    { q: "શુગર કેવી રીતે કાબૂમાં રાખવી?", a: "બેટા, સવારે ભૂખ્યા પેટે ૧ ચમચી મેથીના દાણા પલાળેલું પાણી પીવું અને નિયમિત રીતે કસરત કરવી. તીખું અને ગળ્યું ખાવાનું બને એટલું ઓછું કરવું!" },
-    { q: "બીપી વધતું હોય તો શું ઘરગથ્થુ ઉપાય છે?", a: "બેટા, હાઈ બીપી માટે રોજ સવારે લસણની એક કળી પાણી સાથે લેવી. ભોજનમાં મીઠું ઓછું કરી દેવું અને શાંતિથી અનુલોમ-વિલોમ પ્રાણાયામ કરવા." },
-    { q: "હાડકાં અને સાંધા બહુ દુખે છે, શું કરવું?", a: "બેટા, શરીરમાં કેલ્શિયમ માટે રોજ રાત્રે દૂધ પીવું. સવારે કુમળા તડકામાં બેસવું અને પલાળેલી મેથી ખાવી. તેલની માલિશ પણ ઉત્તમ છે!" },
-    { q: "વજન ઓછું કરવાના કોઈ સરળ નુસખા જણાવો.", a: "બેટા, સવારે નવશેકા ગરમ પાણીમાં ૧ ચમચી મધ અને અડધા લીંબુનો રસ મેળવીને પીવો. બપોરે ઊંઘવાનું બંધ કર અને રાત્રે હળવું ભોજન લે." }
-  ];
-
-  const handleAskDadi = (qObj) => {
-    // Add user question
-    const updated = [...chatMessages, { sender: "user", text: qObj.q }];
-    setChatMessages(updated);
-
-    // Dadi replies after 800ms
-    setTimeout(() => {
-      setChatMessages(prev => [...prev, { sender: "dadi", text: qObj.a }]);
-      
-      // Speak the answer
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(qObj.a);
-        const voices = window.speechSynthesis.getVoices();
-        const guVoice = voices.find(v => v.lang.includes('gu') || v.lang.includes('hi'));
-        if (guVoice) {
-          utterance.voice = guVoice;
-        }
-        utterance.lang = 'gu-IN';
-        utterance.rate = 0.95;
-        window.speechSynthesis.speak(utterance);
-      }
-    }, 600);
-  };
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages, isTyping]);
 
   useEffect(() => {
     return () => {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-      }
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     };
   }, []);
+
+  const speakText = (text) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text.replace(/\*\*/g, ''));
+      const voices = window.speechSynthesis.getVoices();
+      const guVoice = voices.find(v => v.lang.includes('gu') || v.lang.includes('hi'));
+      if (guVoice) utterance.voice = guVoice;
+      utterance.lang = 'gu-IN';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const handleSendMessage = async (text) => {
+    const query = text || chatInput.trim();
+    if (!query) return;
+    setChatInput('');
+
+    const userMsg = { id: Date.now(), sender: 'user', text: query };
+    setChatMessages(prev => [...prev, userMsg]);
+    setIsTyping(true);
+
+    await new Promise(r => setTimeout(r, 600));
+
+    // Step 1: Search local database
+    const dbResult = searchDadiMaDB(query, chatCategory);
+
+    if (dbResult) {
+      const DISCLAIMER = '\n\n⚠️ *આ ઘરેલુ ઉપાય છે. ગંભીર બીમારી માટે ડૉક્ટર ની સલાહ ચોક્કસ લો.*';
+      const finalAnswer = dbResult.answer + DISCLAIMER;
+      setIsTyping(false);
+      const dadiMsg = { id: Date.now() + 1, sender: 'dadi', text: finalAnswer, isDB: true, raw: dbResult.answer };
+      setChatMessages(prev => [...prev, dadiMsg]);
+      setLastAnswer(finalAnswer);
+      speakText(dbResult.answer);
+      return;
+    }
+
+    // Step 2: Try AI fallback
+    if (isAIConfigured()) {
+      try {
+        const history = chatMessages.slice(-8);
+        const aiAnswer = await callDadiMaAI(query, history);
+        const DISCLAIMER = '\n\n⚠️ *આ ઘરેલુ ઉપાય છે. ગંભીર બીમારી માટે ડૉક્ટર ની સલાહ ચોક્કસ લો.*';
+        const finalAnswer = aiAnswer + DISCLAIMER;
+        setIsTyping(false);
+        const dadiMsg = { id: Date.now() + 1, sender: 'dadi', text: finalAnswer, isAI: true, raw: aiAnswer };
+        setChatMessages(prev => [...prev, dadiMsg]);
+        setLastAnswer(finalAnswer);
+        speakText(aiAnswer);
+      } catch (err) {
+        setIsTyping(false);
+        setChatMessages(prev => [...prev, {
+          id: Date.now() + 1, sender: 'dadi',
+          text: `બેટા, AI સાથે વાત કરવામાં સમસ્યા આવી. 😔\n\n(${err.message})\n\nએડમિન પેનલ → AI સેટિંગ ચેક કરો.`
+        }]);
+      }
+    } else {
+      setIsTyping(false);
+      setChatMessages(prev => [...prev, {
+        id: Date.now() + 1, sender: 'dadi',
+        text: 'બેટા, આ વિષે મારી પાસે હાલ જવાબ નથી. 🙏\n\nએડમિન પેનલ → AI સેટિંગ માં API Key સેટ કરો એટલે ગમે તે સવાલ પૂછી શકો!'
+      }]);
+    }
+  };
+
+  const handleShareAnswer = (text) => {
+    const shareText = `👵 દાદી-મા ના નુસખા:\n\n${text.replace(/\*\*/g, '')}\n\n— ગુજરાતી એપ | dadi-ma chatbot 🌿`;
+    if (navigator.share) {
+      navigator.share({ title: 'દાદી-મા ના નુસખા', text: shareText });
+    } else {
+      navigator.clipboard.writeText(shareText);
+      alert('ઉત્તર ક્લિપબોર્ડ પર કૉપી થઈ ગયો! WhatsApp માં paste કરો.');
+    }
+  };
 
   return (
     <div className="animate-fade-in space-y-8 pb-12">
@@ -586,65 +640,145 @@ export default function HealthAssistant() {
         </div>
       )}
 
-      {/* Dadi-ma Interactive Chat Dialog Modal */}
+      {/* Dadi-Ma HYBRID Chatbot Modal */}
       {showDadiChat && (
-        <div className="fixed inset-0 z-[1000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-6 animate-fade-in overflow-y-auto">
-          <div className="bg-[#faf1e6] dark:bg-stone-950 border-4 border-[#8c6239]/20 text-stone-850 dark:text-stone-100 rounded-[2.5rem] p-6 max-w-md w-full shadow-2xl relative space-y-4 max-h-[85vh] flex flex-col justify-between">
-            
-            {/* Close Button */}
-            <button
-              onClick={() => {
-                setShowDadiChat(false);
-                if ('speechSynthesis' in window) {
-                  window.speechSynthesis.cancel();
-                }
-              }}
-              className="absolute top-4 right-4 h-9 w-9 rounded-full bg-[#f0d8c0]/50 hover:bg-[#e0c8b0] text-[#5c3e21] dark:bg-stone-850 dark:text-stone-300 flex items-center justify-center transition-all"
-            >
-              <span className="material-symbols-outlined text-lg">close</span>
-            </button>
+        <div className="fixed inset-0 z-[1000] bg-black/75 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
+          <div className="bg-[#fdf8f2] dark:bg-stone-950 border border-[#d5bdaf]/40 text-stone-850 dark:text-stone-100 rounded-t-[2.5rem] sm:rounded-[2.5rem] w-full sm:max-w-lg shadow-2xl flex flex-col" style={{maxHeight: '92vh'}}>
 
-            {/* Chat Title */}
-            <div className="flex gap-3 items-center border-b-2 border-dashed border-[#d5bdaf]/30 pb-3">
-              <span className="text-3xl select-none">👵</span>
-              <div>
-                <h3 className="font-gujarati font-black text-xl text-[#5c3e21] dark:text-[#f4d6b6]">દાદી-મા ના નુસખા ચેટ</h3>
-                <p className="font-gujarati text-[9px] text-stone-400 font-bold uppercase tracking-wide">અવાજ પ્લેયર સાથે સક્રિય 🎧</p>
+            {/* Chat Header */}
+            <div className="flex gap-3 items-center p-5 border-b border-[#e8d5c0]/50 dark:border-stone-800 shrink-0">
+              <div className="relative">
+                <span className="text-4xl">👵</span>
+                <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 bg-emerald-500 rounded-full border-2 border-white"></span>
               </div>
+              <div className="flex-1">
+                <h3 className="font-gujarati font-black text-base text-[#5c3e21] dark:text-[#f4d6b6]">દાદી-મા ના નુસખા ચેટ</h3>
+                <p className="font-gujarati text-[10px] text-stone-400">
+                  {isAIConfigured() ? '🤖 AI + Database Hybrid' : '📚 Database Mode'} | 200+ ઘરેલુ ઉપાય
+                </p>
+              </div>
+              <button
+                onClick={() => { setShowDadiChat(false); if ('speechSynthesis' in window) window.speechSynthesis.cancel(); }}
+                className="h-9 w-9 rounded-full bg-[#f0d8c0]/50 hover:bg-[#e0c8b0] text-[#5c3e21] dark:bg-stone-800 dark:text-stone-300 flex items-center justify-center transition-all"
+              >
+                <span className="material-symbols-outlined text-lg">close</span>
+              </button>
             </div>
 
-            {/* Chat Messages Logs */}
-            <div className="flex-1 overflow-y-auto min-h-[220px] max-h-[350px] p-3 rounded-2xl bg-white/40 dark:bg-stone-900/40 space-y-3 border border-[#d5bdaf]/10">
-              {chatMessages.map((msg, idx) => (
-                <div 
-                  key={idx} 
-                  className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
+            {/* Category Filter Chips */}
+            <div className="flex gap-2 px-4 pt-3 pb-1 overflow-x-auto no-scrollbar shrink-0">
+              {CATEGORIES.map(cat => (
+                <button
+                  key={cat.id}
+                  onClick={() => setChatCategory(cat.id)}
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-gujarati font-bold whitespace-nowrap transition-all shrink-0 ${
+                    chatCategory === cat.id
+                      ? 'bg-[#8c6239] text-white shadow-md'
+                      : 'bg-white dark:bg-stone-900 text-stone-600 dark:text-stone-400 border border-stone-200 dark:border-stone-800'
+                  }`}
                 >
-                  <div className={`max-w-[85%] px-4 py-2.5 rounded-2xl font-gujarati text-xs leading-relaxed font-bold ${
-                    msg.sender === 'user' 
-                      ? 'bg-[#004d40] text-white rounded-tr-none' 
-                      : 'bg-[#f0e3d2] text-[#5c3e21] dark:bg-stone-800 dark:text-stone-200 rounded-tl-none border border-[#d5bdaf]/10'
-                  }`}>
-                    {msg.text}
-                  </div>
-                </div>
+                  <span>{cat.emoji}</span> {cat.label}
+                </button>
               ))}
             </div>
 
-            {/* User Options list */}
-            <div className="space-y-2">
-              <p className="font-gujarati text-[9px] text-stone-400 font-bold uppercase tracking-widest pl-1">કોઈ સવાલ પૂછો:</p>
-              <div className="flex flex-col gap-1.5 max-h-[140px] overflow-y-auto no-scrollbar">
-                {dadiQuestions.map((qObj, idx) => (
+            {/* Messages Area */}
+            <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-0">
+              {chatMessages.map((msg) => (
+                <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}>
+                  {msg.sender === 'dadi' && <span className="text-xl mr-2 mt-1 shrink-0">👵</span>}
+                  <div className={`group max-w-[82%] relative ${
+                    msg.sender === 'user' ? '' : ''
+                  }`}>
+                    <div className={`px-4 py-2.5 rounded-2xl font-gujarati text-xs leading-relaxed whitespace-pre-line ${
+                      msg.sender === 'user'
+                        ? 'bg-[#004d40] text-white rounded-tr-none font-bold'
+                        : 'bg-white dark:bg-stone-900 text-[#3d2610] dark:text-stone-200 rounded-tl-none border border-[#e8d5c0]/60 dark:border-stone-800 shadow-sm'
+                    }`}>
+                      {msg.text.split('**').map((part, i) =>
+                        i % 2 === 0 ? part : <strong key={i}>{part}</strong>
+                      )}
+                    </div>
+                    {/* Action buttons on dadi's messages */}
+                    {msg.sender === 'dadi' && msg.text.length > 50 && (
+                      <div className="flex gap-1.5 mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => handleShareAnswer(msg.raw || msg.text)}
+                          className="flex items-center gap-1 text-[10px] font-gujarati px-2 py-1 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg text-stone-500 hover:text-[#8c6239] transition-colors"
+                        >
+                          <span className="material-symbols-outlined text-[12px]">share</span> WhatsApp
+                        </button>
+                        <button
+                          onClick={() => speakText(msg.raw || msg.text)}
+                          className="flex items-center gap-1 text-[10px] font-gujarati px-2 py-1 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg text-stone-500 hover:text-[#8c6239] transition-colors"
+                        >
+                          <span className="material-symbols-outlined text-[12px]">volume_up</span> સાંભળો
+                        </button>
+                        {msg.isAI && <span className="text-[9px] px-2 py-1 bg-violet-100 dark:bg-violet-950 text-violet-600 rounded-full font-bold">🤖 AI</span>}
+                        {msg.isDB && <span className="text-[9px] px-2 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 rounded-full font-bold">📚 DB</span>}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+
+              {/* Typing Indicator */}
+              {isTyping && (
+                <div className="flex items-center gap-2 animate-fade-in">
+                  <span className="text-xl">👵</span>
+                  <div className="bg-white dark:bg-stone-900 border border-[#e8d5c0]/60 dark:border-stone-800 px-4 py-3 rounded-2xl rounded-tl-none shadow-sm">
+                    <div className="flex gap-1.5 items-center">
+                      <div className="w-2 h-2 bg-[#8c6239] rounded-full animate-bounce" style={{animationDelay:'0ms'}}></div>
+                      <div className="w-2 h-2 bg-[#8c6239] rounded-full animate-bounce" style={{animationDelay:'150ms'}}></div>
+                      <div className="w-2 h-2 bg-[#8c6239] rounded-full animate-bounce" style={{animationDelay:'300ms'}}></div>
+                      <span className="font-gujarati text-[10px] text-stone-400 ml-1">દાદી-મા વિચારી રહ્યાં છે...</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={chatEndRef} />
+            </div>
+
+            {/* Quick Suggestions */}
+            <div className="px-4 pb-2 shrink-0">
+              <p className="font-gujarati text-[10px] text-stone-400 font-bold uppercase tracking-widest mb-2">ઝડપ સૂચનો:</p>
+              <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                {QUICK_SUGGESTIONS.map((q, i) => (
                   <button
-                    key={idx}
-                    onClick={() => handleAskDadi(qObj)}
-                    className="w-full text-left py-2 px-3 bg-white hover:bg-amber-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-amber-500/35 rounded-xl font-gujarati font-bold text-xs text-stone-750 dark:text-stone-200 truncate"
+                    key={i}
+                    onClick={() => handleSendMessage(q)}
+                    disabled={isTyping}
+                    className="shrink-0 text-[11px] font-gujarati px-3 py-2 bg-amber-50 dark:bg-stone-900 border border-amber-200 dark:border-stone-800 rounded-xl text-[#8c6239] dark:text-amber-400 hover:bg-amber-100 transition-all disabled:opacity-50 whitespace-nowrap"
                   >
-                    👵 {qObj.q}
+                    👵 {q}
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Input Area */}
+            <div className="p-4 border-t border-[#e8d5c0]/50 dark:border-stone-800 shrink-0">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={chatInput}
+                  onChange={e => setChatInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && !isTyping && handleSendMessage()}
+                  placeholder="ગુજરાતી અથવા English માં ટાઈપ કરો..."
+                  disabled={isTyping}
+                  className="flex-1 px-4 py-2.5 rounded-2xl bg-white dark:bg-stone-900 border border-[#d5bdaf]/60 dark:border-stone-800 font-gujarati text-sm text-stone-800 dark:text-stone-200 placeholder:text-stone-400 focus:outline-none focus:border-[#8c6239] transition-colors disabled:opacity-60"
+                />
+                <button
+                  onClick={() => handleSendMessage()}
+                  disabled={isTyping || !chatInput.trim()}
+                  className="h-11 w-11 bg-[#8c6239] hover:bg-[#7a5430] disabled:bg-stone-300 dark:disabled:bg-stone-800 text-white rounded-2xl flex items-center justify-center transition-all active:scale-95"
+                >
+                  <span className="material-symbols-outlined text-lg">send</span>
+                </button>
+              </div>
+              <p className="font-gujarati text-[10px] text-stone-400 text-center mt-2">
+                ⚠️ ઘરેલુ ઉપાય | ગંભીર બીમારી = ડૉક્ટર ની સલાહ
+              </p>
             </div>
 
           </div>
