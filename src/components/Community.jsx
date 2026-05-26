@@ -29,6 +29,7 @@ import {
   getRelativeTimeString,
   addReferral
 } from '../utils/otlo_helper';
+import RamatoHub from './RamatoHub';
 
 const SIMULATED_IMAGES = [
   "https://images.unsplash.com/photo-1566378246598-5b11a0ff7f6c?auto=format&fit=crop&q=80&w=800",
@@ -856,6 +857,7 @@ const Community = () => {
         {[
           { id: "feed", label: "ચર્ચાઓ 💬" },
           { id: "directory", label: "ડિરેક્ટરી 📞" },
+          { id: "games", label: "રમતો 🎮" },
           { id: "leaderboard", label: "લીડરબોર્ડ 🏆" },
           { id: "sabha", label: "ગામ સભા 📢" }
         ].map(tab => (
@@ -1398,6 +1400,11 @@ const Community = () => {
             </button>
           </div>
         </div>
+      )}
+
+      {/* 4B. GAMES TAB */}
+      {activeTab === "games" && (
+        <RamatoHub userLocation={userLocation} />
       )}
 
       {/* 5. DRAWERS & MODALS */}
