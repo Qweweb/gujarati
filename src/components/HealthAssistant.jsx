@@ -442,6 +442,15 @@ export default function HealthAssistant() {
     }
   };
 
+  const getDynamicSuggestions = () => {
+    if (chatCategory === 'all') {
+      return QUICK_SUGGESTIONS;
+    }
+    // Filter the local database to get matching questions for this category
+    const filtered = DADI_MA_DB.filter(entry => entry.category === chatCategory);
+    return filtered.slice(0, 6).map(entry => entry.question);
+  };
+
   // Helper functions for options formatting
   const getAgeGroupText = (val) => {
     switch (val) {
@@ -917,7 +926,8 @@ export default function HealthAssistant() {
   };
 
   return (
-    <div className="animate-fade-in space-y-8 pb-12">
+    <>
+      <div className="animate-fade-in space-y-8 pb-12">
       {/* Personalized Header with Dadi-ma Avatar */}
       <section id="health-hero" className="bg-gradient-to-br from-[#d2e2d9] to-[#c2d7cc] p-8 rounded-[2.5rem] relative overflow-hidden shadow-sm">
         <div className="absolute right-[-20px] top-[-20px] opacity-10">
@@ -1403,269 +1413,6 @@ export default function HealthAssistant() {
         </div>
       )}
 
-      {/* Dadi-Ma HYBRID Chatbot Modal */}
-      {showDadiChat && (
-        <div className="fixed inset-0 z-[1000] bg-black/75 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
-          <div className="bg-[#fdf8f2] dark:bg-stone-950 border border-[#d5bdaf]/40 text-stone-850 dark:text-stone-100 rounded-t-[2.5rem] sm:rounded-[2.5rem] w-full sm:max-w-lg shadow-2xl flex flex-col" style={{maxHeight: '92vh'}}>
-
-            {/* Chat Header */}
-            <div className="flex gap-3 items-center p-5 border-b border-[#e8d5c0]/50 dark:border-stone-800 shrink-0">
-              <div className="relative">
-                <span className="text-4xl">👵</span>
-                <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 bg-emerald-500 rounded-full border-2 border-white"></span>
-              </div>
-              <div className="flex-1">
-                <h3 className="font-gujarati font-black text-base text-[#5c3e21] dark:text-[#f4d6b6]">દાદી-મા ના નુસખા ચેટ</h3>
-                <p className="font-gujarati text-[10px] text-stone-400">
-                  આયુર્વેદિક ઘરેલુ ઉપચાર | ૨૨૦+ નુસખા
-                </p>
-              </div>
-              {/* Mode Toggle Button */}
-              <button
-                onClick={() => {
-                  const nextMode = dadiMode === 'traditional' ? 'modern' : 'traditional';
-                  setDadiMode(nextMode);
-                  localStorage.setItem('dadi_ma_chatbot_mode', nextMode);
-                }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-gujarati font-black transition-all border shadow-sm shrink-0 ${
-                  dadiMode === 'traditional'
-                    ? 'bg-[#8c6239] border-[#8c6239] text-white hover:bg-[#7a5430]'
-                    : 'bg-emerald-600 border-emerald-600 text-white hover:bg-emerald-700'
-                }`}
-              >
-                {dadiMode === 'traditional' ? (
-                  <>👵 Traditional</>
-                ) : (
-                  <>👩‍⚕️ Scientific</>
-                )}
-              </button>
-              <button
-                onClick={() => { setShowDadiChat(false); if ('speechSynthesis' in window) window.speechSynthesis.cancel(); }}
-                className="h-9 w-9 rounded-full bg-[#f0d8c0]/50 hover:bg-[#e0c8b0] text-[#5c3e21] dark:bg-stone-800 dark:text-stone-300 flex items-center justify-center transition-all shrink-0"
-              >
-                <span className="material-symbols-outlined text-lg">close</span>
-              </button>
-            </div>
-
-            {/* Category Filter Chips */}
-            <div className="flex gap-2 px-4 pt-3 pb-1 overflow-x-auto no-scrollbar shrink-0">
-              {CATEGORIES.map(cat => (
-                <button
-                  key={cat.id}
-                  onClick={() => setChatCategory(cat.id)}
-                  className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-gujarati font-bold whitespace-nowrap transition-all shrink-0 ${
-                    chatCategory === cat.id
-                      ? 'bg-[#8c6239] text-white shadow-md'
-                      : 'bg-white dark:bg-stone-900 text-stone-600 dark:text-stone-400 border border-stone-200 dark:border-stone-800'
-                  }`}
-                >
-                  <span>{cat.emoji}</span> {cat.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-0">
-              {chatMessages.map((msg) => (
-                <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}>
-                  {msg.sender === 'dadi' && <span className="text-xl mr-2 mt-1 shrink-0">👵</span>}
-                  <div className={`group max-w-[82%] relative ${
-                    msg.sender === 'user' ? '' : ''
-                  }`}>
-                    <div className={`px-4 py-2.5 rounded-2xl font-gujarati text-xs leading-relaxed whitespace-pre-line ${
-                      msg.sender === 'user'
-                        ? 'bg-[#004d40] text-white rounded-tr-none font-bold'
-                        : 'bg-white dark:bg-stone-900 text-[#3d2610] dark:text-stone-200 rounded-tl-none border border-[#e8d5c0]/60 dark:border-stone-800 shadow-sm'
-                    }`}>
-                      {msg.text.split('**').map((part, i) =>
-                        i % 2 === 0 ? part : <strong key={i}>{part}</strong>
-                      )}
-                      
-                      {/* Related Topics Chips inside Bubble */}
-                      {msg.sender === 'dadi' && msg.relatedChips && msg.relatedChips.length > 0 && (
-                        <div className="mt-3 pt-2.5 border-t border-dashed border-[#e8d5c0]/60 dark:border-stone-800">
-                          <p className="font-gujarati text-[10px] text-stone-400 font-bold mb-1.5 flex items-center gap-1">
-                            <span className="material-symbols-outlined text-[12px]">link</span> આ પણ જાણો / સંબંધિત વિષયો:
-                          </p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {msg.relatedChips.map((chipKey) => {
-                              const relatedTopic = PERSONALIZED_TOPICS[chipKey];
-                              if (!relatedTopic) return null;
-                              return (
-                                <button
-                                  key={chipKey}
-                                  onClick={() => handleSendMessage(relatedTopic.name)}
-                                  className="text-[10px] font-gujarati px-2.5 py-1 bg-amber-50 dark:bg-stone-950 border border-amber-250 dark:border-stone-850 rounded-lg text-[#8c6239] dark:text-amber-400 hover:bg-amber-105 transition-colors font-bold"
-                                >
-                                  {relatedTopic.name} 🔗
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    
-                    {/* Action buttons on dadi's messages */}
-                    {msg.sender === 'dadi' && msg.text.length > 50 && (
-                      <div className="flex flex-wrap gap-1.5 mt-2">
-                        <button
-                          onClick={() => handleShareAnswer(msg.raw || msg.text)}
-                          className="flex items-center gap-1 text-[10px] font-gujarati px-2 py-1 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg text-stone-500 hover:text-[#8c6239] transition-colors"
-                        >
-                          <span className="material-symbols-outlined text-[12px]">share</span> WhatsApp
-                        </button>
-                        <button
-                          onClick={() => speakText(msg.raw || msg.text)}
-                          className="flex items-center gap-1 text-[10px] font-gujarati px-2 py-1 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg text-stone-500 hover:text-[#8c6239] transition-colors"
-                        >
-                          <span className="material-symbols-outlined text-[12px]">volume_up</span> સાંભળો
-                        </button>
-                        <button
-                          onClick={() => handleSaveAnswer(msg)}
-                          className={`flex items-center gap-1 text-[10px] font-gujarati px-2 py-1 border rounded-lg transition-colors ${
-                            isBookmarked(msg.id)
-                              ? 'bg-amber-100 dark:bg-stone-800 border-amber-300 text-amber-700 dark:text-amber-400 font-bold'
-                              : 'bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-500 hover:text-[#8c6239]'
-                          }`}
-                        >
-                          <span className="material-symbols-outlined text-[12px]">{isBookmarked(msg.id) ? 'bookmark_added' : 'bookmark'}</span>
-                          {isBookmarked(msg.id) ? 'સેવ કરેલ' : 'સાચવો'}
-                        </button>
-                        {msg.isPersonalized && msg.topicKey && (
-                          <button
-                            onClick={() => start7DayChallenge(msg.topicKey)}
-                            className="flex items-center gap-1 text-[10px] font-gujarati px-2.5 py-1 bg-emerald-50 dark:bg-stone-900 border border-emerald-250 dark:border-emerald-800 rounded-lg text-emerald-600 dark:text-emerald-450 hover:bg-emerald-100 transition-colors font-bold"
-                          >
-                            <span className="material-symbols-outlined text-[12px]">calendar_today</span> ૭ દિવસ પડકાર શરૂ કરો
-                          </button>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-
-              {/* Typing Indicator */}
-              {isTyping && (
-                <div className="flex items-center gap-2 animate-fade-in">
-                  <span className="text-xl">👵</span>
-                  <div className="bg-white dark:bg-stone-900 border border-[#e8d5c0]/60 dark:border-stone-800 px-4 py-3 rounded-2xl rounded-tl-none shadow-sm">
-                    <div className="flex gap-1.5 items-center">
-                      <div className="w-2 h-2 bg-[#8c6239] rounded-full animate-bounce" style={{animationDelay:'0ms'}}></div>
-                      <div className="w-2 h-2 bg-[#8c6239] rounded-full animate-bounce" style={{animationDelay:'150ms'}}></div>
-                      <div className="w-2 h-2 bg-[#8c6239] rounded-full animate-bounce" style={{animationDelay:'300ms'}}></div>
-                      <span className="font-gujarati text-[10px] text-stone-400 ml-1">દાદી-મા વિચારી રહ્યાં છે...</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-              <div ref={chatEndRef} />
-            </div>
-
-            {/* Questionnaire Options Chips or Quick Suggestions */}
-            {questionnaire.active ? (
-              <div className="px-4 pb-4 shrink-0 space-y-2">
-                <div className="flex justify-between items-center">
-                  <p className="font-gujarati text-[10px] text-[#8c6239] dark:text-amber-400 font-bold uppercase tracking-widest">
-                    {questionnaire.step === -1 ? "તમારી પસંદગી ટેપ કરો:" : `સવાલ ${questionnaire.step + 1} / ૬:`}
-                  </p>
-                  <button
-                    onClick={() => {
-                      setQuestionnaire({ active: false, topicKey: '', step: 0, answers: {} });
-                      setChatMessages(prev => [...prev, {
-                        id: Date.now(),
-                        sender: 'dadi',
-                        text: 'બેટા, પ્રશ્નાવલી રદ કરી છે. તું હવે સીધો પ્રશ્ન પૂછી શકે છે! 👵'
-                      }]);
-                    }}
-                    className="text-[10px] font-gujarati px-2.5 py-1 bg-stone-150 hover:bg-stone-200 dark:bg-stone-900 dark:hover:bg-stone-800 border border-stone-200 dark:border-stone-800 rounded-lg text-stone-500 transition-colors"
-                  >
-                    રદ કરો ❌
-                  </button>
-                </div>
-                <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto no-scrollbar py-1">
-                  {questionnaire.step === -1 ? (
-                    <>
-                      <button
-                        onClick={() => handleQuestionnaireAnswer('yes', 'હા, વિગતો સાચી છે ✅')}
-                        disabled={isTyping}
-                        className="text-[11px] font-gujarati px-4 py-2 bg-emerald-50 dark:bg-stone-900 border border-emerald-250 dark:border-stone-800 rounded-xl text-emerald-700 dark:text-emerald-450 hover:bg-emerald-100 transition-all font-bold active:scale-95"
-                      >
-                        હા, વિગતો સાચી છે ✅
-                      </button>
-                      <button
-                        onClick={() => handleQuestionnaireAnswer('no', 'ના, વિગતો બદલવી છે ❌')}
-                        disabled={isTyping}
-                        className="text-[11px] font-gujarati px-4 py-2 bg-rose-50 dark:bg-stone-900 border border-rose-250 dark:border-stone-800 rounded-xl text-rose-700 dark:text-rose-450 hover:bg-rose-100 transition-all font-bold active:scale-95"
-                      >
-                        ના, વિગતો બદલવી છે ❌
-                      </button>
-                    </>
-                  ) : (
-                    QUESTIONNAIRE_STEPS[questionnaire.step].options.map((opt) => (
-                      <button
-                        key={opt.value}
-                        onClick={() => handleQuestionnaireAnswer(opt.value, opt.label)}
-                        disabled={isTyping}
-                        className="text-[11px] font-gujarati px-4 py-2 bg-[#fdf8f2] dark:bg-stone-900 border border-[#e8d5c0] dark:border-stone-800 rounded-xl text-[#8c6239] dark:text-[#f4d6b6] hover:bg-[#f3e5d8] transition-all font-bold active:scale-95"
-                      >
-                        {opt.label}
-                      </button>
-                    ))
-                  )}
-                </div>
-              </div>
-            ) : (
-              <>
-                {/* Quick Suggestions */}
-                <div className="px-4 pb-2 shrink-0">
-                  <p className="font-gujarati text-[10px] text-stone-400 font-bold uppercase tracking-widest mb-2">ઝડપ સૂચનો:</p>
-                  <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-                    {QUICK_SUGGESTIONS.map((q, i) => (
-                      <button
-                        key={i}
-                        onClick={() => handleSendMessage(q)}
-                        disabled={isTyping}
-                        className="shrink-0 text-[11px] font-gujarati px-3 py-2 bg-amber-50 dark:bg-stone-900 border border-amber-200 dark:border-stone-800 rounded-xl text-[#8c6239] dark:text-amber-400 hover:bg-amber-100 transition-all disabled:opacity-50 whitespace-nowrap active:scale-95"
-                      >
-                        👵 {q}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Input Area */}
-                <div className="p-4 border-t border-[#e8d5c0]/50 dark:border-stone-800 shrink-0">
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={chatInput}
-                      onChange={e => setChatInput(e.target.value)}
-                      onKeyDown={e => e.key === 'Enter' && !isTyping && handleSendMessage()}
-                      placeholder="ગુજરાતી અથવા English માં ટાઈપ કરો..."
-                      disabled={isTyping}
-                      className="flex-1 px-4 py-2.5 rounded-2xl bg-white dark:bg-stone-900 border border-[#d5bdaf]/60 dark:border-stone-800 font-gujarati text-sm text-stone-800 dark:text-stone-200 placeholder:text-stone-400 focus:outline-none focus:border-[#8c6239] transition-colors disabled:opacity-60"
-                    />
-                    <button
-                      onClick={() => handleSendMessage()}
-                      disabled={isTyping || !chatInput.trim()}
-                      className="h-11 w-11 bg-[#8c6239] hover:bg-[#7a5430] disabled:bg-stone-300 dark:disabled:bg-stone-800 text-white rounded-2xl flex items-center justify-center transition-all active:scale-95"
-                    >
-                      <span className="material-symbols-outlined text-lg">send</span>
-                    </button>
-                  </div>
-                  <p className="font-gujarati text-[10px] text-stone-400 text-center mt-2">
-                    ⚠️ ઘરેલુ ઉપાય | ગંભીર બીમારી = ડૉક્ટર ની સલાહ
-                  </p>
-                </div>
-              </>
-            )}
-
-          </div>
-        </div>
-      )}
-
       {/* Professional Medical Disclaimer Section */}
       <section 
         id="disclaimer-section" 
@@ -1681,5 +1428,270 @@ export default function HealthAssistant() {
       </section>
 
     </div>
+
+    {/* Dadi-Ma HYBRID Chatbot Modal */}
+    {/* Moved outside the animated container to prevent stacking context clipping and overflow navigation overlap */}
+    {showDadiChat && (
+      <div className="fixed inset-0 z-[9999] bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+        <div className="bg-[#fdf8f2] dark:bg-stone-950 border border-[#d5bdaf]/40 text-stone-850 dark:text-stone-100 rounded-[2rem] w-full sm:max-w-md shadow-2xl flex flex-col max-h-[85vh]">
+
+          {/* Chat Header */}
+          <div className="flex gap-3 items-center p-5 border-b border-[#e8d5c0]/50 dark:border-stone-800 shrink-0">
+            <div className="relative">
+              <span className="text-4xl">👵</span>
+              <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 bg-emerald-500 rounded-full border-2 border-white"></span>
+            </div>
+            <div className="flex-1">
+              <h3 className="font-gujarati font-black text-base text-[#5c3e21] dark:text-[#f4d6b6]">દાદી-મા ના નુસખા ચેટ</h3>
+              <p className="font-gujarati text-[10px] text-stone-400">
+                આયુર્વેદિક ઘરેલુ ઉપચાર | ૨૨૦+ નુસખા
+              </p>
+            </div>
+            {/* Mode Toggle Button */}
+            <button
+              onClick={() => {
+                const nextMode = dadiMode === 'traditional' ? 'modern' : 'traditional';
+                setDadiMode(nextMode);
+                localStorage.setItem('dadi_ma_chatbot_mode', nextMode);
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-gujarati font-black transition-all border shadow-sm shrink-0 ${
+                dadiMode === 'traditional'
+                  ? 'bg-[#8c6239] border-[#8c6239] text-white hover:bg-[#7a5430]'
+                  : 'bg-emerald-600 border-emerald-600 text-white hover:bg-emerald-700'
+              }`}
+            >
+              {dadiMode === 'traditional' ? (
+                <>👵 Traditional</>
+              ) : (
+                <>👩‍⚕️ Scientific</>
+              )}
+            </button>
+            <button
+              onClick={() => { setShowDadiChat(false); if ('speechSynthesis' in window) window.speechSynthesis.cancel(); }}
+              className="h-9 w-9 rounded-full bg-[#f0d8c0]/50 hover:bg-[#e0c8b0] text-[#5c3e21] dark:bg-stone-800 dark:text-stone-300 flex items-center justify-center transition-all shrink-0"
+            >
+              <span className="material-symbols-outlined text-lg">close</span>
+            </button>
+          </div>
+
+          {/* Category Filter Chips */}
+          <div className="flex gap-2 px-4 pt-3 pb-1 overflow-x-auto no-scrollbar shrink-0">
+            {CATEGORIES.map(cat => (
+              <button
+                key={cat.id}
+                onClick={() => setChatCategory(cat.id)}
+                className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-gujarati font-bold whitespace-nowrap transition-all shrink-0 ${
+                  chatCategory === cat.id
+                    ? 'bg-[#8c6239] text-white shadow-md'
+                    : 'bg-white dark:bg-stone-900 text-stone-600 dark:text-stone-400 border border-stone-200 dark:border-stone-800'
+                }`}
+              >
+                <span>{cat.emoji}</span> {cat.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Messages Area */}
+          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-0">
+            {chatMessages.map((msg) => (
+              <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}>
+                {msg.sender === 'dadi' && <span className="text-xl mr-2 mt-1 shrink-0">👵</span>}
+                <div className={`group max-w-[82%] relative ${
+                  msg.sender === 'user' ? '' : ''
+                }`}>
+                  <div className={`px-4 py-2.5 rounded-2xl font-gujarati text-xs leading-relaxed whitespace-pre-line ${
+                    msg.sender === 'user'
+                      ? 'bg-[#004d40] text-white rounded-tr-none font-bold'
+                      : 'bg-white dark:bg-stone-900 text-[#3d2610] dark:text-stone-200 rounded-tl-none border border-[#e8d5c0]/60 dark:border-stone-800 shadow-sm'
+                  }`}>
+                    {msg.text.split('**').map((part, i) =>
+                      i % 2 === 0 ? part : <strong key={i}>{part}</strong>
+                    )}
+                    
+                    {/* Related Topics Chips inside Bubble */}
+                    {msg.sender === 'dadi' && msg.relatedChips && msg.relatedChips.length > 0 && (
+                      <div className="mt-3 pt-2.5 border-t border-dashed border-[#e8d5c0]/60 dark:border-stone-800">
+                        <p className="font-gujarati text-[10px] text-stone-400 font-bold mb-1.5 flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[12px]">link</span> આ પણ જાણો / સંબંધિત વિષયો:
+                        </p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {msg.relatedChips.map((chipKey) => {
+                            const relatedTopic = PERSONALIZED_TOPICS[chipKey];
+                            if (!relatedTopic) return null;
+                            return (
+                              <button
+                                key={chipKey}
+                                onClick={() => handleSendMessage(relatedTopic.name)}
+                                className="text-[10px] font-gujarati px-2.5 py-1 bg-amber-50 dark:bg-stone-950 border border-amber-250 dark:border-stone-850 rounded-lg text-[#8c6239] dark:text-amber-400 hover:bg-amber-105 transition-colors font-bold"
+                              >
+                                {relatedTopic.name} 🔗
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Action buttons on dadi's messages */}
+                  {msg.sender === 'dadi' && msg.text.length > 50 && (
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      <button
+                        onClick={() => handleShareAnswer(msg.raw || msg.text)}
+                        className="flex items-center gap-1 text-[10px] font-gujarati px-2 py-1 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg text-stone-500 hover:text-[#8c6239] transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-[12px]">share</span> WhatsApp
+                      </button>
+                      <button
+                        onClick={() => speakText(msg.raw || msg.text)}
+                        className="flex items-center gap-1 text-[10px] font-gujarati px-2 py-1 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg text-stone-500 hover:text-[#8c6239] transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-[12px]">volume_up</span> સાંભળો
+                      </button>
+                      <button
+                        onClick={() => handleSaveAnswer(msg)}
+                        className={`flex items-center gap-1 text-[10px] font-gujarati px-2 py-1 border rounded-lg transition-colors ${
+                          isBookmarked(msg.id)
+                            ? 'bg-amber-100 dark:bg-stone-800 border-amber-300 text-amber-700 dark:text-amber-400 font-bold'
+                            : 'bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-500 hover:text-[#8c6239]'
+                        }`}
+                      >
+                        <span className="material-symbols-outlined text-[12px]">{isBookmarked(msg.id) ? 'bookmark_added' : 'bookmark'}</span>
+                        {isBookmarked(msg.id) ? 'સેવ કરેલ' : 'સાચવો'}
+                      </button>
+                      {msg.isPersonalized && msg.topicKey && (
+                        <button
+                          onClick={() => start7DayChallenge(msg.topicKey)}
+                          className="flex items-center gap-1 text-[10px] font-gujarati px-2.5 py-1 bg-emerald-50 dark:bg-stone-900 border border-emerald-250 dark:border-emerald-800 rounded-lg text-emerald-600 dark:text-emerald-450 hover:bg-emerald-100 transition-colors font-bold"
+                        >
+                          <span className="material-symbols-outlined text-[12px]">calendar_today</span> ૭ દિવસ પડકાર શરૂ કરો
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+
+            {/* Typing Indicator */}
+            {isTyping && (
+              <div className="flex items-center gap-2 animate-fade-in">
+                <span className="text-xl">👵</span>
+                <div className="bg-white dark:bg-stone-900 border border-[#e8d5c0]/60 dark:border-stone-800 px-4 py-3 rounded-2xl rounded-tl-none shadow-sm">
+                  <div className="flex gap-1.5 items-center">
+                    <div className="w-2 h-2 bg-[#8c6239] rounded-full animate-bounce" style={{animationDelay:'0ms'}}></div>
+                    <div className="w-2 h-2 bg-[#8c6239] rounded-full animate-bounce" style={{animationDelay:'150ms'}}></div>
+                    <div className="w-2 h-2 bg-[#8c6239] rounded-full animate-bounce" style={{animationDelay:'300ms'}}></div>
+                    <span className="font-gujarati text-[10px] text-stone-400 ml-1">દાદી-મા વિચારી રહ્યાં છે...</span>
+                  </div>
+                </div>
+              </div>
+            )}
+            <div ref={chatEndRef} />
+          </div>
+
+          {/* Questionnaire Options Chips or Quick Suggestions */}
+          {questionnaire.active ? (
+            <div className="px-4 pb-4 shrink-0 space-y-2">
+              <div className="flex justify-between items-center">
+                <p className="font-gujarati text-[10px] text-[#8c6239] dark:text-amber-400 font-bold uppercase tracking-widest">
+                  {questionnaire.step === -1 ? "તમારી પસંદગી ટેપ કરો:" : `સવાલ ${questionnaire.step + 1} / ૬:`}
+                </p>
+                <button
+                  onClick={() => {
+                    setQuestionnaire({ active: false, topicKey: '', step: 0, answers: {} });
+                    setChatMessages(prev => [...prev, {
+                      id: Date.now(),
+                      sender: 'dadi',
+                      text: 'બેટા, પ્રશ્નાવલી રદ કરી છે. તું હવે સીધો પ્રશ્ન પૂછી શકે છે! 👵'
+                    }]);
+                  }}
+                  className="text-[10px] font-gujarati px-2.5 py-1 bg-stone-150 hover:bg-stone-200 dark:bg-stone-900 dark:hover:bg-stone-800 border border-stone-200 dark:border-stone-800 rounded-lg text-stone-500 transition-colors"
+                >
+                  રદ કરો ❌
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto no-scrollbar py-1">
+                {questionnaire.step === -1 ? (
+                  <>
+                    <button
+                      onClick={() => handleQuestionnaireAnswer('yes', 'હા, વિગતો સાચી છે ✅')}
+                      disabled={isTyping}
+                      className="text-[11px] font-gujarati px-4 py-2 bg-emerald-50 dark:bg-stone-900 border border-emerald-250 dark:border-stone-800 rounded-xl text-emerald-700 dark:text-emerald-450 hover:bg-emerald-100 transition-all font-bold active:scale-95"
+                    >
+                      હા, વિગતો સાચી છે ✅
+                    </button>
+                    <button
+                      onClick={() => handleQuestionnaireAnswer('no', 'ના, વિગતો બદલવી છે ❌')}
+                      disabled={isTyping}
+                      className="text-[11px] font-gujarati px-4 py-2 bg-rose-50 dark:bg-stone-900 border border-rose-250 dark:border-stone-800 rounded-xl text-rose-700 dark:text-rose-450 hover:bg-rose-100 transition-all font-bold active:scale-95"
+                    >
+                      ના, વિગતો બદલવી છે ❌
+                    </button>
+                  </>
+                ) : (
+                  QUESTIONNAIRE_STEPS[questionnaire.step].options.map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => handleQuestionnaireAnswer(opt.value, opt.label)}
+                      disabled={isTyping}
+                      className="text-[11px] font-gujarati px-4 py-2 bg-[#fdf8f2] dark:bg-stone-900 border border-[#e8d5c0] dark:border-stone-800 rounded-xl text-[#8c6239] dark:text-[#f4d6b6] hover:bg-[#f3e5d8] transition-all font-bold active:scale-95"
+                    >
+                      {opt.label}
+                    </button>
+                  ))
+                )}
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* Quick Suggestions */}
+              <div className="px-4 pb-2 shrink-0">
+                <p className="font-gujarati text-[10px] text-stone-400 font-bold uppercase tracking-widest mb-2">ઝડપ સૂચનો:</p>
+                <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                  {getDynamicSuggestions().map((q, i) => (
+                    <button
+                      key={i}
+                      onClick={() => handleSendMessage(q)}
+                      disabled={isTyping}
+                      className="shrink-0 text-[11px] font-gujarati px-3 py-2 bg-amber-50 dark:bg-stone-900 border border-amber-200 dark:border-stone-800 rounded-xl text-[#8c6239] dark:text-amber-400 hover:bg-amber-100 transition-all disabled:opacity-50 whitespace-nowrap active:scale-95"
+                    >
+                      👵 {q}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Input Area */}
+              <div className="p-4 border-t border-[#e8d5c0]/50 dark:border-stone-800 shrink-0">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={chatInput}
+                    onChange={e => setChatInput(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && !isTyping && handleSendMessage()}
+                    placeholder="ગુજરાતી અથવા English માં ટાઈપ કરો..."
+                    disabled={isTyping}
+                    className="flex-1 px-4 py-2.5 rounded-2xl bg-white dark:bg-stone-900 border border-[#d5bdaf]/60 dark:border-stone-800 font-gujarati text-sm text-stone-800 dark:text-stone-200 placeholder:text-stone-400 focus:outline-none focus:border-[#8c6239] transition-colors disabled:opacity-60"
+                  />
+                  <button
+                    onClick={() => handleSendMessage()}
+                    disabled={isTyping || !chatInput.trim()}
+                    className="h-11 w-11 bg-[#8c6239] hover:bg-[#7a5430] disabled:bg-stone-300 dark:disabled:bg-stone-800 text-white rounded-2xl flex items-center justify-center transition-all active:scale-95"
+                  >
+                    <span className="material-symbols-outlined text-lg">send</span>
+                  </button>
+                </div>
+                <p className="font-gujarati text-[10px] text-stone-400 text-center mt-2">
+                  ⚠️ ઘરેલુ ઉપાય | ગંભીર બીમારી = ડૉક્ટર ની સલાહ
+                </p>
+              </div>
+            </>
+          )}
+
+        </div>
+      </div>
+    )}
+  </>
   );
 }
