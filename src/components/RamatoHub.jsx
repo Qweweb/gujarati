@@ -19,6 +19,20 @@ const addCoins = (amount) => {
   return cur;
 };
 
+const triggerToast = (message) => {
+  window.dispatchEvent(new CustomEvent('show-toast', { detail: { message } }));
+};
+
+const splitGujaratiWord = (word) => {
+  if (!word) return [];
+  try {
+    const segmenter = new Intl.Segmenter('gu', { granularity: 'grapheme' });
+    return Array.from(segmenter.segment(word)).map(s => s.segment);
+  } catch (e) {
+    return word.match(/[\u0A80-\u0AFF][\u0ABE-\u0BCD]*/g) || word.split('');
+  }
+};
+
 // Streak tracker
 const getStreak = () => {
   const streak = parseInt(localStorage.getItem('sanskar_game_streak') || '0');
@@ -202,7 +216,10 @@ function WordConnectGame() {
   const [success, setSuccess] = useState(false);
   
   // Choose a random word of length 3 or 4
-  const pool = WORDS_DB.filter(w => w.length >= 3 && w.length <= 4);
+  const pool = WORDS_DB.filter(w => {
+    const syllables = splitGujaratiWord(w);
+    return syllables.length >= 3 && syllables.length <= 4;
+  });
   const [wordData, setWordData] = useState(() => pool[Math.floor(Math.random() * pool.length)]);
   
   // Shuffled letters
@@ -210,7 +227,7 @@ function WordConnectGame() {
   
   useEffect(() => {
     if (wordData) {
-      const arr = wordData.split('');
+      const arr = splitGujaratiWord(wordData);
       // Shuffle
       arr.sort(() => Math.random() - 0.5);
       setLetters(arr);
@@ -231,7 +248,7 @@ function WordConnectGame() {
       setSuccess(true);
       addCoins(15);
       setScore(prev => prev + 1);
-    } else if (nextWord.length >= wordData.length) {
+    } else if (nextSel.length >= letters.length) {
       // Incorrect
       setTimeout(() => {
         setSelectedLetters([]);
@@ -251,12 +268,12 @@ function WordConnectGame() {
       
       {/* Target slots */}
       <div className="flex justify-center gap-2.5 my-6">
-        {wordData.split('').map((_, i) => (
+        {splitGujaratiWord(wordData).map((_, i) => (
           <div 
             key={i} 
             className="w-12 h-12 border-2 border-dashed border-stone-300 dark:border-stone-700 rounded-xl flex items-center justify-center text-lg font-bold font-gujarati text-orange-500 bg-stone-50 dark:bg-stone-950 animate-pulse"
           >
-            {selectedLetters[i] !== undefined ? wordData.split('')[wordData.split('').indexOf(letters[selectedLetters[i]])] : ''}
+            {selectedLetters[i] !== undefined ? letters[selectedLetters[i]] : ''}
           </div>
         ))}
       </div>
@@ -829,9 +846,11 @@ function MapGame() {
     { id: 4, name: 'દ્વારકા જિલ્લો', location: 'પશ્ચિમ સરહદ', correctDir: 'West' }
   ];
 
-  const [activeItem, setActiveItem] = useState(MAP_QUESTIONS[0]);
+  const [activeIdx, setActiveIdx] = useState(0);
   const [selectedDir, setSelectedDir] = useState(null);
   const [score, setScore] = useState(0);
+  
+  const activeItem = MAP_QUESTIONS[activeIdx];
 
   const handleDir = (dir) => {
     setSelectedDir(dir);
@@ -842,12 +861,15 @@ function MapGame() {
   };
 
   const nextLevel = () => {
-    const nextIdx = MAP_QUESTIONS.indexOf(activeItem) + 1;
+    const nextIdx = activeIdx + 1;
     if (nextIdx < MAP_QUESTIONS.length) {
-      setActiveItem(MAP_QUESTIONS[nextIdx]);
+      setActiveIdx(nextIdx);
       setSelectedDir(null);
     } else {
       alert('અભિનંદન! નકશાની રમત પૂરી થઈ!');
+      setActiveIdx(0);
+      setSelectedDir(null);
+      setScore(0);
     }
   };
 
@@ -888,10 +910,68 @@ function MapGame() {
    GAME G: COLOR RANGOLI (રંગોળી પૂરો)
    ======================================================= */
 function RangoliGame() {
-  const [grid, setGrid] = useState(Array(36).fill('#f3f4f6'));
+  const TEMPLATES = {
+    rangoli: [
+      0,0,1,1,1,1,0,0,
+      0,1,1,1,1,1,1,0,
+      1,1,1,1,1,1,1,1,
+      1,1,1,1,1,1,1,1,
+      1,1,1,1,1,1,1,1,
+      1,1,1,1,1,1,1,1,
+      0,1,1,1,1,1,1,0,
+      0,0,1,1,1,1,0,0
+    ],
+    house: [
+      0,0,0,1,1,0,0,0,
+      0,0,1,1,1,1,0,0,
+      0,1,1,1,1,1,1,0,
+      1,1,1,1,1,1,1,1,
+      0,1,1,1,1,1,1,0,
+      0,1,0,1,1,0,1,0,
+      0,1,1,1,1,1,1,0,
+      0,1,1,0,0,1,1,0
+    ],
+    car: [
+      0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,
+      0,0,0,1,1,1,0,0,
+      0,0,1,1,1,1,1,0,
+      0,1,1,1,1,1,1,1,
+      1,1,1,1,1,1,1,1,
+      0,1,0,0,0,0,1,0,
+      0,0,0,0,0,0,0,0
+    ],
+    diya: [
+      0,0,0,1,1,0,0,0,
+      0,0,0,1,1,0,0,0,
+      0,0,1,1,1,1,0,0,
+      0,0,0,1,1,0,0,0,
+      1,1,1,1,1,1,1,1,
+      1,1,1,1,1,1,1,1,
+      0,1,1,1,1,1,1,0,
+      0,0,1,1,1,1,0,0
+    ],
+    animal: [
+      0,0,0,0,0,0,0,0,
+      0,1,1,1,1,0,0,0,
+      0,1,1,1,1,1,1,0,
+      1,1,1,1,1,1,1,1,
+      0,0,1,1,1,1,1,0,
+      0,0,1,1,1,1,1,0,
+      0,0,1,0,0,0,1,0,
+      0,0,1,0,0,0,1,0
+    ]
+  };
+
+  const [selectedTemplate, setSelectedTemplate] = useState('rangoli');
+  const [grid, setGrid] = useState(() => Array(64).fill('#ffffff'));
   const [activeColor, setActiveColor] = useState('#f59e0b');
 
-  const colors = ['#f59e0b', '#ef4444', '#3b82f6', '#10b981', '#ec4899', '#8b5cf6'];
+  const colors = ['#f59e0b', '#ef4444', '#3b82f6', '#10b981', '#ec4899', '#8b5cf6', '#06b6d4', '#eab308'];
+
+  useEffect(() => {
+    setGrid(Array(64).fill('#ffffff'));
+  }, [selectedTemplate]);
 
   const clickCell = (idx) => {
     setGrid(prev => prev.map((c, i) => i === idx ? activeColor : c));
@@ -900,35 +980,68 @@ function RangoliGame() {
   return (
     <div className="text-center space-y-6 max-w-sm mx-auto py-2">
       <h3 className="font-gujarati font-black text-xl">રંગોળી પૂરો 🎨</h3>
-      <p className="font-gujarati text-xs text-stone-500">રંગ પસંદ કરો અને ચોકઠામાં ટૅપ કરીને ભરો:</p>
+      <p className="font-gujarati text-xs text-stone-500">કેનવાસ પસંદ કરી, રંગ લો અને ખાનાઓમાં રંગ પૂરો:</p>
+
+      {/* Template selector */}
+      <div className="flex flex-wrap justify-center gap-1.5">
+        {[
+          { id: 'rangoli', name: 'રંગોળી 🌸' },
+          { id: 'house', name: 'ઘર 🏠' },
+          { id: 'car', name: 'ગાડી 🚗' },
+          { id: 'diya', name: 'દીવો 🪔' },
+          { id: 'animal', name: 'ગાય 🐂' }
+        ].map(t => (
+          <button
+            key={t.id}
+            onClick={() => setSelectedTemplate(t.id)}
+            className={`px-3 py-1.5 rounded-xl text-[10px] font-gujarati font-black border transition active:scale-95 ${
+              selectedTemplate === t.id
+                ? 'bg-amber-600 border-amber-700 text-white shadow-sm'
+                : 'bg-white border-stone-200 text-stone-600 dark:bg-stone-950 dark:border-stone-850 dark:text-stone-300'
+            }`}
+          >
+            {t.name}
+          </button>
+        ))}
+      </div>
 
       {/* Rangoli palette */}
-      <div className="flex justify-center gap-2 mb-4">
+      <div className="flex justify-center flex-wrap gap-2 max-w-[280px] mx-auto">
         {colors.map(col => (
           <button
             key={col}
             onClick={() => setActiveColor(col)}
-            className={`w-8 h-8 rounded-full border-2 transition ${activeColor === col ? 'border-black scale-110' : 'border-transparent'}`}
+            className={`w-7 h-7 rounded-full border-2 transition ${activeColor === col ? 'border-stone-800 scale-110 shadow-md' : 'border-transparent'}`}
             style={{ backgroundColor: col }}
           />
         ))}
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-6 gap-1 max-w-[240px] mx-auto bg-stone-100 p-2 rounded-2xl">
-        {grid.map((col, idx) => (
-          <button
-            key={idx}
-            onClick={() => clickCell(idx)}
-            className="aspect-square rounded border border-white/40 transition active:scale-95"
-            style={{ backgroundColor: col }}
-          />
-        ))}
+      <div className="grid grid-cols-8 gap-1 max-w-[260px] mx-auto bg-stone-50 dark:bg-stone-950 p-3 rounded-[2rem] border border-stone-200 dark:border-stone-850">
+        {grid.map((col, idx) => {
+          const isOutline = TEMPLATES[selectedTemplate][idx] === 1;
+          const isColored = col !== '#ffffff';
+          return (
+            <button
+              key={idx}
+              onClick={() => clickCell(idx)}
+              className={`aspect-square rounded-md transition active:scale-95 border ${
+                isColored 
+                  ? 'border-black/5' 
+                  : isOutline 
+                    ? 'bg-stone-100 dark:bg-stone-800 border-2 border-dashed border-stone-300 dark:border-stone-700' 
+                    : 'bg-white dark:bg-stone-900 border-stone-150 dark:border-stone-850'
+              }`}
+              style={isColored ? { backgroundColor: col } : {}}
+            />
+          );
+        })}
       </div>
       
       <button 
-        onClick={() => { setGrid(Array(36).fill('#f3f4f6')); addCoins(5); }}
-        className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-gujarati font-bold"
+        onClick={() => { setGrid(Array(64).fill('#ffffff')); addCoins(5); triggerToast("🎨 કલર સબમિટ થયો! +૫ કોઈન્સ મળ્યા!"); }}
+        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-2xl font-gujarati font-black text-xs shadow-md transition active:scale-95"
       >
         સાફ કરો અને સબમિટ (કોઈન સંગ્રહ) 🪙
       </button>
@@ -950,44 +1063,90 @@ function WordSearchGame() {
   
   const targetWords = ['કમળ', 'ગામડા', 'ખેતી', 'ગાય', 'દવા', 'જય'];
   const [foundWords, setFoundWords] = useState([]);
+  const [selectedCells, setSelectedCells] = useState([]);
 
-  const handleWordClick = (word) => {
-    if (foundWords.includes(word)) return;
-    setFoundWords(prev => [...prev, word]);
-    addCoins(10);
+  const currentSelectionString = selectedCells.map(cell => grid[cell.r][cell.c]).join('');
+
+  const handleCellClick = (r, c) => {
+    if (foundWords.length === targetWords.length) return;
+    
+    const exists = selectedCells.some(cell => cell.r === r && cell.c === c);
+    let nextSel;
+    
+    if (exists) {
+      // Undo up to the clicked cell
+      const idx = selectedCells.findIndex(cell => cell.r === r && cell.c === c);
+      nextSel = selectedCells.slice(0, idx);
+    } else {
+      nextSel = [...selectedCells, { r, c }];
+    }
+    
+    setSelectedCells(nextSel);
+
+    const currentString = nextSel.map(cell => grid[cell.r][cell.c]).join('');
+    const match = targetWords.find(word => word === currentString);
+    
+    if (match && !foundWords.includes(match)) {
+      setFoundWords(prev => [...prev, match]);
+      setSelectedCells([]); // Reset on match
+      addCoins(10);
+      triggerToast(`🎉 તમે "${match}" શબ્દ શોધ્યો! +૧૦ કોઈન્સ`);
+    }
   };
 
   return (
     <div className="text-center space-y-4 max-w-sm mx-auto py-2">
       <h3 className="font-gujarati font-black text-xl">શબ્દ શોધ 🔍</h3>
-      <p className="font-gujarati text-xs text-stone-500">ગ્રીડમાંથી નીચેના કોઈ પણ શબ્દ પર ક્લિક કરી શોધો:</p>
+      <p className="font-gujarati text-xs text-stone-500">ગ્રીડમાંથી અક્ષરો વારાફરતી દબાવીને નીચે આપેલ શબ્દો શોધો:</p>
+
+      {/* Selection Preview */}
+      <div className="bg-amber-500/10 border border-amber-500/20 py-2.5 px-4 rounded-xl font-gujarati font-black text-sm text-primary flex items-center justify-between">
+        <span>પસંદ કરેલ: <span className="underline decoration-2 decoration-primary">{currentSelectionString || "..."}</span></span>
+        {selectedCells.length > 0 && (
+          <button 
+            onClick={() => setSelectedCells([])}
+            className="text-xs bg-primary/20 text-primary px-2.5 py-1 rounded-md font-bold hover:bg-primary/30 transition active:scale-95"
+          >
+            સાફ કરો ❌
+          </button>
+        )}
+      </div>
 
       {/* Grid */}
-      <div className="bg-stone-50 dark:bg-stone-950 p-3 rounded-2xl grid grid-cols-5 gap-1.5 max-w-[200px] mx-auto border border-stone-200">
+      <div className="bg-stone-50 dark:bg-stone-950 p-4 rounded-[2rem] grid grid-cols-5 gap-2 max-w-[240px] mx-auto border border-stone-250 dark:border-stone-850">
         {grid.map((row, r) => 
-          row.map((letter, c) => (
-            <div key={`${r}-${c}`} className="w-8 h-8 rounded-lg bg-white dark:bg-stone-900 border flex items-center justify-center font-gujarati font-black text-xs">
-              {letter}
-            </div>
-          ))
+          row.map((letter, c) => {
+            const isSelected = selectedCells.some(cell => cell.r === r && cell.c === c);
+            return (
+              <button
+                key={`${r}-${c}`}
+                onClick={() => handleCellClick(r, c)}
+                className={`w-10 h-10 rounded-xl flex items-center justify-center font-gujarati font-black text-sm transition active:scale-90 border select-none ${
+                  isSelected 
+                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 border-orange-500 text-white shadow-md' 
+                    : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-stone-750 dark:text-stone-100 hover:border-amber-400'
+                }`}
+              >
+                {letter}
+              </button>
+            );
+          })
         )}
       </div>
 
       {/* Targets list */}
-      <div className="flex flex-wrap gap-2 justify-center pt-4">
+      <div className="flex flex-wrap gap-2 justify-center pt-2">
         {targetWords.map(word => (
-          <button
+          <div
             key={word}
-            onClick={() => handleWordClick(word)}
-            disabled={foundWords.includes(word)}
-            className={`px-3 py-1.5 rounded-xl text-[11px] font-gujarati font-bold transition border ${
+            className={`px-3 py-1.5 rounded-xl text-[11px] font-gujarati font-bold border transition ${
               foundWords.includes(word) 
-                ? 'bg-emerald-100 border-emerald-200 text-emerald-700 line-through dark:bg-emerald-950/20' 
-                : 'bg-white border-stone-200 text-stone-600 dark:bg-stone-900'
+                ? 'bg-emerald-100 border-emerald-250 text-emerald-700 line-through dark:bg-emerald-950/20 dark:border-emerald-900/40' 
+                : 'bg-white border-stone-200 text-stone-500 dark:bg-stone-900 dark:border-stone-850'
             }`}
           >
             {word} {foundWords.includes(word) && '✓'}
-          </button>
+          </div>
         ))}
       </div>
     </div>
