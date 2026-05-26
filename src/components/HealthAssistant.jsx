@@ -572,6 +572,11 @@ export default function HealthAssistant() {
       text: `ખૂબ સરસ બેટા! 👏 તારો **"${topic.name}" નો ૭ દિવસનો પડકાર** શરૂ થઈ ગયો છે. રોજ હું તને એક નવું કાર્ય આપીશ. તારી હેલ્થ સુધારવા માટે દરરોજ આ એપ ઓપન કરી આજનું કાર્ય પૂર્ણ કરજે! 👵✨`
     }]);
     speakText(`ખૂબ સરસ બેટા! તારો ${topic.name} નો સાત દિવસનો પડકાર શરૂ થઈ ગયો છે.`);
+    
+    // Automatically close the chatbot modal so the user instantly sees the active tracker on the main page
+    setTimeout(() => {
+      setShowDadiChat(false);
+    }, 1800);
   };
 
   const handleRatingAndComplete = (rating) => {
