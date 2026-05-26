@@ -769,6 +769,378 @@ const generateDynamicChallenge = (dbResult) => {
   return challengeList;
 };
 
+const isAcuteCondition = (topicKey, dbResult = null) => {
+  if (topicKey === 'coldcough' || topicKey === 'headache') {
+    return true;
+  }
+  if (dbResult) {
+    const title = (dbResult.question || "").toLowerCase();
+    const keywords = (dbResult.keywords || []).map(k => k.toLowerCase());
+    
+    // Diarrhea / Dysentery
+    if (
+      title.includes("ઝાડા") || title.includes("અતિસાર") || title.includes("મરડો") || title.includes("દસ્ત") || title.includes("loose motion") || title.includes("diarrhea") || title.includes("dysentery") ||
+      keywords.some(k => k.includes("ઝાડા") || k.includes("અતિસાર") || k.includes("મરડો") || k.includes("દસ્ત") || k.includes("loose motion") || k.includes("diarrhea"))
+    ) {
+      return true;
+    }
+    
+    // Cold / Cough / Fever / Sore throat / Hiccup / Vomiting / Food poisoning / Heat stroke / Sprains / Burns
+    if (
+      title.includes("શરદી") || title.includes("ઉધરસ") || title.includes("કફ") || title.includes("તાવ") || title.includes("ઉલ્ટી") || title.includes("ઊલટી") || title.includes("હેડકી") || title.includes("ગળામાં સોજો") || title.includes("ગળાનો દુખાવો") || title.includes("ફૂડ પોઇઝનિંગ") || title.includes("લૂ લાગવી") || title.includes("મચકોડ") || title.includes("ઉબકા") || title.includes("ઊબકા") ||
+      keywords.some(k => k.includes("શરદી") || k.includes("ઉધરસ") || k.includes("કફ") || k.includes("તાવ") || k.includes("ઉલ્ટી") || k.includes("ઊલટી") || k.includes("હેડકી") || k.includes("vomiting") || k.includes("fever") || k.includes("cold") || k.includes("cough"))
+    ) {
+      return true;
+    }
+    
+    // Stomach ache (unless chronic)
+    if (
+      (title.includes("પેટમાં દુખાવો") || title.includes("પેટનો દુખાવો") || keywords.some(k => k.includes("પેટનો દુખાવો") || k.includes("stomach ache"))) &&
+      !title.includes("કાયમ") && !title.includes("નિયમિત")
+    ) {
+      return true;
+    }
+  }
+  return false;
+};
+
+const getQuickRecoveryTips = (topicKey, dbResult = null) => {
+  const title = (dbResult ? dbResult.question : (PERSONALIZED_TOPICS[topicKey]?.name || "")).toLowerCase();
+  const keywords = (dbResult ? (dbResult.keywords || []) : (PERSONALIZED_TOPICS[topicKey]?.keywords || [])).map(k => k.toLowerCase());
+
+  // 1. Diarrhea / Vomiting / Food Poisoning
+  if (
+    title.includes("ઝાડા") || title.includes("અતિસાર") || title.includes("મરડો") || title.includes("દસ્ત") || title.includes("loose motion") || title.includes("diarrhea") || title.includes("dysentery") ||
+    title.includes("ઉલ્ટી") || title.includes("ઊલટી") || title.includes("ઉબકા") || title.includes("ઊબકા") || title.includes("vomiting") || title.includes("nausea") || title.includes("ફૂડ પોઇઝનિંગ") ||
+    keywords.some(k => k.includes("ઝાડા") || k.includes("અતિસાર") || k.includes("મરડો") || k.includes("દસ્ત") || k.includes("loose motion") || k.includes("diarrhea") || k.includes("vomiting") || k.includes("nausea"))
+  ) {
+    return [
+      "શરીરમાં ડીહાઈડ્રેશન ન થાય તે માટે દર કલાકે લીંબુ-મીઠાનું પાણી અથવા ORS (ઓરલ રીહાઈડ્રેશન સોલ્યુશન) પીવો.",
+      "હળવો ખોરાક જેમ કે મગની દાળની ખીચડી, દહીં-ભાત અથવા સાદી મોળી છાશ જ લો.",
+      "પેટના આંતરડાને આરામ આપવા માટે દૂધ, ભારે અને તીખો-તળેલો ખોરાક બિલકુલ ન લો.",
+      "દિવસ દરમિયાન તાજું નાળિયેર પાણી અચૂક પીવો જેથી શરીરનું આંતરિક તાપમાન અને ક્ષારનું સંતુલન જળવાય.",
+      "⚠️ જો ૨૪ કલાકમાં ઝાડા-ઊલટી બંધ ન થાય કે તીવ્ર અશક્તિ લાગે તો તુરંત ફેમિલી ડૉક્ટરનો સંપર્ક કરો."
+    ];
+  }
+
+  // 2. Cold / Cough / Fever / Sore throat
+  if (
+    title.includes("શરદી") || title.includes("ઉધરસ") || title.includes("કફ") || title.includes("તાવ") || title.includes("fever") || title.includes("cold") || title.includes("cough") || title.includes("ગળામાં") || title.includes("ગળાનો") ||
+    keywords.some(k => k.includes("શરદી") || k.includes("ઉધરસ") || k.includes("કફ") || k.includes("તાવ") || k.includes("vomiting") || k.includes("fever") || k.includes("cold") || k.includes("cough"))
+  ) {
+    return [
+      "દિવસ દરમિયાન ફક્ત હુંફાળું ગરમ પાણી જ પીવો, ફ્રિજનું કે ઠંડુ પાણી બિલકુલ ટાળો.",
+      "સવાર-સાંજ ગરમ પાણીમાં મીઠું અને હળદર નાખીને કોગળા (Gargles) અચૂક કરો, ગળાના વાયરસ દુર થશે.",
+      "રાત્રે સૂતા પહેલા ગરમ દૂધમાં અડધી ચમચી હળદર અને થોડું ગાયનું ઘી નાખીને પીવો.",
+      "અજમા અથવા નીલગીરી તેલના પાણીની ગરમ વરાળ (Steam) દિવસમાં બે વાર લો.",
+      "⚠️ તાવ ૩ દિવસથી વધારે રહે અથવા શ્વાસ લેવામાં તકલીફ થાય તો તાત્કાલિક ડૉક્ટરની સલાહ લો."
+    ];
+  }
+
+  // 3. Headache
+  if (
+    title.includes("માથાનો દુખાવો") || title.includes("headache") || title.includes("આધાશીશી") || title.includes("migraine") ||
+    keywords.some(k => k.includes("માથાનો દુખાવો") || k.includes("headache") || k.includes("migraine"))
+  ) {
+    return [
+      "ચંદન અથવા આદુનો લેપ કપાળ પર લગાવો, અથવા દેશી ગાયના ઘીના ૨-૨ ટીપાં નાકમાં નાખો.",
+      "૧ કપ પાણીમાં આદુ ઉકાળીને દેશી ગોળ સાથે ગરમ ચા બનાવીને પીવો.",
+      "બિલકુલ શાંત અને અંધારા રૂમમાં ૧૫ મિનિટ માટે ફોન-ટીવી બંધ કરી આંખો મીંચીને આરામ કરો.",
+      "પૂરતી ઊંઘ લો અને ૨-૩ ગ્લાસ પાણી ધીમે-ધીમે પીવો, કારણ કે ડીહાઈડ્રેશનથી પણ માથું દુખે છે.",
+      "⚠️ જો ખૂબ તીવ્ર દુખાવો રહે અથવા આંખે અંધારા આવે તો ડૉક્ટરને અચૂક બતાવો."
+    ];
+  }
+
+  // 4. Stomach ache
+  if (
+    title.includes("પેટનો દુખાવો") || title.includes("stomach ache") || title.includes("પેટમાં દુખાવો") ||
+    keywords.some(k => k.includes("પેટનો દુખાવો") || k.includes("stomach ache"))
+  ) {
+    return [
+      "૧ ચમચી અજમો અને ચપટી સિંધવ મીઠું ચાવીને ઉપરથી ગરમ પાણી પી લો.",
+      "હિંગને ગરમ પાણીમાં ઓગાળીને નાભિ (ડૂંટી) ની આસપાસ હળવા હાથે લેપ કરો, ગેસ ગેસ્ટ્રિક દુખાવો ઓછો થશે.",
+      "પેટ પર ગરમ પાણીની કોથળી અથવા ગરમ કપડાથી હળવો શેક કરો.",
+      "જ્યાં સુધી દુખાવો શાંત ન થાય સુધી ભારે ખોરાક ન લેવો, માત્ર મગનું ઓસામણ કે નવશેકું પાણી પીવું.",
+      "⚠️ જો પેટનો જમણી બાજુ નીચે અસહ્ય દુખાવો થાય અથવા તાવ આવે તો તબીબી સલાહ તાત્કાલિક લો."
+    ];
+  }
+
+  // 5. Hiccup
+  if (
+    title.includes("હેડકી") || title.includes("hiccup") ||
+    keywords.some(k => k.includes("હેડકી") || k.includes("hiccup"))
+  ) {
+    return [
+      "૧૫-૨૦ સેકન્ડ માટે શ્વાસ રોકી રાખો, આ ડાયાફ્રામ મસલ્સને ફરીથી સામાન્ય કરે છે.",
+      "અચાનક ૧ ગ્લાસ એકદમ ઠંડુ પાણી પીવો અથવા ૧ ચમચી મોળું મધ કે ખાંડ મોંમાં રાખો.",
+      "એક કાગળની થેલી (paper bag) મોં અને નાક પર રાખીને થોડીવાર માટે તેમાં શ્વાસ લો.",
+      "મન બીજે ડાયવર્ટ કરો, અથવા કાકડીનો એક ઠંડો ટુકડો મોંમાં ચાવો.",
+      "⚠️ જો હેડકી ૨૪ કલાકથી વધુ સમય સુધી સતત ચાલુ રહે તો ડૉક્ટરનો સંપર્ક કરવો."
+    ];
+  }
+
+  return [
+    "નવશેકું ગરમ પાણી પીવો અને शरीरને સંપૂર્ણ આરામ (Complete Bed Rest) આપો.",
+    "ભારે, તેલવાળો કે પચવામાં મુશ્કેલ ખોરાક ટાળીને સાદો બાફેલો આહાર (મગ, ખીચડી) લો.",
+    "બીમારીના પ્રારંભિક લક્ષણોમાં ઘરગથ્થુ ઉપચારથી ફાયદો ન થાય તો તુરંત ડૉક્ટરની સલાહ લેવી હિતાવહ છે."
+  ];
+};
+
+const getExplanationOverrides = (topicKey, dbResult = null, answers = {}) => {
+  const title = (dbResult ? dbResult.question : (PERSONALIZED_TOPICS[topicKey]?.name || "")).toLowerCase();
+  const keywords = (dbResult ? (dbResult.keywords || []) : (PERSONALIZED_TOPICS[topicKey]?.keywords || [])).map(k => k.toLowerCase());
+  
+  // 1. Diarrhea / Dysentery
+  if (
+    title.includes("ઝાડા") || title.includes("અતિસાર") || title.includes("મરડો") || title.includes("દસ્ત") || title.includes("loose motion") || title.includes("diarrhea") || title.includes("dysentery") ||
+    keywords.some(k => k.includes("ઝાડા") || k.includes("અતિસાર") || k.includes("મરડો") || k.includes("દસ્ત") || k.includes("loose motion") || k.includes("diarrhea"))
+  ) {
+    return {
+      name: "ઝાડા / અતિસાર (Diarrhea)",
+      why: {
+        student: "બહારના અસ્વસ્થ પાણી કે દૂષિત ફાસ્ટ ફૂડ ખાવાથી પેટમાં ઇન્ફેક્શન થવું અને આંતરડામાં બેક્ટેરિયલ પ્રકોપ વધવો.",
+        job: "કામની દોડધામમાં વાસી કે બહારનું તેલવાળું ટિફિન ખાવાથી અથવા ડીહાઇડ્રેશન (પાણી ઓછું પીવું) ના લીધે પેટ બગડવું.",
+        business: "મુસાફરી દરમિયાન ગમે ત્યાંનું પાણી પીવાથી કે અનિયમિત આહારથી આંતરડામાં સોજો આવવો.",
+        housewife: "વાસી ખોરાક બગાડ ન થાય તે માટે ખાઈ જવો અથવા ચોખ્ખાઈના અભાવે જઠરમાં બેક્ટેરિયા જવાથી ઝાડા થવા.",
+        retired: "મેટાબોલિઝમ અને ઈમ્યુનિટી નબળી હોવાથી અયોગ્ય ખોરાક પચતો નથી અને વારંવાર લૂઝ મોશન થઈ જાય છે."
+      },
+      whyStress: {
+        high: "તથા માનસિક ચિંતા કે ગભરાટથી પણ આંતરડાના સ્નાયુઓ ઉત્તેજિત થાય છે અને કલાકોમાં ઝાડા વધે છે.",
+        moderate: "સાથે જ, થોડો તણાવ પણ જઠરની શક્તિ નબળી પાડે છે.",
+        none: "તારી માનસિક શાંતિ પાચક રસને સ્થિર રાખવામાં મદદ કરશે."
+      },
+      whyDiet: {
+        fastfood: "વધુમાં, ફાસ્ટ ફૂડ પેટના સારા બેક્ટેરિયાનો નાશ કરે છે અને ચેપ વધારે છે.",
+        spicy: "અતિશય તીખો કે મસાલેદાર ખોરાક આંતરડાની અંદરની ત્વચામાં બળતરા અને સોજો ઉત્પન્ન કરે છે.",
+        sattvik: "જોકે તારો આહાર સાત્ત્વિક છે, પરંતુ દૂષિત પાણી કે હવામાનના કારણે આ સમસ્યા થઈ છે.",
+        irregular: "અનિયમિત સમયે ભોજન કરવાથી જઠરાગ્નિ નબળો થાય છે અને ખોરાક સડવા લાગે છે.",
+        tea_coffee: "વધુ ચા-કોફીથી શરીર ડીહાઇડ્રેટ થાય છે અને ઝાડાની સ્થિતિ બગડે છે."
+      },
+      dietEat: ["ખીચડી (મગ-ચોખા) 🍲", "તાજી મોળી છાશ 🥛", "નવશેકું પાણી 💧", "કેળા 🍌", "સફરજનની પ્યુરી"],
+      dietAvoid: ["તળેલો અને ભારે ખોરાક ❌", "દૂધ અને દૂધની બનાવટો (છાશ સિવાય)", "મેંદો", "પપૈયું અને પપૈયાનો રસ"],
+      fact: "આંતરડામાં ઇન્ફેક્શન થવાથી શરીર ઝેરી કચરો બહાર કાઢવા પાણી વાટે તેને વહાવી દે છે, આથી પાણી અને ક્ષાર આપતા રહેવું અનિવાર્ય છે.",
+      yoga: [
+        "🧘 **વજ્રાસન (જો તકલીફ હળવી હોય)**: ભોજન પછી થોડી મિનિટો બેસવાથી ગેસ દૂર થાય છે.",
+        "🌬️ **ઊંડા શ્વાસ**: તણાવ મુક્ત રહેવા માટે શાંતિથી બેસીને લાંબા શ્વાસ લો જેથી પેટના અવયવો શાંત થાય."
+      ]
+    };
+  }
+
+  // 2. Asthma / Respiratory Chronic
+  if (
+    title.includes("અસ્થમા") || title.includes("દમ") || title.includes("asthma") ||
+    keywords.some(k => k.includes("અસ્થમા") || k.includes("દમ") || k.includes("asthma"))
+  ) {
+    return {
+      name: "દમ / અસ્થમા (Asthma)",
+      why: {
+        student: "ધૂળ, પ્રદૂષણ, ચોક-ડસ્ટ અને એલર્જીથી શ્વાસનળીમાં બળતરા તેમજ ફેફસાં સંકોચાવા.",
+        job: "એસી ચેમ્બરની સતત ઠંડી હવા અને ઓફિસ જતા-આવતા ટ્રાફિકના ધુમાડાથી શ્વાસ લેવામાં તકલીફ થવી.",
+        business: "વેપારની દોડધામમાં ધૂળ, ગરમી અને પ્રદૂષિત વાતાવરણમાં ફરવાથી ફેફસામાં એલર્જન જમા થવા.",
+        housewife: "રસોડામાં વઘારનો ધુમાડો, ઘરમાં ધૂળ-ઝાળા સાફ કરતી વખતે વાયુ-કફનો વધારો થવો.",
+        retired: "વય વધતા શ્વસનતંત્ર નબળું પડવું, વાયુદોષ અને ફેફસાની સ્થિતિસ્થાપકતા ઓછી થવાથી શ્વાસ ચડવો."
+      },
+      whyStress: {
+        high: "તથા માનસિક ચિંતા કે સ્ટ્રેસ શ્વાસ લેવાની ગતિ અનિયંત્રિત કરે છે અને અસ્થમા એટેકનું જોખમ વધારે છે.",
+        moderate: "સાથે જ, સામાન્ય માનસિક ભાર પણ છાતીમાં જકડન લાવી શકે છે.",
+        none: "તારી માનસિક શાંતિ નસોને હળવી રાખી શ્વાસ લેવામાં મદદ કરશે."
+      },
+      whyDiet: {
+        fastfood: "વધુમાં, ફાસ્ટ ફૂડ અને ઠંડા પીણા શરીરમાં ચીકાશ અને બળગમ (કફ) વધારે છે.",
+        spicy: "તીખો ખોરાક ગળા અને શ્વાસ નળીમાં સોજો વધારી શકે છે.",
+        sattvik: "આહાર સાત્ત્વિક છે, પરંતુ ઠંડા કે વાસી પદાર્થો ખાવાથી કફ વધે છે.",
+        irregular: "જમવાની અનિયમિતતાથી પિત્ત અને વાયુ ઊંચે ચડે છે અને છાતીને જકડે છે.",
+        tea_coffee: "વધુ ચા-કોફી ફેફસાની નસોને અસ્થાયી આરામ આપે છે પણ કફ સૂકવે છે."
+      },
+      dietEat: ["હૂંફાળું ગરમ પાણી 🥛", "આદુ, તુલસી અને અજમાનો ઉકાળો 🌱", "લીલા ગરમ શાકભાજી"],
+      dietAvoid: ["આઈસ્ક્રીમ અને કોલ્ડ ડ્રિંક્સ ❄️", "દહીં, મોળી છાશ, કેળા ❌", "તળેલો અને વાયુ કરે તેવો આહાર"],
+      fact: "આયુર્વેદ મુજબ અસ્થમા એ મૂળભૂત રીતે કફ અને વાયુ દોષ બગડવાથી થાય છે, સવારે ખાલી પેટે અજમાનો નાસ લેવાથી નળીઓ તરત જ ખૂલે છે.",
+      yoga: [
+        "🌬️ **અנוલોમ-વિલોમ**: ૧૫ મિનિટ નિયમિત કરવાથી ફેફસાની ઓક્સિજન શોષવાની ક્ષમતા વધે છે.",
+        "🧘 **ભસ્ત્રિકા પ્રાણાયામ**: ધીમેથી ઊંડો શ્વાસ લઈ બહાર કાઢવો જે શ્વસન નળીઓને પહોળી કરે છે."
+      ]
+    };
+  }
+
+  // 3. Cold / Cough
+  if (
+    title.includes("શરદી") || title.includes("ઉધરસ") || title.includes("કફ") || title.includes("cold") || title.includes("cough") ||
+    keywords.some(k => k.includes("શરદી") || k.includes("ઉધરસ") || k.includes("કફ"))
+  ) {
+    return {
+      name: "શરદી-ઉધરસ / કફ",
+      why: {
+        student: "મોડી રાત સુધી જાગવાથી ઈમ્યુનિટી ઘટવી, ઋતુ બદલાતી વખતે ઠંડુ પાણી કે આઈસ્ક્રીમ ખાવાથી ઇન્ફેક્શન થવું.",
+        job: "એસી ચેમ્બર અને મુસાફરીના વાતાવરણમાં ફેરફારથી વાયરસ ઝડપથી ફેલાવવો.",
+        business: "ભાગદોડમાં ઋતુના તાપમાન સાથે શરીર સાનુકૂળ ન થવું અને ઇમ્યુનિટી નબળી હોવી.",
+        housewife: "સતત ઠંડા પાણીમાં કામ કરવું અને ભેજવાળા વાતાવરણથી શરીરમાં કફદોષ વધી જવો.",
+        retired: "ઈમ્યુનિટી ઓછી હોવાથી વાતાવરણમાં રહેલા વાયરસ સરળતાથી શરીર પર હુમલો કરે છે."
+      },
+      whyStress: {
+        high: "તથા ઉચ્ચ તણાવથી રોગપ્રતિકારક શક્તિ નબળી પડી જાય છે અને શરદી લાંબી ખેંચાય છે.",
+        moderate: "મધ્યમ સ્ટ્રેસ શરીરને વાયરસ સામે લડવામાં ધીમું પાડે છે.",
+        none: "તારી ચિંતામુક્ત મનની સ્થિતિ વાયરસને ઝડપથી હરાવવામાં મદદ કરશે."
+      },
+      whyDiet: {
+        fastfood: "વધુમાં, ફાસ્ટ ફૂડ શરીરમાં લાળ અને Mucus (ચીકણો કફ) વધારે છે.",
+        spicy: "તીખો ખોરાક લાળ વહાવે છે પણ ગળાની બળતરા પણ વધારી શકે છે.",
+        sattvik: "તમારો આહાર ઘણો સારો છે, બસ ઠંડા અને ખાટા ખોરાકથી દૂર રહો.",
+        irregular: "જમવાનો સમય અયોગ્ય હોવાથી હોજરીમાં કફનું સંતુલન બગડે છે.",
+        tea_coffee: "વધુ પડતી કેફીનયુક્ત ચા કફને શુષ્ક (સૂકો) બનાવે છે."
+      },
+      dietEat: ["હૂંફાળું ગરમ પાણી 🥛", "આદુ-તુલસીનો કાઢો/ચા", "ગરમ વેજીટેબલ સૂપ"],
+      dietAvoid: ["ઠંડું દહીં અને ખાટી છાશ ❌", "આઈસ્ક્રીમ અને ઠંડા પીણાં", "કેળા અને સંતરા"],
+      fact: "હૂંફાળા મીઠાવાળા પાણીના કોગળા કરવાથી ગળાના ૯૦% થી વધુ કીટાણુઓ તરત જ નાશ પામે છે.",
+      yoga: [
+        "🌬️ **કપાલભાતિ**: સવારે ખાલી પેટે કરવાથી શ્વસનતંત્ર સાફ થાય છે.",
+        "🧘 **સૂર્યભેદી પ્રાણાયામ**: શરીરમાં ગરમી વધારી કફ ઓગાળવા ઉત્તમ છે."
+      ]
+    };
+  }
+
+  // 4. Fever
+  if (
+    title.includes("તાવ") || title.includes("fever") ||
+    keywords.some(k => k.includes("તાવ") || k.includes("fever"))
+  ) {
+    return {
+      name: "વાતાવારણથી થતો શરદી-તાવ (Fever)",
+      why: {
+        student: "શારીરિક થાક, જાગરણ અને વાયરલ ચેપ લાગવાથી શરીરનું તાપમાન વધવું.",
+        job: "ઑફિસમાં બદલાતા વાતાવરણ (એસી થી તડકો) અને પ્રદૂષણમાં ટ્રાવેલ કરવાથી રોગપ્રતિકારક શક્તિ ઘટવી.",
+        business: "ઋતુ પરિવર્તનમાં બેદરકારી રાખવી, બહારનું જમવું અને કામની ચિંતાથી ઇન્ફેક્શન થવું.",
+        housewife: "ચોવીસ કલાક કામના કારણે શારીરિક નબળાઈ અને બદલાતા હવામાનથી વાયરલ તાવ આવવો.",
+        retired: "ઈમ્યુનિટી ઓછી હોવાથી વાતાવરણમાં રહેલા વાયરસ સરળતાથી શરીર પર હુમલો કરે છે."
+      },
+      whyStress: {
+        high: "તથા ઉચ્ચ તણાવ શરીરની એનર્જી ઓછી કરે છે, જેથી વાયરસ ઝડપથી હુમલો કરે છે.",
+        moderate: "સાથે જ, સામાન્ય માનસિક ભાર પણ રિકવરી ધીમી કરે છે.",
+        none: "માનસિક તણાવ ન હોવાથી ઇમ્યુન સેલ્સ ઝડપથી સક્રિય થશે."
+      },
+      whyDiet: {
+        fastfood: "વધુમાં, ફાસ્ટ ફૂડ શરીરની રોગપ્રતિકારક શક્તિને સાવ નબળી પાડે છે.",
+        spicy: "તીખો ખોરાક તાવના કારણે ગરમ થયેલા જઠરની બળતરા વધારે છે.",
+        sattvik: "આહાર સારો છે, પરંતુ તાવ દરમિયાન જઠરાગ્નિ બહુ જ મંદ હોય છે તેથી પચવામાં સાવ હળવો ખોરાક લો.",
+        irregular: "જમવાની અનિયમિતતાથી શરીરમાં અશક્તિ અને નબળાઈ ઝડપથી વધે છે.",
+        tea_coffee: "વધુ પડતી ચા-કોફી ડીહાઇડ્રેશન વધારે છે જેથી તાવ લાંબો ચાલે છે."
+      },
+      dietEat: ["મગનું પાણી 🍲", "પાતળી ખીચડી", "નવશેકું પાણી 💧", "દાડમનો રસ"],
+      dietAvoid: ["દૂધ અને ડેરી પ્રોડક્ટ્સ 🥛", "ભારે, તેલવાળો ખોરાક ❌", "મીઠાઈઓ અને ઠંડા પીણાં"],
+      fact: "તાવ એ કોઈ રોગ નથી, પરંતુ શરીર જ્યારે કોઈ બેક્ટેરિયા કે વાયરસ સામે લડે છે ત્યારે પ્રતિકાર રૂપે તાપમાન વધારે છે.",
+      yoga: [
+        "🧘 **સંપૂર્ણ આરામ**: તાવ દરમિયાન તીવ્ર કસરત ટાળી માત્ર શાંતિથી લાંબા શ્વાસ લો અને સંપૂર્ણ બેડ રેસ્ટ કરો."
+      ]
+    };
+  }
+
+  // 5. Vomiting / Nausea
+  if (
+    title.includes("ઉલ્ટી") || title.includes("ઊલટી") || title.includes("ઉબકા") || title.includes("ઊબકા") || title.includes("vomiting") || title.includes("nausea") ||
+    keywords.some(k => k.includes("ઉલ્ટી") || k.includes("ઊલટી") || k.includes("ઉબકા") || k.includes("vomiting"))
+  ) {
+    return {
+      name: "ઊબકા અને ઊલટી (Vomiting)",
+      why: {
+        student: "અયોગ્ય કે અસ્વસ્થ ખોરાક ખાવો, ફૂડ પોઇઝનિંગ અથવા અજીર્ણ (અપચો) થવાથી હોજરી ખોરાક સ્વીકારતી નથી.",
+        job: "મલ્ટીપલ સવાલો વચ્ચે મુસાફરી દરમિયાન મોશન સિકનેસ, ખરાબ તેલવાળું બહારનું લંચ કે અપચો.",
+        business: "ખોરાકમાં વિષમતા અને મુસાફરીમાં સતત ગરમ-ઠંડુ ખાવા-પીવાથી પિત્ત વધવો.",
+        housewife: "વાસી કે તેલવાળો ખોરાક ખાવો અથવા ગર્ભાવસ્થા (Pregnancy) દરમિયાન થતી ઉબકાની અસર.",
+        retired: "પાચક રસો ખૂબ ઓછા બનવાને લીધે ખોરાક અંદર સડવા લાગે છે જે ઊલટી વાટે બહાર આવે છે."
+      },
+      whyStress: {
+        high: "તથા માનસિક ચિંતા સીધી જઠરની અન્નનળી પર પ્રતિક્રિયા કરી ઉલ્ટી થવાની ઉત્તેજના વધારે છે.",
+        moderate: "સાથે જ, ચિંતા સામાન્ય નબળાઈ લાવે છે.",
+        none: "મન શાંત હોવાથી નર્વસ સિસ્ટમ ઉલ્ટી રોકવામાં મદદ કરશે."
+      },
+      whyDiet: {
+        fastfood: "વધુમાં, જંક ફૂડ હોજરીના સ્તરને બગાડી પિત્ત ઝડપથી વધારે છે.",
+        spicy: "તીખો ખોરાક હોજરીમાં બળતરા કરે છે અને ખોરાક ઉપરની તરફ ધકેલે છે.",
+        sattvik: "આહાર ઘણો સારો છે, બસ હમણાં થોડા કલાક પેટને આરામ આપો.",
+        irregular: "જમવાની અનિયમિતતાથી પિત્ત દોષ વધે છે અને મોઢામાં પાણી આવે છે.",
+        tea_coffee: "ખાલી પેટે ચા-કોફી પીવાથી પિત્ત અને ઉલ્ટીની ઉત્તેજના બમણી થાય છે."
+      },
+      dietEat: ["લીંબુ-પાણી ખાંડ-મીઠા વગર 🍋", "નાળિયેર પાણી 🥥", "એલચી અને વરિયાળી ચાવવી"],
+      dietAvoid: ["તળેલો અને ગરમ મસાલેદાર ખોરાક ❌", "દૂધ અને ચા-કોફી ☕", "ભારે અનાજ"],
+      fact: "જ્યારે હોજરીમાં ઝેરી તત્વો અથવા અપાચ્ય પદાર્થો વધી જાય ત્યારે શરીર રક્ષણ માટે ઉલ્ટી દ્વારા તેને બહાર ફેંકે છે.",
+      yoga: [
+        "🧘 **ચત્તા સુઈ જવું**: ઉલ્ટી થાય ત્યારે પેટ પર દબાણ ન આવે તે માટે ચત્તા સુઈ જવું અને ઊંડા શ્વાસ લેવા."
+      ]
+    };
+  }
+
+  // 6. Stomach Ache
+  if (
+    title.includes("પેટનો દુખાવો") || title.includes("પેટમાં દુખાવો") ||
+    keywords.some(k => k.includes("પેટનો દુખાવો") || k.includes("પેટમાં દુખાવો"))
+  ) {
+    return {
+      name: "પેટનો દુખાવો (Stomach Ache)",
+      why: {
+        student: "ખોરાકમાં અનિયમિતતા, બહારનું જંક ફૂડ ખાવાથી વાયુ ભરાવવો અથવા કબજિયાત થવી.",
+        job: "બેઠાડુ કામગીરી અને ઓછું ચાલવાથી ગેસ આંતરડામાં ફસાઈ જવો.",
+        business: "અતિશય દોડધામ, ચિંતા અને ગમે ત્યારે ગમે તેવો ખોરાક ખાવો.",
+        housewife: "લાંબા સમય સુધી ભૂખ્યા રહેવાથી એસિડિટીનો દુખાવો અથવા અપચો થવો.",
+        retired: "આંતરડામાં લુબ્રિકેશનની કમી હોવી અને વાયુકારક કઠોળ પચવામાં ભારે પડવા."
+      },
+      whyStress: {
+        high: "તથા માનસિક લોડ આંતરડાના સ્નાયુઓને અકડાવે છે જેનાથી ઝીણી ચૂક આવે છે.",
+        moderate: "સાથે જ, તણાવ પાચનને ધીમું પાડે છે.",
+        none: "માનસિક સુખાકારી પેટની નસોને રિલેક્સ રાખશે."
+      },
+      whyDiet: {
+        fastfood: "વધુમાં, મેંદાવાળો ખોરાક આંતરડામાં ચોંટી જાય છે અને દુખાવો વધારે છે.",
+        spicy: "તીખું મરચું હોજરી અને આંતરડાની સપાટી પર બળતરા અને ખેંચાણ લાવે છે.",
+        sattvik: "ખોરાક સાત્ત્વિક હોવા છતાં કદાચ ગેસ કરે તેવા કઠોળ ખાવાથી દુખાવો થયો છે.",
+        irregular: "જમવાના અયોગ્ય સમયથી આંતરડામાં વાયુ ભરાઈ જાય છે.",
+        tea_coffee: "વધુ ચા પીવાથી વાયુ દોષ બગડે છે અને પેટ કડક થાય છે."
+      },
+      dietEat: ["હૂંફાળું અજમાવાળું પાણી 🥛", "ખીચડી અને છાસ", "આદુનો રસ 🌱"],
+      dietAvoid: ["ચોળા, વટાણા, બટાકા ❌", "મેંદાની વસ્તુઓ અને બહારની મીઠાઈ", "દૂધ"],
+      fact: "નાભિ પર હિંગનો લેપ કરવાથી ગેસ તુરંત છૂટો થાય છે અને પેટનો દુખાવો ૧૦ મિનિટમાં ગાયબ થાય છે.",
+      yoga: [
+        "🧘 **પવનમુક્તાસન (તકલીફ ઓછી હોય ત્યારે)**: પેટનો ગેસ અને આંતરડાનો સોજો દૂર કરવા માટે ઉત્તમ છે."
+      ]
+    };
+  }
+
+  // 7. Hiccups
+  if (
+    title.includes("હેડકી") || title.includes("hiccup") ||
+    keywords.some(k => k.includes("હેડકી") || k.includes("hiccup"))
+  ) {
+    return {
+      name: "લાંબી હેડકી (Hiccups)",
+      why: {
+        student: "ઝડપથી જમવાની આદત, ખોરાકની સાથે હવા ગળી જવી અથવા તીખો ખોરાક અચાનક ખાવો.",
+        job: "કામની ઉતાવળમાં ચાવ્યા વગર ગળી જવું અને જમતી વખતે પૂરતું પાણી ન પીવું.",
+        business: "સતત વાત કરતા કરતા અથવા ઉતાવળમાં હેવી ખોરાક ખાવાથી વાયુ ઉર્ધ્વ થવો.",
+        housewife: "ગરમ મસાલા વાળો તીખો ખોરાક રાંધતી વખતે કે ખાતી વખતે ગળામાં સોજો આવવો.",
+        retired: "જઠરના અન્નનળીના વાલ્વ ઢીલા પડવા અને વધતો વાયુદોષ ડાયાફ્રામ નસને ઉત્તેજિત કરવા."
+      },
+      whyStress: {
+        high: "તથા માનસિક ઉત્તેજનાથી પણ ડાયાફ્રામના સ્નાયુઓ ઉત્તેજિત થઈ હેડકી લાંબી ચાલે છે.",
+        moderate: "સાથે જ, થોડો તણાવ શ્વાસની ગતિને સામાન્ય રાખવા નથી દેતો.",
+        none: "મન શાંત હોવાથી હેડકી ઝડપથી બંધ થઈ જશે."
+      },
+      whyDiet: {
+        fastfood: "વધુમાં, ડ્રાય કે સૂકો ખોરાક ખાવાથી અન્નનળી શુષ્ક બને છે.",
+        spicy: "અતિશય તીખો ખોરાક મગજની નસોને હેડકી માટે ઉત્તેજિત કરે છે.",
+        sattvik: "ખોરાક સાત્ત્વિક હોવા છતાં ઉતાવળમાં ખાવાથી હેડકી થઈ છે.",
+        irregular: "જમવામાં ઉતાવળ અને ગરબડ કરવી હેડકી લાવે છે.",
+        tea_coffee: "અતિશય ગરમ ચા કે કોફીથી ગળાની નસો સંકોચાય છે."
+      },
+      dietEat: ["ઠંડુ પાણી 🥛", "૧ ચમચી સાકર અથવા મધ 🍯", "કાકડીનો ટુકડો"],
+      dietAvoid: ["તીખું લાલ મરચું ❌", "અતિશય ગરમ ખોરાક", "કાર્બોનેટેડ સોડા"],
+      fact: "એક દિનચર્યા મુજબ ઊંડા શ્વાસ લેવાથી હેડકી શાંત થાય છે.",
+      yoga: [
+        "🌬️ **શ્વાસ રોકવો (Kumbhaka)**: ૧૫-૨૦ સેકન્ડ માટે શ્વાસ રોકી રાખો, આ ડાયાફ્રામને ફરીથી સામાન્ય કરે છે."
+      ]
+    };
+  }
+
+  return null;
+};
+
 const generateDynamicTopic = (dbResult, answers) => {
   const category = dbResult.category;
   const catExpl = CATEGORY_EXPLANATIONS[category] || DEFAULT_EXPLANATION;
@@ -776,17 +1148,19 @@ const generateDynamicTopic = (dbResult, answers) => {
   const remedies = parseRemediesAndMechanisms(dbResult.answer);
   const challenge = generateDynamicChallenge(dbResult);
   
+  const overrides = getExplanationOverrides(`db_${dbResult.id}`, dbResult, answers);
+  
   return {
     name: dbResult.question,
     keywords: dbResult.keywords || [],
-    why: catExpl.why || DEFAULT_EXPLANATION.why,
-    whyStress: catExpl.whyStress || DEFAULT_EXPLANATION.whyStress,
-    whyDiet: catExpl.whyDiet || DEFAULT_EXPLANATION.whyDiet,
+    why: overrides?.why || catExpl.why || DEFAULT_EXPLANATION.why,
+    whyStress: overrides?.whyStress || catExpl.whyStress || DEFAULT_EXPLANATION.whyStress,
+    whyDiet: overrides?.whyDiet || catExpl.whyDiet || DEFAULT_EXPLANATION.whyDiet,
     remedies: remedies.length > 0 ? remedies : [dbResult.answer],
-    yoga: catExpl.yoga || DEFAULT_EXPLANATION.yoga,
-    dietEat: catExpl.dietEat || DEFAULT_EXPLANATION.dietEat,
-    dietAvoid: catExpl.dietAvoid || DEFAULT_EXPLANATION.dietAvoid,
-    fact: catExpl.fact || DEFAULT_EXPLANATION.fact,
+    yoga: overrides?.yoga || catExpl.yoga || DEFAULT_EXPLANATION.yoga,
+    dietEat: overrides?.dietEat || catExpl.dietEat || DEFAULT_EXPLANATION.dietEat,
+    dietAvoid: overrides?.dietAvoid || catExpl.dietAvoid || DEFAULT_EXPLANATION.dietAvoid,
+    fact: overrides?.fact || catExpl.fact || DEFAULT_EXPLANATION.fact,
     challenge: challenge
   };
 };
@@ -1209,6 +1583,7 @@ export default function HealthAssistant() {
         };
         localStorage.setItem('dadi_ma_profile_v2', JSON.stringify(profileToSave));
         
+        const isAcute = isAcuteCondition(questionnaire.topicKey, questionnaire.dbResult);
         const finalAnswer = generatePersonalizedResponse(questionnaire.topicKey, newAnswers, questionnaire.dbResult);
         const DISCLAIMER = '\n\n⚠️ *ઘરેલુ ઉપાય ૭ દિવસ ટ્રાય કરો, ફેર ન પડે તો ડૉક્ટરની જરૂર સલાહ લો.*';
         const answerWithDisclaimer = finalAnswer + DISCLAIMER;
@@ -1223,7 +1598,7 @@ export default function HealthAssistant() {
           text: answerWithDisclaimer,
           isDB: true,
           raw: finalAnswer,
-          isPersonalized: true,
+          isPersonalized: !isAcute,
           topicKey: questionnaire.topicKey,
           dbResult: questionnaire.dbResult,
           relatedChips
@@ -1244,11 +1619,31 @@ export default function HealthAssistant() {
     }, 600);
   };
 
-  const generatePersonalizedResponse = (topicKey, answers) => {
-    const topic = PERSONALIZED_TOPICS[topicKey];
+  const generatePersonalizedResponse = (topicKey, answers, dbResult = null) => {
+    let topic;
+    if (dbResult) {
+      topic = generateDynamicTopic(dbResult, answers);
+    } else {
+      topic = PERSONALIZED_TOPICS[topicKey];
+      // Apply overrides to priority topics
+      const overrides = getExplanationOverrides(topicKey, null, answers);
+      if (overrides) {
+        topic = {
+          ...topic,
+          why: overrides.why,
+          whyStress: overrides.whyStress,
+          whyDiet: overrides.whyDiet,
+          dietEat: overrides.dietEat,
+          dietAvoid: overrides.dietAvoid,
+          fact: overrides.fact,
+          yoga: overrides.yoga
+        };
+      }
+    }
     if (!topic) return "બેટા, આ વિષયે મારી પાસે હજુ ઉંડો અનુભવ નથી.";
 
     const severity = answers.severity;
+    const isAcute = isAcuteCondition(topicKey, dbResult);
     
     let severityIntro = "";
     if (severity >= 7) {
@@ -1288,10 +1683,19 @@ export default function HealthAssistant() {
       dietSection += `✔️ **શું ખાવું**: ${topic.dietEat.join(", ")}\n`;
       dietSection += `❌ **શું ટાળવું**: ${topic.dietAvoid.join(", ")}\n`;
 
-      let challengeSection = `\n📅 **૭ દિવસનો પડકાર (7-Day Challenge):**\n`;
-      topic.challenge.forEach(ch => {
-        challengeSection += `• ${ch}\n`;
-      });
+      let challengeSection = "";
+      if (isAcute) {
+        challengeSection = `\n🛡️ **તાત્કાલિક સાવચેતી અને આરામ (Quick Recovery Tips):**\n`;
+        const tips = getQuickRecoveryTips(topicKey, dbResult);
+        tips.forEach(ch => {
+          challengeSection += `• ${ch}\n`;
+        });
+      } else {
+        challengeSection = `\n📅 **૭ દિવસનો પડકાર (7-Day Challenge):**\n`;
+        topic.challenge.forEach(ch => {
+          challengeSection += `• ${ch}\n`;
+        });
+      }
 
       let factSection = `\n💡 **મેડિકલ ફેક્ટ (Medical Fact):**\n*${mod.fact}*\n`;
 
@@ -1334,10 +1738,19 @@ export default function HealthAssistant() {
       dietSection += `📚 **સ્ટુડન્ટ ટિપ**: મોડી રાત્રે જાગતી વખતે વધુ પડતી કોફી-ચા પીવાને બદલે હૂંફાળું દૂધ અથવા વરિયાળીનું પાણી લેવું.\n`;
     }
 
-    let challengeSection = `\n📅 **૭ દિવસનો પડકાર (7-Day Challenge):**\n`;
-    topic.challenge.forEach(ch => {
-      challengeSection += `• ${ch}\n`;
-    });
+    let challengeSection = "";
+    if (isAcute) {
+      challengeSection = `\n🛡️ **તાત્કાલિક સાવચેતી અને આરામ (Quick Recovery Tips):**\n`;
+      const tips = getQuickRecoveryTips(topicKey, dbResult);
+      tips.forEach(ch => {
+        challengeSection += `• ${ch}\n`;
+      });
+    } else {
+      challengeSection = `\n📅 **૭ દિવસનો પડકાર (7-Day Challenge):**\n`;
+      topic.challenge.forEach(ch => {
+        challengeSection += `• ${ch}\n`;
+      });
+    }
 
     let factSection = `\n💡 **અદ્ભુત આયુર્વેદિક ફેક્ટ:**\n*${topic.fact}*\n`;
 
@@ -1917,8 +2330,8 @@ export default function HealthAssistant() {
     {/* Dadi-Ma HYBRID Chatbot Modal */}
     {/* Moved outside the animated container to prevent stacking context clipping and overflow navigation overlap */}
     {showDadiChat && (
-      <div className="fixed inset-0 z-[9999] bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-        <div className="bg-[#fdf8f2] dark:bg-stone-950 border border-[#d5bdaf]/40 text-stone-850 dark:text-stone-100 rounded-[2rem] w-full sm:max-w-md shadow-2xl flex flex-col max-h-[85vh]">
+      <div className="fixed inset-0 z-[9999] bg-black/75 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div className="bg-[#fdf8f2] dark:bg-stone-950 border-t sm:border border-[#d5bdaf]/40 text-stone-850 dark:text-stone-100 rounded-t-[2rem] sm:rounded-[2rem] w-full sm:max-w-md shadow-2xl flex flex-col h-[95vh] sm:h-auto max-h-[95vh] sm:max-h-[85vh]">
 
           {/* Chat Header */}
           <div className="flex gap-3 items-center p-5 border-b border-[#e8d5c0]/50 dark:border-stone-800 shrink-0">
