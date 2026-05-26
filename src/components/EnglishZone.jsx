@@ -24,27 +24,63 @@ const triggerToast = (message) => {
   window.dispatchEvent(new CustomEvent('show-toast', { detail: { message } }));
 };
 
-// XP & Level calculations
+// Streak & XP calculations
+const getActiveEnglishStreak = () => {
+  const today = new Date().toDateString();
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  const lastPlay = localStorage.getItem('sanskar_english_last_play') || '';
+  const savedStreak = parseInt(localStorage.getItem('sanskar_english_streak') || '0', 10);
+  
+  if (lastPlay === today || lastPlay === yesterday) {
+    return savedStreak;
+  }
+  return 0; // Streak is broken
+};
+
+const updateEnglishStreak = () => {
+  const today = new Date().toDateString();
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  const lastPlay = localStorage.getItem('sanskar_english_last_play') || '';
+  let currentStreak = parseInt(localStorage.getItem('sanskar_english_streak') || '0', 10);
+
+  if (lastPlay === today) {
+    return currentStreak;
+  }
+
+  if (lastPlay === yesterday) {
+    currentStreak += 1;
+  } else {
+    currentStreak = 1;
+  }
+
+  localStorage.setItem('sanskar_english_streak', currentStreak.toString());
+  localStorage.setItem('sanskar_english_last_play', today);
+  window.dispatchEvent(new CustomEvent('english-streak-updated', { detail: { streak: currentStreak } }));
+  return currentStreak;
+};
+
 const getXP = () => parseInt(localStorage.getItem('sanskar_english_xp') || '0');
 const addXP = (amount) => {
   const cur = getXP() + amount;
   localStorage.setItem('sanskar_english_xp', cur.toString());
   window.dispatchEvent(new CustomEvent('xp-updated', { detail: { xp: cur } }));
+  updateEnglishStreak();
   return cur;
 };
 
-const getLevelInfo = (xp) => {
-  if (xp < 500) return { level: 1, name: 'Beginner', title: 'Beginner (નવોદિત) 👶', maxXP: 500, prevXP: 0, badge: '👶' };
-  if (xp < 1500) return { level: 2, name: 'Elementary', title: 'Elementary (પ્રાથમિક) 👦', maxXP: 1500, prevXP: 500, badge: '👦' };
-  if (xp < 4000) return { level: 3, name: 'Intermediate', title: 'Intermediate (મધ્યમ) 🧑', maxXP: 4000, prevXP: 1500, badge: '🧑' };
-  if (xp < 9000) return { level: 4, name: 'Upper-Intermediate', title: 'Upper-Intermediate (ઉચ્ચ-મધ્યમ) 👨', maxXP: 9000, prevXP: 4000, badge: '👨' };
-  if (xp < 18000) return { level: 5, name: 'Advanced', title: 'Advanced (ઉચ્ચ) 🎓', maxXP: 18000, prevXP: 9000, badge: '🎓' };
-  return { level: 6, name: 'Expert', title: 'Expert (તજજ્ઞ) 👑', maxXP: 100000, prevXP: 18000, badge: '👑' };
+const getLevelInfo = (xp, streak = 0) => {
+  if (xp < 500 || streak < 3) return { level: 1, name: 'Beginner', title: 'Beginner (નવોદિત) 👶', maxXP: 500, prevXP: 0, badge: '👶', reqStreak: 3 };
+  if (xp < 1500 || streak < 5) return { level: 2, name: 'Elementary', title: 'Elementary (પ્રાથમિક) 👦', maxXP: 1500, prevXP: 500, badge: '👦', reqStreak: 5 };
+  if (xp < 4000 || streak < 7) return { level: 3, name: 'Intermediate', title: 'Intermediate (મધ્યમ) 🧑', maxXP: 4000, prevXP: 1500, badge: '🧑', reqStreak: 7 };
+  if (xp < 9000 || streak < 10) return { level: 4, name: 'Upper-Intermediate', title: 'Upper-Intermediate (ઉચ્ચ-મધ્યમ) 👨', maxXP: 9000, prevXP: 4000, badge: '👨', reqStreak: 10 };
+  if (xp < 18000 || streak < 15) return { level: 5, name: 'Advanced', title: 'Advanced (ઉચ્ચ) 🎓', maxXP: 18000, prevXP: 9000, badge: '🎓', reqStreak: 15 };
+  return { level: 6, name: 'Expert', title: 'Expert (તજજ્ઞ) 👑', maxXP: 100000, prevXP: 18000, badge: '👑', reqStreak: 15 };
 };
 
 export default function EnglishZone({ onBack }) {
   const [xp, setXp] = useState(getXP());
   const [coins, setCoins] = useState(getCoins());
+  const [streak, setStreak] = useState(getActiveEnglishStreak());
   const [activeSubGame, setActiveSubGame] = useState(null);
   const [showCertificate, setShowCertificate] = useState(null); // stores level info for certificate
   const [userName, setUserName] = useState(() => localStorage.getItem('sanskar_username') || '');
@@ -53,15 +89,18 @@ export default function EnglishZone({ onBack }) {
   useEffect(() => {
     const handleXP = () => setXp(getXP());
     const handleCoins = () => setCoins(getCoins());
+    const handleStreak = () => setStreak(getActiveEnglishStreak());
     window.addEventListener('xp-updated', handleXP);
     window.addEventListener('coins-updated', handleCoins);
+    window.addEventListener('english-streak-updated', handleStreak);
     return () => {
       window.removeEventListener('xp-updated', handleXP);
       window.removeEventListener('coins-updated', handleCoins);
+      window.removeEventListener('english-streak-updated', handleStreak);
     };
   }, []);
 
-  const levelInfo = getLevelInfo(xp);
+  const levelInfo = getLevelInfo(xp, streak);
   const progressPercent = Math.min(100, Math.max(0, ((xp - levelInfo.prevXP) / (levelInfo.maxXP - levelInfo.prevXP)) * 100));
 
   const handleBackToHub = () => {
@@ -103,14 +142,18 @@ export default function EnglishZone({ onBack }) {
         </div>
 
         {/* User Stats Box */}
-        <div className="flex gap-3 relative z-10 shrink-0">
-          <div className="bg-white/10 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-white/15 min-w-[70px] text-center">
+        <div className="flex flex-wrap gap-2.5 relative z-10 shrink-0">
+          <div className="bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/15 min-w-[65px] text-center">
             <p className="text-[9px] text-indigo-200 font-bold tracking-wider">XP સ્કોર</p>
-            <h4 className="font-headline font-black text-lg text-amber-300">🌟 {xp}</h4>
+            <h4 className="font-headline font-black text-sm text-amber-300">🌟 {xp}</h4>
           </div>
-          <div className="bg-white/10 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-white/15 min-w-[90px] text-center">
+          <div className="bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/15 min-w-[65px] text-center">
+            <p className="text-[9px] text-indigo-200 font-bold tracking-wider">સ્ટ્રીક</p>
+            <h4 className="font-headline font-black text-sm text-amber-400">🔥 {streak}</h4>
+          </div>
+          <div className="bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/15 min-w-[85px] text-center">
             <p className="text-[9px] text-indigo-200 font-bold tracking-wider">લેવલ</p>
-            <h4 className="font-gujarati font-black text-xs text-white truncate flex items-center justify-center gap-1">
+            <h4 className="font-gujarati font-black text-[10px] text-white truncate flex items-center justify-center gap-0.5">
               <span>{levelInfo.badge}</span> {levelInfo.name}
             </h4>
           </div>
@@ -130,9 +173,16 @@ export default function EnglishZone({ onBack }) {
               style={{ width: `${progressPercent}%` }}
             />
           </div>
-          <p className="font-gujarati text-[10px] text-stone-400 mt-2 text-center">
-            અન્ય રમતો રમીને વધુ XP મેળવો અને આગલું લેવલ અને પ્રમાણપત્ર અનલોક કરો!
-          </p>
+          {xp >= levelInfo.maxXP && streak < levelInfo.reqStreak ? (
+            <p className="font-gujarati text-[10px] text-rose-500 font-bold mt-2 text-center flex items-center justify-center gap-1 bg-rose-50 dark:bg-rose-950/20 py-1.5 px-3 rounded-lg border border-rose-200/50">
+              <span className="material-symbols-outlined text-xs">warning</span>
+              આગલું લેવલ અનલોક કરવા માટે હજુ {levelInfo.reqStreak} દિવસની સળંગ સ્ટ્રીક જરૂરી છે (હાલની સ્ટ્રીક: {streak} દિવસ)!
+            </p>
+          ) : (
+            <p className="font-gujarati text-[10px] text-stone-400 mt-2 text-center">
+              અન્ય રમતો રમીને વધુ XP મેળવો અને આગલું લેવલ અને પ્રમાણપત્ર અનલોક કરો!
+            </p>
+          )}
         </div>
       )}
 
@@ -218,12 +268,12 @@ export default function EnglishZone({ onBack }) {
           <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl p-5 shadow-sm space-y-4">
             <h3 className="font-gujarati font-black text-sm text-stone-750 dark:text-stone-200">અંગ્રેજી લેવલ અને સર્ટિફિકેટ્સ 🏆</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              <LevelBadge lvl={1} title="Beginner" label="નવોદિત 👶" req={0} currentXP={xp} onGetCert={() => setShowCertificate(1)} />
-              <LevelBadge lvl={2} title="Elementary" label="પ્રાથમિક 👦" req={500} currentXP={xp} onGetCert={() => setShowCertificate(2)} />
-              <LevelBadge lvl={3} title="Intermediate" label="મધ્યમ 🧑" req={1500} currentXP={xp} onGetCert={() => setShowCertificate(3)} />
-              <LevelBadge lvl={4} title="Upper-Intermediate" label="ઉચ્ચ-મધ્યમ 👨" req={4000} currentXP={xp} onGetCert={() => setShowCertificate(4)} />
-              <LevelBadge lvl={5} title="Advanced" label="ઉચ્ચ 🎓" req={9000} currentXP={xp} onGetCert={() => setShowCertificate(5)} />
-              <LevelBadge lvl={6} title="Expert" label="તજજ્ઞ 👑" req={18000} currentXP={xp} onGetCert={() => setShowCertificate(6)} />
+              <LevelBadge lvl={1} title="Beginner" label="નવોદિત 👶" req={0} reqStreak={0} currentXP={xp} streak={streak} onGetCert={() => setShowCertificate(1)} />
+              <LevelBadge lvl={2} title="Elementary" label="પ્રાથમિક 👦" req={500} reqStreak={3} currentXP={xp} streak={streak} onGetCert={() => setShowCertificate(2)} />
+              <LevelBadge lvl={3} title="Intermediate" label="મધ્યમ 🧑" req={1500} reqStreak={5} currentXP={xp} streak={streak} onGetCert={() => setShowCertificate(3)} />
+              <LevelBadge lvl={4} title="Upper-Intermediate" label="ઉચ્ચ-મધ્યમ 👨" req={4000} reqStreak={7} currentXP={xp} streak={streak} onGetCert={() => setShowCertificate(4)} />
+              <LevelBadge lvl={5} title="Advanced" label="ઉચ્ચ 🎓" req={9000} reqStreak={10} currentXP={xp} streak={streak} onGetCert={() => setShowCertificate(5)} />
+              <LevelBadge lvl={6} title="Expert" label="તજજ્ઞ 👑" req={18000} reqStreak={15} currentXP={xp} streak={streak} onGetCert={() => setShowCertificate(6)} />
             </div>
           </div>
         </div>
@@ -303,7 +353,7 @@ export default function EnglishZone({ onBack }) {
               </div>
 
               <p className="font-gujarati text-xs text-stone-650 dark:text-stone-400 px-4 leading-normal">
-                એ સફળતાપૂર્વક **English {getLevelInfo(showCertificate === 1 ? 0 : showCertificate === 2 ? 500 : showCertificate === 3 ? 1500 : showCertificate === 4 ? 4000 : showCertificate === 5 ? 9000 : 18000).name}** લેવલ પૂર્ણ કરીને અંગ્રેજી ભાષા શીખવાનો વિજય પ્રાપ્ત કર્યો છે.
+                એ સફળતાપૂર્વક **English {getLevelInfo(showCertificate === 1 ? 0 : showCertificate === 2 ? 500 : showCertificate === 3 ? 1500 : showCertificate === 4 ? 4000 : showCertificate === 5 ? 9000 : 18000, showCertificate === 1 ? 0 : showCertificate === 2 ? 3 : showCertificate === 3 ? 5 : showCertificate === 4 ? 7 : showCertificate === 5 ? 10 : 15).name}** લેવલ પૂર્ણ કરીને અંગ્રેજી ભાષા શીખવાનો વિજય પ્રાપ્ત કર્યો છે.
               </p>
 
               <div className="pt-4 flex justify-between items-center text-[10px] text-stone-400 font-gujarati">
@@ -321,7 +371,7 @@ export default function EnglishZone({ onBack }) {
             <button
               onClick={() => {
                 playSound('click');
-                const text = `🏆 મેં ગુજરાતી એપના English Zone માં English ${getLevelInfo(showCertificate === 1 ? 0 : showCertificate === 2 ? 500 : showCertificate === 3 ? 1500 : showCertificate === 4 ? 4000 : showCertificate === 5 ? 9000 : 18000).name} લેવલનું સર્ટિફિકેટ મેળવ્યું છે! તમે પણ ઇંગ્લિશ રમતો રમીને શીખો.`;
+                const text = `🏆 મેં ગુજરાતી એપના English Zone માં English ${getLevelInfo(showCertificate === 1 ? 0 : showCertificate === 2 ? 500 : showCertificate === 3 ? 1500 : showCertificate === 4 ? 4000 : showCertificate === 5 ? 9000 : 18000, showCertificate === 1 ? 0 : showCertificate === 2 ? 3 : showCertificate === 3 ? 5 : showCertificate === 4 ? 7 : showCertificate === 5 ? 10 : 15).name} લેવલનું સર્ટિફિકેટ મેળવ્યું છે! તમે પણ ઇંગ્લિશ રમતો રમીને શીખો.`;
                 window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
               }}
               disabled={!userName}
@@ -360,8 +410,8 @@ function GameCard({ title, desc, color, onClick }) {
 /* ========================================================
    SUB COMPONENT: LEVEL BADGE
    ======================================================== */
-function LevelBadge({ lvl, title, label, req, currentXP, onGetCert }) {
-  const isUnlocked = currentXP >= req;
+function LevelBadge({ lvl, title, label, req, reqStreak, currentXP, streak, onGetCert }) {
+  const isUnlocked = currentXP >= req && streak >= reqStreak;
   return (
     <div className={`border p-3.5 rounded-2xl text-center space-y-2 relative flex flex-col justify-between ${
       isUnlocked 
@@ -382,8 +432,9 @@ function LevelBadge({ lvl, title, label, req, currentXP, onGetCert }) {
           સર્ટિફિકેટ 🏆
         </button>
       ) : (
-        <div className="text-[9px] font-gujarati text-stone-400 bg-stone-100 dark:bg-stone-800 py-1 rounded-lg">
-          🔒 {req} XP
+        <div className="text-[9px] font-gujarati text-stone-400 bg-stone-100 dark:bg-stone-800 py-1.5 px-1 rounded-lg leading-tight space-y-0.5">
+          {currentXP < req && <div>🔒 {req} XP</div>}
+          {streak < reqStreak && <div>🔒 {reqStreak} દિવસ સ્ટ્રીક</div>}
         </div>
       )}
     </div>
