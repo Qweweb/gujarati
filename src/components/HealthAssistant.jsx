@@ -769,6 +769,25 @@ const generateDynamicChallenge = (dbResult) => {
   return challengeList;
 };
 
+const shouldTriggerQuestionnaire = (topicKey, dbResult = null) => {
+  if (!dbResult && topicKey) {
+    return true;
+  }
+  if (dbResult) {
+    const category = dbResult.category;
+    if (category === 'herbs' || category === 'kitchen' || category === 'beauty') {
+      return false;
+    }
+    const title = (dbResult.question || "").toLowerCase();
+    const keywords = (dbResult.keywords || []).map(k => k.toLowerCase());
+    const infoWords = ["ફાયદા", "ગુણ", "મહત્વ", "માહિતી", "ઉપયોગ", "તત્વો", "નુકસાન", "લાભ"];
+    if (infoWords.some(word => title.includes(word) || keywords.some(k => k.includes(word)))) {
+      return false;
+    }
+  }
+  return true;
+};
+
 const isAcuteCondition = (topicKey, dbResult = null) => {
   if (topicKey === 'coldcough' || topicKey === 'headache') {
     return true;
@@ -1770,7 +1789,7 @@ export default function HealthAssistant() {
 
     // Check if query matches a personalized health topic
     const matchedKey = matchPersonalizedTopic(query);
-    if (matchedKey) {
+    if (matchedKey && shouldTriggerQuestionnaire(matchedKey)) {
       setIsTyping(false);
       startQuestionnaire(matchedKey);
       return;
@@ -1781,7 +1800,26 @@ export default function HealthAssistant() {
 
     if (dbResult) {
       setIsTyping(false);
-      startQuestionnaire(`db_${dbResult.id}`, dbResult);
+      if (shouldTriggerQuestionnaire(`db_${dbResult.id}`, dbResult)) {
+        startQuestionnaire(`db_${dbResult.id}`, dbResult);
+      } else {
+        const DISCLAIMER = '\n\n⚠️ *આ ઘરેલુ ઉપાય છે. ગંભીર બીમારી માટે ડૉક્ટર ની સલાહ ચોક્કસ લો.*';
+        const finalAnswer = dbResult.answer + DISCLAIMER;
+        const relatedChips = DADI_MA_DB.filter(x => x.category === dbResult.category && x.id !== dbResult.id).slice(0, 3).map(x => x.question);
+        
+        const dadiMsg = {
+          id: Date.now() + 1,
+          sender: 'dadi',
+          text: finalAnswer,
+          isDB: true,
+          raw: dbResult.answer,
+          dbResult,
+          relatedChips
+        };
+        setChatMessages(prev => [...prev, dadiMsg]);
+        setLastAnswer(finalAnswer);
+        speakText(dbResult.answer);
+      }
       return;
     }
 
