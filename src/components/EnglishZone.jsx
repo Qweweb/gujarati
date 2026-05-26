@@ -34,12 +34,12 @@ const addXP = (amount) => {
 };
 
 const getLevelInfo = (xp) => {
-  if (xp < 150) return { level: 1, name: 'Beginner', title: 'Beginner (નવોદિત) 👶', maxXP: 150, prevXP: 0, badge: '👶' };
-  if (xp < 500) return { level: 2, name: 'Elementary', title: 'Elementary (પ્રાથમિક) 👦', maxXP: 500, prevXP: 150, badge: '👦' };
-  if (xp < 1200) return { level: 3, name: 'Intermediate', title: 'Intermediate (મધ્યમ) 🧑', maxXP: 1200, prevXP: 500, badge: '🧑' };
-  if (xp < 2500) return { level: 4, name: 'Upper-Intermediate', title: 'Upper-Intermediate (ઉચ્ચ-મધ્યમ) 👨', maxXP: 2500, prevXP: 1200, badge: '👨' };
-  if (xp < 5000) return { level: 5, name: 'Advanced', title: 'Advanced (ઉચ્ચ) 🎓', maxXP: 5000, prevXP: 2500, badge: '🎓' };
-  return { level: 6, name: 'Expert', title: 'Expert (તજજ્ઞ) 👑', maxXP: 100000, prevXP: 5000, badge: '👑' };
+  if (xp < 500) return { level: 1, name: 'Beginner', title: 'Beginner (નવોદિત) 👶', maxXP: 500, prevXP: 0, badge: '👶' };
+  if (xp < 1500) return { level: 2, name: 'Elementary', title: 'Elementary (પ્રાથમિક) 👦', maxXP: 1500, prevXP: 500, badge: '👦' };
+  if (xp < 4000) return { level: 3, name: 'Intermediate', title: 'Intermediate (મધ્યમ) 🧑', maxXP: 4000, prevXP: 1500, badge: '🧑' };
+  if (xp < 9000) return { level: 4, name: 'Upper-Intermediate', title: 'Upper-Intermediate (ઉચ્ચ-મધ્યમ) 👨', maxXP: 9000, prevXP: 4000, badge: '👨' };
+  if (xp < 18000) return { level: 5, name: 'Advanced', title: 'Advanced (ઉચ્ચ) 🎓', maxXP: 18000, prevXP: 9000, badge: '🎓' };
+  return { level: 6, name: 'Expert', title: 'Expert (તજજ્ઞ) 👑', maxXP: 100000, prevXP: 18000, badge: '👑' };
 };
 
 export default function EnglishZone({ onBack }) {
@@ -219,11 +219,11 @@ export default function EnglishZone({ onBack }) {
             <h3 className="font-gujarati font-black text-sm text-stone-750 dark:text-stone-200">અંગ્રેજી લેવલ અને સર્ટિફિકેટ્સ 🏆</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               <LevelBadge lvl={1} title="Beginner" label="નવોદિત 👶" req={0} currentXP={xp} onGetCert={() => setShowCertificate(1)} />
-              <LevelBadge lvl={2} title="Elementary" label="પ્રાથમિક 👦" req={150} currentXP={xp} onGetCert={() => setShowCertificate(2)} />
-              <LevelBadge lvl={3} title="Intermediate" label="મધ્યમ 🧑" req={500} currentXP={xp} onGetCert={() => setShowCertificate(3)} />
-              <LevelBadge lvl={4} title="Upper-Intermediate" label="ઉચ્ચ-મધ્યમ 👨" req={1200} currentXP={xp} onGetCert={() => setShowCertificate(4)} />
-              <LevelBadge lvl={5} title="Advanced" label="ઉચ્ચ 🎓" req={2500} currentXP={xp} onGetCert={() => setShowCertificate(5)} />
-              <LevelBadge lvl={6} title="Expert" label="તજજ્ઞ 👑" req={5000} currentXP={xp} onGetCert={() => setShowCertificate(6)} />
+              <LevelBadge lvl={2} title="Elementary" label="પ્રાથમિક 👦" req={500} currentXP={xp} onGetCert={() => setShowCertificate(2)} />
+              <LevelBadge lvl={3} title="Intermediate" label="મધ્યમ 🧑" req={1500} currentXP={xp} onGetCert={() => setShowCertificate(3)} />
+              <LevelBadge lvl={4} title="Upper-Intermediate" label="ઉચ્ચ-મધ્યમ 👨" req={4000} currentXP={xp} onGetCert={() => setShowCertificate(4)} />
+              <LevelBadge lvl={5} title="Advanced" label="ઉચ્ચ 🎓" req={9000} currentXP={xp} onGetCert={() => setShowCertificate(5)} />
+              <LevelBadge lvl={6} title="Expert" label="તજજ્ઞ 👑" req={18000} currentXP={xp} onGetCert={() => setShowCertificate(6)} />
             </div>
           </div>
         </div>
@@ -303,7 +303,7 @@ export default function EnglishZone({ onBack }) {
               </div>
 
               <p className="font-gujarati text-xs text-stone-650 dark:text-stone-400 px-4 leading-normal">
-                એ સફળતાપૂર્વક **English {getLevelInfo(showCertificate === 1 ? 0 : showCertificate === 2 ? 150 : showCertificate === 3 ? 500 : showCertificate === 4 ? 1200 : showCertificate === 5 ? 2500 : 5000).name}** લેવલ પૂર્ણ કરીને અંગ્રેજી ભાષા શીખવાનો વિજય પ્રાપ્ત કર્યો છે.
+                એ સફળતાપૂર્વક **English {getLevelInfo(showCertificate === 1 ? 0 : showCertificate === 2 ? 500 : showCertificate === 3 ? 1500 : showCertificate === 4 ? 4000 : showCertificate === 5 ? 9000 : 18000).name}** લેવલ પૂર્ણ કરીને અંગ્રેજી ભાષા શીખવાનો વિજય પ્રાપ્ત કર્યો છે.
               </p>
 
               <div className="pt-4 flex justify-between items-center text-[10px] text-stone-400 font-gujarati">
@@ -321,7 +321,7 @@ export default function EnglishZone({ onBack }) {
             <button
               onClick={() => {
                 playSound('click');
-                const text = `🏆 મેં ગુજરાતી એપના English Zone માં English ${getLevelInfo(showCertificate === 1 ? 0 : showCertificate === 2 ? 150 : showCertificate === 3 ? 500 : showCertificate === 4 ? 1200 : showCertificate === 5 ? 2500 : 5000).name} લેવલનું સર્ટિફિકેટ મેળવ્યું છે! તમે પણ ઇંગ્લિશ રમતો રમીને શીખો.`;
+                const text = `🏆 મેં ગુજરાતી એપના English Zone માં English ${getLevelInfo(showCertificate === 1 ? 0 : showCertificate === 2 ? 500 : showCertificate === 3 ? 1500 : showCertificate === 4 ? 4000 : showCertificate === 5 ? 9000 : 18000).name} લેવલનું સર્ટિફિકેટ મેળવ્યું છે! તમે પણ ઇંગ્લિશ રમતો રમીને શીખો.`;
                 window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
               }}
               disabled={!userName}
