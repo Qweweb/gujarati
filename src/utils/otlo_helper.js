@@ -380,39 +380,14 @@ export const getOtloPosts = async (filterLevel = 'all', followedLocationIds = []
     };
   });
 
-  // Filter posts
+  // Filter posts - Temporary: feed remains general (all active posts) until 50k+ users are reached.
   let filteredPosts = posts;
-  if (filterLevel !== 'all') {
-    if (filterLevel === 'village' && userLoc) {
-      const targetHash = stringToHash(userLoc.villageId);
-      filteredPosts = posts.filter(p => p.villageId === targetHash);
-    } else if (filterLevel === 'taluka' && userLoc) {
-      const targetHash = stringToHash(userLoc.talukaId);
-      filteredPosts = posts.filter(p => p.talukaId === targetHash);
-    } else if (filterLevel === 'district' && userLoc) {
-      const targetHash = stringToHash(userLoc.districtId);
-      filteredPosts = posts.filter(p => p.districtId === targetHash);
-    } else if (filterLevel === 'state') {
-      filteredPosts = posts.filter(p => p.visibilityLevel === 'state');
-    } else {
-      // Followed custom location ID
-      const targetHash = stringToHash(filterLevel);
-      filteredPosts = posts.filter(p => 
-        p.villageId === targetHash || 
-        p.talukaId === targetHash || 
-        p.districtId === targetHash
-      );
-    }
-  }
 
-  // Sort posts by their calculated score
-  return filteredPosts.map(post => ({
-    ...post,
-    score: calculatePostScore(post, userLoc || { villageId: "", talukaId: "", districtId: "" })
-  })).sort((a, b) => {
+  // Sort posts by date (latest first), with pinned posts on top
+  return filteredPosts.sort((a, b) => {
     if (a.isPinned && !b.isPinned) return -1;
     if (!a.isPinned && b.isPinned) return 1;
-    return b.score - a.score;
+    return new Date(b.createdAt) - new Date(a.createdAt);
   });
 };
 

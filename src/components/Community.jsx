@@ -114,17 +114,15 @@ const Community = () => {
   // Load data on state updates
   useEffect(() => {
     const loadData = async () => {
-      if (userLocation) {
-        try {
-          const postsData = await getOtloPosts(feedFilter);
-          setPosts(postsData);
-        } catch (err) {
-          console.error("Error loading posts from Supabase:", err);
-        }
-        setDirectoryListings(getDirectoryListings());
-        setLeaderboard(getLeaderboard());
-        setRepData(getUserRepData());
+      try {
+        const postsData = await getOtloPosts(feedFilter);
+        setPosts(postsData);
+      } catch (err) {
+        console.error("Error loading posts from Supabase:", err);
       }
+      setDirectoryListings(getDirectoryListings());
+      setLeaderboard(getLeaderboard());
+      setRepData(getUserRepData());
     };
     loadData();
   }, [userLocation, feedFilter]);
@@ -534,11 +532,20 @@ const Community = () => {
   const activePost = posts.find(p => p.id === showCommentsPostId);
   const commentsList = activePost ? activePost.comments : [];
 
-  // 1. ONE-TIME LOCATION SETUP SCREEN
-  if (!userLocation) {
+  // 1. ONE-TIME LOCATION SETUP SCREEN Helper
+  const renderLocationSetup = () => {
     return (
-      <div className="animate-fade-in max-w-md mx-auto space-y-8 pb-12">
+      <div className="animate-fade-in max-w-md mx-auto space-y-8 pb-12 relative">
         <section className="bg-white dark:bg-dark-surface p-8 rounded-[2.5rem] shadow-xl border border-primary/5 space-y-6 relative overflow-hidden">
+          {/* Close button in top-right to skip setup and go to games */}
+          <button 
+            type="button"
+            onClick={() => setActiveTab("games")}
+            className="absolute right-4 top-4 h-8 w-8 bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-750 text-stone-600 dark:text-stone-300 rounded-full flex items-center justify-center transition-all active:scale-90 shadow-sm border border-black/5 z-20"
+            title="બંધ કરો"
+          >
+            <span className="material-symbols-outlined text-base font-bold">close</span>
+          </button>
           <div className="absolute right-[-15px] top-[-15px] opacity-5 select-none pointer-events-none text-9xl">
             🏘️
           </div>
@@ -718,12 +725,14 @@ const Community = () => {
               
               <div className="flex flex-col gap-2">
                 <button 
+                  type="button"
                   onClick={handleConfirmGps}
                   className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white py-3.5 rounded-2xl font-gujarati font-black text-sm shadow-lg active:scale-95 transition-transform"
                 >
                   હા, આ જ છે! ✓
                 </button>
                 <button 
+                  type="button"
                   onClick={() => setDetectedLocation(null)}
                   className="w-full bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-300 py-3.5 rounded-2xl font-gujarati font-black text-sm active:scale-95 transition-transform"
                 >
@@ -735,7 +744,7 @@ const Community = () => {
         )}
       </div>
     );
-  }
+  };
 
   // 2. MAIN FEED SCREEN (WHEN USER LOCATION IS CONFIGURED)
   return (
@@ -761,13 +770,15 @@ const Community = () => {
               >
                 <span className="material-symbols-outlined text-xl">search</span>
               </button>
-              <button
-                onClick={handleResetLocation}
-                className="h-10 w-10 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl flex items-center justify-center transition-all active:scale-90 shadow-sm"
-                title="ઓટલો બદલો"
-              >
-                <span className="material-symbols-outlined text-xl">settings</span>
-              </button>
+              {userLocation && (
+                <button
+                  onClick={handleResetLocation}
+                  className="h-10 w-10 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl flex items-center justify-center transition-all active:scale-90 shadow-sm"
+                  title="ઓટલો બદલો"
+                >
+                  <span className="material-symbols-outlined text-xl">settings</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -776,14 +787,16 @@ const Community = () => {
             <div className="flex-1 min-w-0">
               <p className="font-gujarati text-[10px] text-orange-200">ચાલુ સ્થાનિક બેઠક:</p>
               <p className="font-gujarati font-bold text-sm truncate">
-                {userLocation.talukaId === "district_city" ? (
-                  `${userLocation.villageNameGu || getVillageName(userLocation.talukaId, userLocation.villageId)}, ${getDistrictName(userLocation.districtId)}`
-                ) : userLocation.villageId === "taluka_city" ? (
-                  `${userLocation.villageNameGu || getVillageName(userLocation.talukaId, userLocation.villageId)}, ${getDistrictName(userLocation.districtId)}`
-                ) : (
-                  `${getVillageName(userLocation.talukaId, userLocation.villageId)}, ${getTalukaName(userLocation.districtId, userLocation.talukaId)}, ${getDistrictName(userLocation.districtId)}`
-                )}
-                {userLocation.ward ? ` (${userLocation.ward})` : ""}
+                {userLocation ? (
+                  userLocation.talukaId === "district_city" ? (
+                    `${userLocation.villageNameGu || getVillageName(userLocation.talukaId, userLocation.villageId)}, ${getDistrictName(userLocation.districtId)}`
+                  ) : userLocation.villageId === "taluka_city" ? (
+                    `${userLocation.villageNameGu || getVillageName(userLocation.talukaId, userLocation.villageId)}, ${getDistrictName(userLocation.districtId)}`
+                  ) : (
+                    `${getVillageName(userLocation.talukaId, userLocation.villageId)}, ${getTalukaName(userLocation.districtId, userLocation.talukaId)}, ${getDistrictName(userLocation.districtId)}`
+                  )
+                ) : "લોકેશન સેટ નથી 🌐"}
+                {userLocation && userLocation.ward ? ` (${userLocation.ward})` : ""}
               </p>
             </div>
           </div>
@@ -950,7 +963,10 @@ const Community = () => {
       
       {/* 1. DISCUSSIONS TAB */}
       {activeTab === "feed" && (
-        <div className="space-y-6">
+        !userLocation ? (
+          renderLocationSetup()
+        ) : (
+          <div className="space-y-6">
           {/* Discussion Topics (Horizontal) */}
           <section id="discussion-topics" className="space-y-4">
             <div className="flex justify-between items-center px-2">
@@ -1032,13 +1048,16 @@ const Community = () => {
 
           {/* Horizontal Level Filters */}
           <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 px-1">
-            {[
+            {(userLocation ? [
               { id: "all", label: "બધું 🌐" },
               { id: "village", label: `${getVillageName(userLocation.talukaId, userLocation.villageId)} 🏘️` },
               { id: "taluka", label: getTalukaName(userLocation.districtId, userLocation.talukaId) },
               { id: "district", label: getDistrictName(userLocation.districtId) },
               { id: "state", label: "ગુજરાત" }
-            ].concat(followedLocations.map(f => ({ id: f.id, label: `${f.name} 📌` }))).map(chip => (
+            ] : [
+              { id: "all", label: "બધું 🌐" },
+              { id: "state", label: "ગુજરાત" }
+            ]).concat(followedLocations.map(f => ({ id: f.id, label: `${f.name} 📌` }))).map(chip => (
               <button
                 key={chip.id}
                 onClick={() => setFeedFilter(chip.id)}
@@ -1165,6 +1184,7 @@ const Community = () => {
             <span className="material-symbols-outlined text-2xl font-bold">add</span>
           </button>
         </div>
+        )
       )}
 
       {/* 2. LOCAL DIRECTORY TAB */}

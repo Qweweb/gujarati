@@ -108,6 +108,43 @@ const Panchang = () => {
     </div>
   );
 
+  const translateTithiToGujarati = (tithiStr) => {
+    if (!tithiStr) return "";
+    let res = tithiStr;
+    const translations = {
+      "Ekadasi": "એકાદશી",
+      "Ekadashi": "એકાદશી",
+      "Prathama": "એકમ",
+      "Pratham": "એકમ",
+      "Dwitiya": "બીજ",
+      "Tritiya": "ત્રીજ",
+      "Chaturthi": "ચોથ",
+      "Panchami": "પાંચમ",
+      "Shasthi": "છઠ",
+      "Shashthi": "છઠ",
+      "Saptami": "સાતમ",
+      "Ashtami": "આઠમ",
+      "Navami": "નોમ",
+      "Dashami": "દશમ",
+      "Dwadashi": "બારસ",
+      "Dwadoshi": "બારસ",
+      "Dvadasi": "બારસ",
+      "Trayodashi": "તેરસ",
+      "Trayodasi": "તેરસ",
+      "Chaturdashi": "ચૌદશ",
+      "Chaturdasi": "ચૌદશ",
+      "Purnima": "પૂનમ",
+      "Pournami": "પૂનમ",
+      "Amavasya": "અમાસ",
+      "Amavas": "અમાસ"
+    };
+    Object.keys(translations).forEach(eng => {
+      const regex = new RegExp(eng, "gi");
+      res = res.replace(regex, translations[eng]);
+    });
+    return res;
+  };
+
   return (
     <div className="space-y-6">
       {/* 1. Live Choghadiya Header - Visual Status (Redesigned with Premium Responsive Layout) */}
@@ -145,7 +182,7 @@ const Panchang = () => {
             <div className="space-y-6">
                 <div className="text-center">
                     <p className="font-gujarati font-bold text-primary tracking-widest uppercase">{panchangData.maas} માસ • {panchangData.paksh} પક્ષ</p>
-                    <h2 className="font-gujarati font-black text-4xl sm:text-5xl my-2">{panchangData.tithi}</h2>
+                    <h2 className="font-gujarati font-black text-4xl sm:text-5xl my-2">{translateTithiToGujarati(panchangData.tithi)}</h2>
                     <p className="font-gujarati font-black text-2xl text-stone-600 dark:text-stone-300 my-2">{panchangData.vaar || new Date().toLocaleDateString('gu-IN', { weekday: 'long' })}</p>
                     <p className="font-headline font-black text-xl opacity-40">{panchangData.date}</p>
                 </div>

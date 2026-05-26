@@ -126,6 +126,43 @@ const Dashboard = () => {
      );
   }
 
+  const translateTithiToGujarati = (tithiStr) => {
+    if (!tithiStr) return "";
+    let res = tithiStr;
+    const translations = {
+      "Ekadasi": "એકાદશી",
+      "Ekadashi": "એકાદશી",
+      "Prathama": "એકમ",
+      "Pratham": "એકમ",
+      "Dwitiya": "બીજ",
+      "Tritiya": "ત્રીજ",
+      "Chaturthi": "ચોથ",
+      "Panchami": "પાંચમ",
+      "Shasthi": "છઠ",
+      "Shashthi": "છઠ",
+      "Saptami": "સાતમ",
+      "Ashtami": "આઠમ",
+      "Navami": "નોમ",
+      "Dashami": "દશમ",
+      "Dwadashi": "બારસ",
+      "Dwadoshi": "બારસ",
+      "Dvadasi": "બારસ",
+      "Trayodashi": "તેરસ",
+      "Trayodasi": "તેરસ",
+      "Chaturdashi": "ચૌદશ",
+      "Chaturdasi": "ચૌદશ",
+      "Purnima": "પૂનમ",
+      "Pournami": "પૂનમ",
+      "Amavasya": "અમાસ",
+      "Amavas": "અમાસ"
+    };
+    Object.keys(translations).forEach(eng => {
+      const regex = new RegExp(eng, "gi");
+      res = res.replace(regex, translations[eng]);
+    });
+    return res;
+  };
+
   const ServiceIcon = ({ icon, label, path, color, iconColor }) => (
     <Link to={path} className="flex flex-col items-center gap-2 group">
       <div className={`h-16 w-16 ${color} rounded-[1.5rem] flex items-center justify-center shadow-sm group-hover:scale-110 active:scale-95 transition-all`}>
@@ -147,7 +184,7 @@ const Dashboard = () => {
             <span className="material-symbols-outlined text-[100px]">temple_hindu</span>
           </div>
           <p className="font-gujarati font-bold text-xs opacity-80 uppercase tracking-widest">આજની તિથિ</p>
-          <h2 className="font-gujarati font-black text-2xl mt-1">{data.tithi}</h2>
+          <h2 className="font-gujarati font-black text-2xl mt-1">{translateTithiToGujarati(data.tithi)}</h2>
           <p className="font-gujarati font-bold text-xs mt-1.5 opacity-90">{todayVaar} • {todayDate}</p>
           <div className="mt-4 flex items-center gap-2 bg-white/20 w-fit px-3 py-1 rounded-full text-xs">
             <span className="material-symbols-outlined text-sm">event</span>
