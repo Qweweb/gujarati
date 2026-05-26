@@ -275,6 +275,9 @@ export default function HealthAssistant() {
   }, [chatMessages, isTyping]);
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.getVoices();
+    }
     return () => {
       if ('speechSynthesis' in window) window.speechSynthesis.cancel();
     };
@@ -283,12 +286,58 @@ export default function HealthAssistant() {
   const speakText = (text) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text.replace(/\*\*/g, ''));
+      
+      // Clean up markdown formatting and all emojis for clean text-to-speech rendering
+      let cleanText = text
+        .replace(/\*\*/g, '')
+        .replace(/\*/g, '')
+        .replace(/#/g, '')
+        .replace(/- /g, '')
+        .replace(/_/g, '');
+      
+      try {
+        cleanText = cleanText.replace(/\p{Extended_Pictographic}/gu, '');
+      } catch (e) {
+        cleanText = cleanText.replace(/🌿|🥛|🫚|🍋|💧|🌱|⚠️|👵|❤️|🍯|🧄|🧅|🍵|🥄|🪵|🧘|💆|🚶|💤|🍊|🥬|🥦|🥜|☀️|🍎/g, '');
+      }
+      
+      const utterance = new SpeechSynthesisUtterance(cleanText);
       const voices = window.speechSynthesis.getVoices();
-      const guVoice = voices.find(v => v.lang.includes('gu') || v.lang.includes('hi'));
-      if (guVoice) utterance.voice = guVoice;
+      
+      const guVoices = voices.filter(v => v.lang.toLowerCase().includes('gu'));
+      const hiVoices = voices.filter(v => v.lang.toLowerCase().includes('hi'));
+      
+      let voice = null;
+      // 1. Try to find a Gujarati female/google/natural voice first
+      voice = guVoices.find(v => {
+        const name = v.name.toLowerCase();
+        return name.includes('female') || name.includes('google') || name.includes('kalpana') || name.includes('karishma') || name.includes('zira') || name.includes('hazel') || name.includes('kiran');
+      });
+      if (!voice && guVoices.length > 0) voice = guVoices[0];
+      
+      // 2. Try to find a Hindi female/google/natural voice next
+      if (!voice) {
+        voice = hiVoices.find(v => {
+          const name = v.name.toLowerCase();
+          return name.includes('female') || name.includes('google') || name.includes('kalpana') || name.includes('swara') || name.includes('heera') || name.includes('madhur') || name.includes('neerja') || name.includes('aarti');
+        });
+      }
+      if (!voice && hiVoices.length > 0) voice = hiVoices[0];
+      
+      // 3. Fall back to any female voice in general if neither Gujarati nor Hindi is found
+      if (!voice) {
+        voice = voices.find(v => {
+          const name = v.name.toLowerCase();
+          return name.includes('female') || name.includes('zira') || name.includes('hazel') || name.includes('google') || name.includes('natural');
+        });
+      }
+      
+      if (voice) utterance.voice = voice;
+      
       utterance.lang = 'gu-IN';
-      utterance.rate = 0.9;
+      utterance.rate = 0.78;  // Gentle, slower tempo (like a grandmother speaking)
+      utterance.pitch = 0.88; // Warm, maternal pitch (slightly lower/softer than standard)
+      
       window.speechSynthesis.speak(utterance);
     }
   };
@@ -654,7 +703,7 @@ export default function HealthAssistant() {
               <div className="flex-1">
                 <h3 className="font-gujarati font-black text-base text-[#5c3e21] dark:text-[#f4d6b6]">દાદી-મા ના નુસખા ચેટ</h3>
                 <p className="font-gujarati text-[10px] text-stone-400">
-                  {isAIConfigured() ? '🤖 AI + Database Hybrid' : '📚 Database Mode'} | 200+ ઘરેલુ ઉપાય
+                  આયુર્વેદિક ઘરેલુ ઉપચાર | ૨૨૦+ નુસખા
                 </p>
               </div>
               <button
@@ -714,8 +763,6 @@ export default function HealthAssistant() {
                         >
                           <span className="material-symbols-outlined text-[12px]">volume_up</span> સાંભળો
                         </button>
-                        {msg.isAI && <span className="text-[9px] px-2 py-1 bg-violet-100 dark:bg-violet-950 text-violet-600 rounded-full font-bold">🤖 AI</span>}
-                        {msg.isDB && <span className="text-[9px] px-2 py-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 rounded-full font-bold">📚 DB</span>}
                       </div>
                     )}
                   </div>
