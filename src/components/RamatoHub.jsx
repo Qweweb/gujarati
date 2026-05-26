@@ -33,6 +33,83 @@ const splitGujaratiWord = (word) => {
   }
 };
 
+const playSound = (type) => {
+  const enabled = localStorage.getItem('sanskar_sound_enabled') !== 'false';
+  if (!enabled) return;
+  
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    
+    if (type === 'tick') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      
+      osc.frequency.setValueAtTime(800, ctx.currentTime);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+      
+      osc.start();
+      osc.stop(ctx.currentTime + 0.05);
+    } else if (type === 'click') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      
+      osc.frequency.setValueAtTime(450, ctx.currentTime);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+      
+      osc.start();
+      osc.stop(ctx.currentTime + 0.08);
+    } else if (type === 'correct') {
+      const now = ctx.currentTime;
+      const playNote = (freq, start, duration) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        osc.frequency.setValueAtTime(freq, start);
+        gain.gain.setValueAtTime(0.12, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+        
+        osc.start(start);
+        osc.stop(start + duration);
+      };
+      
+      playNote(523.25, now, 0.12); // C5
+      playNote(659.25, now + 0.06, 0.12); // E5
+      playNote(783.99, now + 0.12, 0.25); // G5
+    } else if (type === 'wrong') {
+      const now = ctx.currentTime;
+      const playNote = (freq, start, duration) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        osc.frequency.setValueAtTime(freq, start);
+        gain.gain.setValueAtTime(0.12, start);
+        gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+        
+        osc.start(start);
+        osc.stop(start + duration);
+      };
+      
+      playNote(150, now, 0.2);
+      playNote(110, now + 0.1, 0.3);
+    }
+  } catch (e) {
+    console.error("Audio Context failed", e);
+  }
+};
+
 // Streak tracker
 const getStreak = () => {
   const streak = parseInt(localStorage.getItem('sanskar_game_streak') || '0');
@@ -148,17 +225,40 @@ export default function RamatoHub({ userLocation }) {
    GAME PLAYING CONTAINER WRAPPER
    ======================================================== */
 function GameWrapper({ gameId, onClose, userLocation }) {
+  const [soundOn, setSoundOn] = useState(() => localStorage.getItem('sanskar_sound_enabled') !== 'false');
+
+  const toggleSound = () => {
+    const nextVal = !soundOn;
+    setSoundOn(nextVal);
+    localStorage.setItem('sanskar_sound_enabled', nextVal ? 'true' : 'false');
+    playSound('click');
+  };
+
   return (
     <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-[2.5rem] p-6 shadow-xl relative min-h-[450px] flex flex-col">
       {/* Header */}
       <div className="flex justify-between items-center border-b border-stone-100 dark:border-stone-800 pb-4 mb-4">
         <button 
-          onClick={onClose}
+          onClick={() => {
+            playSound('click');
+            onClose();
+          }}
           className="h-10 px-4 bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 rounded-xl flex items-center gap-1.5 font-gujarati text-xs font-bold text-stone-600 dark:text-stone-300 transition"
         >
           <span className="material-symbols-outlined text-sm">arrow_back</span> પાછા જાઓ
         </button>
-        <span className="font-gujarati font-black text-sm text-orange-500 uppercase tracking-widest">રમત ચાલુ છે</span>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggleSound}
+            className="h-10 w-10 bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 rounded-xl flex items-center justify-center text-stone-600 dark:text-stone-300 transition"
+            title={soundOn ? "અવાજ બંધ કરો" : "અવાજ ચાલુ કરો"}
+          >
+            <span className="material-symbols-outlined text-lg">
+              {soundOn ? 'volume_up' : 'volume_off'}
+            </span>
+          </button>
+          <span className="font-gujarati font-black text-sm text-orange-500 uppercase tracking-widest">રમત ચાલુ છે</span>
+        </div>
       </div>
 
       {/* Game Content Renderers */}
@@ -239,16 +339,19 @@ function WordConnectGame() {
 
   const handleLetterClick = (letter, index) => {
     if (selectedLetters.includes(index)) return;
+    playSound('click');
     const nextSel = [...selectedLetters, index];
     setSelectedLetters(nextSel);
     const nextWord = currentWord + letter;
     setCurrentWord(nextWord);
 
     if (nextWord === wordData) {
+      playSound('correct');
       setSuccess(true);
       addCoins(15);
       setScore(prev => prev + 1);
     } else if (nextSel.length >= letters.length) {
+      playSound('wrong');
       // Incorrect
       setTimeout(() => {
         setSelectedLetters([]);
@@ -258,6 +361,7 @@ function WordConnectGame() {
   };
 
   const nextLevel = () => {
+    playSound('click');
     setWordData(pool[Math.floor(Math.random() * pool.length)]);
   };
 
@@ -346,16 +450,21 @@ function VisualQuizGame() {
 
   const handleSelect = (option) => {
     if (selectedOption) return;
+    playSound('click');
     setSelectedOption(option);
     setBlurAmount(0); // clear blur
     setShowExplanation(true);
     if (option === activeItem.name) {
+      playSound('correct');
       addCoins(10);
       playedController.markPlayed('visual_quiz', activeItem.id);
+    } else {
+      playSound('wrong');
     }
   };
 
   const nextItem = () => {
+    playSound('click');
     setActiveItem(playedController.getUnplayed('visual_quiz', VISUAL_QUIZ_DB));
   };
 
@@ -450,7 +559,7 @@ function MathRushGame() {
   const [op, setOp] = useState('+');
   const [ans, setAns] = useState(0);
   const [options, setOptions] = useState([]);
-  const [timer, setTimer] = useState(5);
+  const [timer, setTimer] = useState(12);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const timerRef = useRef(null);
@@ -489,7 +598,7 @@ function MathRushGame() {
     const all = [answer, ...fakes];
     all.sort(() => Math.random() - 0.5);
     setOptions(all);
-    setTimer(5);
+    setTimer(12);
   };
 
   useEffect(() => {
@@ -506,9 +615,11 @@ function MathRushGame() {
     timerRef.current = setInterval(() => {
       setTimer(prev => {
         if (prev <= 1) {
+          playSound('wrong');
           setGameOver(true);
           return 0;
         }
+        playSound('tick');
         return prev - 1;
       });
     }, 1000);
@@ -516,16 +627,20 @@ function MathRushGame() {
   }, [num1, num2, gameOver]);
 
   const handleChoice = (val) => {
+    playSound('click');
     if (val === ans) {
+      playSound('correct');
       setScore(prev => prev + 1);
       addCoins(2);
       generateQuestion();
     } else {
+      playSound('wrong');
       setGameOver(true);
     }
   };
 
   const restartGame = () => {
+    playSound('click');
     setScore(0);
     setGameOver(false);
     generateQuestion();
@@ -1069,6 +1184,7 @@ function WordSearchGame() {
 
   const handleCellClick = (r, c) => {
     if (foundWords.length === targetWords.length) return;
+    playSound('click');
     
     const exists = selectedCells.some(cell => cell.r === r && cell.c === c);
     let nextSel;
@@ -1087,6 +1203,7 @@ function WordSearchGame() {
     const match = targetWords.find(word => word === currentString);
     
     if (match && !foundWords.includes(match)) {
+      playSound('correct');
       setFoundWords(prev => [...prev, match]);
       setSelectedCells([]); // Reset on match
       addCoins(10);
@@ -1104,7 +1221,10 @@ function WordSearchGame() {
         <span>પસંદ કરેલ: <span className="underline decoration-2 decoration-primary">{currentSelectionString || "..."}</span></span>
         {selectedCells.length > 0 && (
           <button 
-            onClick={() => setSelectedCells([])}
+            onClick={() => {
+              playSound('click');
+              setSelectedCells([]);
+            }}
             className="text-xs bg-primary/20 text-primary px-2.5 py-1 rounded-md font-bold hover:bg-primary/30 transition active:scale-95"
           >
             સાફ કરો ❌
@@ -1457,33 +1577,81 @@ function GramTriviaGame({ userLocation }) {
    GAME M: SPEED TAP (ઝડપ ટૅપ)
    ======================================================= */
 function SpeedTapGame() {
-  const [items, setItems] = useState([
-    { id: 1, label: 'સફરજન 🍎', isTarget: true, tapped: false },
-    { id: 2, label: 'દૂધી 🥬', isTarget: false, tapped: false },
-    { id: 3, label: 'જાંબુ 🍇', isTarget: true, tapped: false },
-    { id: 4, label: 'ગાજર 🥕', isTarget: false, tapped: false }
-  ]);
+  const FRUITS = [
+    'સફરજન 🍎', 'કેળા 🍌', 'કેરી 🥭', 'દ્રાક્ષ 🍇', 'પપૈયું 🍍', 
+    'સંતરા 🍊', 'તડબૂચ 🍉', 'સીતાફળ 🍈', 'જામફળ 🍐', 'દાડમ 🍎', 
+    'શક્કરટેટી 🍈', 'જાંબુ 🍇'
+  ];
+  const VEGGIES = [
+    'દૂધી 🥬', 'બટાકા 🥔', 'ટામેટા 🍅', 'ડુંગળી 🧅', 'લસણ 🧄', 
+    'ગાજર 🥕', 'ભીંડા 🥒', 'રીંગણ 🍆', 'મરચા 🌶️', 'કોબીજ 🥬', 
+    'ફુલાવર 🥦', 'આદુ 🫚'
+  ];
 
+  const generateRoundItems = () => {
+    const selectedFruits = [...FRUITS].sort(() => Math.random() - 0.5).slice(0, 2);
+    const selectedVeggies = [...VEGGIES].sort(() => Math.random() - 0.5).slice(0, 2);
+
+    const pool = [
+      ...selectedFruits.map((label, idx) => ({ id: `f-${idx}-${Math.random()}`, label, isTarget: true, tapped: false })),
+      ...selectedVeggies.map((label, idx) => ({ id: `v-${idx}-${Math.random()}`, label, isTarget: false, tapped: false }))
+    ];
+
+    return pool.sort(() => Math.random() - 0.5);
+  };
+
+  const [items, setItems] = useState(() => generateRoundItems());
   const [score, setScore] = useState(0);
+  const [round, setRound] = useState(1);
+  const [message, setMessage] = useState('');
 
   const tap = (id) => {
+    playSound('click');
     const item = items.find(i => i.id === id);
     if (item.tapped) return;
-    
+
     setItems(prev => prev.map(i => i.id === id ? { ...i, tapped: true } : i));
-    
+
     if (item.isTarget) {
+      playSound('correct');
       setScore(prev => prev + 1);
-      addCoins(5);
+      addCoins(2);
+      
+      const updatedItems = items.map(i => i.id === id ? { ...i, tapped: true } : i);
+      const allTargetsTapped = updatedItems.filter(i => i.isTarget).every(i => i.tapped);
+      if (allTargetsTapped) {
+        setMessage('શાબાશ! તમે બધા જ ફળો શોધી લીધા છે. આગળ વધવા માટે નીચેના બટન પર ક્લિક કરો. 🎉');
+      }
     } else {
-      alert('ચૂકી ગયા! તે ટાર્ગેટ આઇટમ નહોતી.');
+      playSound('wrong');
+      setMessage('ચૂકી ગયા! તે ફળ નથી, શાકભાજી છે. લાલ બોક્સ દર્શાવે છે કે તે ખોટું છે. ❌');
     }
   };
 
+  const nextRound = () => {
+    playSound('click');
+    setItems(generateRoundItems());
+    setRound(prev => prev + 1);
+    setMessage('');
+  };
+
+  const toGujaratiNum = (num) => {
+    const map = { '0':'૦', '1':'૧', '2':'૨', '3':'૩', '4':'૪', '5':'૫', '6':'૬', '7':'૭', '8':'૮', '9':'૯' };
+    return num.toString().split('').map(char => map[char] || char).join('');
+  };
+
+  const allTargetsTapped = items.filter(i => i.isTarget).every(i => i.tapped);
+
   return (
-    <div className="text-center space-y-6 max-w-sm mx-auto py-4">
+    <div className="text-center space-y-6 max-w-sm mx-auto py-4 animate-fade-in">
       <h3 className="font-gujarati font-black text-xl">ઝડપ ટૅપ ⚡</h3>
-      <p className="font-gujarati text-xs text-stone-500">ગ્રીડમાંથી ફક્ત ફળો (ફળ 🍎) પર જ ટૅપ કરો:</p>
+      
+      <div className="flex justify-between items-center px-4">
+        <span className="font-gujarati text-xs text-stone-500">સ્કોર: {toGujaratiNum(score)}</span>
+        <span className="font-gujarati text-xs text-stone-500 font-bold bg-amber-100 dark:bg-stone-850 px-3 py-1 rounded-full text-amber-800 dark:text-amber-300">રાઉન્ડ: {toGujaratiNum(round)}</span>
+      </div>
+
+      <p className="font-gujarati text-xs text-stone-500">ગ્રીડમાંથી ફક્ત ફળો (ફળ 🍎, 🍌, 🍇...) પર જ ટૅપ કરો:</p>
 
       <div className="grid grid-cols-2 gap-4">
         {items.map(item => (
@@ -1491,18 +1659,33 @@ function SpeedTapGame() {
             key={item.id}
             onClick={() => tap(item.id)}
             disabled={item.tapped}
-            className={`p-6 rounded-3xl border font-gujarati font-bold text-sm transition active:scale-95 shadow-md ${
+            className={`p-6 rounded-[2rem] border font-gujarati font-black text-sm transition active:scale-95 shadow-md min-h-[80px] flex items-center justify-center ${
               item.tapped 
                 ? item.isTarget 
                   ? 'bg-emerald-500 border-emerald-600 text-white' 
                   : 'bg-rose-500 border-rose-600 text-white' 
-                : 'bg-white hover:bg-stone-50 border-stone-200'
+                : 'bg-white dark:bg-stone-950 hover:bg-stone-50 dark:hover:bg-stone-900 border-stone-200 dark:border-stone-800 text-stone-750 dark:text-stone-150'
             }`}
           >
             {item.label}
           </button>
         ))}
       </div>
+
+      {message && (
+        <p className="font-gujarati text-xs text-stone-600 dark:text-stone-300 px-4 leading-normal mt-2">
+          {message}
+        </p>
+      )}
+
+      {allTargetsTapped && (
+        <button
+          onClick={nextRound}
+          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-2xl font-gujarati font-bold text-sm shadow-md active:scale-95 transition"
+        >
+          આગળ વધો ➡️
+        </button>
+      )}
     </div>
   );
 }
@@ -1514,16 +1697,29 @@ function TrueFalseGame() {
   const [activeItem, setActiveItem] = useState(() => playedController.getUnplayed('true_false', TRUE_FALSE_DB));
   const [checked, setChecked] = useState(null);
 
+  const cleanStatement = (str) => {
+    if (!str) return '';
+    return str
+      .replace(/ગુજરાત પ્રદેશ સંબંધિત પ્રશ્ન ક્રમાંક\s*[\d૦-૯]+:\s*/gi, '')
+      .replace(/^"|"$|^“|”$/g, '')
+      .trim();
+  };
+
   const handleChoice = (choice) => {
     if (checked !== null) return;
+    playSound('click');
     setChecked(choice);
     if (choice === activeItem.answer) {
+      playSound('correct');
       addCoins(10);
       playedController.markPlayed('true_false', activeItem.id);
+    } else {
+      playSound('wrong');
     }
   };
 
   const next = () => {
+    playSound('click');
     setActiveItem(playedController.getUnplayed('true_false', TRUE_FALSE_DB));
     setChecked(null);
   };
@@ -1532,9 +1728,9 @@ function TrueFalseGame() {
     <div className="text-center space-y-6 max-w-sm mx-auto py-2">
       <h3 className="font-gujarati font-black text-xl">સાચું કે ખોટું 🎪</h3>
       
-      <div className="bg-white border border-stone-200 p-6 rounded-3xl shadow-lg relative overflow-hidden flex flex-col justify-center min-h-[160px] animate-fade-in">
-        <p className="font-gujarati font-black text-sm text-stone-700 leading-normal">
-          "{activeItem.statement}"
+      <div className="bg-white dark:bg-stone-950 border border-stone-200 dark:border-stone-850 p-6 rounded-3xl shadow-lg relative overflow-hidden flex flex-col justify-center min-h-[160px] animate-fade-in">
+        <p className="font-gujarati font-black text-sm text-stone-700 dark:text-stone-200 leading-normal">
+          "{cleanStatement(activeItem.statement)}"
         </p>
       </div>
 
@@ -1556,8 +1752,8 @@ function TrueFalseGame() {
       </div>
 
       {checked !== null && (
-        <div className="bg-stone-50 border border-stone-200 p-4 rounded-2xl text-left space-y-3 animate-fade-in">
-          <p className="font-gujarati text-[10px] text-stone-600 leading-normal">{activeItem.fact}</p>
+        <div className="bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-4 rounded-2xl text-left space-y-3 animate-fade-in">
+          <p className="font-gujarati text-[10px] text-stone-600 dark:text-stone-300 leading-normal">{activeItem.fact}</p>
           <div className="flex justify-between items-center pt-2">
             <span className="font-gujarati text-[10px] font-bold text-emerald-600">
               {checked === activeItem.answer ? '🎉 સાચું! +૧૦ કોઈન્સ' : '❌ ઉત્તર ખોટો છે'}
