@@ -325,6 +325,68 @@ const QUESTIONNAIRE_STEPS = [
   }
 ];
 
+const CHILD_QUESTIONNAIRE_STEPS = [
+  {
+    field: 'ageGroup',
+    text: "બેટા, બાળકની ઉંમર કેટલી છે એ જણાવીશ? 🧒",
+    options: [
+      { value: '0-2', label: '૧-૨ વર્ષ (Toddler)' },
+      { value: '3-7', label: '૩-૭ વર્ષ (Kid)' },
+      { value: '8-12', label: '૮-૧૨ વર્ષ (Child)' }
+    ]
+  },
+  {
+    field: 'lifestyle',
+    text: "દીકરા, બાળકની દિનચર્યા કે પ્રવૃત્તિ શું છે? 🎒",
+    options: [
+      { value: 'toddler', label: 'બાળક નાનું છે (ઘરે જ રહે છે)' },
+      { value: 'student', label: 'શાળાએ જાય છે (School student)' }
+    ]
+  },
+  {
+    field: 'diet',
+    text: "બેટા, બાળકનો આહાર કેવો છે? 🥛",
+    options: [
+      { value: 'milk', label: 'માતાનું દૂધ / ઉપરનું દૂધ' },
+      { value: 'junk', label: 'બહારની ચોકલેટ/ચીપ્સ વધુ ખાય છે' },
+      { value: 'normal', label: 'ઘરનો સાદો પૌષ્ટિક ખોરાક' }
+    ]
+  },
+  {
+    field: 'timing',
+    text: "બેટા, બાળકને આ તકલીફ ક્યારે વધારે થાય છે? ⏰",
+    options: [
+      { value: 'morning', label: 'સવારે (Morning)' },
+      { value: 'night', label: 'રાત્રે (Night)' },
+      { value: 'always', label: 'હંમેશા (Always)' }
+    ]
+  },
+  {
+    field: 'stress',
+    text: "બેટા, બાળકને અભ્યાસ કે સ્કૂલનો કોઈ ભાર છે? 🧠",
+    options: [
+      { value: 'high', label: 'હા, ભણવાનો ભાર છે' },
+      { value: 'none', label: 'ના, રમત-ગમતમાં મસ્ત રહે છે' }
+    ]
+  },
+  {
+    field: 'severity',
+    text: "છેલ્લો સવાલ દીકરા, ૧ થી ૧૦ વચ્ચે બાળકની આ તકલીફ કેટલી ગંભીર છે? (Severity Scale) 📊",
+    options: [
+      { value: '1', label: '૧' },
+      { value: '2', label: '૨' },
+      { value: '3', label: '૩' },
+      { value: '4', label: '૪' },
+      { value: '5', label: '૫' },
+      { value: '6', label: '૬' },
+      { value: '7', label: '૭' },
+      { value: '8', label: '૮' },
+      { value: '9', label: '૯' },
+      { value: '10', label: '૧૦' }
+    ]
+  }
+];
+
 const DEFAULT_EXPLANATION = {
   name: "સ્વાસ્થ્ય ઉપચાર",
   why: {
@@ -769,7 +831,14 @@ const generateDynamicChallenge = (dbResult) => {
   return challengeList;
 };
 
-const shouldTriggerQuestionnaire = (topicKey, dbResult = null) => {
+const shouldTriggerQuestionnaire = (topicKey, dbResult = null, userQuery = "") => {
+  const queryText = (userQuery || "").toLowerCase();
+  const infoWords = ["ફાયદા", "ગુણ", "મહત્વ", "માહિતી", "ઉપયોગ", "તત્વો", "નુકસાન", "લાભ", "ઔષધિય", "બનાવવાની", "રીત", "રેસિપી", "પ્રોપર્ટી", "benefits", "uses", "recipe"];
+  
+  if (queryText && infoWords.some(word => queryText.includes(word))) {
+    return false;
+  }
+
   if (!dbResult && topicKey) {
     return true;
   }
@@ -780,7 +849,6 @@ const shouldTriggerQuestionnaire = (topicKey, dbResult = null) => {
     }
     const title = (dbResult.question || "").toLowerCase();
     const keywords = (dbResult.keywords || []).map(k => k.toLowerCase());
-    const infoWords = ["ફાયદા", "ગુણ", "મહત્વ", "માહિતી", "ઉપયોગ", "તત્વો", "નુકસાન", "લાભ"];
     if (infoWords.some(word => title.includes(word) || keywords.some(k => k.includes(word)))) {
       return false;
     }
@@ -1310,13 +1378,15 @@ export default function HealthAssistant() {
     return filtered.slice(0, 6).map(entry => entry.question);
   };
 
-  // Helper functions for options formatting
   const getAgeGroupText = (val) => {
     switch (val) {
       case '13-18': return '૧૩-૧૮ વર્ષ (Teen)';
       case '19-35': return '૧૯-૩૫ વર્ષ (Youth)';
       case '36-55': return '૩૬-૫૫ વર્ષ (Middle Age)';
       case '55+': return '૫૫+ વર્ષ (Senior)';
+      case '0-2': return '૧-૨ વર્ષ (Toddler)';
+      case '3-7': return '૩-૭ વર્ષ (Kid)';
+      case '8-12': return '૮-૧૨ વર્ષ (Child)';
       default: return val || '';
     }
   };
@@ -1328,6 +1398,7 @@ export default function HealthAssistant() {
       case 'business': return 'ધંધો (Business)';
       case 'housewife': return 'ઘરકામ (Housewife)';
       case 'retired': return 'નિવૃત્ત (Retired)';
+      case 'toddler': return 'બાળક નાનું છે (ઘરે જ રહે છે)';
       default: return val || '';
     }
   };
@@ -1350,6 +1421,9 @@ export default function HealthAssistant() {
       case 'sattvik': return 'ઘરનું સાત્ત્વિક ભોજન';
       case 'irregular': return 'જમવાનો સમય અનિયમિત';
       case 'tea_coffee': return 'ચા/કોફી વધારે';
+      case 'milk': return 'માતાનું દૂધ / ઉપરનું દૂધ';
+      case 'junk': return 'બહારની ચોકલેટ/ચીપ્સ વધુ ખાય છે';
+      case 'normal': return 'ઘરનો સાદો પૌષ્ટિક ખોરાક';
       default: return val || '';
     }
   };
@@ -1364,12 +1438,33 @@ export default function HealthAssistant() {
   };
 
   const matchPersonalizedTopic = (query) => {
+    if (!query) return null;
     const normalized = query.toLowerCase().trim();
+    // Split the query into tokens/words to check for exact word matches.
+    // Also include common Gujarati characters and zero-width space characters.
+    const words = normalized.split(/[\s,\-\/\.\?\!\u200b\u200c\u200d]+/);
+
     for (const [key, topic] of Object.entries(PERSONALIZED_TOPICS)) {
       if (normalized === key) return key;
       for (const keyword of topic.keywords) {
-        if (normalized === keyword.toLowerCase() || normalized.includes(keyword.toLowerCase())) {
-          return key;
+        const kw = keyword.toLowerCase().trim();
+        if (normalized === kw) return key;
+        
+        // For multi-word keywords, check if they exist as a clean phrase
+        if (kw.includes(' ')) {
+          if (normalized.includes(kw)) {
+            const idx = normalized.indexOf(kw);
+            const charBefore = idx > 0 ? normalized[idx - 1] : ' ';
+            const charAfter = idx + kw.length < normalized.length ? normalized[idx + kw.length] : ' ';
+            if (/[\s,\-\/\.\?\!\u200b\u200c\u200d]/.test(charBefore) && /[\s,\-\/\.\?\!\u200b\u200c\u200d]/.test(charAfter)) {
+              return key;
+            }
+          }
+        } else {
+          // Single-word keyword: must match one of the tokens exactly
+          if (words.includes(kw)) {
+            return key;
+          }
         }
       }
     }
@@ -1491,6 +1586,68 @@ export default function HealthAssistant() {
   };
 
   const startQuestionnaire = (topicKey, dbResult = null) => {
+    const isChild = dbResult && dbResult.category === 'child';
+    const isWomen = (dbResult && dbResult.category === 'women') || topicKey === 'periods';
+    
+    if (isChild) {
+      setQuestionnaire({
+        active: true,
+        topicKey,
+        dbResult,
+        step: 0,
+        answers: { isChild: true },
+        isChild: true,
+        isWomenPrelude: false
+      });
+      const dadiChildMsg = {
+        id: Date.now(),
+        sender: 'dadi',
+        text: "બેટા, આ બાળકની તકલીફ છે. બાળકની ઉંમર અને ખોરાક અલગ હોવાથી આપણે તેના માટે નવી માહિતી સેટ કરીશું. પહેલાં બાળકની ઉંમર (Age Group) કેટલી છે એ જણાવીશ? 🧒"
+      };
+      setChatMessages(prev => [...prev, dadiChildMsg]);
+      speakText("બેટા, આ બાળકની તકલીફ છે. બાળકની ઉંમર અને ખોરાક અલગ હોવાથી આપણે તેના માટે નવી માહિતી સેટ કરીશું.");
+      return;
+    }
+    
+    if (isWomen) {
+      let profileGender = 'male';
+      try {
+        const kbcProfile = localStorage.getItem('sanskari_kbc_profile');
+        if (kbcProfile) {
+          const parsed = JSON.parse(kbcProfile);
+          if (parsed.gender) profileGender = parsed.gender.toLowerCase();
+        }
+      } catch (e) {}
+      
+      const saved = localStorage.getItem('dadi_ma_profile_v2');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed.gender) profileGender = parsed.gender.toLowerCase();
+        } catch (e) {}
+      }
+
+      if (profileGender !== 'female') {
+        setQuestionnaire({
+          active: true,
+          topicKey,
+          dbResult,
+          step: 0,
+          answers: {},
+          isChild: false,
+          isWomenPrelude: true
+        });
+        const dadiPreludeMsg = {
+          id: Date.now(),
+          sender: 'dadi',
+          text: "બેટા, આ મહિલાઓ સંબંધિત તકલીફ (સ્ત્રી રોગ) છે. શું તું આ તારા પોતાના માટે પૂછી રહી છે કે ઘરના અન્ય કોઈ સ્ત્રી સભ્ય (માતા, પત્ની, બહેન કે દીકરી) માટે? 👵"
+        };
+        setChatMessages(prev => [...prev, dadiPreludeMsg]);
+        speakText("બેટા, આ મહિલાઓ સંબંધિત તકલીફ છે. શું તું આ તારા પોતાના માટે પૂછી રહી છે કે ઘરના અન્ય કોઈ સ્ત્રી સભ્ય માટે?");
+        return;
+      }
+    }
+
     const saved = localStorage.getItem('dadi_ma_profile_v2');
     if (saved) {
       try {
@@ -1500,7 +1657,9 @@ export default function HealthAssistant() {
           topicKey,
           dbResult,
           step: -1, // Verification step
-          answers: parsed
+          answers: parsed,
+          isChild: false,
+          isWomenPrelude: false
         });
         
         const dadiVerifyMsg = {
@@ -1521,7 +1680,9 @@ export default function HealthAssistant() {
       topicKey,
       dbResult,
       step: 0,
-      answers: {}
+      answers: {},
+      isChild: false,
+      isWomenPrelude: false
     });
     
     const dadiFirstMsg = {
@@ -1541,6 +1702,62 @@ export default function HealthAssistant() {
     setTimeout(() => {
       setIsTyping(false);
       
+      // 1. Handle Women's Disease Prelude
+      if (questionnaire.isWomenPrelude) {
+        if (val === 'self_female') {
+          const saved = localStorage.getItem('dadi_ma_profile_v2');
+          if (saved) {
+            try {
+              const parsed = JSON.parse(saved);
+              setQuestionnaire(prev => ({
+                ...prev,
+                step: -1,
+                isWomenPrelude: false,
+                answers: { ...parsed, gender: 'female' }
+              }));
+              
+              const dadiVerifyMsg = {
+                id: Date.now() + 1,
+                sender: 'dadi',
+                text: `બેટા, તારી અગાઉ સેવ કરેલી વિગતો આ મુજબ છે:\n\n• **ઉંમર**: ${getAgeGroupText(parsed.ageGroup)}\n• **લાઇફસ્ટાઇલ**: ${getLifestyleText(parsed.lifestyle)}\n• **ક્યારે થાય છે**: ${getTimingText(parsed.timing)}\n• **ખોરાક**: ${getDietText(parsed.diet)}\n• **સ્ટ્રેસ**: ${getStressText(parsed.stress)}\n\nશું આ વિગતો સાચી છે કે બદલવી છે? 👵`
+              };
+              setChatMessages(prev => [...prev, dadiVerifyMsg]);
+              speakText(`બેટા, તારી અગાઉ સેવ કરેલી વિગતો આ મુજબ છે. શું આ વિગતો સાચી છે કે બદલવી છે?`);
+              return;
+            } catch (e) {}
+          }
+          setQuestionnaire(prev => ({
+            ...prev,
+            step: 0,
+            isWomenPrelude: false,
+            answers: { gender: 'female' }
+          }));
+          const dadiFirstMsg = {
+            id: Date.now() + 1,
+            sender: 'dadi',
+            text: QUESTIONNAIRE_STEPS[0].text
+          };
+          setChatMessages(prev => [...prev, dadiFirstMsg]);
+          speakText(QUESTIONNAIRE_STEPS[0].text);
+        } else {
+          setQuestionnaire(prev => ({
+            ...prev,
+            step: 0,
+            isWomenPrelude: false,
+            answers: { gender: 'female' }
+          }));
+          const dadiFirstMsg = {
+            id: Date.now() + 1,
+            sender: 'dadi',
+            text: "સરસ દીકરા, તો ચાલ આપણે તેમની વિગતો જાણીએ. પહેલાં તેમની ઉંમર (Age Group) કેટલી છે એ જણાવીશ? 👵"
+          };
+          setChatMessages(prev => [...prev, dadiFirstMsg]);
+          speakText("સરસ દીકરા, તો ચાલ આપણે તેમની વિગતો જાણીએ. પહેલાં તેમની ઉંમર કેટલી છે એ જણાવીશ?");
+        }
+        return;
+      }
+
+      // 2. Handle Saved Profile Verification Step
       if (questionnaire.step === -1) {
         if (val === 'yes') {
           setQuestionnaire(prev => ({
@@ -1559,7 +1776,7 @@ export default function HealthAssistant() {
           setQuestionnaire(prev => ({
             ...prev,
             step: 0,
-            answers: {}
+            answers: questionnaire.answers.gender ? { gender: questionnaire.answers.gender } : {}
           }));
           
           const dadiMsg = {
@@ -1573,18 +1790,20 @@ export default function HealthAssistant() {
         return;
       }
       
-      const currentStepObj = QUESTIONNAIRE_STEPS[questionnaire.step];
+      // 3. Regular and Child steps
+      const stepsList = questionnaire.isChild ? CHILD_QUESTIONNAIRE_STEPS : QUESTIONNAIRE_STEPS;
+      const currentStepObj = stepsList[questionnaire.step];
       const newAnswers = { ...questionnaire.answers, [currentStepObj.field]: val };
       
       const nextStep = questionnaire.step + 1;
-      if (nextStep < QUESTIONNAIRE_STEPS.length) {
+      if (nextStep < stepsList.length) {
         setQuestionnaire(prev => ({
           ...prev,
           step: nextStep,
           answers: newAnswers
         }));
         
-        const nextStepObj = QUESTIONNAIRE_STEPS[nextStep];
+        const nextStepObj = stepsList[nextStep];
         const dadiMsg = {
           id: Date.now() + 1,
           sender: 'dadi',
@@ -1593,18 +1812,21 @@ export default function HealthAssistant() {
         setChatMessages(prev => [...prev, dadiMsg]);
         speakText(nextStepObj.text);
       } else {
-        const profileToSave = {
-          ageGroup: newAnswers.ageGroup,
-          lifestyle: newAnswers.lifestyle,
-          timing: newAnswers.timing,
-          diet: newAnswers.diet,
-          stress: newAnswers.stress
-        };
-        localStorage.setItem('dadi_ma_profile_v2', JSON.stringify(profileToSave));
+        if (!questionnaire.isChild) {
+          const profileToSave = {
+            ageGroup: newAnswers.ageGroup,
+            lifestyle: newAnswers.lifestyle,
+            timing: newAnswers.timing,
+            diet: newAnswers.diet,
+            stress: newAnswers.stress,
+            gender: newAnswers.gender || 'male'
+          };
+          localStorage.setItem('dadi_ma_profile_v2', JSON.stringify(profileToSave));
+        }
         
         const isAcute = isAcuteCondition(questionnaire.topicKey, questionnaire.dbResult);
         const finalAnswer = generatePersonalizedResponse(questionnaire.topicKey, newAnswers, questionnaire.dbResult);
-        const DISCLAIMER = '\n\n⚠️ *ઘરેલુ ઉપાય ૭ દિવસ ટ્રાય કરો, ફેર ન પડે તો ડૉક્ટરની જરૂર સલાહ લો.*';
+        const DISCLAIMER = '\n\n⚠️ *આયુર્વેદિક ઘરેલુ ઉપાય છે. જો તકલીફ વધારે હોય તો ડૉક્ટરની સલાહ અચૂક લો.*';
         const answerWithDisclaimer = finalAnswer + DISCLAIMER;
         
         const relatedChips = questionnaire.dbResult
@@ -1630,7 +1852,9 @@ export default function HealthAssistant() {
           topicKey: '',
           dbResult: null,
           step: 0,
-          answers: {}
+          answers: {},
+          isChild: false,
+          isWomenPrelude: false
         });
         
         speakText("બેટા, તારી વિગતો મુજબ મેં તારા માટે ખાસ આયુર્વેદિક ઉપચાર તૈયાર કર્યો છે.");
@@ -1663,30 +1887,48 @@ export default function HealthAssistant() {
 
     const severity = answers.severity;
     const isAcute = isAcuteCondition(topicKey, dbResult);
+    const isChild = (dbResult && dbResult.category === 'child') || answers.isChild;
     
     let severityIntro = "";
-    if (severity >= 7) {
-      severityIntro = `⚠️ **ગંભીરતા રેટિંગ: ${severity}/૧૦ (અતિશય તકલીફ)**\nબેટા, તારી તકલીફ ઘણી વધારે છે! આ ઘરેલુ ઉપચારની સાથે તારે કોઈ સારા **આયુર્વેદિક અથવા ફેમિલી ડૉક્ટરની સલાહ તાત્કાલિક લેવી જ જોઈએ**! 👵🩺\n\n`;
-    } else if (severity >= 4) {
-      severityIntro = `📊 **ગંભીરતા રેટિંગ: ${severity}/૧૦ (મધ્યમ તકલીફ)**\nબેટા, ચિંતા ન કર, આ મધ્યમ તકલીફ છે. નીચે આપેલા નુસખાઓથી તને ખૂબ જ જલ્દી અને ચોક્કસ રાહત મળશે. 🌿\n\n`;
+    if (isChild) {
+      if (severity >= 7) {
+        severityIntro = `⚠️ **બાળકની તકલીફનું ગંભીરતા રેટિંગ: ${severity}/૧૦ (અતિશય તકલીફ)**\nબેટા, બાળકની તકલીફ ઘણી વધારે લાગે છે! ઘરેલુ ઉપચાર ચાલુ રાખવાની સાથે તારે **બાળકોના સ્પેશિયાલિસ્ટ ડૉક્ટર (Pediatrician) નો તાત્કાલિક સંપર્ક કરવો જ જોઈએ**! 👵🩺\n\n`;
+      } else if (severity >= 4) {
+        severityIntro = `📊 **બાળકની તકલીફનું ગંભીરતા રેટિંગ: ${severity}/૧૦ (મધ્યમ તકલીફ)**\nબેટા, ચિંતા ન કર, નીચે આપેલા નુસખાઓથી બાળકને ખૂબ જ જલ્દી અને ચોક્કસ રાહત મળશે. 🌿\n\n`;
+      } else {
+        severityIntro = `🍃 **બાળકની તકલીફનું ગંભીરતા રેટિંગ: ${severity}/૧૦ (હળવી તકલીફ)**\nદીકરા, ચિંતા કરવાની કોઈ જરૂર નથી! આ માત્ર સામાન્ય સમસ્યા છે, જે માત્ર હળવો ખોરાક આપવાથી જ ઠીક થઈ જશે. ✨\n\n`;
+      }
     } else {
-      severityIntro = `🍃 **ગંભીરતા રેટિંગ: ${severity}/૧૦ (હળવી તકલીફ)**\nદીકરા, ચિંતા કરવાની કોઈ જરૂર નથી! આ માત્ર સામાન્ય સમસ્યા છે, જે માત્ર ખોરાક અને દિનચર્યા સુધારવાથી જ ગાયબ થઈ જશે. ✨\n\n`;
+      if (severity >= 7) {
+        severityIntro = `⚠️ **ગંભીરતા રેટિંગ: ${severity}/૧૦ (અતિશય તકલીફ)**\nબેટા, તારી તકલીફ ઘણી વધારે છે! આ ઘરેલુ ઉપચારની સાથે તારે કોઈ સારા **આયુર્વેદિક અથવા ફેમિલી ડૉક્ટરની સલાહ તાત્કાલિક લેવી જ જોઈએ**! 👵🩺\n\n`;
+      } else if (severity >= 4) {
+        severityIntro = `📊 **ગંભીરતા રેટિંગ: ${severity}/૧૦ (મધ્યમ તકલીફ)**\nબેટા, ચિંતા ન કર, આ મધ્યમ તકલીફ છે. નીચે આપેલા નુસખાઓથી તને ખૂબ જ જલ્દી અને ચોક્કસ રાહત મળશે. 🌿\n\n`;
+      } else {
+        severityIntro = `🍃 **ગંભીરતા રેટિંગ: ${severity}/૧૦ (હળવી તકલીફ)**\nદીકરા, ચિંતા કરવાની કોઈ જરૂર નથી! આ માત્ર સામાન્ય સમસ્યા છે, જે માત્ર ખોરાક અને દિનચર્યા સુધારવાથી જ ગાયબ થઈ જશે. ✨\n\n`;
+      }
     }
 
-    let gender = 'male';
-    try {
-      const kbcProfile = localStorage.getItem('sanskari_kbc_profile');
-      if (kbcProfile) {
-        const parsed = JSON.parse(kbcProfile);
-        if (parsed.gender) gender = parsed.gender.toLowerCase();
-      }
-    } catch (e) {}
+    let gender = answers.gender || 'male';
+    if (!answers.gender) {
+      try {
+        const kbcProfile = localStorage.getItem('sanskari_kbc_profile');
+        if (kbcProfile) {
+          const parsed = JSON.parse(kbcProfile);
+          if (parsed.gender) gender = parsed.gender.toLowerCase();
+        }
+      } catch (e) {}
+    }
 
     if (dadiMode === 'modern' && topic.modern) {
       const mod = topic.modern;
       let whySection = `🩺 **સાયન્ટિફિક એનાલિસિસ (Scientific Analysis):**\n`;
-      whySection += `• ${mod.why[answers.lifestyle] || ""}\n`;
-      whySection += `• ${topic.whyStress[answers.stress] ? "Stress Factor: " + mod.fact : ""}\n`;
+      if (isChild) {
+        whySection += `• બાળકની કુમળી વયે શારીરિક પાચક ઉત્સેચકો અને રોગપ્રતિકારક શક્તિ (Immune Response) હજુ વિકાસશીલ અવસ્થામાં હોય છે.\n`;
+        whySection += `• ${answers.diet === 'junk' ? "બહારની મિલાવટવાળી વસ્તુઓ આંતરડાના માઇક્રોબાયોમ (Microbiome) ને નુકસાન કરે છે." : "ખોરાકમાં યોગ્ય પ્રવાહી અને પોષક તત્વોનો અભાવ ચયાપચયને ધીમું પાડે છે."}\n`;
+      } else {
+        whySection += `• ${mod.why[answers.lifestyle] || ""}\n`;
+        whySection += `• ${topic.whyStress[answers.stress] ? "Stress Factor: " + mod.fact : ""}\n`;
+      }
       
       let remediesSection = `\n🔬 **પ્રમાણિત ઉપચાર (Clinical Remedies):**\n`;
       mod.remedies.forEach(rem => {
@@ -1723,19 +1965,39 @@ export default function HealthAssistant() {
 
     // Traditional (default)
     let whySection = `📍 **શા માટે થાય છે? (Ayurvedic Explanation):**\n`;
-    whySection += `• ${topic.why[answers.lifestyle] || ""}\n`;
-    whySection += `• ${topic.whyStress[answers.stress] || ""}\n`;
-    whySection += `• ${topic.whyDiet[answers.diet] || ""}\n`;
-    
-    if (gender === 'female') {
-      if (topicKey === 'acidity') whySection += `• **મહિલાઓ માટે ખાસ**: હોર્મોનલ ફેરફારો, માસિક અથવા પીસીઓડી (PCOD) તેમજ વ્રત-ઉપવાસ દરમિયાન લાંબા સમય સુધી ભૂખ્યા રહેવાથી પિત્ત ઝડપથી વધે છે.\n`;
-      if (topicKey === 'bp') whySection += `• **મહિલાઓ માટે ખાસ**: મેનોપોઝના હોર્મોનલ બદલાવો અને રસોડાની ગરમી તેમજ કુટુંબની અતિશય ચિંતાથી બ્લડ પ્રેશર વધવાની શક્યતા રહે છે.\n`;
-      if (topicKey === 'hairfall') whySection += `• **મહિલાઓ માટે ખાસ**: ગર્ભાવસ્થા (Pregnancy), સ્તનપાન (Breastfeeding) અથવા માસિક ધર્મ દરમિયાન શરીરમાં આયર્નની ઉણપ વાળ ખરવાનું મુખ્ય કારણ બને છે.\n`;
-      if (topicKey === 'periods') whySection += `• **મહિલાઓ માટે ખાસ**: પીસીઓડી કે પીસીઓએસ (PCOD/PCOS), અનિયમિત આહાર અને કસરતનો અભાવ માસિક ચક્રને ખોરવે છે.\n`;
+    if (isChild) {
+      if (answers.lifestyle === 'toddler') {
+        whySection += `• બાળક નાનું હોવાથી તેની પાચનશક્તિ અને નસો હજુ કુમળી હોય છે, જેથી ઋતુ બદલાતા કે ગેસ થતા તકલીફ ઝડપથી વધે છે.\n`;
+      } else {
+        whySection += `• સ્કૂલ જવાની દોડધામ, બહારના પવનમાં રહેવું અથવા ભણવાનો ભાર બાળકના વાયુ અને પિત્ત પ્રકોપને અસર કરે છે.\n`;
+      }
+      
+      if (answers.diet === 'milk') {
+        whySection += `• ફક્ત દૂધ અથવા ઉપરના દૂધનું વધુ પડતું સેવન ક્યારેક કફ કે પેટમાં કરમિયા પેદા કરે છે.\n`;
+      } else if (answers.diet === 'junk') {
+        whySection += `• બહારની ચોકલેટ, વેફર્સ કે મેંદાવાળી આઇટમ્સ બાળકના પેટમાં જઈને આંતરડામાં ચોંટી જાય છે અને કૃમિ તેમજ ગરમી વધારે છે.\n`;
+      } else {
+        whySection += `• ઘરનો ખોરાક સારો છે, પરંતુ બાળકના કોઠામાં રહેલો વાયુ કે કફ કોઈ અયોગ્ય કોમ્બિનેશનથી વધ્યો છે.\n`;
+      }
+      
+      if (answers.stress === 'high') {
+        whySection += `• ભણવાનો કે હોમવર્કનો ભાર પણ બાળકના નાજુક મગજ પર અસર કરી ઊંઘ અને પેટ બગાડે છે.\n`;
+      }
     } else {
-      if (topicKey === 'acidity') whySection += `• **પુરુષો માટે ખાસ**: ધૂમ્રપાન (Smoking), આલ્કોહોલનું સેવન, અને મોડી રાતનું ભોજન હોજરીમાં એસિડ પ્રોડક્શન બગાડે છે.\n`;
-      if (topicKey === 'bp') whySection += `• **પુરુષો માટે ખાસ**: કામનું વધુ પ્રેશર, ધૂમ્રપાન કે આલ્કોહોલનું સેવન હાર્ટ રેટ અને નસોના દબાણને અસર કરે છે.\n`;
-      if (topicKey === 'stress') whySection += `• **પુરુષો માટે ખાસ**: નોકરી/વેપારની જવાબદારીઓ, આર્થિક ભાર અને અપૂરતા સામાજિક આરામથી સતત ચિંતા રહે છે.\n`;
+      whySection += `• ${topic.why[answers.lifestyle] || ""}\n`;
+      whySection += `• ${topic.whyStress[answers.stress] || ""}\n`;
+      whySection += `• ${topic.whyDiet[answers.diet] || ""}\n`;
+      
+      if (gender === 'female') {
+        if (topicKey === 'acidity') whySection += `• **મહિલાઓ માટે ખાસ**: હોર્મોનલ ફેરફારો, માસિક અથવા પીસીઓડી (PCOD) તેમજ વ્રત-ઉપવાસ દરમિયાન લાંબા સમય સુધી ભૂખ્યા રહેવાથી પિત્ત ઝડપથી વધે છે.\n`;
+        if (topicKey === 'bp') whySection += `• **મહિલાઓ માટે ખાસ**: મેનોપોઝના હોર્મોનલ બદલાવો અને રસોડાની ગરમી તેમજ કુટુંબની અતિશય ચિંતાથી બ્લડ પ્રેશર વધવાની શક્યતા રહે છે.\n`;
+        if (topicKey === 'hairfall') whySection += `• **મહિલાઓ માટે ખાસ**: ગર્ભાવસ્થા (Pregnancy), સ્તનપાન (Breastfeeding) અથવા માસિક ધર્મ દરમિયાન શરીરમાં આયર્નની ઉણપ વાળ ખરવાનું મુખ્ય કારણ બને છે.\n`;
+        if (topicKey === 'periods') whySection += `• **મહિલાઓ માટે ખાસ**: પીસીઓડી કે પીસીઓએસ (PCOD/PCOS), અનિયમિત આહાર અને કસરતનો અભાવ માસિક ચક્રને ખોરવે છે.\n`;
+      } else {
+        if (topicKey === 'acidity') whySection += `• **પુરુષો માટે ખાસ**: ધૂમ્રપાન (Smoking), આલ્કોહોલનું સેવન, અને મોડી રાતનું ભોજન હોજરીમાં એસિડ પ્રોડક્શન બગાડે છે.\n`;
+        if (topicKey === 'bp') whySection += `• **પુરુષો માટે ખાસ**: કામનું વધુ પ્રેશર, ધૂમ્રપાન કે આલ્કોહોલનું સેવન હાર્ટ રેટ અને નસોના દબાણને અસર કરે છે.\n`;
+        if (topicKey === 'stress') whySection += `• **પુરુષો માટે ખાસ**: નોકરી/વેપારની જવાબદારીઓ, આર્થિક ભાર અને અપૂરતા સામાજિક આરામથી સતત ચિંતા રહે છે.\n`;
+      }
     }
 
     let remediesSection = `\n🌿 **તાત્કાલિક ઘરેલુ ઉપાય (Home Remedies):**\n`;
@@ -1789,7 +2051,7 @@ export default function HealthAssistant() {
 
     // Check if query matches a personalized health topic
     const matchedKey = matchPersonalizedTopic(query);
-    if (matchedKey && shouldTriggerQuestionnaire(matchedKey)) {
+    if (matchedKey && shouldTriggerQuestionnaire(matchedKey, null, query)) {
       setIsTyping(false);
       startQuestionnaire(matchedKey);
       return;
@@ -1800,7 +2062,7 @@ export default function HealthAssistant() {
 
     if (dbResult) {
       setIsTyping(false);
-      if (shouldTriggerQuestionnaire(`db_${dbResult.id}`, dbResult)) {
+      if (shouldTriggerQuestionnaire(`db_${dbResult.id}`, dbResult, query)) {
         startQuestionnaire(`db_${dbResult.id}`, dbResult);
       } else {
         const DISCLAIMER = '\n\n⚠️ *આ ઘરેલુ ઉપાય છે. ગંભીર બીમારી માટે ડૉક્ટર ની સલાહ ચોક્કસ લો.*';
@@ -2541,11 +2803,11 @@ export default function HealthAssistant() {
             <div className="px-4 pb-4 shrink-0 space-y-2">
               <div className="flex justify-between items-center">
                 <p className="font-gujarati text-[10px] text-[#8c6239] dark:text-amber-400 font-bold uppercase tracking-widest">
-                  {questionnaire.step === -1 ? "તમારી પસંદગી ટેપ કરો:" : `સવાલ ${questionnaire.step + 1} / ૬:`}
+                  {questionnaire.isWomenPrelude || questionnaire.step === -1 ? "તમારી પસંદગી ટેપ કરો:" : `સવાલ ${questionnaire.step + 1} / ૬:`}
                 </p>
                 <button
                   onClick={() => {
-                    setQuestionnaire({ active: false, topicKey: '', step: 0, answers: {} });
+                    setQuestionnaire({ active: false, topicKey: '', step: 0, answers: {}, isChild: false, isWomenPrelude: false });
                     setChatMessages(prev => [...prev, {
                       id: Date.now(),
                       sender: 'dadi',
@@ -2558,7 +2820,24 @@ export default function HealthAssistant() {
                 </button>
               </div>
               <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto no-scrollbar py-1">
-                {questionnaire.step === -1 ? (
+                {questionnaire.isWomenPrelude ? (
+                  <>
+                    <button
+                      onClick={() => handleQuestionnaireAnswer('self_female', 'હું પોતે સ્ત્રી છું (મારા માટે) 🙋‍♀️')}
+                      disabled={isTyping}
+                      className="text-[11px] font-gujarati px-4 py-2 bg-emerald-50 dark:bg-stone-900 border border-emerald-250 dark:border-stone-800 rounded-xl text-emerald-700 dark:text-emerald-450 hover:bg-emerald-100 transition-all font-bold active:scale-95"
+                    >
+                      હું પોતે સ્ત્રી છું (મારા માટે) 🙋‍♀️
+                    </button>
+                    <button
+                      onClick={() => handleQuestionnaireAnswer('family_female', 'ઘરની કોઈ સ્ત્રી સભ્ય માટે 👩')}
+                      disabled={isTyping}
+                      className="text-[11px] font-gujarati px-4 py-2 bg-[#fdf8f2] dark:bg-stone-900 border border-[#e8d5c0] dark:border-stone-800 rounded-xl text-[#8c6239] dark:text-[#f4d6b6] hover:bg-[#f3e5d8] transition-all font-bold active:scale-95"
+                    >
+                      ઘરની કોઈ સ્ત્રી સભ્ય માટે 👩
+                    </button>
+                  </>
+                ) : questionnaire.step === -1 ? (
                   <>
                     <button
                       onClick={() => handleQuestionnaireAnswer('yes', 'હા, વિગતો સાચી છે ✅')}
@@ -2576,7 +2855,7 @@ export default function HealthAssistant() {
                     </button>
                   </>
                 ) : (
-                  QUESTIONNAIRE_STEPS[questionnaire.step].options.map((opt) => (
+                  (questionnaire.isChild ? CHILD_QUESTIONNAIRE_STEPS : QUESTIONNAIRE_STEPS)[questionnaire.step].options.map((opt) => (
                     <button
                       key={opt.value}
                       onClick={() => handleQuestionnaireAnswer(opt.value, opt.label)}
