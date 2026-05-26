@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import ShareButton from './ShareButton';
 import { DADI_MA_DB, CATEGORIES, QUICK_SUGGESTIONS, searchDadiMaDB } from '../data/dadiMaDatabase';
 import { callDadiMaAI, isAIConfigured } from '../utils/aiService';
+import { PERSONALIZED_TOPICS } from '../data/personalizedAdvice';
 
 const CONDITIONS_DATA = {
   "ડાયાબિટીસ (Type 2)": {
@@ -253,6 +254,77 @@ const VITAMINS_DATA = [
   }
 ];
 
+const QUESTIONNAIRE_STEPS = [
+  {
+    field: 'ageGroup',
+    text: "બેટા, તારી ઉંમર કેટલી છે એ જણાવીશ? 👵",
+    options: [
+      { value: '13-18', label: '૧૩-૧૮ વર્ષ (Teen)' },
+      { value: '19-35', label: '૧૯-૩૫ વર્ષ (Youth)' },
+      { value: '36-55', label: '૩૬-૫૫ વર્ષ (Middle Age)' },
+      { value: '55+', label: '૫૫+ વર્ષ (Senior)' }
+    ]
+  },
+  {
+    field: 'lifestyle',
+    text: "ખૂબ સરસ દીકરા! તું શું કરે છે (લાઇફસ્ટાઇલ/વ્યવસાય) એ જણાવીશ? 💼",
+    options: [
+      { value: 'student', label: 'વિદ્યાર્થી (Student)' },
+      { value: 'job', label: 'નોકરી (Job)' },
+      { value: 'business', label: 'ધંધો (Business)' },
+      { value: 'housewife', label: 'ઘરકામ (Housewife)' },
+      { value: 'retired', label: 'નિવૃત્ત (Retired)' }
+    ]
+  },
+  {
+    field: 'timing',
+    text: "બેટા, તને આ તકલીફ સામાન્ય રીતે ક્યારે વધારે થાય છે? ⏰",
+    options: [
+      { value: 'morning', label: 'સવારે (Morning)' },
+      { value: 'after_meal', label: 'જમ્યા પછી (After Meal)' },
+      { value: 'empty_stomach', label: 'ખાલી પેટ (Empty Stomach)' },
+      { value: 'night', label: 'રાત્રે (Night)' },
+      { value: 'always', label: 'હંમેશા (Always)' }
+    ]
+  },
+  {
+    field: 'diet',
+    text: "દીકરા, તારો આહાર કેવો છે? સામાન્ય રીતે શું વધારે ખાય છે? 🍽️",
+    options: [
+      { value: 'fastfood', label: 'ફાસ્ટ ફૂડ વધારે' },
+      { value: 'spicy', label: 'તીખું/સ્પાઈસી ખૂબ' },
+      { value: 'sattvik', label: 'ઘરનું સાત્ત્વિક ભોજન' },
+      { value: 'irregular', label: 'જમવાનો સમય અનિયમિત' },
+      { value: 'tea_coffee', label: 'ચા/કોફી વધારે' }
+    ]
+  },
+  {
+    field: 'stress',
+    text: "બેટા, તને માનસિક તણાવ (Stress) કેટલો રહે છે? 🧠",
+    options: [
+      { value: 'high', label: 'ઘણો સ્ટ્રેસ' },
+      { value: 'moderate', label: 'સામાન્ય (Moderate)' },
+      { value: 'none', label: 'બિલકુલ નહીં (Almost Nil)' }
+    ]
+  },
+  {
+    field: 'severity',
+    text: "છેલ્લો સવાલ દીકરા, ૧ થી ૧૦ વચ્ચે તારી આ તકલીફ કેટલી ગંભીર કે અસહ્ય છે? (Severity Scale) 📊",
+    options: [
+      { value: '1', label: '૧' },
+      { value: '2', label: '૨' },
+      { value: '3', label: '૩' },
+      { value: '4', label: '૪' },
+      { value: '5', label: '૫' },
+      { value: '6', label: '૬' },
+      { value: '7', label: '૭' },
+      { value: '8', label: '૮' },
+      { value: '9', label: '૯' },
+      { value: '10', label: '૧૦' }
+    ]
+  }
+];
+
 export default function HealthAssistant() {
   const [activeTab, setActiveTab] = useState("conditions");
   const [activeCondition, setActiveCondition] = useState("ડાયાબિટીસ (Type 2)");
@@ -267,6 +339,34 @@ export default function HealthAssistant() {
   const [chatCategory, setChatCategory] = useState('all');
   const [lastAnswer, setLastAnswer] = useState(null);
   const chatEndRef = useRef(null);
+
+  // Dadi-ma Interactive v2.0 State
+  const [dadiMode, setDadiMode] = useState(() => localStorage.getItem('dadi_ma_chatbot_mode') || 'traditional');
+  
+  const [savedNotes, setSavedNotes] = useState(() => {
+    try {
+      const saved = localStorage.getItem('dadi_ma_saved_notes');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  const [activeChallenge, setActiveChallenge] = useState(() => {
+    try {
+      const saved = localStorage.getItem('dadi_ma_active_challenge');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
+  });
+
+  const [questionnaire, setQuestionnaire] = useState({
+    active: false,
+    topicKey: '',
+    step: 0,
+    answers: {}
+  });
 
   const currentCondition = CONDITIONS_DATA[activeCondition];
 
@@ -342,6 +442,409 @@ export default function HealthAssistant() {
     }
   };
 
+  // Helper functions for options formatting
+  const getAgeGroupText = (val) => {
+    switch (val) {
+      case '13-18': return '૧૩-૧૮ વર્ષ (Teen)';
+      case '19-35': return '૧૯-૩૫ વર્ષ (Youth)';
+      case '36-55': return '૩૬-૫૫ વર્ષ (Middle Age)';
+      case '55+': return '૫૫+ વર્ષ (Senior)';
+      default: return val || '';
+    }
+  };
+
+  const getLifestyleText = (val) => {
+    switch (val) {
+      case 'student': return 'વિદ્યાર્થી (Student)';
+      case 'job': return 'નોકરી (Job)';
+      case 'business': return 'ધંધો (Business)';
+      case 'housewife': return 'ઘરકામ (Housewife)';
+      case 'retired': return 'નિવૃત્ત (Retired)';
+      default: return val || '';
+    }
+  };
+
+  const getTimingText = (val) => {
+    switch (val) {
+      case 'morning': return 'સવારે (Morning)';
+      case 'after_meal': return 'જમ્યા પછી (After Meals)';
+      case 'empty_stomach': return 'ખાલી પેટ (Empty Stomach)';
+      case 'night': return 'રાત્રે (Night)';
+      case 'always': return 'હંમેશા (Always)';
+      default: return val || '';
+    }
+  };
+
+  const getDietText = (val) => {
+    switch (val) {
+      case 'fastfood': return 'ફાસ્ટ ફૂડ વધારે';
+      case 'spicy': return 'સ્પાઈસી/તીખું ખૂબ';
+      case 'sattvik': return 'ઘરનું સાત્ત્વિક ભોજન';
+      case 'irregular': return 'જમવાનો સમય અનિયમિત';
+      case 'tea_coffee': return 'ચા/કોફી વધારે';
+      default: return val || '';
+    }
+  };
+
+  const getStressText = (val) => {
+    switch (val) {
+      case 'high': return 'ઘણો સ્ટ્રેસ (High)';
+      case 'moderate': return 'સામાન્ય (Moderate)';
+      case 'none': return 'બિલકુલ નહીં (None)';
+      default: return val || '';
+    }
+  };
+
+  const matchPersonalizedTopic = (query) => {
+    const normalized = query.toLowerCase().trim();
+    for (const [key, topic] of Object.entries(PERSONALIZED_TOPICS)) {
+      if (normalized === key) return key;
+      for (const keyword of topic.keywords) {
+        if (normalized === keyword.toLowerCase() || normalized.includes(keyword.toLowerCase())) {
+          return key;
+        }
+      }
+    }
+    return null;
+  };
+
+  const addCoins = (amount) => {
+    const cur = parseInt(localStorage.getItem('gujarat_coins') || '100', 10);
+    localStorage.setItem('gujarat_coins', (cur + amount).toString());
+    window.dispatchEvent(new Event('coins-updated'));
+  };
+
+  const handleSaveAnswer = (msg) => {
+    const exists = savedNotes.some(n => n.id === msg.id);
+    let updated = [];
+    if (exists) {
+      updated = savedNotes.filter(n => n.id !== msg.id);
+      alert('નુસખો સેવ લિસ્ટમાંથી હટાવવામાં આવ્યો છે.');
+    } else {
+      const title = msg.topicKey ? (PERSONALIZED_TOPICS[msg.topicKey]?.name || "દાદી-મા નો નુસખો") : "આયુર્વેદિક ઉપચાર";
+      const newNote = {
+        id: msg.id,
+        title,
+        text: msg.text,
+        raw: msg.raw,
+        topicKey: msg.topicKey,
+        savedAt: new Date().toLocaleDateString('gu-IN')
+      };
+      updated = [newNote, ...savedNotes];
+      alert('સરસ બેટા! આ નુસખો "મારી સ્વાસ્થ્ય નોટ્સ" વિભાગમાં સેવ થઈ ગયો છે. 👵💾');
+    }
+    setSavedNotes(updated);
+    localStorage.setItem('dadi_ma_saved_notes', JSON.stringify(updated));
+  };
+
+  const isBookmarked = (id) => {
+    return savedNotes.some(n => n.id === id);
+  };
+
+  const start7DayChallenge = (topicKey) => {
+    const topic = PERSONALIZED_TOPICS[topicKey];
+    if (!topic) return;
+    
+    const newChallenge = {
+      topicKey,
+      topicName: topic.name,
+      startDate: new Date().toISOString(),
+      currentDay: 1,
+      completedDays: [],
+      ratings: {}
+    };
+    
+    localStorage.setItem('dadi_ma_active_challenge', JSON.stringify(newChallenge));
+    setActiveChallenge(newChallenge);
+    
+    setChatMessages(prev => [...prev, {
+      id: Date.now(),
+      sender: 'dadi',
+      text: `ખૂબ સરસ બેટા! 👏 તારો **"${topic.name}" નો ૭ દિવસનો પડકાર** શરૂ થઈ ગયો છે. રોજ હું તને એક નવું કાર્ય આપીશ. તારી હેલ્થ સુધારવા માટે દરરોજ આ એપ ઓપન કરી આજનું કાર્ય પૂર્ણ કરજે! 👵✨`
+    }]);
+    speakText(`ખૂબ સરસ બેટા! તારો ${topic.name} નો સાત દિવસનો પડકાર શરૂ થઈ ગયો છે.`);
+  };
+
+  const handleRatingAndComplete = (rating) => {
+    if (!activeChallenge) return;
+    const currentDay = activeChallenge.currentDay;
+    
+    const updatedCompleted = [...activeChallenge.completedDays];
+    if (!updatedCompleted.includes(currentDay)) {
+      updatedCompleted.push(currentDay);
+    }
+    
+    const updatedRatings = { ...activeChallenge.ratings, [currentDay]: rating };
+    
+    let nextDay = currentDay;
+    if (currentDay < 7) {
+      nextDay = currentDay + 1;
+    }
+    
+    const updatedChallenge = {
+      ...activeChallenge,
+      currentDay: nextDay,
+      completedDays: updatedCompleted,
+      ratings: updatedRatings
+    };
+    
+    localStorage.setItem('dadi_ma_active_challenge', JSON.stringify(updatedChallenge));
+    setActiveChallenge(updatedChallenge);
+    
+    addCoins(10);
+    
+    setChatMessages(prev => [...prev, {
+      id: Date.now(),
+      sender: 'dadi',
+      text: `ખૂબ સરસ બેટા! તે દિવસ ${currentDay} નું કાર્ય પૂરું કરી લીધું છે અને રેટીંગ ${rating}/૧૦ સબમિટ કર્યું છે. તને **+૧૦ કોઈન્સ** મળ્યા છે! 👵💰`
+    }]);
+    speakText(`શાબાશ બેટા! તે દિવસ ${currentDay} નું કાર્ય પૂરું કર્યું છે.`);
+  };
+
+  const handleCompleteDay = (day) => {
+    // If they manually tap a completed bubble just to confirm
+  };
+
+  const startQuestionnaire = (topicKey) => {
+    const saved = localStorage.getItem('dadi_ma_profile_v2');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setQuestionnaire({
+          active: true,
+          topicKey,
+          step: -1, // Verification step
+          answers: parsed
+        });
+        
+        const dadiVerifyMsg = {
+          id: Date.now(),
+          sender: 'dadi',
+          text: `બેટા, તારી અગાઉ સેવ કરેલી વિગતો આ મુજબ છે:\n\n• **ઉંમર**: ${getAgeGroupText(parsed.ageGroup)}\n• **લાઇફસ્ટાઇલ**: ${getLifestyleText(parsed.lifestyle)}\n• **ક્યારે થાય છે**: ${getTimingText(parsed.timing)}\n• **ખોરાક**: ${getDietText(parsed.diet)}\n• **સ્ટ્રેસ**: ${getStressText(parsed.stress)}\n\nશું આ વિગતો સાચી છે કે બદલવી છે? 👵`
+        };
+        setChatMessages(prev => [...prev, dadiVerifyMsg]);
+        speakText(`બેટા, તારી અગાઉ સેવ કરેલી વિગતો આ મુજબ છે. શું આ વિગતો સાચી છે કે બદલવી છે?`);
+        return;
+      } catch (e) {
+        // Fallback to starting from scratch
+      }
+    }
+    
+    setQuestionnaire({
+      active: true,
+      topicKey,
+      step: 0,
+      answers: {}
+    });
+    
+    const dadiFirstMsg = {
+      id: Date.now(),
+      sender: 'dadi',
+      text: "બેટા, તારી સ્વાસ્થ્ય સમસ્યાનો એકદમ સચોટ આયુર્વેદિક ઉપાય આપવા માટે પહેલાં તારી ઉંમર (Age Group) કેટલી છે એ જણાવીશ? 👵"
+    };
+    setChatMessages(prev => [...prev, dadiFirstMsg]);
+    speakText("બેટા, તારી સ્વાસ્થ્ય સમસ્યાનો એકદમ સચોટ આયુર્વેદિક ઉપાય આપવા માટે પહેલાં તારી ઉંમર કેટલી છે એ જણાવીશ?");
+  };
+
+  const handleQuestionnaireAnswer = (val, label) => {
+    const userMsg = { id: Date.now(), sender: 'user', text: label };
+    setChatMessages(prev => [...prev, userMsg]);
+    setIsTyping(true);
+    
+    setTimeout(() => {
+      setIsTyping(false);
+      
+      if (questionnaire.step === -1) {
+        if (val === 'yes') {
+          setQuestionnaire(prev => ({
+            ...prev,
+            step: 5
+          }));
+          
+          const dadiMsg = {
+            id: Date.now() + 1,
+            sender: 'dadi',
+            text: QUESTIONNAIRE_STEPS[5].text
+          };
+          setChatMessages(prev => [...prev, dadiMsg]);
+          speakText(QUESTIONNAIRE_STEPS[5].text);
+        } else {
+          setQuestionnaire(prev => ({
+            ...prev,
+            step: 0,
+            answers: {}
+          }));
+          
+          const dadiMsg = {
+            id: Date.now() + 1,
+            sender: 'dadi',
+            text: QUESTIONNAIRE_STEPS[0].text
+          };
+          setChatMessages(prev => [...prev, dadiMsg]);
+          speakText(QUESTIONNAIRE_STEPS[0].text);
+        }
+        return;
+      }
+      
+      const currentStepObj = QUESTIONNAIRE_STEPS[questionnaire.step];
+      const newAnswers = { ...questionnaire.answers, [currentStepObj.field]: val };
+      
+      const nextStep = questionnaire.step + 1;
+      if (nextStep < QUESTIONNAIRE_STEPS.length) {
+        setQuestionnaire(prev => ({
+          ...prev,
+          step: nextStep,
+          answers: newAnswers
+        }));
+        
+        const nextStepObj = QUESTIONNAIRE_STEPS[nextStep];
+        const dadiMsg = {
+          id: Date.now() + 1,
+          sender: 'dadi',
+          text: nextStepObj.text
+        };
+        setChatMessages(prev => [...prev, dadiMsg]);
+        speakText(nextStepObj.text);
+      } else {
+        const profileToSave = {
+          ageGroup: newAnswers.ageGroup,
+          lifestyle: newAnswers.lifestyle,
+          timing: newAnswers.timing,
+          diet: newAnswers.diet,
+          stress: newAnswers.stress
+        };
+        localStorage.setItem('dadi_ma_profile_v2', JSON.stringify(profileToSave));
+        
+        const finalAnswer = generatePersonalizedResponse(questionnaire.topicKey, newAnswers);
+        const DISCLAIMER = '\n\n⚠️ *ઘરેલુ ઉપાય ૭ દિવસ ટ્રાય કરો, ફેર ન પડે તો ડૉક્ટરની જરૂર સલાહ લો.*';
+        const answerWithDisclaimer = finalAnswer + DISCLAIMER;
+        const topicObj = PERSONALIZED_TOPICS[questionnaire.topicKey];
+        
+        const dadiMsg = {
+          id: Date.now() + 1,
+          sender: 'dadi',
+          text: answerWithDisclaimer,
+          isDB: true,
+          raw: finalAnswer,
+          isPersonalized: true,
+          topicKey: questionnaire.topicKey,
+          relatedChips: topicObj?.related || []
+        };
+        
+        setChatMessages(prev => [...prev, dadiMsg]);
+        setLastAnswer(answerWithDisclaimer);
+        setQuestionnaire({
+          active: false,
+          topicKey: '',
+          step: 0,
+          answers: {}
+        });
+        
+        speakText("બેટા, તારી વિગતો મુજબ મેં તારા માટે ખાસ આયુર્વેદિક ઉપચાર તૈયાર કર્યો છે.");
+      }
+    }, 600);
+  };
+
+  const generatePersonalizedResponse = (topicKey, answers) => {
+    const topic = PERSONALIZED_TOPICS[topicKey];
+    if (!topic) return "બેટા, આ વિષયે મારી પાસે હજુ ઉંડો અનુભવ નથી.";
+
+    const severity = answers.severity;
+    
+    let severityIntro = "";
+    if (severity >= 7) {
+      severityIntro = `⚠️ **ગંભીરતા રેટિંગ: ${severity}/૧૦ (અતિશય તકલીફ)**\nબેટા, તારી તકલીફ ઘણી વધારે છે! આ ઘરેલુ ઉપચારની સાથે તારે કોઈ સારા **આયુર્વેદિક અથવા ફેમિલી ડૉક્ટરની સલાહ તાત્કાલિક લેવી જ જોઈએ**! 👵🩺\n\n`;
+    } else if (severity >= 4) {
+      severityIntro = `📊 **ગંભીરતા રેટિંગ: ${severity}/૧૦ (મધ્યમ તકલીફ)**\nબેટા, ચિંતા ન કર, આ મધ્યમ તકલીફ છે. નીચે આપેલા નુસખાઓથી તને ખૂબ જ જલ્દી અને ચોક્કસ રાહત મળશે. 🌿\n\n`;
+    } else {
+      severityIntro = `🍃 **ગંભીરતા રેટિંગ: ${severity}/૧૦ (હળવી તકલીફ)**\nદીકરા, ચિંતા કરવાની કોઈ જરૂર નથી! આ માત્ર સામાન્ય સમસ્યા છે, જે માત્ર ખોરાક અને દિનચર્યા સુધારવાથી જ ગાયબ થઈ જશે. ✨\n\n`;
+    }
+
+    let gender = 'male';
+    try {
+      const kbcProfile = localStorage.getItem('sanskari_kbc_profile');
+      if (kbcProfile) {
+        const parsed = JSON.parse(kbcProfile);
+        if (parsed.gender) gender = parsed.gender.toLowerCase();
+      }
+    } catch (e) {}
+
+    if (dadiMode === 'modern' && topic.modern) {
+      const mod = topic.modern;
+      let whySection = `🩺 **સાયન્ટિફિક એનાલિસિસ (Scientific Analysis):**\n`;
+      whySection += `• ${mod.why[answers.lifestyle] || ""}\n`;
+      whySection += `• ${topic.whyStress[answers.stress] ? "Stress Factor: " + mod.fact : ""}\n`;
+      
+      let remediesSection = `\n🔬 **પ્રમાણિત ઉપચાર (Clinical Remedies):**\n`;
+      mod.remedies.forEach(rem => {
+        remediesSection += `• ${rem}\n`;
+      });
+
+      let guideSection = `\n📋 **વૈજ્ઞાનિક માર્ગદર્શિકા (Health Guidelines):**\n`;
+      mod.guidelines.forEach(g => {
+        guideSection += `• ${g}\n`;
+      });
+
+      let dietSection = `\n🍽️ **પથ્ય-અપથ્ય (Diet Tips):**\n`;
+      dietSection += `✔️ **શું ખાવું**: ${topic.dietEat.join(", ")}\n`;
+      dietSection += `❌ **શું ટાળવું**: ${topic.dietAvoid.join(", ")}\n`;
+
+      let challengeSection = `\n📅 **૭ દિવસનો પડકાર (7-Day Challenge):**\n`;
+      topic.challenge.forEach(ch => {
+        challengeSection += `• ${ch}\n`;
+      });
+
+      let factSection = `\n💡 **મેડિકલ ફેક્ટ (Medical Fact):**\n*${mod.fact}*\n`;
+
+      return severityIntro + whySection + remediesSection + guideSection + dietSection + challengeSection + factSection;
+    }
+
+    // Traditional (default)
+    let whySection = `📍 **શા માટે થાય છે? (Ayurvedic Explanation):**\n`;
+    whySection += `• ${topic.why[answers.lifestyle] || ""}\n`;
+    whySection += `• ${topic.whyStress[answers.stress] || ""}\n`;
+    whySection += `• ${topic.whyDiet[answers.diet] || ""}\n`;
+    
+    if (gender === 'female') {
+      if (topicKey === 'acidity') whySection += `• **મહિલાઓ માટે ખાસ**: હોર્મોનલ ફેરફારો, માસિક અથવા પીસીઓડી (PCOD) તેમજ વ્રત-ઉપવાસ દરમિયાન લાંબા સમય સુધી ભૂખ્યા રહેવાથી પિત્ત ઝડપથી વધે છે.\n`;
+      if (topicKey === 'bp') whySection += `• **મહિલાઓ માટે ખાસ**: મેનોપોઝના હોર્મોનલ બદલાવો અને રસોડાની ગરમી તેમજ કુટુંબની અતિશય ચિંતાથી બ્લડ પ્રેશર વધવાની શક્યતા રહે છે.\n`;
+      if (topicKey === 'hairfall') whySection += `• **મહિલાઓ માટે ખાસ**: ગર્ભાવસ્થા (Pregnancy), સ્તનપાન (Breastfeeding) અથવા માસિક ધર્મ દરમિયાન શરીરમાં આયર્નની ઉણપ વાળ ખરવાનું મુખ્ય કારણ બને છે.\n`;
+      if (topicKey === 'periods') whySection += `• **મહિલાઓ માટે ખાસ**: પીસીઓડી કે પીસીઓએસ (PCOD/PCOS), અનિયમિત આહાર અને કસરતનો અભાવ માસિક ચક્રને ખોરવે છે.\n`;
+    } else {
+      if (topicKey === 'acidity') whySection += `• **પુરુષો માટે ખાસ**: ધૂમ્રપાન (Smoking), આલ્કોહોલનું સેવન, અને મોડી રાતનું ભોજન હોજરીમાં એસિડ પ્રોડક્શન બગાડે છે.\n`;
+      if (topicKey === 'bp') whySection += `• **પુરુષો માટે ખાસ**: કામનું વધુ પ્રેશર, ધૂમ્રપાન કે આલ્કોહોલનું સેવન હાર્ટ રેટ અને નસોના દબાણને અસર કરે છે.\n`;
+      if (topicKey === 'stress') whySection += `• **પુરુષો માટે ખાસ**: નોકરી/વેપારની જવાબદારીઓ, આર્થિક ભાર અને અપૂરતા સામાજિક આરામથી સતત ચિંતા રહે છે.\n`;
+    }
+
+    let remediesSection = `\n🌿 **તાત્કાલિક ઘરેલુ ઉપાય (Home Remedies):**\n`;
+    topic.remedies.forEach(rem => {
+      remediesSection += `• ${rem}\n`;
+    });
+
+    let yogaSection = `\n🧘 **યોગ અને પ્રાણાયામ (Yoga & Exercises):**\n`;
+    topic.yoga.forEach(y => {
+      yogaSection += `• ${y}\n`;
+    });
+
+    let dietSection = `\n🍽️ **પથ્ય-અપથ્ય (Diet Tips):**\n`;
+    dietSection += `✔️ **શું ખાવું**: ${topic.dietEat.join(", ")}\n`;
+    dietSection += `❌ **શું ટાળવું**: ${topic.dietAvoid.join(", ")}\n`;
+    if (answers.lifestyle === 'job') {
+      dietSection += `💼 **ઑફિસ ટિપ**: ક્યારેય લંચ સ્કીપ ન કરો, તમારી ડેસ્ક પર વોટર બોટલ રાખો અને નાસ્તામાં તળેલા નાસ્તાને બદલે ધાણી, મખાના અથવા શેકેલા ચણા રાખો.\n`;
+    } else if (answers.lifestyle === 'student') {
+      dietSection += `📚 **સ્ટુડન્ટ ટિપ**: મોડી રાત્રે જાગતી વખતે વધુ પડતી કોફી-ચા પીવાને બદલે હૂંફાળું દૂધ અથવા વરિયાળીનું પાણી લેવું.\n`;
+    }
+
+    let challengeSection = `\n📅 **૭ દિવસનો પડકાર (7-Day Challenge):**\n`;
+    topic.challenge.forEach(ch => {
+      challengeSection += `• ${ch}\n`;
+    });
+
+    let factSection = `\n💡 **અદ્ભુત આયુર્વેદિક ફેક્ટ:**\n*${topic.fact}*\n`;
+
+    return severityIntro + whySection + remediesSection + yogaSection + dietSection + challengeSection + factSection;
+  };
+
   const handleSendMessage = async (text) => {
     const query = text || chatInput.trim();
     if (!query) return;
@@ -352,6 +855,14 @@ export default function HealthAssistant() {
     setIsTyping(true);
 
     await new Promise(r => setTimeout(r, 600));
+
+    // Check if query matches a personalized health topic
+    const matchedKey = matchPersonalizedTopic(query);
+    if (matchedKey) {
+      setIsTyping(false);
+      startQuestionnaire(matchedKey);
+      return;
+    }
 
     // Step 1: Search local database
     const dbResult = searchDadiMaDB(query, chatCategory);
@@ -444,19 +955,159 @@ export default function HealthAssistant() {
         </div>
       </section>
 
+      {/* 7-Day Challenge Progress Card */}
+      {activeChallenge && (
+        <section className="bg-white dark:bg-stone-900 border border-primary/20 rounded-[2.5rem] p-6 shadow-md space-y-4 animate-fade-in">
+          <div className="flex justify-between items-start">
+            <div className="flex gap-3 items-center">
+              <span className="text-3xl">📅</span>
+              <div>
+                <h4 className="font-gujarati font-black text-[#8c6239] dark:text-[#f4d6b6] text-base sm:text-lg">
+                  {activeChallenge.topicName} નો પડકાર
+                </h4>
+                <p className="font-gujarati text-[11px] text-stone-400">દાદી-મા માર્ગદર્શન હેઠળ ૭ દિવસનો કોર્સ</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => {
+                if (window.confirm("બેટા, શું તારે ખરેખર આ ચેલેન્જ બંધ કરવી છે?")) {
+                  localStorage.removeItem('dadi_ma_active_challenge');
+                  setActiveChallenge(null);
+                }
+              }}
+              className="text-[11px] text-rose-500 hover:underline font-gujarati font-bold"
+            >
+              બંધ કરો ❌
+            </button>
+          </div>
+
+          {/* Day Progress Bubbles */}
+          <div className="flex justify-between items-center gap-1 bg-[#fdf8f2] dark:bg-stone-950 p-4 rounded-2xl border border-[#e8d5c0]/50">
+            {[1, 2, 3, 4, 5, 6, 7].map((day) => {
+              const isCompleted = activeChallenge.completedDays.includes(day);
+              const isCurrent = activeChallenge.currentDay === day;
+              const isFuture = day > activeChallenge.currentDay;
+              
+              return (
+                <div key={day} className="flex flex-col items-center flex-1">
+                  <div
+                    className={`h-9 w-9 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                      isCompleted 
+                        ? 'bg-emerald-500 text-white shadow-sm'
+                        : isCurrent
+                          ? 'bg-[#8c6239] text-white ring-4 ring-[#8c6239]/20 animate-pulse'
+                          : 'bg-stone-200 dark:bg-stone-850 text-stone-500'
+                    }`}
+                  >
+                    {isCompleted ? <span className="material-symbols-outlined text-sm font-black">done</span> : `D${day}`}
+                  </div>
+                  <span className="font-gujarati text-[9px] text-stone-400 mt-1">દિવસ {day}</span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Current Day Task Description */}
+          {activeChallenge.currentDay <= 7 && !activeChallenge.completedDays.includes(activeChallenge.currentDay) ? (
+            <div className="bg-amber-50/50 dark:bg-stone-950/40 p-4 rounded-2xl border border-amber-200/50">
+              <span className="font-gujarati text-[10px] bg-amber-100 dark:bg-stone-900 text-[#8c6239] font-bold px-2 py-0.5 rounded-full">આજનું કાર્ય (Day {activeChallenge.currentDay})</span>
+              <p className="font-gujarati text-sm text-stone-750 dark:text-stone-300 font-bold mt-2 leading-relaxed">
+                {PERSONALIZED_TOPICS[activeChallenge.topicKey]?.challenge[activeChallenge.currentDay - 1] || "આજે તમારા આહારમાં કાળજી રાખો."}
+              </p>
+              
+              {/* Daily Complete and Symptom Rate Button */}
+              <div className="mt-3 space-y-3 pt-3 border-t border-stone-200/50">
+                <p className="font-gujarati text-[11px] text-stone-500 font-bold">આજે તમારી તકલીફ કેટલી છે? (૧ થી ૧૦ રેટ કરો):</p>
+                <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-1">
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(rating => (
+                    <button
+                      key={rating}
+                      onClick={() => handleRatingAndComplete(rating)}
+                      className="shrink-0 h-7 w-7 rounded-lg bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-xs text-[#8c6239] font-bold hover:bg-amber-50 active:scale-95 transition-all"
+                    >
+                      {rating}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            activeChallenge.currentDay <= 7 && (
+              <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-4 rounded-2xl border border-emerald-250 text-center font-gujarati text-xs text-emerald-800 dark:text-emerald-450 font-bold">
+                👍 આજનું કાર્ય પૂર્ણ કર્યું છે બેટા! આવતી કાલે દિવસ {activeChallenge.currentDay} ની પ્રવૃત્તિ શરૂ થશે.
+              </div>
+            )
+          )}
+
+          {/* Completion Celebration Message */}
+          {activeChallenge.completedDays.length === 7 && (
+            <div className="bg-emerald-50 dark:bg-emerald-950/20 p-4 rounded-2xl border border-emerald-200 text-center space-y-2">
+              <p className="text-2xl">🎉👵🏆</p>
+              <h5 className="font-gujarati font-black text-emerald-800 dark:text-emerald-400 text-base">અભિનંદન બેટા! તે પડકાર પૂર્ણ કર્યો!</h5>
+              <p className="font-gujarati text-xs text-emerald-700 dark:text-emerald-500">દાદી-મા ની સલાહ માનીને તે ૭ દિવસ સતત ધ્યાન રાખ્યું. તારા ખાતામાં **+૧૦૦ કોઈન્સ** ઉમેરવામાં આવ્યા છે!</p>
+              <button
+                onClick={() => {
+                  addCoins(100);
+                  localStorage.removeItem('dadi_ma_active_challenge');
+                  setActiveChallenge(null);
+                }}
+                className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-gujarati font-bold transition-all active:scale-95 shadow"
+              >
+                ઇનામ સ્વીકારો અને બંધ કરો 🏆
+              </button>
+            </div>
+          )}
+
+          {/* Simple progress charts or ratings list if they have rated past days */}
+          {Object.keys(activeChallenge.ratings || {}).length > 0 && (
+            <div className="pt-2">
+              <span className="font-gujarati text-[10px] text-stone-400 font-bold uppercase tracking-wider block mb-1.5">તમારી સુધારણાનો ગ્રાફ (Progress Chart):</span>
+              <div className="flex items-end gap-2.5 h-12 pt-3 border-b border-l border-stone-200 dark:border-stone-850 px-2">
+                {[1, 2, 3, 4, 5, 6, 7].map(day => {
+                  const rating = activeChallenge.ratings[day];
+                  const heightPercentage = rating ? (rating / 10) * 100 : 0;
+                  return (
+                    <div key={day} className="flex-1 flex flex-col items-center justify-end h-full relative group">
+                      {rating && (
+                        <>
+                          <div 
+                            style={{ height: `${heightPercentage}%` }} 
+                            className={`w-full rounded-t-sm transition-all ${
+                              rating >= 7 ? 'bg-rose-500' : rating >= 4 ? 'bg-amber-500' : 'bg-emerald-500'
+                            }`}
+                          />
+                          <span className="absolute -top-3.5 text-[8px] font-bold text-stone-400">{rating}</span>
+                        </>
+                      )}
+                      <span className="text-[8px] text-stone-400 mt-1">D{day}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </section>
+      )}
+
       {/* Main Tab Navigation */}
-      <section className="flex border-b border-stone-200 dark:border-stone-800">
+      <section className="flex border-b border-stone-200 dark:border-stone-800 overflow-x-auto no-scrollbar">
         <button
           onClick={() => setActiveTab("conditions")}
-          className={`flex-1 py-4 text-center font-gujarati font-black text-lg border-b-4 transition-all ${activeTab === "conditions" ? 'border-primary text-primary' : 'border-transparent text-stone-400 dark:text-stone-600'}`}
+          className={`flex-shrink-0 flex-1 py-4 px-3 text-center font-gujarati font-black text-sm sm:text-base border-b-4 transition-all whitespace-nowrap ${activeTab === "conditions" ? 'border-primary text-primary' : 'border-transparent text-stone-400 dark:text-stone-600'}`}
         >
-          🩺 રોગો અને સચોટ માહિતી
+          🩺 રોગો અને માહિતી
         </button>
         <button
           onClick={() => setActiveTab("vitamins")}
-          className={`flex-1 py-4 text-center font-gujarati font-black text-lg border-b-4 transition-all ${activeTab === "vitamins" ? 'border-primary text-primary' : 'border-transparent text-stone-400 dark:text-stone-600'}`}
+          className={`flex-shrink-0 flex-1 py-4 px-3 text-center font-gujarati font-black text-sm sm:text-base border-b-4 transition-all whitespace-nowrap ${activeTab === "vitamins" ? 'border-primary text-primary' : 'border-transparent text-stone-400 dark:text-stone-600'}`}
         >
-          🥑 શરીરના જરૂરી વિટામિન્સ
+          🥑 વિટામિન્સ
+        </button>
+        <button
+          onClick={() => setActiveTab("notes")}
+          className={`flex-shrink-0 flex-1 py-4 px-3 text-center font-gujarati font-black text-sm sm:text-base border-b-4 transition-all whitespace-nowrap ${activeTab === "notes" ? 'border-primary text-primary' : 'border-transparent text-stone-400 dark:text-stone-600'}`}
+        >
+          📝 મારી સ્વાસ્થ્ય નોટ્સ
         </button>
       </section>
 
@@ -689,6 +1340,69 @@ export default function HealthAssistant() {
         </div>
       )}
 
+      {/* TAB 3: Saved Health Notes */}
+      {activeTab === "notes" && (
+        <div className="space-y-6 animate-fade-in">
+          <div className="px-2">
+            <h4 className="font-gujarati font-black text-2xl text-on-surface">મારી સ્વાસ્થ્ય નોટ્સ 📝</h4>
+            <p className="font-gujarati text-stone-400 text-xs mt-1">તમે સેવ કરેલા તમામ વ્યક્તિગત નુસખાઓ અને દાદી-માના ઉપાયોની યાદી.</p>
+          </div>
+
+          {savedNotes.length === 0 ? (
+            <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-850 p-8 rounded-[2.5rem] text-center space-y-3">
+              <span className="text-5xl block">👵</span>
+              <p className="font-gujarati font-bold text-stone-600 dark:text-stone-300 text-sm">
+                બેટા, તેં હજી સુધી કોઈ પણ નુસખો સાચવ્યો નથી!
+              </p>
+              <p className="font-gujarati text-xs text-stone-400 max-w-sm mx-auto leading-relaxed">
+                જ્યારે તું દાદી-મા ચેટમાં કોઈ નુસખો પૂછે, ત્યારે નીચે આપેલ "સાચવો" બટન દબાવીને અહીં સાચવી શકે છે જેથી તે હંમેશા તારી પાસે રહે.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {savedNotes.map((note) => (
+                <div 
+                  key={note.id} 
+                  className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-850 rounded-[2rem] overflow-hidden shadow-sm"
+                >
+                  <div className="bg-[#fdf8f2] dark:bg-stone-950 p-5 border-b border-stone-100 dark:border-stone-800 flex justify-between items-center">
+                    <div>
+                      <h5 className="font-gujarati font-black text-base text-[#5c3e21] dark:text-[#f4d6b6]">{note.title}</h5>
+                      <span className="text-[10px] text-stone-400 font-bold block mt-0.5">સાચવ્યા તારીખ: {note.savedAt}</span>
+                    </div>
+                    <button
+                      onClick={() => handleSaveAnswer({ id: note.id })}
+                      className="text-stone-400 hover:text-rose-500 font-bold text-xs flex items-center gap-0.5 font-gujarati"
+                    >
+                      <span className="material-symbols-outlined text-sm">delete</span> હટાવો
+                    </button>
+                  </div>
+                  <div className="p-5 space-y-4">
+                    <p className="font-gujarati text-sm text-stone-750 dark:text-stone-300 whitespace-pre-line leading-relaxed font-medium">
+                      {note.text}
+                    </p>
+                    <div className="flex gap-2 pt-2 border-t border-stone-100 dark:border-stone-800">
+                      <button
+                        onClick={() => speakText(note.raw || note.text)}
+                        className="flex items-center gap-1 text-[10px] font-gujarati px-2.5 py-1.5 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-850 rounded-lg text-stone-500 hover:text-[#8c6239] transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-[12px]">volume_up</span> સાંભળો
+                      </button>
+                      <button
+                        onClick={() => handleShareAnswer(note.raw || note.text)}
+                        className="flex items-center gap-1 text-[10px] font-gujarati px-2.5 py-1.5 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-850 rounded-lg text-stone-500 hover:text-[#8c6239] transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-[12px]">share</span> WhatsApp
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Dadi-Ma HYBRID Chatbot Modal */}
       {showDadiChat && (
         <div className="fixed inset-0 z-[1000] bg-black/75 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
@@ -706,9 +1420,28 @@ export default function HealthAssistant() {
                   આયુર્વેદિક ઘરેલુ ઉપચાર | ૨૨૦+ નુસખા
                 </p>
               </div>
+              {/* Mode Toggle Button */}
+              <button
+                onClick={() => {
+                  const nextMode = dadiMode === 'traditional' ? 'modern' : 'traditional';
+                  setDadiMode(nextMode);
+                  localStorage.setItem('dadi_ma_chatbot_mode', nextMode);
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-gujarati font-black transition-all border shadow-sm shrink-0 ${
+                  dadiMode === 'traditional'
+                    ? 'bg-[#8c6239] border-[#8c6239] text-white hover:bg-[#7a5430]'
+                    : 'bg-emerald-600 border-emerald-600 text-white hover:bg-emerald-700'
+                }`}
+              >
+                {dadiMode === 'traditional' ? (
+                  <>👵 Traditional</>
+                ) : (
+                  <>👩‍⚕️ Scientific</>
+                )}
+              </button>
               <button
                 onClick={() => { setShowDadiChat(false); if ('speechSynthesis' in window) window.speechSynthesis.cancel(); }}
-                className="h-9 w-9 rounded-full bg-[#f0d8c0]/50 hover:bg-[#e0c8b0] text-[#5c3e21] dark:bg-stone-800 dark:text-stone-300 flex items-center justify-center transition-all"
+                className="h-9 w-9 rounded-full bg-[#f0d8c0]/50 hover:bg-[#e0c8b0] text-[#5c3e21] dark:bg-stone-800 dark:text-stone-300 flex items-center justify-center transition-all shrink-0"
               >
                 <span className="material-symbols-outlined text-lg">close</span>
               </button>
@@ -747,10 +1480,35 @@ export default function HealthAssistant() {
                       {msg.text.split('**').map((part, i) =>
                         i % 2 === 0 ? part : <strong key={i}>{part}</strong>
                       )}
+                      
+                      {/* Related Topics Chips inside Bubble */}
+                      {msg.sender === 'dadi' && msg.relatedChips && msg.relatedChips.length > 0 && (
+                        <div className="mt-3 pt-2.5 border-t border-dashed border-[#e8d5c0]/60 dark:border-stone-800">
+                          <p className="font-gujarati text-[10px] text-stone-400 font-bold mb-1.5 flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[12px]">link</span> આ પણ જાણો / સંબંધિત વિષયો:
+                          </p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {msg.relatedChips.map((chipKey) => {
+                              const relatedTopic = PERSONALIZED_TOPICS[chipKey];
+                              if (!relatedTopic) return null;
+                              return (
+                                <button
+                                  key={chipKey}
+                                  onClick={() => handleSendMessage(relatedTopic.name)}
+                                  className="text-[10px] font-gujarati px-2.5 py-1 bg-amber-50 dark:bg-stone-950 border border-amber-250 dark:border-stone-850 rounded-lg text-[#8c6239] dark:text-amber-400 hover:bg-amber-105 transition-colors font-bold"
+                                >
+                                  {relatedTopic.name} 🔗
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
                     </div>
+                    
                     {/* Action buttons on dadi's messages */}
                     {msg.sender === 'dadi' && msg.text.length > 50 && (
-                      <div className="flex gap-1.5 mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex flex-wrap gap-1.5 mt-2">
                         <button
                           onClick={() => handleShareAnswer(msg.raw || msg.text)}
                           className="flex items-center gap-1 text-[10px] font-gujarati px-2 py-1 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg text-stone-500 hover:text-[#8c6239] transition-colors"
@@ -763,6 +1521,25 @@ export default function HealthAssistant() {
                         >
                           <span className="material-symbols-outlined text-[12px]">volume_up</span> સાંભળો
                         </button>
+                        <button
+                          onClick={() => handleSaveAnswer(msg)}
+                          className={`flex items-center gap-1 text-[10px] font-gujarati px-2 py-1 border rounded-lg transition-colors ${
+                            isBookmarked(msg.id)
+                              ? 'bg-amber-100 dark:bg-stone-800 border-amber-300 text-amber-700 dark:text-amber-400 font-bold'
+                              : 'bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-500 hover:text-[#8c6239]'
+                          }`}
+                        >
+                          <span className="material-symbols-outlined text-[12px]">{isBookmarked(msg.id) ? 'bookmark_added' : 'bookmark'}</span>
+                          {isBookmarked(msg.id) ? 'સેવ કરેલ' : 'સાચવો'}
+                        </button>
+                        {msg.isPersonalized && msg.topicKey && (
+                          <button
+                            onClick={() => start7DayChallenge(msg.topicKey)}
+                            className="flex items-center gap-1 text-[10px] font-gujarati px-2.5 py-1 bg-emerald-50 dark:bg-stone-900 border border-emerald-250 dark:border-emerald-800 rounded-lg text-emerald-600 dark:text-emerald-450 hover:bg-emerald-100 transition-colors font-bold"
+                          >
+                            <span className="material-symbols-outlined text-[12px]">calendar_today</span> ૭ દિવસ પડકાર શરૂ કરો
+                          </button>
+                        )}
                       </div>
                     )}
                   </div>
@@ -786,47 +1563,104 @@ export default function HealthAssistant() {
               <div ref={chatEndRef} />
             </div>
 
-            {/* Quick Suggestions */}
-            <div className="px-4 pb-2 shrink-0">
-              <p className="font-gujarati text-[10px] text-stone-400 font-bold uppercase tracking-widest mb-2">ઝડપ સૂચનો:</p>
-              <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-                {QUICK_SUGGESTIONS.map((q, i) => (
+            {/* Questionnaire Options Chips or Quick Suggestions */}
+            {questionnaire.active ? (
+              <div className="px-4 pb-4 shrink-0 space-y-2">
+                <div className="flex justify-between items-center">
+                  <p className="font-gujarati text-[10px] text-[#8c6239] dark:text-amber-400 font-bold uppercase tracking-widest">
+                    {questionnaire.step === -1 ? "તમારી પસંદગી ટેપ કરો:" : `સવાલ ${questionnaire.step + 1} / ૬:`}
+                  </p>
                   <button
-                    key={i}
-                    onClick={() => handleSendMessage(q)}
-                    disabled={isTyping}
-                    className="shrink-0 text-[11px] font-gujarati px-3 py-2 bg-amber-50 dark:bg-stone-900 border border-amber-200 dark:border-stone-800 rounded-xl text-[#8c6239] dark:text-amber-400 hover:bg-amber-100 transition-all disabled:opacity-50 whitespace-nowrap"
+                    onClick={() => {
+                      setQuestionnaire({ active: false, topicKey: '', step: 0, answers: {} });
+                      setChatMessages(prev => [...prev, {
+                        id: Date.now(),
+                        sender: 'dadi',
+                        text: 'બેટા, પ્રશ્નાવલી રદ કરી છે. તું હવે સીધો પ્રશ્ન પૂછી શકે છે! 👵'
+                      }]);
+                    }}
+                    className="text-[10px] font-gujarati px-2.5 py-1 bg-stone-150 hover:bg-stone-200 dark:bg-stone-900 dark:hover:bg-stone-800 border border-stone-200 dark:border-stone-800 rounded-lg text-stone-500 transition-colors"
                   >
-                    👵 {q}
+                    રદ કરો ❌
                   </button>
-                ))}
+                </div>
+                <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto no-scrollbar py-1">
+                  {questionnaire.step === -1 ? (
+                    <>
+                      <button
+                        onClick={() => handleQuestionnaireAnswer('yes', 'હા, વિગતો સાચી છે ✅')}
+                        disabled={isTyping}
+                        className="text-[11px] font-gujarati px-4 py-2 bg-emerald-50 dark:bg-stone-900 border border-emerald-250 dark:border-stone-800 rounded-xl text-emerald-700 dark:text-emerald-450 hover:bg-emerald-100 transition-all font-bold active:scale-95"
+                      >
+                        હા, વિગતો સાચી છે ✅
+                      </button>
+                      <button
+                        onClick={() => handleQuestionnaireAnswer('no', 'ના, વિગતો બદલવી છે ❌')}
+                        disabled={isTyping}
+                        className="text-[11px] font-gujarati px-4 py-2 bg-rose-50 dark:bg-stone-900 border border-rose-250 dark:border-stone-800 rounded-xl text-rose-700 dark:text-rose-450 hover:bg-rose-100 transition-all font-bold active:scale-95"
+                      >
+                        ના, વિગતો બદલવી છે ❌
+                      </button>
+                    </>
+                  ) : (
+                    QUESTIONNAIRE_STEPS[questionnaire.step].options.map((opt) => (
+                      <button
+                        key={opt.value}
+                        onClick={() => handleQuestionnaireAnswer(opt.value, opt.label)}
+                        disabled={isTyping}
+                        className="text-[11px] font-gujarati px-4 py-2 bg-[#fdf8f2] dark:bg-stone-900 border border-[#e8d5c0] dark:border-stone-800 rounded-xl text-[#8c6239] dark:text-[#f4d6b6] hover:bg-[#f3e5d8] transition-all font-bold active:scale-95"
+                      >
+                        {opt.label}
+                      </button>
+                    ))
+                  )}
+                </div>
               </div>
-            </div>
+            ) : (
+              <>
+                {/* Quick Suggestions */}
+                <div className="px-4 pb-2 shrink-0">
+                  <p className="font-gujarati text-[10px] text-stone-400 font-bold uppercase tracking-widest mb-2">ઝડપ સૂચનો:</p>
+                  <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                    {QUICK_SUGGESTIONS.map((q, i) => (
+                      <button
+                        key={i}
+                        onClick={() => handleSendMessage(q)}
+                        disabled={isTyping}
+                        className="shrink-0 text-[11px] font-gujarati px-3 py-2 bg-amber-50 dark:bg-stone-900 border border-amber-200 dark:border-stone-800 rounded-xl text-[#8c6239] dark:text-amber-400 hover:bg-amber-100 transition-all disabled:opacity-50 whitespace-nowrap active:scale-95"
+                      >
+                        👵 {q}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-            {/* Input Area */}
-            <div className="p-4 border-t border-[#e8d5c0]/50 dark:border-stone-800 shrink-0">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={chatInput}
-                  onChange={e => setChatInput(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && !isTyping && handleSendMessage()}
-                  placeholder="ગુજરાતી અથવા English માં ટાઈપ કરો..."
-                  disabled={isTyping}
-                  className="flex-1 px-4 py-2.5 rounded-2xl bg-white dark:bg-stone-900 border border-[#d5bdaf]/60 dark:border-stone-800 font-gujarati text-sm text-stone-800 dark:text-stone-200 placeholder:text-stone-400 focus:outline-none focus:border-[#8c6239] transition-colors disabled:opacity-60"
-                />
-                <button
-                  onClick={() => handleSendMessage()}
-                  disabled={isTyping || !chatInput.trim()}
-                  className="h-11 w-11 bg-[#8c6239] hover:bg-[#7a5430] disabled:bg-stone-300 dark:disabled:bg-stone-800 text-white rounded-2xl flex items-center justify-center transition-all active:scale-95"
-                >
-                  <span className="material-symbols-outlined text-lg">send</span>
-                </button>
-              </div>
-              <p className="font-gujarati text-[10px] text-stone-400 text-center mt-2">
-                ⚠️ ઘરેલુ ઉપાય | ગંભીર બીમારી = ડૉક્ટર ની સલાહ
-              </p>
-            </div>
+                {/* Input Area */}
+                <div className="p-4 border-t border-[#e8d5c0]/50 dark:border-stone-800 shrink-0">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={chatInput}
+                      onChange={e => setChatInput(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && !isTyping && handleSendMessage()}
+                      placeholder="ગુજરાતી અથવા English માં ટાઈપ કરો..."
+                      disabled={isTyping}
+                      className="flex-1 px-4 py-2.5 rounded-2xl bg-white dark:bg-stone-900 border border-[#d5bdaf]/60 dark:border-stone-800 font-gujarati text-sm text-stone-800 dark:text-stone-200 placeholder:text-stone-400 focus:outline-none focus:border-[#8c6239] transition-colors disabled:opacity-60"
+                    />
+                    <button
+                      onClick={() => handleSendMessage()}
+                      disabled={isTyping || !chatInput.trim()}
+                      className="h-11 w-11 bg-[#8c6239] hover:bg-[#7a5430] disabled:bg-stone-300 dark:disabled:bg-stone-800 text-white rounded-2xl flex items-center justify-center transition-all active:scale-95"
+                    >
+                      <span className="material-symbols-outlined text-lg">send</span>
+                    </button>
+                  </div>
+                  <p className="font-gujarati text-[10px] text-stone-400 text-center mt-2">
+                    ⚠️ ઘરેલુ ઉપાય | ગંભીર બીમારી = ડૉક્ટર ની સલાહ
+                  </p>
+                </div>
+              </>
+            )}
 
           </div>
         </div>
