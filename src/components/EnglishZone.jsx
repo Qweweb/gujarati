@@ -87,7 +87,7 @@ export default function EnglishZone({ onBack }) {
       {/* English Hub Header */}
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-stretch sm:items-center bg-gradient-to-r from-indigo-900 via-purple-900 to-indigo-950 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden">
         <div className="absolute right-0 top-0 opacity-10 font-bold text-[120px] select-none translate-y-[-10px] translate-x-[20px]">
-          🇬🇧
+          📝
         </div>
         <div className="space-y-2 relative z-10">
           <div className="flex items-center gap-2">
@@ -97,7 +97,7 @@ export default function EnglishZone({ onBack }) {
             >
               <span className="material-symbols-outlined text-xs">arrow_back</span> પાછા
             </button>
-            <h2 className="font-gujarati font-black text-xl">ઇંગ્લિશ શીખો 🇬🇧</h2>
+            <h2 className="font-gujarati font-black text-xl">ઇંગ્લિશ શીખો 🎓</h2>
           </div>
           <p className="font-gujarati text-xs text-indigo-200">રમતો રમતા રમતા સરળતાથી ઇંગ્લિશ પાકું કરો!</p>
         </div>
@@ -1014,7 +1014,7 @@ function WordScrambleGame() {
 
   const checkAnswer = () => {
     const userWord = slots.map(s => s.letter).join('');
-    if (userWord === activeItem.word) {
+    if (userWord.toLowerCase().trim() === activeItem.word.toLowerCase().trim()) {
       clearInterval(timerRef.current);
       playSound('correct');
       setScore(prev => prev + 1);
@@ -1347,9 +1347,12 @@ function SentenceBuilderGame() {
 
   const verifySentence = () => {
     const current = questions[qIdx];
-    const sentence = selectedWords.map(s => s.word).join(' ');
+    const sentence = selectedWords.map(s => s.word).join(' ').trim();
     
-    if (sentence === current.correct) {
+    const cleanUser = sentence.toLowerCase().replace(/\s+/g, ' ');
+    const cleanCorrect = current.correct.toLowerCase().replace(/\s+/g, ' ');
+
+    if (cleanUser === cleanCorrect) {
       playSound('correct');
       setSuccess(true);
       addCoins(5);
@@ -1785,7 +1788,7 @@ function DailyChallengeGame({ onFinish }) {
 
   const checkScramble = () => {
     const userWord = scrambleSlots.map(s => s.letter).join('');
-    if (userWord === scrambleWordData.word) {
+    if (userWord.toLowerCase().trim() === scrambleWordData.word.toLowerCase().trim()) {
       playSound('correct');
       setScore(prev => prev + 1);
       setShowExplanation(true);
@@ -1809,8 +1812,12 @@ function DailyChallengeGame({ onFinish }) {
   };
 
   const checkBuilder = () => {
-    const sentence = sentenceSlots.map(s => s.word).join(' ');
-    if (sentence === sentenceData.correct) {
+    const sentence = sentenceSlots.map(s => s.word).join(' ').trim();
+    
+    const cleanUser = sentence.toLowerCase().replace(/\s+/g, ' ');
+    const cleanCorrect = sentenceData.correct.toLowerCase().replace(/\s+/g, ' ');
+
+    if (cleanUser === cleanCorrect) {
       playSound('correct');
       setScore(prev => prev + 1);
       setShowExplanation(true);

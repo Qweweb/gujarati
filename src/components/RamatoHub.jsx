@@ -156,7 +156,7 @@ export default function RamatoHub({ userLocation }) {
             className="bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-950 p-6 rounded-[2.5rem] hover:shadow-xl transition-all active:scale-[0.98] text-left flex flex-col justify-between group min-h-[190px] border border-indigo-950 relative overflow-hidden text-white"
           >
             <div className="absolute right-[-20px] bottom-[-20px] opacity-10 group-hover:scale-110 transition-transform font-bold text-[140px] select-none text-indigo-800">
-              🇬🇧
+              📝
             </div>
             <div className="space-y-2 relative z-10">
               <div className="flex justify-between items-center">
@@ -167,7 +167,7 @@ export default function RamatoHub({ userLocation }) {
                   નવું સર્ટિફિકેટ 🏆
                 </span>
               </div>
-              <h3 className="font-gujarati font-black text-xl text-white pt-2">🇬🇧 અંગ્રેજી પાઠશાળા</h3>
+              <h3 className="font-gujarati font-black text-xl text-white pt-2">📝 અંગ્રેજી પાઠશાળા</h3>
               <p className="font-gujarati text-xs text-indigo-200/90 leading-normal">
                 સ્પેલિંગ મેચ, સ્ક્રૅમ્બલ, વાક્ય બનાવો અને રોજિંદી વાતચીત દ્વારા ગામડાના યુવાનો અને બાળકો સરળતાથી સાચું ઇંગ્લિશ શીખે.
               </p>
