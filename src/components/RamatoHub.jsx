@@ -8,6 +8,8 @@ import {
   VISUAL_QUIZ_DB, 
   BHAJAN_DB 
 } from '../data/gamesDatabase';
+import { playSound } from '../utils/audio';
+import EnglishZone from './EnglishZone';
 
 // Load or initialize coins
 const getCoins = () => parseInt(localStorage.getItem('sanskar_coins') || '100');
@@ -30,83 +32,6 @@ const splitGujaratiWord = (word) => {
     return Array.from(segmenter.segment(word)).map(s => s.segment);
   } catch (e) {
     return word.match(/[\u0A80-\u0AFF][\u0ABE-\u0BCD]*/g) || word.split('');
-  }
-};
-
-const playSound = (type) => {
-  const enabled = localStorage.getItem('sanskar_sound_enabled') !== 'false';
-  if (!enabled) return;
-  
-  try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-    const ctx = new AudioContext();
-    
-    if (type === 'tick') {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      
-      osc.frequency.setValueAtTime(800, ctx.currentTime);
-      gain.gain.setValueAtTime(0.08, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
-      
-      osc.start();
-      osc.stop(ctx.currentTime + 0.05);
-    } else if (type === 'click') {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      
-      osc.frequency.setValueAtTime(450, ctx.currentTime);
-      gain.gain.setValueAtTime(0.12, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
-      
-      osc.start();
-      osc.stop(ctx.currentTime + 0.08);
-    } else if (type === 'correct') {
-      const now = ctx.currentTime;
-      const playNote = (freq, start, duration) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        
-        osc.frequency.setValueAtTime(freq, start);
-        gain.gain.setValueAtTime(0.12, start);
-        gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
-        
-        osc.start(start);
-        osc.stop(start + duration);
-      };
-      
-      playNote(523.25, now, 0.12); // C5
-      playNote(659.25, now + 0.06, 0.12); // E5
-      playNote(783.99, now + 0.12, 0.25); // G5
-    } else if (type === 'wrong') {
-      const now = ctx.currentTime;
-      const playNote = (freq, start, duration) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sawtooth';
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        
-        osc.frequency.setValueAtTime(freq, start);
-        gain.gain.setValueAtTime(0.12, start);
-        gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
-        
-        osc.start(start);
-        osc.stop(start + duration);
-      };
-      
-      playNote(150, now, 0.2);
-      playNote(110, now + 0.1, 0.3);
-    }
-  } catch (e) {
-    console.error("Audio Context failed", e);
   }
 };
 
@@ -137,6 +62,7 @@ const updateStreak = () => {
 };
 
 export default function RamatoHub({ userLocation }) {
+  const [currentMode, setCurrentMode] = useState(null); // 'gujarati', 'english', or null (landing screen)
   const [activeGame, setActiveGame] = useState(null);
   const [coins, setCoins] = useState(getCoins());
   const [streak, setStreak] = useState(getStreak());
@@ -166,8 +92,114 @@ export default function RamatoHub({ userLocation }) {
     { id: 'riddle', name: '🌟 દૈનિક ઉખાણાં', desc: 'રમુજી ઉખાણાં ઉકેલો અને જ્ઞાન વધારો', color: 'from-blue-500 to-indigo-600' }
   ];
 
+  if (currentMode === null) {
+    return (
+      <div className="space-y-6 pb-12 animate-fade-in">
+        {/* Hub Header */}
+        <div className="bg-gradient-to-r from-amber-500 to-orange-600 p-6 rounded-3xl text-white shadow-xl flex justify-between items-center relative overflow-hidden">
+          <div className="absolute right-0 top-0 opacity-10 font-bold text-[120px] select-none translate-y-[-20px] translate-x-[20px]">
+            🎮
+          </div>
+          <div className="space-y-1 relative z-10">
+            <h2 className="font-gujarati font-black text-2xl">રમતો ચોરો 🎮</h2>
+            <p className="font-gujarati text-xs text-amber-100 font-bold">રમો, શીખો અને કોઈન્સ કમાઓ!</p>
+          </div>
+          <div className="flex gap-4 relative z-10">
+            <div className="bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-2xl text-center border border-white/15">
+              <p className="text-[10px] text-amber-200 font-bold uppercase tracking-widest">કોઈન્સ</p>
+              <h4 className="font-headline font-black text-xl flex items-center justify-center gap-1">🪙 {coins}</h4>
+            </div>
+            <div className="bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-2xl text-center border border-white/15">
+              <p className="text-[10px] text-amber-200 font-bold uppercase tracking-widest">સ્ટ્રીક</p>
+              <h4 className="font-headline font-black text-xl flex items-center justify-center gap-1">🔥 {streak}</h4>
+            </div>
+          </div>
+        </div>
+
+        {/* Mode Selection Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+          {/* Card 1: Gujarati Games */}
+          <button
+            onClick={() => {
+              playSound('click');
+              setCurrentMode('gujarati');
+              updateStreak();
+              setStreak(getStreak());
+            }}
+            className="bg-white dark:bg-stone-900 border border-stone-250 dark:border-stone-850 p-6 rounded-[2.5rem] hover:border-amber-500/50 hover:shadow-xl transition-all active:scale-[0.98] text-left flex flex-col justify-between group min-h-[190px] relative overflow-hidden"
+          >
+            <div className="absolute right-[-20px] bottom-[-20px] opacity-10 group-hover:scale-110 transition-transform font-bold text-[140px] select-none text-stone-300 dark:text-stone-700">
+              🦁
+            </div>
+            <div className="space-y-2 relative z-10">
+              <span className="px-3.5 py-1.5 bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 font-gujarati font-black text-xs rounded-full">
+                ગુજરાતી રમતો
+              </span>
+              <h3 className="font-gujarati font-black text-xl text-stone-850 dark:text-white pt-2">🎮 ગુજરાતી જ્ઞાન ગલી</h3>
+              <p className="font-gujarati text-xs text-stone-550 dark:text-stone-400 leading-normal">
+                ગુજરાતી શબ્દ જોડો, રંગોળી પૂરો, ઉખાણાં, અને સાચું-ખોટું રમીને માતૃભાષાનું જ્ઞાન અને સ્કોર વધારો.
+              </p>
+            </div>
+            <span className="font-gujarati text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1 mt-4 group-hover:underline">
+              રમતો રમો <span className="material-symbols-outlined text-xs">arrow_forward</span>
+            </span>
+          </button>
+
+          {/* Card 2: English Learning Zone */}
+          <button
+            onClick={() => {
+              playSound('click');
+              setCurrentMode('english');
+              updateStreak();
+              setStreak(getStreak());
+            }}
+            className="bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-950 p-6 rounded-[2.5rem] hover:shadow-xl transition-all active:scale-[0.98] text-left flex flex-col justify-between group min-h-[190px] border border-indigo-950 relative overflow-hidden text-white"
+          >
+            <div className="absolute right-[-20px] bottom-[-20px] opacity-10 group-hover:scale-110 transition-transform font-bold text-[140px] select-none text-indigo-800">
+              🇬🇧
+            </div>
+            <div className="space-y-2 relative z-10">
+              <div className="flex justify-between items-center">
+                <span className="px-3.5 py-1.5 bg-indigo-500/20 text-indigo-200 font-gujarati font-black text-xs rounded-full border border-indigo-500/30">
+                  ઇંગ્લિશ ઝોન
+                </span>
+                <span className="px-2.5 py-1 bg-amber-500 text-stone-900 font-gujarati font-black text-[9px] rounded-full animate-bounce">
+                  નવું સર્ટિફિકેટ 🏆
+                </span>
+              </div>
+              <h3 className="font-gujarati font-black text-xl text-white pt-2">🇬🇧 અંગ્રેજી પાઠશાળા</h3>
+              <p className="font-gujarati text-xs text-indigo-200/90 leading-normal">
+                સ્પેલિંગ મેચ, સ્ક્રૅમ્બલ, વાક્ય બનાવો અને રોજિંદી વાતચીત દ્વારા ગામડાના યુવાનો અને બાળકો સરળતાથી સાચું ઇંગ્લિશ શીખે.
+              </p>
+            </div>
+            <span className="font-gujarati text-xs font-bold text-indigo-300 flex items-center gap-1 mt-4 group-hover:underline">
+              અંગ્રેજી શીખો <span className="material-symbols-outlined text-xs">arrow_forward</span>
+            </span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (currentMode === 'english') {
+    return <EnglishZone onBack={() => setCurrentMode(null)} userLocation={userLocation} />;
+  }
+
   return (
-    <div className="space-y-6 pb-12">
+    <div className="space-y-6 pb-12 animate-fade-in">
+      {/* Header back to mode selection */}
+      <div className="flex justify-between items-center">
+        <button 
+          onClick={() => { playSound('click'); setCurrentMode(null); }}
+          className="h-9 px-3 bg-stone-100 hover:bg-stone-200 dark:bg-stone-850 dark:hover:bg-stone-800 rounded-xl flex items-center gap-1 font-gujarati text-[11px] font-bold text-stone-600 dark:text-stone-300 transition"
+        >
+          <span className="material-symbols-outlined text-xs">arrow_back</span> મુખ્ય મેનુ
+        </button>
+        <span className="font-gujarati font-black text-xs text-amber-600 bg-amber-50 dark:bg-stone-900 px-3 py-1 rounded-full">
+          ગુજરાતી રમતો
+        </span>
+      </div>
+
       {/* Top Banner Stats */}
       <div className="bg-gradient-to-r from-amber-500 to-orange-600 p-6 rounded-3xl text-white shadow-xl flex justify-between items-center relative overflow-hidden">
         <div className="absolute right-0 top-0 opacity-10 font-bold text-[120px] select-none translate-y-[-20px] translate-x-[20px]">
