@@ -1567,27 +1567,28 @@ export const DADI_MA_DB = [
   }
 ];
 
-export const CATEGORIES = {
-  digestion: 'પાચન',
-  respiratory: 'શ્વાસ સંબંધિત',
-  pain: 'દુખાવો અને જકડન',
-  lifestyle: 'જીવનશૈલી અને રોગો',
-  weight: 'વજન નિયંત્રણ',
-  mental: 'માનસિક સ્વાસ્થ્ય',
-  beauty: 'સૌંદર્ય અને ત્વચા',
-  women: 'સ્ત્રી રોગો',
-  child: 'બાળ સંભાળ',
-  herbs: 'જડીબુટ્ટીઓ',
-  kitchen: 'રસોડાની સામગ્રી'
-};
+export const CATEGORIES = [
+  { id: 'all', label: 'બધા ઉપાય', emoji: '🌿' },
+  { id: 'digestion', label: 'પાચન', emoji: '🥛' },
+  { id: 'respiratory', label: 'શ્વાસ સંબંધિત', emoji: '🫁' },
+  { id: 'pain', label: 'દુખાવો અને જકડન', emoji: '💪' },
+  { id: 'lifestyle', label: 'જીવનશૈલી અને રોગો', emoji: '🏥' },
+  { id: 'weight', label: 'વજન નિયંત્રણ', emoji: '⚖️' },
+  { id: 'mental', label: 'માનસિક સ્વાસ્થ્ય', emoji: '🧠' },
+  { id: 'beauty', label: 'સૌંદર્ય અને ત્વચા', emoji: '✨' },
+  { id: 'women', label: 'સ્ત્રી રોગો', emoji: '👩' },
+  { id: 'child', label: 'બાળ સંભાળ', emoji: '👶' },
+  { id: 'herbs', label: 'જડીબુટ્ટીઓ', emoji: '🌱' },
+  { id: 'kitchen', label: 'રસોડાની સામગ્રી', emoji: '🍳' }
+];
 
 export const QUICK_SUGGESTIONS = [
-  { text: 'એસિડિટી', category: 'digestion' },
-  { text: 'શરદી-ઉધરસ', category: 'respiratory' },
-  { text: 'સાંધાનો દુખાવો', category: 'pain' },
-  { text: 'ખીલ અને ગ્લો', category: 'beauty' },
-  { text: 'વજન ઘટાડવું', category: 'weight' },
-  { text: 'ઊંઘ ન આવવી', category: 'lifestyle' }
+  'એસિડિટી',
+  'શરદી-ઉધરસ',
+  'સાંધાનો દુખાવો',
+  'ખીલ અને ગ્લો',
+  'વજન ઘટાડવું',
+  'ઊંઘ ન આવવી'
 ];
 
 export function searchDadiMaDB(query, chatCategory) {
