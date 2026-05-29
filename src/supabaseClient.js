@@ -7,4 +7,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Supabase URL or Anon Key is missing in environment variables.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Use 'implicit' flow so Supabase returns tokens in URL hash (#access_token=...)
+// This is simpler for Capacitor Android deep-link handling vs PKCE (?code=...)
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    flowType: 'implicit',
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+  }
+});

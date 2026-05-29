@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { calculateChoghadiyas, calculateMuhurts } from '../utils/choghadiya_helper';
 import { API_ENDPOINTS } from '../config/api';
+import { RASHI_DATA, generateDailyRashifal } from '../data/rashifalDatabase';
 
 const Panchang = () => {
   const [panchangData, setPanchangData] = useState(() => {
@@ -63,6 +64,17 @@ const Panchang = () => {
   };
 
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [selectedRashifalId, setSelectedRashifalId] = useState('mesh');
+
+  // Set default rashi based on panchang transit rashi
+  useEffect(() => {
+    if (panchangData.rashi) {
+      const matched = RASHI_DATA.find(r => r.name === panchangData.rashi.trim());
+      if (matched) {
+        setSelectedRashifalId(matched.id);
+      }
+    }
+  }, [panchangData.rashi]);
 
   useEffect(() => {
     fetchData();
@@ -316,13 +328,132 @@ const Panchang = () => {
                               <p className={`font-gujarati font-black text-lg ${isActive ? 'text-orange-950' : ''}`}>{ch.name}</p>
                           </div>
                           <p className="font-headline font-black text-[10px] opacity-60 mt-2">{ch.time}</p>
-                      </div>
-                  );
-              })}
+                       </div>
+                   );
+               })}
           </div>
+      </div>
+
+      {/* 6. Rashifal (Today's Horoscope) Section */}
+      <div className="bg-white dark:bg-dark-surface rounded-[2.5rem] p-6 sm:p-8 shadow-xl space-y-6 border-t-8 border-amber-600">
+          <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-amber-600 text-3xl font-black">stars</span>
+              <h3 className="font-gujarati font-black text-2xl">આજનું રાશિફળ (Daily Horoscope)</h3>
+          </div>
+          <p className="font-gujarati text-xs text-stone-400">તમારા દૈનિક વ્યવહાર, આરોગ્ય અને પારિવારિક જીવનનું જ્યોતિષ માર્ગદર્શન.</p>
+          
+          {/* Scrollable Rashi Selector Carousel */}
+          <div className="flex gap-2 overflow-x-auto no-scrollbar py-2 border-b border-stone-100 dark:border-stone-850">
+              {RASHI_DATA.map(r => (
+                  <button
+                    key={r.id}
+                    onClick={() => setSelectedRashifalId(r.id)}
+                    className={`px-4 py-2.5 rounded-2xl flex flex-col items-center justify-center shrink-0 min-w-[75px] border transition-all active:scale-95
+                      ${selectedRashifalId === r.id 
+                        ? 'bg-amber-600 border-amber-600 text-white shadow-md font-black scale-105' 
+                        : 'bg-stone-50 dark:bg-stone-850 border-stone-200/50 text-stone-700 hover:bg-stone-100'}`}
+                  >
+                      <span className="text-2xl mb-1">{r.emoji}</span>
+                      <span className="font-gujarati text-sm font-black">{r.name}</span>
+                      <span className="text-[10px] opacity-60 font-medium font-sans">{r.nameEn}</span>
+                  </button>
+              ))}
+          </div>
+
+          {/* Selected Rashi's Prediction Content */}
+          {(() => {
+              const rashiObj = RASHI_DATA.find(r => r.id === selectedRashifalId) || RASHI_DATA[0];
+              const rashifal = generateDailyRashifal(rashiObj.id);
+              
+              return (
+                  <div className="space-y-6">
+                      {/* Rashi Header Info Banner */}
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-amber-500/5 p-5 rounded-3xl border border-amber-500/10">
+                          <div className="flex items-center gap-3">
+                              <span className="text-4xl">{rashiObj.emoji}</span>
+                              <div>
+                                  <h4 className="font-gujarati font-black text-xl text-amber-950 dark:text-amber-300">{rashiObj.name} રાશિ</h4>
+                                  <p className="font-gujarati text-xs text-amber-700/80 font-bold">નામ અક્ષરો: <span className="font-sans font-black">{rashiObj.letters}</span></p>
+                              </div>
+                          </div>
+                          
+                          {/* Lucky indicators */}
+                          <div className="flex gap-4 w-full sm:w-auto">
+                              <div className="bg-white dark:bg-stone-900 px-4 py-2 rounded-2xl border shadow-xs text-center flex-1 sm:flex-initial min-w-[80px]">
+                                  <p className="font-gujarati text-[9px] font-black text-stone-400">શુભ અંક</p>
+                                  <p className="font-headline font-black text-lg text-amber-700">{rashifal.luckyNumber}</p>
+                              </div>
+                              <div className="bg-white dark:bg-stone-900 px-4 py-2 rounded-2xl border shadow-xs text-center flex-1 sm:flex-initial min-w-[80px]">
+                                  <p className="font-gujarati text-[9px] font-black text-stone-400">શુભ રંગ</p>
+                                  <p className="font-gujarati font-black text-sm text-stone-700 dark:text-stone-300 mt-1">{rashifal.luckyColor}</p>
+                              </div>
+                          </div>
+                      </div>
+
+                      {/* Main Rashifal Grid */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {/* Career */}
+                          <PredictionCard 
+                            icon="work" 
+                            title="નૌકરી અને વ્યવસાય" 
+                            desc={rashifal.career} 
+                            color="border-blue-200 dark:border-blue-900 bg-blue-50/5" 
+                            iconColor="bg-blue-500" 
+                          />
+                          {/* Finance */}
+                          <PredictionCard 
+                            icon="payments" 
+                            title="આર્થિક સ્થિતિ" 
+                            desc={rashifal.finance} 
+                            color="border-emerald-200 dark:border-emerald-900 bg-emerald-50/5" 
+                            iconColor="bg-emerald-500" 
+                          />
+                          {/* Family */}
+                          <PredictionCard 
+                            icon="family_history" 
+                            title="કૌટુંબિક જીવન" 
+                            desc={rashifal.family} 
+                            color="border-purple-200 dark:border-purple-900 bg-purple-50/5" 
+                            iconColor="bg-purple-500" 
+                          />
+                          {/* Health */}
+                          <PredictionCard 
+                            icon="favorite" 
+                            title="આરોગ્ય અને સ્વાસ્થ્ય" 
+                            desc={rashifal.health} 
+                            color="border-rose-200 dark:border-rose-900 bg-rose-50/5" 
+                            iconColor="bg-rose-500" 
+                          />
+                      </div>
+
+                      {/* Daily Remedy Card */}
+                      <div className="p-5 bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-3xl border border-amber-500/20 flex gap-4 items-start">
+                          <div className="h-10 w-10 bg-amber-500 text-white rounded-2xl flex items-center justify-center shrink-0 shadow-md">
+                              <span className="material-symbols-outlined">auto_awesome</span>
+                          </div>
+                          <div>
+                              <h5 className="font-gujarati font-black text-base text-amber-950 dark:text-amber-300">આજનો વિશેષ ઉપાય (Remedy)</h5>
+                              <p className="font-gujarati text-sm text-stone-700 dark:text-stone-300 leading-relaxed mt-1">{rashifal.remedy}</p>
+                          </div>
+                      </div>
+                  </div>
+              );
+          })()}
       </div>
     </div>
   );
 };
+
+const PredictionCard = ({ icon, title, desc, color, iconColor }) => (
+  <div className={`p-4 rounded-3xl border ${color} flex gap-3.5 items-start`}>
+    <div className={`h-9 w-9 rounded-xl flex items-center justify-center text-white shrink-0 shadow-sm ${iconColor}`}>
+      <span className="material-symbols-outlined text-lg">{icon}</span>
+    </div>
+    <div className="space-y-1">
+      <h5 className="font-gujarati font-black text-sm text-stone-800 dark:text-stone-200">{title}</h5>
+      <p className="font-gujarati text-xs text-stone-600 dark:text-stone-400 leading-relaxed">{desc}</p>
+    </div>
+  </div>
+);
 
 export default Panchang;

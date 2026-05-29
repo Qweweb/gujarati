@@ -1267,6 +1267,40 @@ export default function HealthAssistant() {
   const [lastAnswer, setLastAnswer] = useState(null);
   const chatEndRef = useRef(null);
 
+  const [isListening, setIsListening] = useState(false);
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: `❌ તમારા બ્રાઉઝરમાં વોઈસ ઈનપુટ સપોર્ટ નથી. ગૂગલ ક્રોમ વાપરો.` } }));
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'gu-IN';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      setIsListening(true);
+      window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: `🎙️ બોલો બેટા, હું સાંભળી રહી છું...` } }));
+    };
+
+    recognition.onresult = (event) => {
+      const speechToText = event.results[0][0].transcript;
+      setChatInput(speechToText);
+    };
+
+    recognition.onerror = (event) => {
+      console.error("Speech Recognition Error:", event.error);
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.start();
+  };
+
   // Dadi-ma Interactive v2.0 State
   const [dadiMode, setDadiMode] = useState(() => localStorage.getItem('dadi_ma_chatbot_mode') || 'traditional');
   
@@ -2132,8 +2166,8 @@ export default function HealthAssistant() {
           <span className="material-symbols-outlined text-[150px]">health_and_safety</span>
         </div>
         <div className="relative z-10 flex flex-col items-center text-center space-y-4">
-          <div className="h-24 w-24 rounded-full border-4 border-white shadow-xl overflow-hidden bg-white flex items-center justify-center text-5xl select-none">
-            👵
+          <div className="h-24 w-24 rounded-full border-4 border-white shadow-xl overflow-hidden bg-white flex items-center justify-center select-none">
+            <img src="/gujarati_dadi_ma.png" alt="દાદી-મા" className="h-full w-full object-cover" />
           </div>
           <div className="space-y-1">
             <p className="text-[#004d40] font-black text-xs uppercase tracking-widest">આયુર્વેદિક સ્વાસ્થ્ય સંગાથી 🛡️</p>
@@ -2635,8 +2669,10 @@ export default function HealthAssistant() {
 
           {/* Chat Header */}
           <div className="flex gap-3 items-center p-5 border-b border-[#e8d5c0]/50 dark:border-stone-800 shrink-0">
-            <div className="relative">
-              <span className="text-4xl">👵</span>
+            <div className="relative shrink-0">
+              <div className="h-10 w-10 rounded-full overflow-hidden border border-[#e8d5c0]/50 bg-white">
+                <img src="/gujarati_dadi_ma.png" alt="દાદી-મા" className="h-full w-full object-cover" />
+              </div>
               <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 bg-emerald-500 rounded-full border-2 border-white"></span>
             </div>
             <div className="flex-1">
@@ -2693,7 +2729,11 @@ export default function HealthAssistant() {
           <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-0">
             {chatMessages.map((msg) => (
               <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}>
-                {msg.sender === 'dadi' && <span className="text-xl mr-2 mt-1 shrink-0">👵</span>}
+                {msg.sender === 'dadi' && (
+                  <div className="h-6 w-6 rounded-full overflow-hidden border border-stone-200 dark:border-stone-800 mr-2 mt-1 shrink-0 bg-white">
+                    <img src="/gujarati_dadi_ma.png" alt="દાદી-મા" className="h-full w-full object-cover" />
+                  </div>
+                )}
                 <div className={`group max-w-[82%] relative ${
                   msg.sender === 'user' ? '' : ''
                 }`}>
@@ -2784,7 +2824,9 @@ export default function HealthAssistant() {
             {/* Typing Indicator */}
             {isTyping && (
               <div className="flex items-center gap-2 animate-fade-in">
-                <span className="text-xl">👵</span>
+                <div className="h-6 w-6 rounded-full overflow-hidden border border-stone-200 dark:border-stone-800 mr-2 mt-1 shrink-0 bg-white">
+                  <img src="/gujarati_dadi_ma.png" alt="દાદી-મા" className="h-full w-full object-cover" />
+                </div>
                 <div className="bg-white dark:bg-stone-900 border border-[#e8d5c0]/60 dark:border-stone-800 px-4 py-3 rounded-2xl rounded-tl-none shadow-sm">
                   <div className="flex gap-1.5 items-center">
                     <div className="w-2 h-2 bg-[#8c6239] rounded-full animate-bounce" style={{animationDelay:'0ms'}}></div>
@@ -2890,19 +2932,27 @@ export default function HealthAssistant() {
               {/* Input Area */}
               <div className="p-4 border-t border-[#e8d5c0]/50 dark:border-stone-800 shrink-0">
                 <div className="flex gap-2">
+                  <button
+                    onClick={startListening}
+                    disabled={isTyping}
+                    className={`h-11 w-11 rounded-2xl flex items-center justify-center transition-all active:scale-95 shadow-sm shrink-0 ${isListening ? 'bg-red-500 animate-pulse text-white' : 'bg-amber-100 hover:bg-amber-200 text-[#8c6239] dark:bg-stone-800 dark:hover:bg-stone-750 dark:text-amber-450'}`}
+                    title="બોલીને પ્રશ્ન પૂછો"
+                  >
+                    <span className="material-symbols-outlined text-lg">{isListening ? 'mic' : 'mic_none'}</span>
+                  </button>
                   <input
                     type="text"
                     value={chatInput}
                     onChange={e => setChatInput(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && !isTyping && handleSendMessage()}
-                    placeholder="ગુજરાતી અથવા English માં ટાઈપ કરો..."
+                    placeholder="બોલીને અથવા ટાઈપ કરીને પૂછો..."
                     disabled={isTyping}
                     className="flex-1 px-4 py-2.5 rounded-2xl bg-white dark:bg-stone-900 border border-[#d5bdaf]/60 dark:border-stone-800 font-gujarati text-sm text-stone-800 dark:text-stone-200 placeholder:text-stone-400 focus:outline-none focus:border-[#8c6239] transition-colors disabled:opacity-60"
                   />
                   <button
                     onClick={() => handleSendMessage()}
                     disabled={isTyping || !chatInput.trim()}
-                    className="h-11 w-11 bg-[#8c6239] hover:bg-[#7a5430] disabled:bg-stone-300 dark:disabled:bg-stone-800 text-white rounded-2xl flex items-center justify-center transition-all active:scale-95"
+                    className="h-11 w-11 bg-[#8c6239] hover:bg-[#7a5430] disabled:bg-stone-300 dark:disabled:bg-stone-800 text-white rounded-2xl flex items-center justify-center transition-all active:scale-95 shrink-0"
                   >
                     <span className="material-symbols-outlined text-lg">send</span>
                   </button>

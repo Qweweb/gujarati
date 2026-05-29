@@ -1,377 +1,350 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { calculateChoghadiyas } from '../utils/choghadiya_helper';
 import { API_ENDPOINTS } from '../config/api';
 import ShareButton from './ShareButton';
 
+/* ─────────────────────────────────────────────────────────────────
+   DASHBOARD — Expert Audit Restructure
+   Zone 1: Contextual Hero (Panchang + Challenge)
+   Zone 2: Category Tabs (All / Spiritual / Utilities / Business / Games)
+   Zone 3: Tool Grid (filtered by tab, 72dp icons, 1-line labels)
+   Zone 4: Engagement (Suvichar + Alert)
+   ───────────────────────────────────────────────────────────────── */
+
+const TABS = [
+  { id: 'all',       label: 'બધા'       },
+  { id: 'spiritual', label: 'આધ્યાત્મિક' },
+  { id: 'utilities', label: 'સાધનો'     },
+  { id: 'business',  label: 'બિઝનેસ'   },
+  { id: 'games',     label: 'ગેમ્સ'     },
+];
+
+const TOOLS = [
+  // ── Spiritual ────────────────────────────────────────────────
+  { cat:'spiritual', icon:'calendar_month',   label:'પંચાંગ',    path:'/panchang',             bg:'#FFF8EF', iconBg:'#FBBF24', iconClr:'#fff' },
+  { cat:'spiritual', icon:'grid_view',        label:'ચોઘડિયા',   path:'/panchang',             bg:'#FFF1F5', iconBg:'#F43F5E', iconClr:'#fff' },
+  { cat:'spiritual', icon:'stars',            label:'કુંડળી',    path:'/kundali',              bg:'#F5F3FF', iconBg:'#8B5CF6', iconClr:'#fff' },
+  { cat:'spiritual', icon:'auto_stories',     label:'ભક્તિ',     path:'/devotional',           bg:'#FEF2F2', iconBg:'#EF4444', iconClr:'#fff' },
+  { cat:'spiritual', icon:'temple_hindu',     label:'કુળદેવી',   path:'/kuldevi',              bg:'#FFF7ED', iconBg:'#F97316', iconClr:'#fff' },
+  { cat:'spiritual', icon:'explore',          label:'વાસ્તુ',    path:'/vastu',                bg:'#F0FDFA', iconBg:'#14B8A6', iconClr:'#fff' },
+  // ── Utilities ────────────────────────────────────────────────
+  { cat:'utilities', icon:'calculate',        label:'વ્યાજ ગણક', path:'/interest-calculator',  bg:'#EFF6FF', iconBg:'#3B82F6', iconClr:'#fff' },
+  { cat:'utilities', icon:'auto_fix_high',    label:'નામકરણ',   path:'/namkaran',             bg:'#FDF4FF', iconBg:'#D946EF', iconClr:'#fff' },
+  { cat:'utilities', icon:'favorite',         label:'સ્વાસ્થ્ય', path:'/health',               bg:'#F0FDF4', iconBg:'#22C55E', iconClr:'#fff' },
+  { cat:'utilities', icon:'construction',     label:'ઓજારો',    path:'/tools',                bg:'#F9FAFB', iconBg:'#6B7280', iconClr:'#fff' },
+  // ── Business ─────────────────────────────────────────────────
+  { cat:'business',  icon:'badge',            label:'BizCard',  path:'/card',                 bg:'#F0F9FF', iconBg:'#0284C7', iconClr:'#fff' },
+  { cat:'business',  icon:'description',      label:'બાયોડેટા', path:'/biodata',              bg:'#EFF6FF', iconBg:'#2563EB', iconClr:'#fff' },
+  { cat:'business',  icon:'frame_person',     label:'કાર્ડ',    path:'/devotional-cards',     bg:'#F5F3FF', iconBg:'#7C3AED', iconClr:'#fff' },
+  { cat:'business',  icon:'groups',           label:'કોમ્યુ.',  path:'/community',            bg:'#ECFDF5', iconBg:'#059669', iconClr:'#fff' },
+  // ── Games ────────────────────────────────────────────────────
+  { cat:'games',     icon:'psychology',       label:'શબ્દ રમત', path:'/daily-challenge',      bg:'#FFF7ED', iconBg:'#EA580C', iconClr:'#fff' },
+  { cat:'games',     icon:'workspace_premium',label:'KBC ક્વિઝ', path:'/kbc-quiz',            bg:'#FFFBEB', iconBg:'#D97706', iconClr:'#fff' },
+  { cat:'games',     icon:'style',            label:'કાર્ડ્સ',  path:'/swipe-cards',          bg:'#F5F3FF', iconBg:'#7C3AED', iconClr:'#fff' },
+  { cat:'games',     icon:'map',              label:'સફારી',    path:'/gujarat-safari',       bg:'#F0FDF4', iconBg:'#16A34A', iconClr:'#fff' },
+  { cat:'games',     icon:'menu_book',        label:'પાસપોર્ટ', path:'/passport',             bg:'#EFF6FF', iconBg:'#2563EB', iconClr:'#fff' },
+  { cat:'games',     icon:'search',           label:'રહસ્યો',   path:'/mysteries',            bg:'#FFF1F2', iconBg:'#BE123C', iconClr:'#fff' },
+];
+
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('all');
   const [data, setData] = useState(() => {
-    const cached = localStorage.getItem('panchang_cache') || localStorage.getItem('panchang_cache_full');
-    return cached ? JSON.parse(cached) : {
-      user: "મહેમાન",
-      tithi: "વૈશાખ સુદ બારસ",
-      sunrise: "૦૬:૧૦ AM",
-      sunset: "૦૭:૦૮ PM",
-      choghadiya: { name: "લાભ", isGood: true, endTime: "૧૧:૪૫ AM" },
-      suvichar: "સચ્ચાઈનો જ હંમેશા વિજય થાય છે!",
-      healthTip: "બા, આજે સવારે પૂરતું પાણી પીધું?",
-      communityAlert: "ખોરજ ગામમાં આવતીકાલે સવારે રસીકરણ કેમ્પ છે."
+    const c = localStorage.getItem('panchang_cache');
+    return c ? JSON.parse(c) : {
+      tithi:'વૈશાખ સુદ બારસ', sunrise:'૦૬:૧૦ AM', sunset:'૦૭:૦૮ PM',
+      choghadiya:{ name:'લાભ', isGood:true, endTime:'૧૧:૪૫ AM' },
+      suvichar:'સચ્ચાઈનો જ હંમેશા વિજય થાય છે!',
+      healthTip:'આજે સવારે પૂરતું પાણી પીધું?',
+      communityAlert:'ખોરજ ગામમાં આવતીકાલે રસીકરણ કેમ્પ છે.',
     };
   });
-
   const [loading, setLoading] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
-
   const [challengeStreak, setChallengeStreak] = useState(0);
-  const [hasPlayedChallenge, setHasPlayedChallenge] = useState(false);
+  const [hasPlayed, setHasPlayed] = useState(false);
 
   useEffect(() => {
     const today = new Date().toLocaleDateString();
-    const lastPlayed = localStorage.getItem('otlo_challenge_last_date');
-    const savedStreak = parseInt(localStorage.getItem('otlo_challenge_streak') || '0', 10);
-    setChallengeStreak(savedStreak);
-    setHasPlayedChallenge(lastPlayed === today);
+    setChallengeStreak(parseInt(localStorage.getItem('otlo_challenge_streak') || '0', 10));
+    setHasPlayed(localStorage.getItem('otlo_challenge_last_date') === today);
   }, []);
 
   const fetchData = async () => {
     try {
-      const response = await fetch(API_ENDPOINTS.PANCHANG);
-      if (!response.ok) throw new Error('API request failed');
-      const apiData = await response.json();
-      
-      const updatedData = {
-        ...data,
-        tithi: apiData.tithi || data.tithi,
-        sunrise: apiData.sunrise || data.sunrise,
-        sunset: apiData.sunset || data.sunset,
-        choghadiya: apiData.choghadiya || data.choghadiya,
-        healthTip: apiData.healthTip || data.healthTip,
-        suvichar: apiData.suvichar || data.suvichar,
-        communityAlert: apiData.communityAlert || data.communityAlert
-      };
-      
-      setData(updatedData);
-      localStorage.setItem('panchang_cache', JSON.stringify(updatedData));
-    } catch (error) {
-      console.error("Panchang API Error:", error);
-      // Fallback to cache if exists
-      const cached = localStorage.getItem('panchang_cache');
-      if (cached) {
-        setData(JSON.parse(cached));
-      }
-    } finally {
-      setLoading(false);
-    }
+      const r = await fetch(API_ENDPOINTS.PANCHANG);
+      if (!r.ok) throw new Error();
+      const d = await r.json();
+      const u = { ...data, ...d };
+      setData(u);
+      localStorage.setItem('panchang_cache', JSON.stringify(u));
+    } catch {
+      const c = localStorage.getItem('panchang_cache');
+      if (c) setData(JSON.parse(c));
+    } finally { setLoading(false); }
   };
 
   useEffect(() => {
     fetchData();
-    
-    // Tick every 10 seconds to keep the remaining minutes 100% accurate and ultra-responsive
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 10000);
-
-    // Live Update: Refresh API data every 5 minutes
-    const apiInterval = setInterval(fetchData, 5 * 60 * 1000);
-
-    return () => {
-      clearInterval(timer);
-      clearInterval(apiInterval);
-    };
+    const t  = setInterval(() => setCurrentTime(new Date()), 10000);
+    const ai = setInterval(fetchData, 5 * 60 * 1000);
+    return () => { clearInterval(t); clearInterval(ai); };
   }, []);
 
-  // Calculate dynamic Choghadiyas reactively on render
-  const choghadiyaResult = calculateChoghadiyas(data.sunrise || "૦૬:૧૦ AM", data.sunset || "૦૭:૦૮ PM", currentTime);
-  
-  // Find current active choghadiya from dayList or nightList
-  let activeChoghadiya = data.choghadiya;
-  let timeRemainingText = "";
-  
-  if (choghadiyaResult) {
-    const combined = [...choghadiyaResult.dayList, ...choghadiyaResult.nightList];
-    const active = combined.find(ch => currentTime >= ch.startTime && currentTime < ch.endTime);
+  // Live choghadiya
+  const cgResult = calculateChoghadiyas(data.sunrise || '૦૬:૧૦ AM', data.sunset || '૦૭:૦૮ PM', currentTime);
+  let activeCG = data.choghadiya;
+  let timeLeft  = '';
+  if (cgResult) {
+    const combined = [...cgResult.dayList, ...cgResult.nightList];
+    const active = combined.find(c => currentTime >= c.startTime && currentTime < c.endTime);
     if (active) {
-      const formatTimeGu = (date) => {
-        let hours = date.getHours();
-        const minutes = date.getMinutes();
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // 0 -> 12
-        const pad = (n) => n < 10 ? '0' + n : n;
-        const gujaratiNumerals = ['૦', '૧', '૨', '૩', '૪', '૫', '૬', '૭', '૮', '૯'];
-        const toGu = (numStr) => numStr.toString().split('').map(digit => {
-          if (digit >= '0' && digit <= '9') {
-            return gujaratiNumerals[parseInt(digit, 10)];
-          }
-          return digit;
-        }).join('');
-        return `${toGu(pad(hours))}:${toGu(pad(minutes))} ${ampm}`;
-      };
-      
-      activeChoghadiya = {
-        name: active.name,
-        isGood: active.isGood,
-        endTime: formatTimeGu(active.endTime)
-      };
-      timeRemainingText = choghadiyaResult.current.timeRemaining;
+      const toGu = s => s.toString().replace(/[0-9]/g, d => '૦૧૨૩૪૫૬૭૮૯'[d]);
+      const fmt  = d => { let h=d.getHours(), m=d.getMinutes(), ap=h>=12?'PM':'AM'; h=h%12||12; return `${toGu(String(h).padStart(2,'0'))}:${toGu(String(m).padStart(2,'0'))} ${ap}`; };
+      activeCG = { name:active.name, isGood:active.isGood, endTime:fmt(active.endTime) };
+      timeLeft  = cgResult.current.timeRemaining;
     }
   }
 
+  const tMap = { Ekadasi:'એકાદશી',Ekadashi:'એકાદશી',Prathama:'એકમ',Pratham:'એકમ',Dwitiya:'બીજ',Tritiya:'ત્રીજ',Chaturthi:'ચોથ',Panchami:'પાંચમ',Shasthi:'છઠ',Shashthi:'છઠ',Saptami:'સાતમ',Ashtami:'આઠમ',Navami:'નોમ',Dashami:'દશમ',Dwadashi:'બારસ',Dvadasi:'બારસ',Trayodashi:'તેરસ',Chaturdashi:'ચૌદશ',Purnima:'પૂનમ',Pournami:'પૂનમ',Amavasya:'અમાસ',Amavas:'અમાસ' };
+  const trTithi = s => Object.keys(tMap).reduce((r,k) => r.replace(new RegExp(k,'gi'), tMap[k]), s || '');
+
+  const todayDate = new Date().toLocaleDateString('gu-IN', { day:'numeric', month:'long' });
+  const todayVaar = new Date().toLocaleDateString('gu-IN', { weekday:'long' });
+
+  const tools = activeTab === 'all' ? TOOLS : TOOLS.filter(t => t.cat === activeTab);
+
   if (loading && !data.tithi) {
-     return (
-       <div className="flex items-center justify-center min-h-[50vh]">
-         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-primary"></div>
-       </div>
-     );
+    return (
+      <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', minHeight:'60vh', gap:12 }}>
+        <div style={{ width:36, height:36, borderRadius:'50%', border:'3px solid #F59E0B', borderTopColor:'transparent', animation:'spin 0.8s linear infinite' }} />
+        <p className="type-gu-caption" style={{ color:'#A8A29E' }}>લોડ થઈ રહ્યું છે...</p>
+        <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+      </div>
+    );
   }
 
-  const translateTithiToGujarati = (tithiStr) => {
-    if (!tithiStr) return "";
-    let res = tithiStr;
-    const translations = {
-      "Ekadasi": "એકાદશી",
-      "Ekadashi": "એકાદશી",
-      "Prathama": "એકમ",
-      "Pratham": "એકમ",
-      "Dwitiya": "બીજ",
-      "Tritiya": "ત્રીજ",
-      "Chaturthi": "ચોથ",
-      "Panchami": "પાંચમ",
-      "Shasthi": "છઠ",
-      "Shashthi": "છઠ",
-      "Saptami": "સાતમ",
-      "Ashtami": "આઠમ",
-      "Navami": "નોમ",
-      "Dashami": "દશમ",
-      "Dwadashi": "બારસ",
-      "Dwadoshi": "બારસ",
-      "Dvadasi": "બારસ",
-      "Trayodashi": "તેરસ",
-      "Trayodasi": "તેરસ",
-      "Chaturdashi": "ચૌદશ",
-      "Chaturdasi": "ચૌદશ",
-      "Purnima": "પૂનમ",
-      "Pournami": "પૂનમ",
-      "Amavasya": "અમાસ",
-      "Amavas": "અમાસ"
-    };
-    Object.keys(translations).forEach(eng => {
-      const regex = new RegExp(eng, "gi");
-      res = res.replace(regex, translations[eng]);
-    });
-    return res;
-  };
-
-  const ServiceIcon = ({ icon, label, path, color, iconColor }) => (
-    <Link to={path} className="flex flex-col items-center gap-2 group">
-      <div className={`h-16 w-16 ${color} rounded-[1.5rem] flex items-center justify-center shadow-sm group-hover:scale-110 active:scale-95 transition-all`}>
-        <span className={`material-symbols-outlined text-3xl ${iconColor}`} style={{ fontVariationSettings: "'FILL' 1" }}>{icon}</span>
-      </div>
-      <span className="font-gujarati font-bold text-xs text-stone-700 dark:text-dark-text">{label}</span>
-    </Link>
-  );
-
-  const todayDate = new Date().toLocaleDateString('gu-IN', { day: 'numeric', month: 'long', year: 'numeric' });
-  const todayVaar = new Date().toLocaleDateString('gu-IN', { weekday: 'long' });
-
   return (
-    <div className="space-y-6 pb-20 animate-fade-in">
-      {/* 1. Compact Hero Slider (Tithi & Choghadiya) */}
-      <section id="hero-slider" className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
-        <Link to="/panchang" className="flex-shrink-0 w-72 bg-gradient-to-br from-orange-400 to-orange-600 rounded-3xl p-5 text-white shadow-lg relative overflow-hidden group hover:scale-[1.02] active:scale-[0.98] transition-all duration-300">
-          <div className="absolute -right-4 -top-4 opacity-10">
-            <span className="material-symbols-outlined text-[100px]">temple_hindu</span>
+    <div style={{ paddingTop:16, paddingBottom:32, display:'flex', flexDirection:'column', gap:16 }} className="animate-fade-in">
+
+      {/* ══════════════════════════════════════════════════════════
+          ZONE 1 — CONTEXTUAL HERO
+          ══════════════════════════════════════════════════════════ */}
+
+      {/* Date greeting */}
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'0 4px' }}>
+        <div>
+          <p className="type-overline">{todayVaar} • {todayDate}</p>
+          <h1 className="type-gu-title" style={{ color:'#1A1614', marginTop:2 }}>
+            <span style={{ fontFamily:'"Noto Serif Gujarati",serif' }}>🙏 જય ભગવાન!</span>
+          </h1>
+        </div>
+        <div style={{ width:44, height:44, borderRadius:14, background:'linear-gradient(135deg,#FEF3C7,#FDE68A)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:22 }}>
+          🕉️
+        </div>
+      </div>
+
+      {/* Panchang Hero Row — horizontal scroll */}
+      <div style={{ display:'flex', gap:12, overflowX:'auto', marginLeft:-16, marginRight:-16, padding:'0 16px 4px' }} className="no-scrollbar">
+
+        {/* Tithi Card */}
+        <Link to="/panchang" className="press" style={{ flexShrink:0, width:200, borderRadius:20, padding:16, textDecoration:'none', position:'relative', overflow:'hidden', background:'linear-gradient(135deg,#B45309,#F97316)' }}>
+          <p style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:10, fontWeight:700, letterSpacing:'0.07em', textTransform:'uppercase', color:'rgba(255,255,255,0.75)' }}>આજની તિથિ</p>
+          <p className="type-gu-display" style={{ color:'#fff', marginTop:4 }}>{trTithi(data.tithi)}</p>
+          <div style={{ display:'flex', alignItems:'center', gap:4, marginTop:10, color:'rgba(255,255,255,0.8)' }}>
+            <span className="material-symbols-outlined" style={{ fontSize:13 }}>wb_sunny</span>
+            <span style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:11, fontWeight:500 }}>{data.sunrise} – {data.sunset}</span>
           </div>
-          <p className="font-gujarati font-bold text-xs opacity-80 uppercase tracking-widest">આજની તિથિ</p>
-          <h2 className="font-gujarati font-black text-2xl mt-1">{translateTithiToGujarati(data.tithi)}</h2>
-          <p className="font-gujarati font-bold text-xs mt-1.5 opacity-90">{todayVaar} • {todayDate}</p>
-          <div className="mt-4 flex items-center gap-2 bg-white/20 w-fit px-3 py-1 rounded-full text-xs">
-            <span className="material-symbols-outlined text-sm">event</span>
-            <span className="font-gujarati font-bold">વિગતવાર પંચાંગ જુઓ</span>
-          </div>
+          <span className="material-symbols-outlined" style={{ position:'absolute', right:-8, bottom:-8, fontSize:72, color:'rgba(255,255,255,0.08)', fontVariationSettings:"'FILL' 1" }}>calendar_month</span>
         </Link>
 
-        <Link to="/panchang" className={`flex-shrink-0 w-72 rounded-3xl p-5 shadow-lg relative overflow-hidden border-2 group hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 ${activeChoghadiya.isGood ? 'bg-emerald-50 border-emerald-100 dark:bg-emerald-950/20 dark:border-emerald-900/50' : 'bg-rose-50 border-rose-100 dark:bg-rose-950/20 dark:border-rose-900/50'}`}>
-          <p className={`font-gujarati font-bold text-xs uppercase tracking-widest ${activeChoghadiya.isGood ? 'text-emerald-600 dark:text-emerald-455' : 'text-rose-600 dark:text-rose-455'}`}>અત્યારે ચોઘડિયું</p>
-          <h2 className={`font-gujarati font-black text-3xl mt-1 flex items-baseline gap-2 ${activeChoghadiya.isGood ? 'text-emerald-800 dark:text-emerald-300' : 'text-rose-800 dark:text-rose-300'}`}>
-            {activeChoghadiya.name}
-            {timeRemainingText && (
-              <span className={`text-xs font-bold font-gujarati ${activeChoghadiya.isGood ? 'text-emerald-600/80 dark:text-emerald-400/80' : 'text-rose-600/80 dark:text-rose-400/80'}`}>
-                ({timeRemainingText} બાકી)
-              </span>
-            )}
-          </h2>
-          <div className="mt-4 flex items-center justify-between">
-            <span className={`font-gujarati font-bold text-xs ${activeChoghadiya.isGood ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>{activeChoghadiya.endTime} સુધી</span>
-            <span className={`material-symbols-outlined ${activeChoghadiya.isGood ? 'text-emerald-500' : 'text-rose-500'} animate-pulse`}>
-               {activeChoghadiya.isGood ? 'check_circle' : 'warning'}
+        {/* Choghadiya Card */}
+        <Link to="/panchang" className="press" style={{
+          flexShrink:0, width:180, borderRadius:20, padding:16, textDecoration:'none', position:'relative', overflow:'hidden',
+          background: activeCG.isGood ? '#F0FDF4' : '#FFF1F2',
+          border:`1.5px solid ${activeCG.isGood ? '#86EFAC' : '#FECDD3'}`,
+        }}>
+          <p style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:10, fontWeight:700, letterSpacing:'0.07em', textTransform:'uppercase', color: activeCG.isGood ? '#16A34A' : '#DC2626' }}>ચોઘડિયું</p>
+          <p className="type-gu-display" style={{ color: activeCG.isGood ? '#166534' : '#991B1B', marginTop:4 }}>{activeCG.name}</p>
+          <div style={{ display:'flex', alignItems:'center', gap:4, marginTop:10, color: activeCG.isGood ? '#16A34A' : '#DC2626' }}>
+            <span className="material-symbols-outlined" style={{ fontSize:14, fontVariationSettings:"'FILL' 1" }}>{activeCG.isGood ? 'check_circle' : 'warning'}</span>
+            <span style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:11, fontWeight:600 }}>{activeCG.endTime} સુધી</span>
+          </div>
+          {timeLeft && <p style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:10, color: activeCG.isGood ? '#16A34A' : '#DC2626', marginTop:4, fontWeight:500 }}>{timeLeft} બાકી</p>}
+        </Link>
+
+        {/* See Full Panchang */}
+        <Link to="/panchang" className="press" style={{
+          flexShrink:0, width:100, borderRadius:20, padding:16, textDecoration:'none',
+          display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:6,
+          background:'#FFFFFF', border:'1.5px solid #E8E6E3',
+        }}>
+          <span className="material-symbols-outlined" style={{ fontSize:28, color:'#B45309', fontVariationSettings:"'FILL' 1" }}>calendar_month</span>
+          <p className="type-gu-caption" style={{ textAlign:'center', lineHeight:1.3, color:'#78716C' }}>સંપૂર્�{'\n'}પંચાંગ</p>
+        </Link>
+      </div>
+
+      {/* Daily Challenge Banner */}
+      <div style={{
+        display:'flex', alignItems:'center', gap:12, padding:'14px 16px', borderRadius:16,
+        background:'#FFF8EF', border:'1.5px solid #FDE68A',
+      }}>
+        <div style={{ width:48, height:48, borderRadius:14, background:'linear-gradient(135deg,#F97316,#B45309)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+          <span className="material-symbols-outlined" style={{ color:'#fff', fontSize:24, fontVariationSettings:"'FILL' 1" }}>psychology</span>
+        </div>
+        <div style={{ flex:1, minWidth:0 }}>
+          <p className="type-gu-body" style={{ fontWeight:700, color:'#1A1614', margin:0, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
+            {hasPlayed ? `✅ આજ પૂર્ણ · ${challengeStreak} Day Streak` : '🧠 આજની શબ્દ રમત'}
+          </p>
+          <p className="type-caption" style={{ color:'#78716C', margin:'2px 0 0' }}>
+            {hasPlayed ? 'આવતીકાલ ફ્રી.' : '+15 Coins · અત્યારે રમો'}
+          </p>
+        </div>
+        <Link to="/daily-challenge" className="g-btn-primary press" style={{ flexShrink:0, padding:'8px 14px', borderRadius:10, fontSize:13, textDecoration:'none' }}>
+          {hasPlayed ? 'જુઓ →' : 'રમો →'}
+        </Link>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════
+          ZONE 2 — CATEGORY TABS
+          ══════════════════════════════════════════════════════════ */}
+      <div style={{ display:'flex', gap:6, overflowX:'auto', marginLeft:-16, marginRight:-16, padding:'0 16px' }} className="no-scrollbar">
+        {TABS.map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            style={{
+              flexShrink:0,
+              padding:'8px 14px',
+              borderRadius:10,
+              border: activeTab === tab.id ? '1.5px solid #F59E0B' : '1.5px solid #E8E6E3',
+              background: activeTab === tab.id ? '#FFF8EF' : '#FFFFFF',
+              fontFamily:'"Noto Serif Gujarati",serif',
+              fontSize:13,
+              fontWeight: activeTab === tab.id ? 700 : 600,
+              color: activeTab === tab.id ? '#B45309' : '#78716C',
+              cursor:'pointer',
+              transition:'all 0.15s ease',
+              whiteSpace:'nowrap',
+            }}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════
+          ZONE 3 — TOOL GRID (72dp icons, 1-line labels)
+          ══════════════════════════════════════════════════════════ */}
+      <div style={{ background:'#FFFFFF', border:'1px solid #E8E6E3', borderRadius:16, padding:'16px 12px' }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'16px 8px' }}>
+          {tools.map(({ icon, label, path, bg, iconBg, iconClr }, i) => (
+            <Link key={`${path}-${i}`} to={path} className="press"
+              style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:7, textDecoration:'none' }}>
+              {/* 72×72dp icon container */}
+              <div style={{
+                width:56, height:56, borderRadius:14,
+                background: bg,
+                display:'flex', alignItems:'center', justifyContent:'center',
+              }}>
+                <div style={{ width:36, height:36, borderRadius:10, background:iconBg, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                  <span className="material-symbols-outlined" style={{ fontSize:20, color:iconClr, fontVariationSettings:"'FILL' 1" }}>{icon}</span>
+                </div>
+              </div>
+              {/* Max 1-line label */}
+              <p className="type-gu-caption line-clamp-1" style={{ color:'#57534E', textAlign:'center', fontSize:11 }}>{label}</p>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════
+          ZONE 3B — BENTO BOX (Games/Entertainment highlight)
+          ══════════════════════════════════════════════════════════ */}
+      {(activeTab === 'all' || activeTab === 'games') && (
+        <div>
+          <p className="type-overline" style={{ paddingLeft:4, marginBottom:10 }}>ફ્ચર્ડ</p>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+
+            {/* Big card — Gujarat Safari */}
+            <Link to="/gujarat-safari" className="press" style={{
+              gridColumn:'1 / -1', borderRadius:16, padding:18, textDecoration:'none', position:'relative', overflow:'hidden',
+              background:'linear-gradient(135deg,#064E3B,#065F46)',
+              display:'flex', alignItems:'center', gap:14,
+            }}>
+              <div style={{ width:56, height:56, borderRadius:16, background:'rgba(255,255,255,0.15)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:28, flexShrink:0 }}>🦁</div>
+              <div style={{ flex:1, minWidth:0 }}>
+                <p className="g-chip" style={{ background:'rgba(255,255,255,0.15)', color:'rgba(255,255,255,0.9)', marginBottom:6 }}>ઇન્ટ્રેક્ટિવ</p>
+                <p className="type-gu-title" style={{ color:'#fff', margin:0 }}>ગુજરાત સફારી 🗺️</p>
+                <p className="type-caption" style={{ color:'rgba(255,255,255,0.7)', margin:'4px 0 0', lineHeight:1.4 }}>સિંહ, ડાયનાસોર, મોરના અવાજ સાભળો</p>
+              </div>
+              <span className="material-symbols-outlined" style={{ color:'rgba(255,255,255,0.25)', fontSize:64, position:'absolute', right:-8, bottom:-8 }}>explore</span>
+            </Link>
+
+            {/* Half cards */}
+            {[
+              { to:'/mysteries', emoji:'🕵️', title:'ગુજરાતના રહસ્યો', sub:'અજ્ઞાત સ્થળો', bg:'#1C1917', textClr:'#F5F5F4', subClr:'rgba(245,245,244,0.6)' },
+              { to:'/kbc-quiz',  emoji:'🏆', title:'KBC ક્વિઝ',       sub:'ઇનામ જીતો',   bg:'#78350F', textClr:'#FEF3C7', subClr:'rgba(254,243,199,0.7)' },
+            ].map(({ to, emoji, title, sub, bg, textClr, subClr }) => (
+              <Link key={to} to={to} className="press" style={{ borderRadius:16, padding:16, textDecoration:'none', background:bg }}>
+                <span style={{ fontSize:26 }}>{emoji}</span>
+                <p className="type-gu-body" style={{ color:textClr, fontWeight:700, marginTop:8, lineHeight:1.3 }}>{title}</p>
+                <p className="type-caption" style={{ color:subClr, marginTop:4 }}>{sub}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════
+          ZONE 4 — ENGAGEMENT FEED
+          ══════════════════════════════════════════════════════════ */}
+
+      {/* Suvichar */}
+      <div id="daily-suvichar" style={{ background:'#FFFFFF', border:'1px solid #E8E6E3', borderRadius:16, padding:20 }}>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:14 }}>
+          <div>
+            <p className="type-overline">આજનો સુવિચાર</p>
+          </div>
+          <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+            <span className="g-chip" style={{ background:'#F0FDF4', color:'#16A34A', border:'1px solid #86EFAC' }}>
+              <span className="material-symbols-outlined" style={{ fontSize:12, fontVariationSettings:"'FILL' 1" }}>share</span>
+              WhatsApp
             </span>
-          </div>
-        </Link>
-      </section>
-
-      {/* 1.5. Daily Challenge Widget */}
-      <section className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border-2 border-amber-500/30 rounded-[2.5rem] p-6 shadow-sm flex items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="h-14 w-14 bg-amber-550 text-white rounded-2xl flex items-center justify-center shadow-md shrink-0">
-            <span className="material-symbols-outlined text-3xl font-bold animate-pulse">psychology</span>
-          </div>
-          <div>
-            <h4 className="font-gujarati font-black text-xl leading-tight text-stone-850 dark:text-stone-100">આજની શબ્દ રમત 🧠</h4>
-            <p className="font-gujarati text-xs text-stone-605 dark:text-stone-300 mt-1.5">
-              {hasPlayedChallenge 
-                ? `અદ્ભુત! આજનું રમવાનું પૂર્ણ છે. (સ્ટ્રીક: ${challengeStreak} દિવસ)`
-                : `નવા અક્ષરો ગોઠવી વર્ડ પઝલ ઉકેલો અને +૧૫ કોઈન્સ મેળવો!`
-              }
-            </p>
+            <ShareButton sectionId="daily-suvichar" successMessage="✨ સુવિચાર શેર!" />
           </div>
         </div>
-        <Link 
-          to="/daily-challenge" 
-          className="bg-amber-500 hover:bg-amber-400 text-white px-5 py-3.5 rounded-2xl font-gujarati font-black text-xs shadow-md shrink-0 active:scale-95 transition-transform"
-        >
-          {hasPlayedChallenge ? "સ્ટેટસ જુઓ ➔" : "હમણાં રમો ➔"}
-        </Link>
-      </section>
-
-      {/* 2. Services Grid (Quick Discovery) */}
-      <section id="services-grid" className="bg-white dark:bg-dark-surface p-6 rounded-[2.5rem] shadow-sm grid grid-cols-4 gap-y-6">
-        <ServiceIcon icon="description" label="બાયોડેટા" path="/biodata" color="bg-blue-50 dark:bg-blue-950/20" iconColor="text-blue-600 dark:text-blue-400" />
-        <ServiceIcon icon="auto_stories" label="ભક્તિ" path="/devotional" color="bg-rose-50 dark:bg-rose-950/20" iconColor="text-rose-600 dark:text-rose-400" />
-        <ServiceIcon icon="temple_hindu" label="કુળદેવી" path="/kuldevi" color="bg-orange-50 dark:bg-orange-950/20" iconColor="text-orange-600 dark:text-orange-400" />
-        <ServiceIcon icon="favorite" label="સ્વાસ્થ્ય" path="/health" color="bg-emerald-50 dark:bg-emerald-950/20" iconColor="text-emerald-600 dark:text-emerald-400" />
-        <ServiceIcon icon="calendar_month" label="પંચાંગ" path="/panchang" color="bg-amber-50 dark:bg-amber-950/20" iconColor="text-amber-600 dark:text-amber-400" />
-        <ServiceIcon icon="grid_view" label="ચોઘડિયા" path="/panchang" color="bg-purple-50 dark:bg-purple-950/20" iconColor="text-purple-600 dark:text-purple-400" />
-        <ServiceIcon icon="stars" label="કુંડળી" path="/kundali" color="bg-indigo-50 dark:bg-indigo-950/20" iconColor="text-indigo-600 dark:text-indigo-400" />
-        <ServiceIcon icon="explore" label="વાસ્તુ" path="/vastu" color="bg-teal-50 dark:bg-teal-950/20" iconColor="text-teal-650 dark:text-teal-400" />
-        <ServiceIcon icon="auto_fix_high" label="નામકરણ" path="/namkaran" color="bg-pink-50 dark:bg-pink-950/20" iconColor="text-pink-650 dark:text-pink-400" />
-        <ServiceIcon icon="calculate" label="વ્યાજ ગણક" path="/interest-calculator" color="bg-cyan-50 dark:bg-cyan-950/20" iconColor="text-cyan-600 dark:text-cyan-400" />
-        <ServiceIcon icon="quiz" label="જ્ઞાન ક્વિઝ" path="/kbc-quiz" color="bg-red-50 dark:bg-red-950/20" iconColor="text-red-650 dark:text-red-400" />
-        <ServiceIcon icon="settings" label="સેટિંગ્સ" path="/settings" color="bg-stone-50 dark:bg-stone-900/40" iconColor="text-stone-600 dark:text-stone-400" />
-      </section>
-
-      {/* 2.5. Gujarat Safari Prominent Card */}
-      <section className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-[2.5rem] p-6 text-white shadow-xl relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-6">
-        <div className="absolute right-0 top-0 opacity-10 scale-150">
-          <span className="material-symbols-outlined text-[120px]">explore</span>
+        <div style={{ position:'relative', padding:'8px 16px' }}>
+          <span style={{ fontFamily:'"Noto Serif Gujarati",serif', fontSize:48, lineHeight:1, color:'#F59E0B', opacity:0.25, position:'absolute', top:-4, left:0 }}>"</span>
+          <p className="type-gu-body" style={{ color:'#1A1614', fontWeight:700, fontSize:16, lineHeight:1.65 }}>{data.suvichar}</p>
+          <span style={{ fontFamily:'"Noto Serif Gujarati",serif', fontSize:48, lineHeight:1, color:'#F59E0B', opacity:0.25, position:'absolute', bottom:-12, right:0 }}>"</span>
         </div>
-        <div className="flex items-center gap-6 z-10">
-          <div className="h-16 w-16 bg-white/20 rounded-2xl flex items-center justify-center shrink-0 text-4xl select-none">
-            🦁
-          </div>
-          <div>
-            <h4 className="font-gujarati font-black text-2xl leading-tight">ગુજરાત સફારી (Gujarat Safari) 🗺️</h4>
-            <p className="font-gujarati text-xs opacity-90 mt-1.5 max-w-md leading-relaxed">
-              બાળકો માટે વિશેષ સંવાદ નકશો! સિંહ 🦁, ડાયનાસોર 🦖 અને મોર 🦚 ના પાત્રો પર ક્લિક કરો અને તેમના જ અવાજમાં રોચક માહિતી સાંભળો.
-            </p>
-          </div>
-        </div>
-        <Link 
-          to="/gujarat-safari" 
-          className="bg-white text-emerald-700 hover:bg-emerald-50 px-6 py-3.5 rounded-2xl font-gujarati font-black text-sm shadow-lg shrink-0 active:scale-95 transition-all relative z-10"
-        >
-          સફારી શરૂ કરો 🎧 ➔
-        </Link>
-      </section>
+      </div>
 
-      {/* 3. Daily Health Tip (Personalized) */}
-      <section id="health-tip" className="bg-emerald-600 rounded-[2.5rem] p-6 text-white shadow-xl flex items-center gap-6 relative overflow-hidden">
-        <div className="absolute right-0 bottom-0 opacity-10">
-          <span className="material-symbols-outlined text-[100px]">healing</span>
+      {/* Health tip */}
+      <div id="health-tip" style={{ display:'flex', alignItems:'flex-start', gap:12, padding:'14px 16px', borderRadius:16, background:'linear-gradient(135deg,#F0FDF4,#DCFCE7)', border:'1px solid #86EFAC' }}>
+        <div style={{ width:40, height:40, borderRadius:12, background:'#16A34A', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+          <span className="material-symbols-outlined" style={{ color:'#fff', fontSize:20, fontVariationSettings:"'FILL' 1" }}>favorite</span>
         </div>
-        <div className="h-16 w-16 bg-white/20 rounded-2xl flex items-center justify-center shrink-0">
-          <span className="material-symbols-outlined text-4xl">favorite</span>
+        <div style={{ flex:1 }}>
+          <p className="type-overline" style={{ color:'#166534', marginBottom:4 }}>સ્વાસ્થ્ય ટિપ</p>
+          <p className="type-gu-body" style={{ color:'#166534', fontWeight:600, margin:0 }}>{data.healthTip}</p>
+        </div>
+        <ShareButton sectionId="health-tip" successMessage="🍀 ટિપ શેર!" />
+      </div>
+
+      {/* Community alert */}
+      <div style={{ display:'flex', alignItems:'flex-start', gap:12, padding:'14px 16px', borderRadius:16, background:'#FFFBEB', border:'1px solid #FDE68A' }}>
+        <div style={{ width:40, height:40, borderRadius:12, background:'#F59E0B', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+          <span className="material-symbols-outlined" style={{ color:'#fff', fontSize:20, fontVariationSettings:"'FILL' 1" }}>campaign</span>
         </div>
         <div>
-          <div className="flex items-center gap-3">
-            <h4 className="font-gujarati font-black text-xl mb-1">સ્વાસ્થ્ય ટિપ્સ</h4>
-            <ShareButton 
-              sectionId="health-tip" 
-              successMessage="🍀 સ્વાસ્થ્ય ટિપ્સની ડાયરેક્ટ લિંક કોપી થઈ ગઈ છે!" 
-              className="bg-white/10 hover:bg-white/20 border-white/20 text-white dark:bg-white/10 dark:hover:bg-white/20 dark:text-white"
-            />
-          </div>
-          <p className="font-gujarati font-bold text-sm opacity-90">{data.healthTip}</p>
+          <p className="type-overline" style={{ color:'#92400E', marginBottom:4 }}>જાહેર ખબર</p>
+          <p className="type-gu-body" style={{ color:'#78350F', fontWeight:600, margin:0 }}>{data.communityAlert}</p>
         </div>
-      </section>
+      </div>
 
-      {/* 4. WhatsApp Status Preview (Shareable Suvichar) */}
-      <section id="daily-suvichar" className="bg-white dark:bg-dark-surface p-6 rounded-[2.5rem] shadow-sm space-y-4">
-        <div className="flex justify-between items-center">
-            <div className="flex items-center gap-3">
-                <h4 className="font-gujarati font-black text-xl">આજનો સુવિચાર</h4>
-                <ShareButton sectionId="daily-suvichar" successMessage="✨ આજના સુવિચારની ડાયરેક્ટ લિંક કોપી થઈ ગઈ છે!" />
-            </div>
-            <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-gujarati font-bold text-xs flex items-center gap-1">
-              <span className="material-symbols-outlined text-sm">share</span> Whatsapp
-            </span>
-        </div>
-        <div className="aspect-video bg-gradient-to-br from-[#fef8f1] to-[#f9f3ea] rounded-3xl p-8 flex items-center justify-center text-center relative border-2 border-primary/5">
-             <span className="material-symbols-outlined absolute top-4 left-4 text-primary/20 text-4xl">format_quote</span>
-             <p className="font-gujarati font-black text-2xl text-stone-800 leading-relaxed italic">"{data.suvichar}"</p>
-             <span className="material-symbols-outlined absolute bottom-4 right-4 text-primary/20 text-4xl">format_quote</span>
-        </div>
-      </section>
-
-      {/* 4.5. Gamification Activities Grid */}
-      <section className="space-y-4">
-        <h4 className="font-gujarati font-black text-xl px-2">મનોરંજન અને જ્ઞાન સંગાથ 🎮</h4>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          
-          <Link to="/passport" className="bg-[#f0f4ff] dark:bg-stone-900 border border-blue-200 dark:border-stone-850 p-6 rounded-[2rem] flex items-center gap-4 hover:border-blue-500/30 transition-all shadow-sm">
-            <div className="h-14 w-14 bg-blue-500 text-white rounded-2xl flex items-center justify-center shrink-0 shadow-md">
-              <span className="material-symbols-outlined text-2xl font-bold">menu_book</span>
-            </div>
-            <div>
-              <h5 className="font-gujarati font-black text-lg text-stone-855 dark:text-stone-100">ટ્રાવેલ પાસપોર્ટ 📖</h5>
-              <p className="font-gujarati text-xs text-stone-500 dark:text-stone-400 mt-0.5">GPS મુલાકાત વેરિફાય કરી મેળવો કૂપન અને સ્ટેમ્પ્સ</p>
-            </div>
-          </Link>
-
-          <Link to="/mysteries" className="bg-[#fff0f3] dark:bg-stone-900 border border-rose-200 dark:border-stone-855 p-6 rounded-[2rem] flex items-center gap-4 hover:border-rose-500/30 transition-all shadow-sm">
-            <div className="h-14 w-14 bg-rose-500 text-white rounded-2xl flex items-center justify-center shrink-0 shadow-md">
-              <span className="material-symbols-outlined text-2xl font-bold">search</span>
-            </div>
-            <div>
-              <h5 className="font-gujarati font-black text-lg text-stone-855 dark:text-stone-100">ગુજરાતના રહસ્યો 🕵️‍♂️</h5>
-              <p className="font-gujarati text-xs text-stone-500 dark:text-stone-400 mt-0.5">કાળો ડુંગર અને દુમસ બીચ પાછળનું વિજ્ઞાન જાણો</p>
-            </div>
-          </Link>
-
-          <Link to="/swipe-cards" className="bg-[#faf5ff] dark:bg-stone-900 border border-purple-200 dark:border-stone-855 p-6 rounded-[2rem] flex items-center gap-4 hover:border-purple-500/30 transition-all shadow-sm">
-            <div className="h-14 w-14 bg-purple-500 text-white rounded-2xl flex items-center justify-center shrink-0 shadow-md">
-              <span className="material-symbols-outlined text-2xl font-bold">style</span>
-            </div>
-            <div>
-              <h5 className="font-gujarati font-black text-lg text-stone-855 dark:text-stone-100">જ્ઞાન કાર્ડ્સ 🎴</h5>
-              <p className="font-gujarati text-xs text-stone-500 dark:text-stone-400 mt-0.5">ગુજરાતની કળા અને પેલેસ વિશે સ્વાઇપ કરી શીખો</p>
-            </div>
-          </Link>
-
-          <Link to="/gujarat-quiz" className="bg-[#fffaf0] dark:bg-stone-900 border border-orange-200 dark:border-stone-855 p-6 rounded-[2rem] flex items-center gap-4 hover:border-orange-500/30 transition-all shadow-sm">
-            <div className="h-14 w-14 bg-orange-500 text-white rounded-2xl flex items-center justify-center shrink-0 shadow-md">
-              <span className="material-symbols-outlined text-2xl font-bold">workspace_premium</span>
-            </div>
-            <div>
-              <h5 className="font-gujarati font-black text-lg text-stone-855 dark:text-stone-100">જ્ઞાન ક્વિઝ 🏆</h5>
-              <p className="font-gujarati text-xs text-stone-500 dark:text-stone-400 mt-0.5">ફોટા સાથેની રોચક સવાલોત્તરી રમી કૂપન જીતો</p>
-            </div>
-          </Link>
-
-        </div>
-      </section>
-
-      {/* 5. Community Alert Section */}
-      <section className="bg-amber-50 dark:bg-amber-900/10 border-2 border-amber-200 p-6 rounded-[2.5rem] flex gap-4">
-        <div className="h-10 w-10 bg-amber-500 text-white rounded-xl flex items-center justify-center shrink-0">
-          <span className="material-symbols-outlined">campaign</span>
-        </div>
-        <div>
-          <h4 className="font-gujarati font-black text-lg text-amber-900 dark:text-amber-200">જાહેર ખબર</h4>
-          <p className="font-gujarati font-bold text-sm text-amber-800 dark:text-amber-100">{data.communityAlert}</p>
-        </div>
-      </section>
     </div>
   );
 };

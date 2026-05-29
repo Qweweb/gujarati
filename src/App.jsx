@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import Dashboard from './components/Dashboard';
 import HealthAssistant from './components/HealthAssistant';
@@ -30,17 +30,22 @@ import MysteryHub from './components/MysteryHub';
 import TravelPassport from './components/TravelPassport';
 import ScratchRewards from './components/ScratchRewards';
 import './App.css';
+import { App as CapApp } from '@capacitor/app';
+import { supabase } from './supabaseClient';
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem('sanskari_darkMode') === 'true';
   });
 
-  const [hasAgreedConsent, setHasAgreedConsent] = useState(true);
+  const [hasAgreedConsent, setHasAgreedConsent] = useState(() => {
+    return localStorage.getItem('sanskari_consent') === 'true';
+  });
 
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
-  // Extremely robust theme applier Header
+  // Extremely robust theme applier
   useEffect(() => {
     const applyTheme = (isDark) => {
       const root = window.document.documentElement;
@@ -61,6 +66,106 @@ function App() {
     localStorage.setItem('sanskari_darkMode', darkMode);
   }, [darkMode]);
 
+  // Supabase Auth and Deep Linking handler
+  useEffect(() => {
+    // 1. Initial check of active session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setIsLoggedIn(true);
+        localStorage.setItem('sanskari_token', 'true');
+        // Save Google user info to localStorage for Profile page
+        if (session.user) {
+          const meta = session.user.user_metadata || {};
+          if (meta.full_name) localStorage.setItem('google_name', meta.full_name);
+          if (meta.email || session.user.email) localStorage.setItem('google_email', meta.email || session.user.email);
+          if (meta.avatar_url) localStorage.setItem('google_avatar', meta.avatar_url);
+        }
+      }
+      setIsLoadingAuth(false);
+    });
+
+    // 2. Auth state change listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log('Auth event:', _event, session?.user?.email);
+      if (session) {
+        setIsLoggedIn(true);
+        localStorage.setItem('sanskari_token', 'true');
+        // Save Google user info for Profile page
+        if (session.user) {
+          const meta = session.user.user_metadata || {};
+          if (meta.full_name) localStorage.setItem('google_name', meta.full_name);
+          if (meta.email || session.user.email) localStorage.setItem('google_email', meta.email || session.user.email);
+          if (meta.avatar_url) localStorage.setItem('google_avatar', meta.avatar_url);
+        }
+        // If first time, redirect to profile to fill details
+        if (_event === 'SIGNED_IN' && localStorage.getItem('profile_completed') !== 'true') {
+          setTimeout(() => {
+            window.location.hash = '#/profile';
+          }, 500);
+        }
+      } else {
+        setIsLoggedIn(false);
+        localStorage.removeItem('sanskari_token');
+      }
+    });
+
+    // 3. Capacitor App URL Deep Link Listener (for Android)
+    const setupDeepLink = async () => {
+      try {
+        await CapApp.addListener('appUrlOpen', async (event) => {
+          try {
+            const urlStr = event.url;
+            console.log("Deep link opened app:", urlStr);
+            
+            // Handle hash-based tokens: gujaratiapp://login#access_token=...&refresh_token=...
+            if (urlStr.includes('#')) {
+              const hash = urlStr.split('#')[1];
+              const params = new URLSearchParams(hash);
+              const accessToken = params.get('access_token');
+              const refreshToken = params.get('refresh_token');
+              
+              if (accessToken && refreshToken) {
+                console.log("Setting session from deep link tokens...");
+                const { error } = await supabase.auth.setSession({
+                  access_token: accessToken,
+                  refresh_token: refreshToken
+                });
+                if (error) {
+                  console.error("setSession error:", error);
+                  throw error;
+                }
+                console.log("Session set successfully via deep link!");
+              }
+            }
+            
+            // Handle query-param based code (PKCE fallback): gujaratiapp://login?code=...
+            if (urlStr.includes('?code=') || urlStr.includes('&code=')) {
+              console.log("PKCE code detected in deep link, exchanging...");
+              // Supabase will detect this automatically if we give it the full URL
+              // Just trigger a session refresh
+              await supabase.auth.getSession();
+            }
+          } catch (err) {
+            console.error("Deep link auth error:", err);
+          }
+        });
+      } catch (e) {
+        console.warn("CapApp.addListener not supported in browser environment:", e);
+      }
+    };
+
+    setupDeepLink();
+
+    return () => {
+      subscription.unsubscribe();
+      try {
+        CapApp.removeAllListeners();
+      } catch (e) {
+        // Ignore in browser
+      }
+    };
+  }, []);
+
   const toggleDarkMode = () => setDarkMode(prev => !prev);
 
   const handleAgreeConsent = () => {
@@ -72,6 +177,18 @@ function App() {
     localStorage.setItem('sanskari_token', 'true');
     setIsLoggedIn(true);
   };
+
+  // Show loading spinner while checking auth
+  if (isLoadingAuth) {
+    return (
+      <div className="min-h-screen bg-[#F5EEDC] dark:bg-dark-bg flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <span className="material-symbols-outlined text-[#d35400] text-6xl animate-spin">progress_activity</span>
+          <p className="font-gujarati text-[#d35400] font-bold">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!hasAgreedConsent) {
     return <Onboarding onAgree={handleAgreeConsent} />;

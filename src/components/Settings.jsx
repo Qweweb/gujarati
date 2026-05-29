@@ -1,4 +1,15 @@
+import { deleteUserAccount } from '../utils/otlo_helper';
+
 const Settings = ({ darkMode, toggleDarkMode }) => {
+    const handleDeleteAccount = () => {
+        const confirmDelete = window.confirm(
+            "શું તમે ખરેખર તમારું એકાઉન્ટ ડીલીટ કરવા માંગો છો? આનાથી તમારા તમામ લોકેશન ડેટા, કમ્યુનિટી પોસ્ટ્સ અને કોઈન્સ હંમેશ માટે દૂર થઈ જશે. આ ક્રિયા પાછી મેળવી શકાશે નહીં."
+        );
+        if (confirmDelete) {
+            deleteUserAccount();
+        }
+    };
+
     const categories = [
       { 
           title: "એપ સેટિંગ્સ", 
@@ -12,7 +23,8 @@ const Settings = ({ darkMode, toggleDarkMode }) => {
           title: "સુરક્ષા", 
           items: [
               { label: "PIN સેટ કરો", icon: "lock", value: "લોક" },
-              { label: "મેડિકલ ડિસ્ક્લેમર", icon: "policy", value: "વાંચો" }
+              { label: "મેડિકલ ડિસ્ક્લેમર", icon: "policy", value: "વાંચો" },
+              { label: "એકાઉન્ટ ડીલીટ કરો", icon: "delete_forever", isDeleteAccount: true, value: "ડીલીટ" }
           ]
       },
       { 
@@ -37,14 +49,14 @@ const Settings = ({ darkMode, toggleDarkMode }) => {
                 {cat.items.map((item, i) => (
                   <div 
                     key={i} 
-                    onClick={item.isThemeToggle ? toggleDarkMode : undefined}
+                    onClick={item.isThemeToggle ? toggleDarkMode : (item.isDeleteAccount ? handleDeleteAccount : undefined)}
                     className="flex items-center justify-between p-6 border-b border-black/5 last:border-none group active:bg-primary/5 transition-colors cursor-pointer"
                   >
                     <div className="flex items-center gap-4">
-                        <div className={`h-10 w-10 ${item.isThemeToggle ? 'bg-primary dark:bg-dark-accent text-white' : 'bg-surface-container dark:bg-dark-bg text-outline dark:text-dark-text-dim'} rounded-xl flex items-center justify-center transition-all`}>
+                        <div className={`h-10 w-10 ${item.isThemeToggle ? 'bg-primary dark:bg-dark-accent text-white' : (item.isDeleteAccount ? 'bg-error/10 text-error' : 'bg-surface-container dark:bg-dark-bg text-outline dark:text-dark-text-dim')} rounded-xl flex items-center justify-center transition-all`}>
                             <span className="material-symbols-outlined">{item.icon}</span>
                         </div>
-                        <span className="font-gujarati font-black text-xl text-on-surface dark:text-dark-text">{item.label}</span>
+                        <span className={`font-gujarati font-black text-xl ${item.isDeleteAccount ? 'text-error font-extrabold' : 'text-on-surface dark:text-dark-text'}`}>{item.label}</span>
                     </div>
                     
                     {item.isThemeToggle ? (
@@ -53,8 +65,8 @@ const Settings = ({ darkMode, toggleDarkMode }) => {
                         </div>
                     ) : (
                         <div className="flex items-center gap-2">
-                            <span className="font-gujarati text-sm text-outline dark:text-dark-text-dim">{item.value}</span>
-                            <span className="material-symbols-outlined text-outline text-sm">chevron_right</span>
+                            <span className={`font-gujarati text-sm ${item.isDeleteAccount ? 'text-error font-bold' : 'text-outline dark:text-dark-text-dim'}`}>{item.value}</span>
+                            <span className={`material-symbols-outlined text-sm ${item.isDeleteAccount ? 'text-error' : 'text-outline'}`}>chevron_right</span>
                         </div>
                     )}
                   </div>
@@ -70,6 +82,6 @@ const Settings = ({ darkMode, toggleDarkMode }) => {
         </div>
       </div>
     );
-  };
+};
   
-  export default Settings;
+export default Settings;

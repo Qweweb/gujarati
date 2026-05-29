@@ -255,15 +255,23 @@ export const getOrCreateUserId = () => {
 
 // Sync local user profile to Supabase database
 export const syncUserProfile = async () => {
-  const userId = getOrCreateUserId();
+  const { data: { user } } = await supabase.auth.getUser();
+  const userId = user ? user.id : getOrCreateUserId();
   const userLoc = getOtloLocation();
   
-  const name = "નરેન્દ્રભાઈ પટેલ";
+  const name = user?.user_metadata?.full_name || localStorage.getItem('user_full_name') || "નરેન્દ્રભાઈ પટેલ";
   
-  let userMobile = localStorage.getItem('supabase_user_mobile');
+  let userMobile = user?.phone || localStorage.getItem('supabase_user_mobile');
   if (!userMobile) {
     userMobile = '99' + Math.floor(10000000 + Math.random() * 90000000);
     localStorage.setItem('supabase_user_mobile', userMobile);
+  }
+
+  if (user) {
+    localStorage.setItem('supabase_user_id', user.id);
+    if (user.user_metadata?.full_name) {
+      localStorage.setItem('user_full_name', user.user_metadata.full_name);
+    }
   }
 
   const district_id = userLoc ? stringToHash(userLoc.districtId) : null;
@@ -361,6 +369,7 @@ export const getOtloPosts = async (filterLevel = 'all', followedLocationIds = []
     return {
       id: post.id,
       userName: post.users?.name || "અજ્ઞાત યુઝર",
+      userId: post.user_id,
       avatarUrl: post.users?.photo_url || "https://i.pravatar.cc/150?img=68",
       postType: post.post_type,
       content: post.content,
@@ -380,8 +389,12 @@ export const getOtloPosts = async (filterLevel = 'all', followedLocationIds = []
     };
   });
 
-  // Filter posts - Temporary: feed remains general (all active posts) until 50k+ users are reached.
-  let filteredPosts = posts;
+  // Filter posts - Filter out blocked users and reported posts for Google Play UGC compliance
+  const blockedUsers = JSON.parse(localStorage.getItem('otlo_blocked_users') || '[]');
+  const reportedPosts = JSON.parse(localStorage.getItem('otlo_reported_posts') || '[]');
+  let filteredPosts = posts.filter(post => 
+    !blockedUsers.includes(post.userId) && !reportedPosts.includes(post.id)
+  );
 
   // Sort posts by date (latest first), with pinned posts on top
   return filteredPosts.sort((a, b) => {
@@ -435,6 +448,7 @@ export const createOtloPost = async (postContent, type, visibility, mediaUrl = "
   return {
     id: data.id,
     userName: "નરેન્દ્રભાઈ પટેલ (તમે)",
+    userId: userId,
     avatarUrl: "https://i.pravatar.cc/150?img=68",
     postType: data.post_type,
     content: data.content,
@@ -580,3 +594,99 @@ export const createDirectoryListing = (name, category, phone, address) => {
   localStorage.setItem('otlo_directory', JSON.stringify(listings));
   return newListing;
 };
+
+// Report a post on Supabase and locally
+export const reportOtloPost = async (postId) => {
+  try {
+    const { data, error } = await supabase
+      .from('posts')
+      .select('reports')
+      .eq('id', postId)
+      .single();
+
+    if (!error && data) {
+      const newReports = (data.reports || 0) + 1;
+      await supabase
+        .from('posts')
+        .update({ reports: newReports })
+        .eq('id', postId);
+    }
+  } catch (err) {
+    console.error("Error reporting post:", err);
+  }
+
+  // Track locally to hide reported posts immediately (Google Play UGC requirement)
+  const reported = JSON.parse(localStorage.getItem('otlo_reported_posts') || '[]');
+  if (!reported.includes(postId)) {
+    reported.push(postId);
+    localStorage.setItem('otlo_reported_posts', JSON.stringify(reported));
+  }
+};
+
+// Block a user locally (Google Play UGC requirement)
+export const blockOtloUser = (blockedUserId) => {
+  if (!blockedUserId) return;
+  const blocked = JSON.parse(localStorage.getItem('otlo_blocked_users') || '[]');
+  if (!blocked.includes(blockedUserId)) {
+    blocked.push(blockedUserId);
+    localStorage.setItem('otlo_blocked_users', JSON.stringify(blocked));
+  }
+};
+
+// Get blocked users
+export const getBlockedOtloUsers = () => {
+  return JSON.parse(localStorage.getItem('otlo_blocked_users') || '[]');
+};
+
+// Get reported posts
+export const getReportedOtloPosts = () => {
+  return JSON.parse(localStorage.getItem('otlo_reported_posts') || '[]');
+};
+
+// Delete User Account from database and local storage (Google Play Console Policy requirement)
+export const deleteUserAccount = async () => {
+  const userId = localStorage.getItem('supabase_user_id');
+  if (userId) {
+    try {
+      // 1. Delete user from Supabase 'users' table
+      const { error } = await supabase
+        .from('users')
+        .delete()
+        .eq('id', userId);
+      
+      if (error) {
+        console.error("Error deleting user from Supabase:", error);
+      }
+    } catch (err) {
+      console.error("Exception during Supabase account deletion:", err);
+    }
+  }
+
+  try {
+    // Sign out from Supabase auth session
+    await supabase.auth.signOut();
+  } catch (err) {
+    console.error("Error signing out from Supabase Auth during deletion:", err);
+  }
+
+  // 2. Clear all local storage keys
+  localStorage.removeItem('sanskari_token');
+  localStorage.removeItem('sanskari_consent');
+  localStorage.removeItem('user_profile');
+  localStorage.removeItem('supabase_user_id');
+  localStorage.removeItem('supabase_user_mobile');
+  localStorage.removeItem('user_full_name');
+  localStorage.removeItem('user_location');
+  localStorage.removeItem('otlo_posts');
+  localStorage.removeItem('otlo_followed_locations');
+  localStorage.removeItem('otlo_blocked_users');
+  localStorage.removeItem('otlo_reported_posts');
+  localStorage.removeItem('gujarat_coins');
+  localStorage.removeItem('otlo_passport_stamps');
+  localStorage.removeItem('otlo_passport_diary');
+  localStorage.removeItem('otlo_suggested_places');
+
+  // 3. Reload window to direct back to onboarding / login
+  window.location.reload();
+};
+

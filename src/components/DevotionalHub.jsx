@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ShareButton from './ShareButton';
+import { GUJARATI_FESTIVALS } from '../data/gujaratiFestivals';
 
 const RAM_SHALAKA_LETTERS = [
   "सु", "प्र", "उ", "बि", "हो", "मु", "ग", "ब", "सु", "नु", "बि", "घ", "धि", "इ", "द",
@@ -896,11 +897,71 @@ const DevotionalHub = () => {
   };
 
 
-  const [festivals, setFestivals] = useState([
-    { title: "રથસપ્તમી", date: "૨૫ જાન્યુઆરી", month: "મહા સુદ ૭", day: "રવિવાર", image: "https://images.unsplash.com/photo-1590059536060-65c2765d774d?auto=format&fit=crop&q=80&w=400", story: "આ દિવસે સૂર્ય દેવનો જન્મ થયો હતો. આથી તેને સૂર્ય જયંતી પણ કહેવાય છે." },
-    { title: "મહાશિવરાત્રિ", date: "૧૫ ફેબ્રુઆરી", month: "મહા વદ ૧૩", day: "રવિવાર", image: "https://images.unsplash.com/photo-1532693322450-2cb5c511067d?auto=format&fit=crop&q=80&w=400", story: "આ શિવ અને શક્તિના મિલનની રાત્રિ છે." },
-    { title: "મકરસંક્રાંતિ", date: "૧૪ જાન્યુઆરી", month: "પોષ વદ ૧૧", day: "બુધવાર", image: "https://images.unsplash.com/photo-1577705998148-6da4f3963bc8?auto=format&fit=crop&q=80&w=400", story: "સૂર્ય ધન રાશિમાંથી મકર રાશિમાં પ્રવેશ કરે છે." }
-  ]);
+  const [selectedFestival, setSelectedFestival] = useState(null);
+  const [activeLiveMandir, setActiveLiveMandir] = useState(null);
+
+  const getMonthNameInGujarati = (monthIndex) => {
+    const months = [
+      "જાન્યુઆરી", "ફેબ્રુઆરી", "માર્ચ", "એપ્રિલ", "મે", "જૂન",
+      "જુલાઈ", "ઓગસ્ટ", "સપ્ટેમ્બર", "ઓક્ટોબર", "નવેમ્બર", "ડિસેમ્બર"
+    ];
+    return months[monthIndex] || "";
+  };
+
+  const getDisplayFestivals = () => {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth();
+    const currentDay = today.getDate();
+
+    // 1. Get upcoming festivals of the current month
+    const currentMonthUpcoming = GUJARATI_FESTIVALS.filter(f => 
+      f.year === currentYear && 
+      f.month === currentMonth && 
+      f.day >= currentDay
+    ).sort((a, b) => a.day - b.day);
+
+    if (currentMonthUpcoming.length > 0) {
+      return {
+        festivalsList: currentMonthUpcoming,
+        sectionTitle: `${getMonthNameInGujarati(currentMonth)} ${currentYear} ના આગામી દિવસો`
+      };
+    }
+
+    // 2. Fallback: Find the next available month with festivals
+    const allUpcoming = GUJARATI_FESTIVALS.filter(f => {
+      if (f.year > currentYear) return true;
+      if (f.year < currentYear) return false;
+      if (f.month > currentMonth) return true;
+      if (f.month < currentMonth) return false;
+      return f.day >= currentDay;
+    }).sort((a, b) => {
+      if (a.year !== b.year) return a.year - b.year;
+      if (a.month !== b.month) return a.month - b.month;
+      return a.day - b.day;
+    });
+
+    if (allUpcoming.length > 0) {
+      const nextFestYear = allUpcoming[0].year;
+      const nextFestMonth = allUpcoming[0].month;
+      
+      const nextMonthFestivals = allUpcoming.filter(f => 
+        f.year === nextFestYear && f.month === nextFestMonth
+      );
+
+      return {
+        festivalsList: nextMonthFestivals,
+        sectionTitle: `${getMonthNameInGujarati(nextFestMonth)} ${nextFestYear} ના વિશેષ દિવસો`
+      };
+    }
+
+    return {
+      festivalsList: [],
+      sectionTitle: "આગામી તહેવારો"
+    };
+  };
+
+  const { festivalsList: festivals, sectionTitle: festivalSectionTitle } = getDisplayFestivals();
 
   const increment = () => setCount(prev => prev + 1);
   const reset = () => setCount(0);
@@ -908,7 +969,9 @@ const DevotionalHub = () => {
   const handleStoryPlay = (fest) => {
     if (playingStory === fest.title) {
         setPlayingStory(null);
+        window.speechSynthesis.cancel();
     } else {
+        window.speechSynthesis.cancel();
         setPlayingStory(fest.title);
         const speech = new SpeechSynthesisUtterance(fest.story);
         speech.lang = 'gu-IN';
@@ -925,7 +988,74 @@ const DevotionalHub = () => {
 
   return (
     <div className="animate-fade-in space-y-10 pb-12">
+      {/* ════ BHAGAVAD GITA ENTRY BANNER ════ */}
+      <section id="gita-section" className="space-y-0">
+        <div
+          onClick={() => navigate('/gita')}
+          className="relative overflow-hidden rounded-[2.5rem] cursor-pointer hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 shadow-2xl border border-amber-400/20"
+          style={{ background: 'linear-gradient(135deg, #0d1b6e 0%, #1a237e 30%, #1565c0 60%, #0d47a1 100%)' }}
+        >
+          {/* Animated dot grid */}
+          <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '18px 18px' }}></div>
+
+          {/* Golden top border */}
+          <div className="absolute top-0 left-0 right-0 h-1" style={{ background: 'linear-gradient(90deg, #FFD700, #FFA000, #FFD700)' }}></div>
+          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-400/30"></div>
+
+          {/* Decorative Om symbol */}
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[100px] select-none pointer-events-none opacity-10 text-white">🕉️</div>
+
+          <div className="relative p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-5 z-10">
+            <div className="space-y-3">
+              {/* Badge */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="bg-yellow-400/15 text-yellow-300 border border-yellow-400/30 px-3 py-1 rounded-full text-[10px] font-black tracking-wider uppercase flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-xs" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
+                  Bhakti Section — New
+                </span>
+                <span className="bg-emerald-400/15 text-emerald-300 border border-emerald-400/30 px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                  100% Free
+                </span>
+              </div>
+
+              {/* Title */}
+              <div>
+                <h2 className="font-gujarati font-black text-3xl sm:text-4xl text-yellow-300 leading-tight">
+                  ભગવદ ગીતા
+                </h2>
+                <p className="text-white/60 text-sm font-gujarati mt-1">ભગવાન કૃષ્ણ અને અર્જુન — Eternal Wisdom</p>
+              </div>
+
+              {/* Stats */}
+              <div className="flex flex-wrap gap-3">
+                {[
+                  { icon: 'menu_book', label: '108 Key Shlokas' },
+                  { icon: 'calendar_month', label: '18 Chapters' },
+                  { icon: 'record_voice_over', label: 'Audio (TTS)' },
+                  { icon: 'share', label: 'Share Cards' },
+                ].map(stat => (
+                  <div key={stat.label} className="flex items-center gap-1.5 bg-white/10 rounded-full px-3 py-1 border border-white/10">
+                    <span className="material-symbols-outlined text-sm text-yellow-300">{stat.icon}</span>
+                    <span className="text-white/80 text-[11px] font-gujarati font-bold">{stat.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* CTA Button */}
+            <div className="flex-shrink-0">
+              <div className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 font-gujarati font-black px-7 py-4 rounded-2xl flex items-center gap-2.5 shadow-lg group-hover:translate-x-1 transition-all whitespace-nowrap">
+                <span className="text-lg">📖</span>
+                <span>ગીતા જ્ઞાન ખોલો</span>
+                <span className="material-symbols-outlined text-lg">arrow_forward</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Festivals Section - KEPT AS TEAL/MAROON AS REQUESTED Header */}
+
       <section id="festivals-section" className="space-y-6">
         <div className="relative bg-teal p-8 rounded-[2.5rem] text-white shadow-xl overflow-hidden group">
             <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]"></div>
@@ -938,69 +1068,131 @@ const DevotionalHub = () => {
                         <h2 className="font-gujarati font-black text-3xl">તહેવાર-વ્રતો</h2>
                         <ShareButton sectionId="festivals-section" successMessage="📅 તહેવાર-વ્રતો વિભાગની ડાયરેક્ટ લિંક કોપી થઈ ગઈ છે!" />
                     </div>
-                    <p className="font-gujarati text-white/70 text-sm">આ મહિનાના વિશેષ દિવસો</p>
+                    <p className="font-gujarati text-white/70 text-sm">{festivalSectionTitle}</p>
                 </div>
                 <span className="material-symbols-outlined text-4xl text-white/50">event_available</span>
             </div>
         </div>
         
         <div className="space-y-4">
-            {festivals.map((fest, idx) => (
-                <div key={idx} className="flex gap-4 p-5 bg-white rounded-3xl shadow-sm border border-teal/5 group border-l-8 border-l-maroon">
-                    <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-inner flex-shrink-0">
-                        <img src={fest.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform" alt={fest.title} />
-                    </div>
-                    <div className="flex-1 flex flex-col justify-center">
-                        <p className="font-gujarati text-maroon text-xs font-bold uppercase tracking-wider">{fest.date} • {fest.month}</p>
-                        <h4 className="font-gujarati font-black text-2xl text-teal mt-1">{fest.title}</h4>
-                        <button 
-                            onClick={() => handleStoryPlay(fest)}
-                            className={`mt-2 flex items-center gap-2 font-gujarati text-sm font-bold ${playingStory === fest.title ? 'text-teal font-black animate-pulse' : 'text-outline hover:text-maroon'} transition-colors`}
-                        >
-                            <span className="material-symbols-outlined text-xl">{playingStory === fest.title ? 'equalizer' : 'record_voice_over'}</span>
-                            {playingStory === fest.title ? 'વાર્તા સંભળાઈ રહી છે...' : 'દાદીમાની વાર્તા સાંભળો'}
-                        </button>
-                    </div>
+            {festivals.length === 0 ? (
+                <div className="p-6 bg-white rounded-3xl shadow-sm border border-teal/5 text-center font-gujarati text-charcoal/60">
+                    આ સમયગાળા માટે કોઈ તહેવાર કે વિશેષ દિવસો ઉપલબ્ધ નથી.
                 </div>
-            ))}
+            ) : (
+                festivals.map((fest, idx) => (
+                    <div key={idx} className="flex gap-4 p-5 bg-white rounded-3xl shadow-sm border border-teal/5 group border-l-8 border-l-maroon">
+                        <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-inner flex-shrink-0">
+                            <img src={fest.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform" alt={fest.title} />
+                        </div>
+                        <div className="flex-1 flex flex-col justify-center">
+                            <p className="font-gujarati text-maroon text-xs font-bold uppercase tracking-wider">{fest.date} • {fest.tithi} • {fest.weekday}</p>
+                            <h4 className="font-gujarati font-black text-2xl text-teal mt-1">{fest.title}</h4>
+                            <p className="font-gujarati text-charcoal/80 text-sm mt-1 line-clamp-1">{fest.significance}</p>
+                            <button 
+                                onClick={() => setSelectedFestival(fest)}
+                                className="mt-2.5 flex items-center gap-1.5 font-gujarati text-sm font-bold text-outline hover:text-maroon transition-colors w-fit"
+                            >
+                                <span className="material-symbols-outlined text-lg">menu_book</span>
+                                વિશેષ મહત્વ અને કથા જુઓ
+                            </button>
+                        </div>
+                    </div>
+                ))
+            )}
         </div>
       </section>
 
-      {/* Live Mandir Darshan Section - REVERTED TO BROWN Header */}
+      {/* Live Mandir Darshan Section */}
       <section id="mandir-section" className="space-y-6">
         <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
                 <h2 className="font-gujarati font-black text-3xl text-primary">લાઈવ મંદિર દર્શન</h2>
                 <ShareButton sectionId="mandir-section" successMessage="🪔 લાઈવ મંદિર દર્શન વિભાગની ડાયરેક્ટ લિંક કોપી થઈ ગઈ છે!" />
             </div>
-            <button className="text-outline text-sm font-gujarati font-bold">બધા જુઓ</button>
+            <span className="flex items-center gap-1.5 bg-red-600 text-white px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">
+                <span className="h-2 w-2 bg-white rounded-full animate-pulse"></span> LIVE
+            </span>
         </div>
         
-        <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
-            <div className="flex-shrink-0 w-72 h-[450px] relative rounded-[2.5rem] overflow-hidden shadow-2xl group">
-                <img src="https://images.unsplash.com/photo-1590059536060-65c2765d774d?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Somnath" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                <div className="absolute top-6 left-6 bg-red-600 text-white px-3 py-1 rounded-full text-[10px] font-black tracking-widest flex items-center gap-1 uppercase">
-                    <span className="h-2 w-2 bg-white rounded-full animate-pulse"></span> LIVE
+        <div className="flex gap-4 overflow-x-auto no-scrollbar pb-3">
+            {[
+              {
+                name: "સોમનાથ મહાદેવ",
+                location: "પ્રભાસ પાટણ, વેરાવળ",
+                image: "/somnath_temple.png",
+                channelId: "UCT1egsvA08YcdMLiEu1DTRg",
+                ytUrl: "https://www.youtube.com/@SomnathTempleOfficialChannel/live",
+                color: "from-orange-900/90 via-orange-800/60"
+              },
+              {
+                name: "દ્વારકાધીશ મંદિર",
+                location: "દ્વારકા, ગુજરાત",
+                image: "/dwarkadheesh_temple.png",
+                channelId: "UCBAvMHZO3BIfMMhOK9LMOYQ",
+                ytUrl: "https://www.youtube.com/@shridwarkadhishmandirofficial/live",
+                color: "from-blue-900/90 via-blue-800/60"
+              },
+              {
+                name: "સારંગપુર હનુમાનજી",
+                location: "સારંગપુર, ગુજરાત",
+                image: "/sarangpur_hanuman.png",
+                channelId: "UCI1r_MNxzyvUPHyTdWDe4NA",
+                ytUrl: "https://www.youtube.com/@salangpurhanumanji/live",
+                color: "from-red-900/90 via-red-800/60"
+              },
+              {
+                name: "અંબાજી શક્તિપીઠ",
+                location: "આરાસુર, ગુજરાત",
+                image: "/ambaji_temple.png",
+                channelId: "UCUge9PCf1By7w1DEP95xXoA",
+                ytUrl: "https://www.youtube.com/@officialambajitemple/live",
+                color: "from-pink-900/90 via-pink-800/60"
+              },
+              {
+                name: "વૈષ્ણો દેવી",
+                location: "કટરા, જમ્મુ",
+                image: "/vaishno_devi_temple.png",
+                channelId: "UCziZy6xAlJWPzgIY4duxAeQ",
+                ytUrl: "https://www.youtube.com/@MHONESHRADDHA/live",
+                color: "from-indigo-900/90 via-indigo-800/60"
+              },
+            ].map((mandir, idx) => (
+              <div
+                key={idx}
+                onClick={() => setActiveLiveMandir(mandir)}
+                className="flex-shrink-0 w-56 h-80 relative rounded-[2rem] overflow-hidden shadow-2xl group cursor-pointer active:scale-95 transition-transform duration-200 border border-white/10"
+              >
+                <img
+                  src={mandir.image}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  alt={mandir.name}
+                  onError={(e) => { e.target.src = "https://placehold.co/400x640/1a1a2e/ffffff?text=🛕"; }}
+                />
+                <div className={`absolute inset-0 bg-gradient-to-t ${mandir.color} to-transparent`}></div>
+                
+                {/* Live badge */}
+                <div className="absolute top-4 left-4 bg-red-600 text-white px-2.5 py-1 rounded-full text-[9px] font-black tracking-widest flex items-center gap-1 uppercase shadow-lg">
+                    <span className="h-1.5 w-1.5 bg-white rounded-full animate-pulse"></span> LIVE
                 </div>
-                <div className="absolute bottom-10 left-8 space-y-1">
-                    <h3 className="font-gujarati font-black text-4xl text-white">સોમનાથ મહાદેવ</h3>
-                    <p className="font-gujarati text-white/70 text-lg">પ્રભાસ પાટણ, વેરાવળ</p>
+                
+                {/* Play button */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="h-14 w-14 rounded-full bg-white/20 backdrop-blur-sm border border-white/40 flex items-center justify-center">
+                        <span className="material-symbols-outlined text-white text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>play_circle</span>
+                    </div>
                 </div>
-            </div>
 
-            <div className="flex flex-col gap-4">
-                <div className="w-48 h-[217px] relative rounded-[2.5rem] overflow-hidden shadow-xl group">
-                    <img src="https://images.unsplash.com/photo-1620131448661-0422d36f2fca?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Dwarka" />
-                    <div className="absolute inset-0 bg-black/30"></div>
-                    <div className="absolute bottom-6 left-6 text-white font-gujarati font-black text-xl leading-tight">દ્વારકાધીશ<br/>મંદિર</div>
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                    <h3 className="font-gujarati font-black text-xl text-white leading-tight drop-shadow-lg">{mandir.name}</h3>
+                    <p className="font-gujarati text-white/70 text-xs mt-0.5">{mandir.location}</p>
+                    <div className="mt-3 flex items-center gap-1.5 bg-white/15 backdrop-blur-sm rounded-full px-3 py-1.5 w-fit border border-white/20">
+                        <span className="material-symbols-outlined text-white text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>smart_display</span>
+                        <span className="text-white text-[10px] font-bold font-gujarati">YouTube Live</span>
+                    </div>
                 </div>
-                <div className="w-48 h-[217px] relative rounded-[2.5rem] overflow-hidden shadow-xl group">
-                    <img src="https://images.unsplash.com/photo-1577705998148-6da4f3963bc8?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Ambaji" />
-                    <div className="absolute inset-0 bg-black/30"></div>
-                    <div className="absolute bottom-6 left-6 text-white font-gujarati font-black text-xl leading-tight">અંબાજી<br/>શક્તિપીઠ</div>
-                </div>
-            </div>
+              </div>
+            ))}
         </div>
       </section>
 
@@ -1088,50 +1280,31 @@ const DevotionalHub = () => {
       {/* Sacred Oracle Hub (Interactive Ram Shalaka & Durga Prashnavali Grid) */}
       <section id="oracle-section" className="space-y-6 relative">
         <div id="ram-shalaka" className="absolute -mt-24"></div>
-        <div id="durga-prashnavali" className="absolute -mt-24"></div>
-        <div className={`relative p-8 rounded-[2.5rem] text-white shadow-xl overflow-hidden group transition-all duration-500 ${activeOracle === 'ram' ? 'bg-gradient-to-r from-orange-600 to-amber-500' : 'bg-gradient-to-r from-rose-800 to-red-600'}`}>
+        <div className={`relative p-8 rounded-[2.5rem] text-white shadow-xl overflow-hidden group transition-all duration-500 bg-gradient-to-r from-orange-600 to-amber-500`}>
             <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]"></div>
-            <div className={`absolute top-0 left-0 right-0 h-1.5 transition-colors duration-500 ${activeOracle === 'ram' ? 'bg-yellow-400' : 'bg-amber-300'}`}></div>
-            <div className={`absolute bottom-0 left-0 right-0 h-1.5 transition-colors duration-500 ${activeOracle === 'ram' ? 'bg-yellow-400' : 'bg-amber-300'}`}></div>
+            <div className={`absolute top-0 left-0 right-0 h-1.5 transition-colors duration-500 bg-yellow-400`}></div>
+            <div className={`absolute bottom-0 left-0 right-0 h-1.5 transition-colors duration-500 bg-yellow-400`}></div>
             
             <div className="relative flex justify-between items-center z-10">
                 <div className="space-y-1">
                     <div className="flex items-center gap-3">
                         <h2 className="font-gujarati font-black text-3xl">
-                            {activeOracle === 'ram' ? "શ્રી રામ શલાકા" : "દુર્ગા સપ્તશતી પ્રશ્નાવલી"}
+                            શ્રી રામ શલાકા
                         </h2>
                         <ShareButton 
-                          sectionId={activeOracle === 'ram' ? 'ram-shalaka' : 'durga-prashnavali'} 
-                          successMessage={activeOracle === 'ram' ? '🏹 શ્રી રામ શલાકાની ડાયરેક્ટ લિંક કોપી થઈ ગઈ છે!' : '🔱 માં દુર્ગા પ્રશ્નાવલીની ડાયરેક્ટ લિંક કોપી થઈ ગઈ છે!'}
+                          sectionId="ram-shalaka" 
+                          successMessage="🏹 શ્રી રામ શલાકાની ડાયરેક્ટ લિંક કોપી થઈ ગઈ છે!"
                           className="bg-white/10 hover:bg-white/20 border-white/20 text-white dark:bg-white/10 dark:hover:bg-white/20 dark:text-white"
                         />
                     </div>
                     <p className="font-gujarati text-white/80 text-sm">
-                        {activeOracle === 'ram' ? "રામચરિતમાનસ પ્રશ્નાવલી" : "માં દુર્ગા ભગવતી પ્રશ્નાવલી"}
+                        રામચરિતમાનસ પ્રશ્નાવલી
                     </p>
                 </div>
                 <span className="material-symbols-outlined text-4xl text-white/50 animate-pulse">
-                    {activeOracle === 'ram' ? "temple_hindu" : "brightness_5"}
+                    temple_hindu
                 </span>
             </div>
-        </div>
-
-        {/* Segmented Toggle Control */}
-        <div className="flex bg-stone-100 dark:bg-stone-900 p-1.5 rounded-3xl max-w-md mx-auto shadow-inner border border-stone-200/50 dark:border-stone-800">
-            <button 
-                onClick={() => { setActiveOracle('ram'); resetShalaka(); resetDurga(); }} 
-                className={`flex-1 py-3.5 px-4 rounded-2xl text-sm font-gujarati font-black transition-all flex items-center justify-center gap-2 ${activeOracle === 'ram' ? 'bg-gradient-to-r from-orange-600 to-amber-500 text-white shadow-md' : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'}`}
-            >
-                <span className="material-symbols-outlined text-lg">temple_hindu</span>
-                🏹 શ્રી રામ શલાકા
-            </button>
-            <button 
-                onClick={() => { setActiveOracle('durga'); resetShalaka(); resetDurga(); }} 
-                className={`flex-1 py-3.5 px-4 rounded-2xl text-sm font-gujarati font-black transition-all flex items-center justify-center gap-2 ${activeOracle === 'durga' ? 'bg-gradient-to-r from-rose-700 to-red-600 text-white shadow-md' : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'}`}
-            >
-                <span className="material-symbols-outlined text-lg">brightness_5</span>
-                🔱 દુર્ગા પ્રશ્નાવલી
-            </button>
         </div>
 
         {/* Expandable Info Panel Button */}
@@ -1151,8 +1324,7 @@ const DevotionalHub = () => {
         {/* Expandable Rules Content */}
         {showRules && (
             <div className="max-w-4xl mx-auto bg-stone-50 dark:bg-stone-900/40 p-6 sm:p-8 rounded-[2.5rem] border border-stone-200/60 dark:border-stone-850 space-y-8 animate-fade-in shadow-inner">
-                {activeOracle === 'ram' ? (
-                    // RAM SHALAKA RULES
+                    {/* RAM SHALAKA RULES */}
                     <div className="space-y-6">
                         <div className="flex items-center gap-3 border-b border-orange-200/50 pb-4 dark:border-stone-800">
                             <span className="material-symbols-outlined text-2xl text-orange-650">temple_hindu</span>
@@ -1203,109 +1375,7 @@ const DevotionalHub = () => {
                             </div>
                         </div>
                     </div>
-                ) : (
-                    // DURGA PRASHNAVALI RULES
-                    <div className="space-y-6">
-                        <div className="flex items-center gap-3 border-b border-rose-200/50 pb-4 dark:border-stone-800">
-                            <span className="material-symbols-outlined text-2xl text-rose-650">brightness_5</span>
-                            <h3 className="font-gujarati font-black text-xl text-rose-950 dark:text-rose-200">🔱 દુર્ગા સપ્તશતી પ્રશ્નાવલી વિધિ અને નિયમો</h3>
-                        </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {/* Ritual (વિધિ) */}
-                            <div className="bg-white dark:bg-dark-surface p-5 rounded-3xl border border-rose-100/50 dark:border-stone-800 space-y-4 shadow-sm">
-                                <h4 className="font-gujarati font-black text-amber-900 dark:text-amber-400 flex items-center gap-2 text-sm border-b pb-2 dark:border-stone-800">
-                                    <span className="material-symbols-outlined text-lg">settings_suggest</span> 🪔 પૂજન વિધિ અને મંત્ર
-                                </h4>
-                                <div className="p-3 bg-rose-50 dark:bg-rose-950/20 rounded-2xl text-center border border-rose-100 dark:border-stone-800">
-                                    <p className="font-sans font-black text-xs text-rose-700 dark:text-rose-300">
-                                        "ॐ ऐं ह्रीं क्लीं चामुण्डायै विच्चे"
-                                    </p>
-                                    <p className="text-[10px] text-stone-500 mt-1 font-gujarati font-bold">આ મંત્રનો ૩ વાર શાંતિથી ઉચ્ચાર કરો</p>
-                                </div>
-                                <ul className="space-y-2 text-xs text-stone-600 dark:text-stone-300 leading-relaxed font-gujarati font-bold">
-                                    <li className="flex gap-2"><span className="text-rose-600">૧.</span> માં દુર્ગા આદિશક્તિનું હૃદયપૂર્વક ધ્યાન કરો.</li>
-                                    <li className="flex gap-2"><span className="text-rose-600">૨.</span> તમારી સમસ્યા કે પ્રશ્ન માં સમક્ષ ભાવથી રજૂ કરો.</li>
-                                    <li className="flex gap-2"><span className="text-rose-600">૩.</span> પૂરી પવિત્રતા સાથે અક્ષર ચક્ર પર આંગળી/ક્લિક મૂકો.</li>
-                                    <li className="flex gap-2"><span className="text-rose-600">૪.</span> માતાજીના આશીર્વાદરૂપ શ્લોક અને ભાવાર્થ ધ્યાનથી વાંચો.</li>
-                                </ul>
-                            </div>
-
-                            {/* DOs (શું કરવું) */}
-                            <div className="bg-white dark:bg-dark-surface p-5 rounded-3xl border border-emerald-100/50 dark:border-stone-800 space-y-4 shadow-sm">
-                                <h4 className="font-gujarati font-black text-emerald-800 dark:text-emerald-400 flex items-center gap-2 text-sm border-b pb-2 dark:border-stone-800">
-                                    <span className="material-symbols-outlined text-lg text-emerald-650">check_circle</span> ✅ શું કરવું (DOs)
-                                </h4>
-                                <ul className="space-y-2 text-xs text-stone-600 dark:text-stone-300 leading-relaxed font-gujarati font-bold">
-                                    <li className="flex gap-2 text-emerald-950 dark:text-emerald-350">✓ માં ભગવતીને એક બાળકની જેમ પ્રાર્થના કરો.</li>
-                                    <li className="flex gap-2 text-emerald-950 dark:text-emerald-350">✓ શુક્રવારે અથવા નવરાત્રિ પર્વમાં પૂછવું અત્યંત ફળદાયી છે.</li>
-                                    <li className="flex gap-2 text-emerald-950 dark:text-emerald-350">✓ સ્નાન આદિથી નિવૃત્ત થઈ શુદ્ધ અવસ્થામાં જ ઉપયોગ કરો.</li>
-                                    <li className="flex gap-2 text-emerald-950 dark:text-emerald-350">✓ આવેલ ઉત્તરને માતાજીની પવિત્ર ઇચ્છા માની સ્વીકારો.</li>
-                                    <li className="flex gap-2 text-emerald-950 dark:text-emerald-350">✓ ઉત્તર વાંચી માતાજીને ધન્યવાદ અર્પિત કરો.</li>
-                                </ul>
-                            </div>
-
-                            {/* DON'Ts (શું ન કરવું) */}
-                            <div className="bg-white dark:bg-dark-surface p-5 rounded-3xl border border-rose-100/50 dark:border-stone-800 space-y-4 shadow-sm">
-                                <h4 className="font-gujarati font-black text-rose-800 dark:text-rose-450 flex items-center gap-2 text-sm border-b pb-2 dark:border-stone-800">
-                                    <span className="material-symbols-outlined text-lg text-rose-655">cancel</span> ❌ શું ન કરવું (DON'Ts)
-                                </h4>
-                                <ul className="space-y-2 text-xs text-stone-600 dark:text-stone-300 leading-relaxed font-gujarati font-bold">
-                                    <li className="flex gap-2 text-rose-950 dark:text-rose-350">✗ અશુદ્ધ કે અપવિત્ર અવસ્થામાં ક્યારેય સ્પર્શ ન કરો.</li>
-                                    <li className="flex gap-2 text-rose-950 dark:text-rose-350">✗ એક દિવસમાં ૩ વારથી વધુ ક્યારેય ન પૂછો.</li>
-                                    <li className="flex gap-2 text-rose-950 dark:text-rose-350">✗ અન્ય વ્યક્તિના હિત કે નુકસાન માટે પ્રશ્ન ન પૂછો.</li>
-                                    <li className="flex gap-2 text-rose-950 dark:text-rose-350">✗ મનગમતો ઉત્તર મેળવવા માટે વારંવાર ન પૂછો.</li>
-                                    <li className="flex gap-2 text-rose-950 dark:text-rose-350">✗ અંધવિશ્વાસ ન રાખવો, કર્મ અને મહેનત અનિવાર્ય છે.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Comparison Table Section */}
-                <div className="bg-white dark:bg-dark-surface p-5 sm:p-6 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-sm space-y-4">
-                    <h4 className="font-gujarati font-black text-stone-800 dark:text-stone-200 flex items-center gap-2 text-sm border-b pb-2 dark:border-stone-800">
-                        <span className="material-symbols-outlined text-lg text-amber-605">balance</span> ⚖️ બંને પવિત્ર પ્રશ્નાવલીઓની સરખામણી
-                    </h4>
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left text-xs font-gujarati font-bold border-collapse">
-                            <thead>
-                                <tr className="border-b border-stone-200 dark:border-stone-800 text-stone-500">
-                                    <th className="py-2 px-3">વિષય</th>
-                                    <th className="py-2 px-3 text-orange-700 dark:text-orange-400">🏹 શ્રી રામ શલાકા</th>
-                                    <th className="py-2 px-3 text-rose-700 dark:text-rose-400">🔱 દુર્ગા સપ્તશતી પ્રશ્નાવલી</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-stone-100 dark:divide-stone-800 text-stone-700 dark:text-stone-300">
-                                <tr>
-                                    <td className="py-2.5 px-3 text-stone-500 font-black">પવિત્ર आधार</td>
-                                    <td className="py-2.5 px-3">શ્રી રામચરિતમાનસ</td>
-                                    <td className="py-2.5 px-3">શ્રી દુર્ગા સપ્તશતી</td>
-                                </tr>
-                                <tr>
-                                    <td className="py-2.5 px-3 text-stone-500 font-black">આરાધ્ય દેવ</td>
-                                    <td className="py-2.5 px-3">ભગવાન શ્રી રામ</td>
-                                    <td className="py-2.5 px-3">આદિશક્તિ માં ભવાની</td>
-                                </tr>
-                                <tr>
-                                    <td className="py-2.5 px-3 text-stone-500 font-black">શ્રેષ્ઠ સમય</td>
-                                    <td className="py-2.5 px-3">સવારે / પૂજા આરાધના સમયે</td>
-                                    <td className="py-2.5 px-3">શુક્રવાર / પવિત્ર નવરાત્રિ પર્વ</td>
-                                </tr>
-                                <tr>
-                                    <td className="py-2.5 px-3 text-stone-500 font-black">ઉત્તર સ્વરૂપ</td>
-                                    <td className="py-2.5 px-3">દોહા અને પવિત્ર ચોપાઈ</td>
-                                    <td className="py-2.5 px-3">સંસ્કૃત શ્લોક અને આશીર્વાદ ફળ</td>
-                                </tr>
-                                <tr>
-                                    <td className="py-2.5 px-3 text-stone-500 font-black">પ્રકૃતિ ફળ</td>
-                                    <td className="py-2.5 px-3">સૌમ્ય, શાંતિ અને પરમ આશ્વાસન</td>
-                                    <td className="py-2.5 px-3">શક્તિ, સાહસ અને નવો ઉત્સાહ આપનાર</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
 
                 {/* Important Caution Callout */}
                 <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 dark:from-amber-950/20 dark:to-orange-950/20 p-5 rounded-3xl border border-amber-200/50 dark:border-amber-900/50 flex gap-4 items-start">
@@ -1321,8 +1391,7 @@ const DevotionalHub = () => {
         )}
 
         <div className="bg-white dark:bg-dark-surface rounded-[2.5rem] p-6 sm:p-8 shadow-xl border border-stone-100 dark:border-stone-800/80 space-y-6">
-            {activeOracle === 'ram' ? (
-                // 1. SHRI RAM SHALAKA VIEW
+            {/* 1. SHRI RAM SHALAKA VIEW */}
                 !showResult ? (
                     <div className="space-y-6 text-center">
                         <div className="max-w-md mx-auto space-y-2">
@@ -1403,95 +1472,7 @@ const DevotionalHub = () => {
                         </div>
                     </div>
                 )
-            ) : (
-                // 2. DURGA SAPTASHATI PRASHNAVALI VIEW
-                !durgaShowResult ? (
-                    <div className="space-y-6 text-center">
-                        <div className="max-w-md mx-auto space-y-2">
-                            <p className="font-gujarati font-black text-lg text-rose-900 dark:text-rose-400">
-                                {durgaAnimating ? "માં ભવાનીનું ધ્યાન ચાલી રહ્યું છે, કૃપા કરીને સ્મરણ ચાલુ રાખો..." : "૧. માં નવદુર્ગા ભગવતીનું ધ્યાન ધરી મનોકામના વિચારો."}
-                            </p>
-                            <p className="font-gujarati text-stone-500 dark:text-stone-400 text-sm">
-                                {durgaAnimating ? "શક્તિપીઠના ચક્રમાંથી પવિત્ર મંગલકારી આશીર્વાદ એકત્રિત થઈ રહ્યા છે." : "૨. નીચેની ૧૫ પવિત્ર શક્તિ પીઠોમાંથી કોઈપણ એક અક્ષર/નામ પર શ્રદ્ધાપૂર્વક ક્લિક કરો."}
-                            </p>
-                        </div>
 
-                        {/* Interactive 3x5 Sacred Crimson Grid */}
-                        <div className="relative max-w-lg mx-auto">
-                            <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-3 p-3 sm:p-5 bg-rose-50/50 dark:bg-rose-950/20 rounded-3xl border-2 border-rose-200/50 shadow-inner">
-                                {DURGA_PRASHNAVALI_ANSWERS.map((ans, idx) => {
-                                    const isHighlighted = durgaHighlightedCells.includes(idx);
-                                    const isSelected = selectedDurgaIdx === idx;
-                                    return (
-                                        <button
-                                            key={idx}
-                                            onClick={() => startDurgaQuery(idx)}
-                                            disabled={durgaAnimating}
-                                            className={`aspect-square p-2 rounded-2xl flex flex-col items-center justify-center transition-all duration-200 border relative overflow-hidden ${
-                                                isSelected 
-                                                    ? 'bg-gradient-to-br from-rose-700 to-red-600 text-white font-black scale-110 z-20 shadow-lg border-yellow-300 animate-pulse' 
-                                                    : isHighlighted 
-                                                        ? 'bg-gradient-to-br from-amber-500 to-orange-500 text-white font-black scale-105 shadow-md animate-pulse z-10' 
-                                                        : 'bg-white dark:bg-dark-surface hover:bg-rose-50 hover:text-rose-950 dark:hover:bg-rose-950/40 dark:hover:text-rose-200 hover:shadow-md hover:scale-105 text-stone-800 dark:text-stone-300 border-stone-200/80 dark:border-stone-800/80'
-                                            }`}
-                                        >
-                                            <span className="material-symbols-outlined text-lg sm:text-xl text-rose-600/70 dark:text-rose-400 mb-1">brightness_5</span>
-                                            <p className="font-gujarati font-black text-xs sm:text-sm tracking-wide leading-tight">
-                                                {ans.name.split('. ')[1]}
-                                            </p>
-                                            <span className="absolute bottom-1 right-2 text-[9px] font-black opacity-30">
-                                                {ans.name.split('. ')[0]}
-                                            </span>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="space-y-6 text-center animate-fade-in py-4">
-                        <div className="max-w-md mx-auto p-6 rounded-[2.5rem] bg-gradient-to-tr from-rose-50 to-red-50/20 dark:from-dark-bg dark:to-dark-bg border-2 border-rose-200/50 shadow-lg relative overflow-hidden space-y-6">
-                            <div className="absolute right-0 top-0 opacity-5 pointer-events-none">
-                                <span className="material-symbols-outlined text-[120px]">brightness_5</span>
-                            </div>
-
-                            {/* Result Badge */}
-                            <div className="flex justify-center">
-                                <span className={`px-4 py-1.5 rounded-full text-xs font-gujarati font-black border uppercase tracking-wider shadow-sm ${DURGA_PRASHNAVALI_ANSWERS[selectedDurgaIdx].badgeColor}`}>
-                                    {DURGA_PRASHNAVALI_ANSWERS[selectedDurgaIdx].category}
-                                </span>
-                            </div>
-
-                            {/* Durga Saptashati Shloka */}
-                            <div className="space-y-2">
-                                <p className="font-label text-[10px] text-rose-600/70 font-black uppercase tracking-[0.2em]">દુર્ગા સપ્તશતી શ્લોક</p>
-                                <p className="font-sans font-black text-xl text-rose-950 dark:text-rose-200 leading-relaxed px-4">
-                                    "{DURGA_PRASHNAVALI_ANSWERS[selectedDurgaIdx].shloka}"
-                                </p>
-                            </div>
-
-                            <div className="h-[2px] w-24 bg-gradient-to-r from-transparent via-rose-400 to-transparent mx-auto"></div>
-
-                            {/* Gujarati Meaning */}
-                            <div className="space-y-2 px-2">
-                                <p className="font-label text-[10px] text-rose-900/60 dark:text-rose-400/60 font-black uppercase tracking-[0.2em]">ચક્ર આશીર્વાદ ફળ કથન</p>
-                                <p className="font-gujarati font-black text-base text-stone-800 dark:text-stone-300 leading-relaxed">
-                                    {DURGA_PRASHNAVALI_ANSWERS[selectedDurgaIdx].meaning}
-                                </p>
-                            </div>
-
-                            {/* Reset Button */}
-                            <button
-                                onClick={resetDurga}
-                                className="w-full bg-gradient-to-r from-rose-700 to-red-600 hover:from-rose-800 hover:to-red-700 text-white font-gujarati font-black py-4 px-6 rounded-2xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-2 border-b-4 border-rose-900"
-                            >
-                                <span className="material-symbols-outlined text-lg">autorenew</span>
-                                માં ભવાનીને પ્રણામ કરી ફરીથી પૂછો
-                            </button>
-                        </div>
-                    </div>
-                )
-            )}
         </div>
       </section>
 
@@ -2010,6 +1991,213 @@ const DevotionalHub = () => {
           </div>
         </div>
       )}
+
+      {/* FESTIVAL DETAILS MODAL OVERLAY */}
+      {selectedFestival && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/75 backdrop-blur-md animate-fade-in">
+          <div className="relative w-full max-w-2xl bg-[#fdfaf6] dark:bg-stone-950 rounded-[2.5rem] shadow-2xl border border-teal/20 overflow-hidden flex flex-col max-h-[85vh] animate-scale-in">
+            {/* Top Teal/Maroon accent stripes */}
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-maroon"></div>
+            
+            {/* Header Image section */}
+            <div className="relative h-48 sm:h-56 w-full overflow-hidden shrink-0">
+              <img 
+                src={selectedFestival.image} 
+                className="w-full h-full object-cover" 
+                alt={selectedFestival.title} 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+              
+              {/* Close Button */}
+              <button 
+                onClick={() => { 
+                  setSelectedFestival(null); 
+                  if (playingStory === selectedFestival.title) {
+                    setPlayingStory(null);
+                    window.speechSynthesis.cancel();
+                  }
+                }}
+                className="absolute top-4 right-4 h-10 w-10 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center text-white transition-colors cursor-pointer active:scale-90"
+              >
+                <span className="material-symbols-outlined text-lg">close</span>
+              </button>
+
+              {/* Title Overlay */}
+              <div className="absolute bottom-4 left-6 right-6">
+                <span className="bg-maroon text-white text-[10px] font-gujarati font-black uppercase tracking-wider px-3 py-1 rounded-full border border-maroon/20 inline-block mb-1.5">
+                  🌺 તહેવાર અને વ્રત વિશેષ
+                </span>
+                <h3 className="font-gujarati font-black text-2xl sm:text-3xl text-white drop-shadow-sm leading-tight">
+                  {selectedFestival.title}
+                </h3>
+              </div>
+            </div>
+
+            {/* Scrollable Modal Content */}
+            <div className="flex-1 overflow-y-auto no-scrollbar p-6 sm:p-8 space-y-6">
+              {/* Badges Info Grid */}
+              <div className="grid grid-cols-3 gap-2 bg-teal/5 dark:bg-teal/10 p-4 rounded-2xl border border-teal/10">
+                <div className="text-center">
+                  <p className="text-[10px] text-teal/70 dark:text-teal/40 font-gujarati font-bold">તારીખ</p>
+                  <p className="font-gujarati text-xs sm:text-sm font-black text-teal mt-0.5">{selectedFestival.date.split(' ૨૦')[0]}</p>
+                </div>
+                <div className="text-center border-x border-teal/10">
+                  <p className="text-[10px] text-teal/70 dark:text-teal/40 font-gujarati font-bold">તિથિ</p>
+                  <p className="font-gujarati text-xs sm:text-sm font-black text-teal mt-0.5">{selectedFestival.tithi}</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-[10px] text-teal/70 dark:text-teal/40 font-gujarati font-bold">વાર</p>
+                  <p className="font-gujarati text-xs sm:text-sm font-black text-teal mt-0.5">{selectedFestival.weekday}</p>
+                </div>
+              </div>
+
+              {/* Sections details */}
+              <div className="space-y-5">
+                {/* 1. Significance */}
+                <div className="space-y-2">
+                  <h4 className="font-gujarati font-black text-lg text-maroon flex items-center gap-1.5 border-b border-maroon/10 pb-1">
+                    <span className="material-symbols-outlined text-xl">stars</span>
+                    પર્વનું મહત્વ (Significance)
+                  </h4>
+                  <p className="font-gujarati text-sm text-charcoal/90 dark:text-stone-300 leading-relaxed font-medium">
+                    {selectedFestival.significance}
+                  </p>
+                </div>
+
+                {/* 2. History / Mythology */}
+                <div className="space-y-2">
+                  <h4 className="font-gujarati font-black text-lg text-maroon flex items-center gap-1.5 border-b border-maroon/10 pb-1">
+                    <span className="material-symbols-outlined text-xl">history_edu</span>
+                    પૌરાણિક કથા / ઇતિહાસ (History & Myth)
+                  </h4>
+                  <p className="font-gujarati text-sm text-charcoal/90 dark:text-stone-300 leading-relaxed">
+                    {selectedFestival.history}
+                  </p>
+                </div>
+
+                {/* 3. Celebration Method */}
+                <div className="space-y-2">
+                  <h4 className="font-gujarati font-black text-lg text-maroon flex items-center gap-1.5 border-b border-maroon/10 pb-1">
+                    <span className="material-symbols-outlined text-xl">celebration</span>
+                    ઉજવણીની વિધિ અને રીત (How to Celebrate)
+                  </h4>
+                  <p className="font-gujarati text-sm text-charcoal/90 dark:text-stone-300 leading-relaxed">
+                    {selectedFestival.howToCelebrate}
+                  </p>
+                </div>
+              </div>
+
+              {/* Audio player voice over */}
+              <button 
+                onClick={() => handleStoryPlay(selectedFestival)}
+                className={`w-full py-3.5 rounded-2xl flex items-center justify-center gap-2.5 font-gujarati font-bold text-white transition-all shadow-md active:scale-98 ${
+                  playingStory === selectedFestival.title 
+                    ? 'bg-teal animate-pulse' 
+                    : 'bg-maroon hover:bg-maroon-dark'
+                }`}
+              >
+                <span className="material-symbols-outlined text-xl">
+                  {playingStory === selectedFestival.title ? 'volume_up' : 'record_voice_over'}
+                </span>
+                <span>
+                  {playingStory === selectedFestival.title 
+                    ? 'અવાજ બંધ કરવા માટે ફરીથી અહી ક્લિક કરો' 
+                    : 'દાદીમાના અવાજમાં કથા/વાર્તા સાંભળો'}
+                </span>
+              </button>
+            </div>
+            
+            {/* Modal Footer */}
+            <div className="p-4 bg-teal/5 dark:bg-stone-900/40 border-t border-teal/10 text-center shrink-0">
+              <p className="font-gujarati text-[10px] sm:text-xs text-teal/70 dark:text-teal/40 font-bold leading-none">
+                🙏 આપનો દિવસ મંગલમય રહે — શુભ ભક્તિભાવ 🙏
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* LIVE MANDIR DARSHAN - SMART HYBRID MODAL */}
+      {activeLiveMandir && (() => {
+        const handleOpenYouTube = () => {
+          window.open(activeLiveMandir.ytUrl, '_blank', 'noopener,noreferrer');
+        };
+        return (
+          <div
+            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/90 backdrop-blur-md animate-fade-in"
+            onClick={(e) => { if (e.target === e.currentTarget) setActiveLiveMandir(null); }}
+          >
+            <div className="w-full sm:max-w-2xl bg-black rounded-t-[2.5rem] sm:rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 animate-scale-in">
+              
+              {/* Modal Header */}
+              <div className="relative flex items-center justify-between px-5 py-3.5 bg-gradient-to-r from-[#0f0f0f] to-[#1a1a1a] border-b border-white/10">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1.5 bg-red-600 text-white px-2.5 py-1 rounded-full text-[9px] font-black tracking-widest uppercase">
+                    <span className="h-1.5 w-1.5 bg-white rounded-full animate-pulse"></span> LIVE
+                  </div>
+                  <div>
+                    <h3 className="font-gujarati font-black text-base text-white leading-none">{activeLiveMandir.name}</h3>
+                    <p className="font-gujarati text-white/50 text-[10px] mt-0.5">{activeLiveMandir.location}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleOpenYouTube}
+                    className="h-8 px-3 bg-red-600 hover:bg-red-500 active:scale-95 rounded-xl flex items-center gap-1.5 text-white text-[11px] font-bold transition-all"
+                  >
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>
+                    YouTube પર જુઓ
+                  </button>
+                  <button
+                    onClick={() => setActiveLiveMandir(null)}
+                    className="h-8 w-8 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center text-white transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-base">close</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Smart Embed Area: try iframe first, with visual fallback */}
+              <div className="relative w-full aspect-video bg-black overflow-hidden">
+                
+                {/* Background temple image — always visible beneath */}
+                <img
+                  src={activeLiveMandir.image}
+                  alt={activeLiveMandir.name}
+                  className="absolute inset-0 w-full h-full object-cover opacity-40"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+
+                {/* Try embed iframe on top */}
+                <iframe
+                  key={activeLiveMandir.channelId}
+                  src={`https://www.youtube.com/embed/live_stream?channel=${activeLiveMandir.channelId}&autoplay=1&rel=0&modestbranding=1`}
+                  title={`${activeLiveMandir.name} Live Darshan`}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="absolute inset-0 w-full h-full z-10"
+                  frameBorder="0"
+                ></iframe>
+              </div>
+
+              {/* Bottom action strip */}
+              <div className="bg-[#0f0f0f] border-t border-white/10 px-4 py-3 flex items-center justify-between gap-3">
+                <p className="font-gujarati text-white/50 text-[10px] leading-tight flex-1">
+                  🙏 {activeLiveMandir.name} — Live Darshan<br/>
+                  <span className="text-white/30">જો video load ન થાય, YouTube પર ખોલો →</span>
+                </p>
+                <button
+                  onClick={handleOpenYouTube}
+                  className="flex-shrink-0 flex items-center gap-2 bg-red-600 hover:bg-red-500 active:scale-95 text-white font-gujarati font-bold text-xs px-4 py-2.5 rounded-2xl transition-all shadow-lg"
+                >
+                  <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: "'FILL' 1" }}>smart_display</span>
+                  YouTube Live ખોલો
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 };

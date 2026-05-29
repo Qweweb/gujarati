@@ -1,0 +1,77 @@
+Total loaded: 522
+
+First 70 questions in database:
+1. ID: tf1 | Ans: True | Statement: બનાસકાંઠા જિલ્લાનું વહીવટી વડું મથક પાલનપુર છે.
+2. ID: tf2 | Ans: False | Statement: બનાસકાંઠા જિલ્લાનું વહીવટી વડું મથક હિંમતનગર છે.
+3. ID: tf3 | Ans: True | Statement: સાબરકાંઠા જિલ્લાનું વહીવટી વડું મથક હિંમતનગર છે.
+4. ID: tf4 | Ans: False | Statement: સાબરકાંઠા જિલ્લાનું વહીવટી વડું મથક નડિયાદ છે.
+5. ID: tf5 | Ans: True | Statement: ખેડા જિલ્લાનું વહીવટી વડું મથક નડિયાદ છે.
+6. ID: tf6 | Ans: False | Statement: ખેડા જિલ્લાનું વહીવટી વડું મથક ગોધરા છે.
+7. ID: tf7 | Ans: True | Statement: પંચમહાલ જિલ્લાનું વહીવટી વડું મથક ગોધરા છે.
+8. ID: tf8 | Ans: False | Statement: પંચમહાલ જિલ્લાનું વહીવટી વડું મથક રાજપીપળા છે.
+9. ID: tf9 | Ans: True | Statement: નર્મદા જિલ્લાનું વહીવટી વડું મથક રાજપીપળા છે.
+10. ID: tf10 | Ans: False | Statement: નર્મદા જિલ્લાનું વહીવટી વડું મથક વ્યારા છે.
+11. ID: tf11 | Ans: True | Statement: તાપી જિલ્લાનું વહીવટી વડું મથક વ્યારા છે.
+12. ID: tf12 | Ans: False | Statement: તાપી જિલ્લાનું વહીવટી વડું મથક આહવા છે.
+13. ID: tf13 | Ans: True | Statement: ડાંગ જિલ્લાનું વહીવટી વડું મથક આહવા છે.
+14. ID: tf14 | Ans: False | Statement: ડાંગ જિલ્લાનું વહીવટી વડું મથક વેરાવળ છે.
+15. ID: tf15 | Ans: True | Statement: ગીર સોમનાથ જિલ્લાનું વહીવટી વડું મથક વેરાવળ છે.
+16. ID: tf16 | Ans: False | Statement: ગીર સોમનાથ જિલ્લાનું વહીવટી વડું મથક ખંભાળિયા છે.
+17. ID: tf17 | Ans: True | Statement: દેવભૂમિ દ્વારકા જિલ્લાનું વહીવટી વડું મથક ખંભાળિયા છે.
+18. ID: tf18 | Ans: False | Statement: દેવભૂમિ દ્વારકા જિલ્લાનું વહીવટી વડું મથક મોડાસા છે.
+19. ID: tf19 | Ans: True | Statement: અરવલ્લી જિલ્લાનું વહીવટી વડું મથક મોડાસા છે.
+20. ID: tf20 | Ans: False | Statement: અરવલ્લી જિલ્લાનું વહીવટી વડું મથક લુણાવાડા છે.
+21. ID: tf21 | Ans: True | Statement: મહીસાગર જિલ્લાનું વહીવટી વડું મથક લુણાવાડા છે.
+22. ID: tf22 | Ans: False | Statement: મહીસાગર જિલ્લાનું વહીવટી વડું મથક ભુજ છે.
+23. ID: tf23 | Ans: True | Statement: કચ્છ જિલ્લાનું વહીવટી વડું મથક ભુજ છે.
+24. ID: tf24 | Ans: False | Statement: કચ્છ જિલ્લાનું વહીવટી વડું મથક સુરેન્દ્રનગર છે.
+25. ID: tf25 | Ans: True | Statement: સુરેન્દ્રનગર જિલ્લાનું વહીવટી વડું મથક સુરેન્દ્રનગર છે.
+26. ID: tf26 | Ans: False | Statement: સુરેન્દ્રનગર જિલ્લાનું વહીવટી વડું મથક મોરબી છે.
+27. ID: tf27 | Ans: True | Statement: મોરબી જિલ્લાનું વહીવટી વડું મથક મોરબી છે.
+28. ID: tf28 | Ans: False | Statement: મોરબી જિલ્લાનું વહીવટી વડું મથક પાટણ છે.
+29. ID: tf29 | Ans: True | Statement: પાટણ જિલ્લાનું વહીવટી વડું મથક પાટણ છે.
+30. ID: tf30 | Ans: False | Statement: પાટણ જિલ્લાનું વહીવટી વડું મથક મહેસાણા છે.
+31. ID: tf31 | Ans: True | Statement: મહેસાણા જિલ્લાનું વહીવટી વડું મથક મહેસાણા છે.
+32. ID: tf32 | Ans: False | Statement: મહેસાણા જિલ્લાનું વહીવટી વડું મથક ગાંધીનગર છે.
+33. ID: tf33 | Ans: True | Statement: ગાંધીનગર જિલ્લાનું વહીવટી વડું મથક ગાંધીનગર છે.
+34. ID: tf34 | Ans: False | Statement: ગાંધીનગર જિલ્લાનું વહીવટી વડું મથક અમદાવાદ છે.
+35. ID: tf35 | Ans: True | Statement: અમદાવાદ જિલ્લાનું વહીવટી વડું મથક અમદાવાદ છે.
+36. ID: tf36 | Ans: False | Statement: અમદાવાદ જિલ્લાનું વહીવટી વડું મથક આણંદ છે.
+37. ID: tf37 | Ans: True | Statement: આણંદ જિલ્લાનું વહીવટી વડું મથક આણંદ છે.
+38. ID: tf38 | Ans: False | Statement: આણંદ જિલ્લાનું વહીવટી વડું મથક વડોદરા છે.
+39. ID: tf39 | Ans: True | Statement: વડોદરા જિલ્લાનું વહીવટી વડું મથક વડોદરા છે.
+40. ID: tf40 | Ans: False | Statement: વડોદરા જિલ્લાનું વહીવટી વડું મથક સુરત છે.
+41. ID: tf41 | Ans: True | Statement: સુરત જિલ્લાનું વહીવટી વડું મથક સુરત છે.
+42. ID: tf42 | Ans: False | Statement: સુરત જિલ્લાનું વહીવટી વડું મથક નવસારી છે.
+43. ID: tf43 | Ans: True | Statement: નવસારી જિલ્લાનું વહીવટી વડું મથક નવસારી છે.
+44. ID: tf44 | Ans: False | Statement: નવસારી જિલ્લાનું વહીવટી વડું મથક વલસાડ છે.
+45. ID: tf45 | Ans: True | Statement: વલસાડ જિલ્લાનું વહીવટી વડું મથક વલસાડ છે.
+46. ID: tf46 | Ans: False | Statement: વલસાડ જિલ્લાનું વહીવટી વડું મથક બોટાદ છે.
+47. ID: tf47 | Ans: True | Statement: બોટાદ જિલ્લાનું વહીવટી વડું મથક બોટાદ છે.
+48. ID: tf48 | Ans: False | Statement: બોટાદ જિલ્લાનું વહીવટી વડું મથક રાજકોટ છે.
+49. ID: tf49 | Ans: True | Statement: રાજકોટ જિલ્લાનું વહીવટી વડું મથક રાજકોટ છે.
+50. ID: tf50 | Ans: False | Statement: રાજકોટ જિલ્લાનું વહીવટી વડું મથક જામનગર છે.
+51. ID: tf51 | Ans: True | Statement: જામનગર જિલ્લાનું વહીવટી વડું મથક જામનગર છે.
+52. ID: tf52 | Ans: False | Statement: જામનગર જિલ્લાનું વહીવટી વડું મથક પોરબંદર છે.
+53. ID: tf53 | Ans: True | Statement: પોરબંદર જિલ્લાનું વહીવટી વડું મથક પોરબંદર છે.
+54. ID: tf54 | Ans: False | Statement: પોરબંદર જિલ્લાનું વહીવટી વડું મથક જૂનાગઢ છે.
+55. ID: tf55 | Ans: True | Statement: જૂનાગઢ જિલ્લાનું વહીવટી વડું મથક જૂનાગઢ છે.
+56. ID: tf56 | Ans: False | Statement: જૂનાગઢ જિલ્લાનું વહીવટી વડું મથક અમરેલી છે.
+57. ID: tf57 | Ans: True | Statement: અમરેલી જિલ્લાનું વહીવટી વડું મથક અમરેલી છે.
+58. ID: tf58 | Ans: False | Statement: અમરેલી જિલ્લાનું વહીવટી વડું મથક ભાવનગર છે.
+59. ID: tf59 | Ans: True | Statement: ભાવનગર જિલ્લાનું વહીવટી વડું મથક ભાવનગર છે.
+60. ID: tf60 | Ans: False | Statement: ભાવનગર જિલ્લાનું વહીવટી વડું મથક દાહોદ છે.
+61. ID: tf61 | Ans: True | Statement: દાહોદ જિલ્લાનું વહીવટી વડું મથક દાહોદ છે.
+62. ID: tf62 | Ans: False | Statement: દાહોદ જિલ્લાનું વહીવટી વડું મથક છોટાઉદેપુર છે.
+63. ID: tf63 | Ans: True | Statement: છોટાઉદેપુર જિલ્લાનું વહીવટી વડું મથક છોટાઉદેપુર છે.
+64. ID: tf64 | Ans: False | Statement: છોટાઉદેપુર જિલ્લાનું વહીવટી વડું મથક પાલનપુર છે.
+65. ID: tf65 | Ans: True | Statement: સિદ્ધપુર તાલુકો પાટણ જિલ્લામાં આવેલો છે.
+66. ID: tf66 | Ans: False | Statement: સિદ્ધપુર તાલુકો દેવભૂમિ દ્વારકા જિલ્લામાં આવેલો છે.
+67. ID: tf67 | Ans: True | Statement: માંડવી તાલુકો કચ્છ જિલ્લામાં આવેલો છે.
+68. ID: tf68 | Ans: False | Statement: માંડવી તાલુકો દેવભૂમિ દ્વારકા જિલ્લામાં આવેલો છે.
+69. ID: tf69 | Ans: True | Statement: ચોટીલા તાલુકો સુરેન્દ્રનગર જિલ્લામાં આવેલો છે.
+70. ID: tf70 | Ans: False | Statement: ચોટીલા તાલુકો અમરેલી જિલ્લામાં આવેલો છે.
+
+Unique core statements (stripped): 522
+
+Core statements appearing more than once:

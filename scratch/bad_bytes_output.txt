@@ -1,0 +1,10 @@
+Context around bad byte:
+     "fact": fact
+    })
+    idx += 1
+
+print(f"Generated {len(tf_statements)} True/False entries.")
+� દાઝેલો _____ ફૂંકીને પીવે", "છાશ", ["દહીં", "પાણી", "ચા"], "એક વાર કડવો અનુભવ થયા પછી વ્યક્તિ અતિશ
+
+Repr representation:
+'     "fact": fact\n    })\n    idx += 1\n\nprint(f"Generated {len(tf_statements)} True/False entries.")\n� દાઝેલો _____ ફૂંકીને પીવે", "છાશ", ["દહીં", "પાણી", "ચા"], "એક વાર કડવો અનુભવ થયા પછી વ્યક્તિ અતિશ'

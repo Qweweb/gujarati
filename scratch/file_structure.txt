@@ -1,0 +1,4 @@
+File character length: 53756
+Number of invalid chars: 1
+Invalid chars locations and context:
+- Position 37548: 'n(tf_statements)} True/False entries.")\n� દાઝેલો _____ ફૂંકીને પીવે", "છાશ", ["દ'

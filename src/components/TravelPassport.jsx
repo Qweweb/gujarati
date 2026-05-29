@@ -132,6 +132,7 @@ const MOCK_COORDINATES = {
 
 export default function TravelPassport() {
   const [stamps, setStamps] = useState({});
+  const [isCoverOpen, setIsCoverOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activeCoupon, setActiveCoupon] = useState(null);
   const [activeZone, setActiveZone] = useState("Mega"); // 'Mega', 'North', 'Saurashtra', 'Central', 'South', 'Badges'
@@ -233,6 +234,7 @@ export default function TravelPassport() {
         if (distance < 5.0) { // Unlocks if within 5 km
           const unlocked = savePassportStamp(landmark.id);
           if (unlocked) {
+            if (navigator.vibrate) navigator.vibrate([150, 100, 150]);
             const updated = getPassportStamps();
             setStamps(updated);
             checkAndUnlockBadges(updated);
@@ -259,6 +261,7 @@ export default function TravelPassport() {
   const handleSimulateCheckIn = (landmark) => {
     const unlocked = savePassportStamp(landmark.id);
     if (unlocked) {
+      if (navigator.vibrate) navigator.vibrate([150, 100, 150]);
       const updated = getPassportStamps();
       setStamps(updated);
       checkAndUnlockBadges(updated);
@@ -420,12 +423,64 @@ export default function TravelPassport() {
 
   const totalStampsCount = Object.keys(stamps).length;
 
+  if (!isCoverOpen) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[70vh] p-4 animate-fade-in">
+        <div 
+          onClick={() => {
+            if (navigator.vibrate) navigator.vibrate([100]);
+            setIsCoverOpen(true);
+          }}
+          className="w-full max-w-sm aspect-[3/4] bg-[#5c2400] dark:bg-stone-900 rounded-[2.5rem] shadow-2xl border-8 border-amber-600/40 p-8 flex flex-col items-center justify-between text-center cursor-pointer transition-all duration-500 hover:scale-[1.03] active:scale-95 hover:shadow-amber-500/10 hover:shadow-2xl relative overflow-hidden group"
+        >
+          {/* Subtle gold lines / patterns */}
+          <div className="absolute inset-4 border border-amber-500/25 rounded-[1.8rem] pointer-events-none"></div>
+          <div className="absolute inset-5 border-2 border-double border-amber-500/20 rounded-[1.5rem] pointer-events-none"></div>
+          
+          <div className="space-y-2 mt-4 z-10">
+            <span className="text-amber-400 font-bold uppercase tracking-widest text-[10px] bg-amber-550/10 px-3 py-1 rounded-full border border-amber-500/20">
+              ગુજરાત પ્રવાસન વિભાગ 🛡️
+            </span>
+            <h1 className="font-gujarati font-black text-3xl text-amber-100 tracking-wide mt-3 drop-shadow-md">
+              ગુજરાત પ્રવાસ પાસપોર્ટ
+            </h1>
+            <p className="font-gujarati text-amber-200/50 text-[10px] tracking-widest uppercase font-bold">
+              Gujarat Travel Passport
+            </p>
+          </div>
+
+          <div className="my-8 z-10 relative">
+            <div className="h-32 w-32 rounded-full border-4 border-double border-amber-500/35 flex items-center justify-center bg-amber-500/5 group-hover:scale-105 transition-transform duration-500">
+              <span className="material-symbols-outlined text-6xl text-amber-300 filter drop-shadow-[0_2px_5px_rgba(245,158,11,0.3)] animate-pulse">temple_hindu</span>
+            </div>
+            <div className="absolute -right-4 -bottom-2 h-12 w-12 rounded-full bg-red-600/80 border-2 border-dashed border-red-400 text-white text-[9px] font-gujarati font-bold flex items-center justify-center rotate-12 uppercase select-none shadow-md">
+              કલ્ચરલ 🚩
+            </div>
+          </div>
+
+          <div className="space-y-4 mb-4 z-10 w-full">
+            <div className="h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent w-full"></div>
+            <button
+              className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-450 hover:to-amber-550 text-stone-950 font-gujarati font-black text-xs px-8 py-3.5 rounded-2xl shadow-lg transition-all w-full flex items-center justify-center gap-2 transform active:scale-95 group-hover:animate-bounce-slow"
+            >
+              <span className="material-symbols-outlined text-sm">menu_book</span>
+              પાસપોર્ટ બુક ખોલો ➔
+            </button>
+            <p className="font-gujarati text-[10px] text-amber-200/40">
+              *ક્લિક કરો અથવા બુક ઓપન કરો
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="animate-fade-in space-y-8 pb-12">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="space-y-1">
-          <h2 className="font-gujarati font-black text-4xl text-primary dark:text-dark-accent">ડિજિટલ પ્રવાસ પાસપોર્ટ 📖</h2>
+          <h2 className="font-gujarati font-black text-4xl text-primary dark:text-dark-accent">ડિજિટલ ગુજરાત પ્રવાસ પાસપોર્ટ 📖</h2>
           <p className="font-gujarati text-stone-550 dark:text-stone-400 text-lg">ગુજરાતના ૩૩ જિલ્લાના પ્રખ્યાત અને ઓફબીટ સ્થળો પર ચેક-ઇન કરી કલ્ચરલ ડાયરી બનાવો.</p>
         </div>
         <button
@@ -444,9 +499,9 @@ export default function TravelPassport() {
           <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest inline-block mb-1">
             ગુજરાત પ્રવાસન ડાયરી 🛡️
           </span>
-          <h3 className="font-gujarati font-black text-3xl">પ્રવાસ પાસપોર્ટ બુક (૧૦૦% ઓફલાઇન)</h3>
+          <h3 className="font-gujarati font-black text-3xl">ગુજરાત પ્રવાસ પાસપોર્ટ બુક (૧૦૦% ઓફલાઇન)</h3>
           <p className="font-gujarati text-xs text-amber-200/70 max-w-xl leading-relaxed">
-            તમારો જીપીએસ પાસપોર્ટ. નજીક જઈ વેરિફાય કરો અથવા ટેસ્ટ કરવા સિમ્યુલેટ કરો. દરેક વિશિષ્ટ જગ્યા પર ક્લિક કરતાં તેના **છુપા રત્નો**, **રૂટ પ્લાન**, **સ્થાનિક ખાણી-પીણી** અને **સ્થાનિક કારીગરો** ની વિગતો ખુલશે!
+            તમારો ગુજરાત જીપીએસ પાસપોર્ટ. નજીક જઈ વેરિફાય કરો અથવા ટેસ્ટ કરવા સિમ્યુલેટ કરો. દરેક વિશિષ્ટ જગ્યા પર ક્લિક કરતાં તેના **છુપા રત્નો**, **રૂટ પ્લાન**, **સ્થાનિક ખાણી-પીણી** અને **સ્થાનિક કારીગરો** ની વિગતો ખુલશે!
           </p>
         </div>
         <div className="flex flex-col gap-3 shrink-0 w-full md:w-auto relative z-10">
@@ -1223,7 +1278,7 @@ export default function TravelPassport() {
               
               <div className="space-y-1">
                 <h4 className="font-gujarati font-black text-2xl text-stone-800 dark:text-stone-100">{shareName}</h4>
-                <p className="font-gujarati text-[10px] text-stone-400">એ પ્રવાસ પાસપોર્ટમાં ગૌરવપૂર્ણ સિદ્ધિ મેળવી છે.</p>
+                <p className="font-gujarati text-[10px] text-stone-400">એ ગુજરાત પ્રવાસ પાસપોર્ટમાં ગૌરવપૂર્ણ સિદ્ધિ મેળવી છે.</p>
               </div>
 
               {/* Stats Grid */}
@@ -1288,7 +1343,7 @@ export default function TravelPassport() {
                 <button
                   type="button"
                   onClick={() => {
-                    const text = `🚩 મેં ગુજરતી એપ ટુરિઝમ પાસપોર્ટમાં ${totalStampsCount}/${TRAVEL_DATABASE.length} સ્ટેમ્પ્સ એકઠા કર્યા છે! તમે પણ તમારા જિલ્લાના છુપા પ્રવાસન સ્થળો જાણો. #GujaratTourism #GujaratiApp`;
+                    const text = `🚩 મેં ગુજરતી એપ ગુજરાત ટ્રાવેલ પાસપોર્ટમાં ${totalStampsCount}/${TRAVEL_DATABASE.length} સ્ટેમ્પ્સ એકઠા કર્યા છે! તમે પણ તમારા જિલ્લાના છુપા પ્રવાસન સ્થળો જાણો. #GujaratTourism #GujaratiApp`;
                     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`);
                   }}
                   className="bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-gujarati text-xs font-black flex items-center justify-center gap-1 active:scale-95 shadow-sm transition-all"
@@ -1298,7 +1353,7 @@ export default function TravelPassport() {
                 <button
                   type="button"
                   onClick={() => {
-                    const text = `🚩 મેં ગુજરતી એપ ટુરિઝમ પાસપોર્ટમાં ${totalStampsCount}/${TRAVEL_DATABASE.length} સ્ટેમ્પ્સ એકઠા કર્યા છે! #GujaratTourism #GujaratiApp`;
+                    const text = `🚩 મેં ગુજરતી એપ ગુજરાત ટ્રાવેલ પાસપોર્ટમાં ${totalStampsCount}/${TRAVEL_DATABASE.length} સ્ટેમ્પ્સ એકઠા કર્યા છે! #GujaratTourism #GujaratiApp`;
                     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`);
                   }}
                   className="bg-sky-500 hover:bg-sky-600 text-white py-3 rounded-2xl font-gujarati text-xs font-black flex items-center justify-center gap-1 active:scale-95 shadow-sm transition-all"
@@ -1309,7 +1364,7 @@ export default function TravelPassport() {
               <button
                 type="button"
                 onClick={() => {
-                  const text = `🚩 મેં ગુજરતી એપ ટુરિઝમ પાસપોર્ટમાં ${totalStampsCount}/${TRAVEL_DATABASE.length} સ્ટેમ્પ્સ એકઠા કર્યા છે! તમે પણ તમારા જિલ્લાના છુપા પ્રવાસન સ્થળો જાણો. #GujaratTourism #GujaratiApp`;
+                  const text = `🚩 મેં ગુજરતી એપ ગુજરાત ટ્રાવેલ પાસપોર્ટમાં ${totalStampsCount}/${TRAVEL_DATABASE.length} સ્ટેમ્પ્સ એકઠા કર્યા છે! તમે પણ તમારા જિલ્લાના છુપા પ્રવાસન સ્થળો જાણો. #GujaratTourism #GujaratiApp`;
                   navigator.clipboard.writeText(text);
                   window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: `📋 શેર મેસેજ ક્લિપબોર્ડ પર કોપી થઈ ગયો છે!` } }));
                 }}

@@ -1,97 +1,301 @@
 @import "tailwindcss";
 
-/* Force Tailwind v4 to use the .dark class instead of system settings Header */
+/* ═══════════════════════════════════════════════════════════════
+   GUJARATI APP — PREMIUM DESIGN SYSTEM v3.0
+   Expert-grade: 8dp grid, strict type scale, unified tokens
+   Font: Noto Serif Gujarati (script) + Plus Jakarta Sans (UI)
+   ═══════════════════════════════════════════════════════════════ */
+
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ── DESIGN TOKENS ─────────────────────────────────────────────── */
 @theme {
-  --font-body: "Hind Vadodara", sans-serif;
-  --font-headline: "Be Vietnam Pro", sans-serif;
-  --font-gujarati: "Hind Vadodara", sans-serif;
-  --font-label: "Work Sans", sans-serif;
+  /* ── Fonts ── */
+  --font-body:      "Plus Jakarta Sans",    sans-serif;
+  --font-headline:  "Plus Jakarta Sans",    sans-serif;
+  --font-gujarati:  "Noto Serif Gujarati",  serif;
+  --font-label:     "Plus Jakarta Sans",    sans-serif;
+  --font-mono:      "JetBrains Mono",       monospace;
 
-  --color-primary: #994700;
-  --color-primary-container: #f47b20;
-  --color-background: #fef8f1;
-  --color-on-surface: #1d1b17;
-  
-  --color-teal: #004847;
-  --color-maroon: #75140c;
-  
-  --color-dark-bg: #1a0a00;
-  --color-dark-surface: #2b1400;
-  --color-dark-accent: #f47b20;
-  --color-dark-text: #ffffff;
+  /* ── Brand Colors ── */
+  --color-brand-600:   #B45309;   /* deep saffron (primary action) */
+  --color-brand-500:   #D97706;   /* saffron                       */
+  --color-brand-400:   #F59E0B;   /* turmeric gold                 */
+  --color-brand-300:   #FCD34D;   /* light gold                    */
+  --color-brand-50:    #FFFBEB;   /* saffron tint bg               */
+
+  /* ── Semantic Grays (Light) ── */
+  --color-background:  #F9F9F7;   /* warm off-white                */
+  --color-surface:     #FFFFFF;
+  --color-surface-2:   #F4F4F2;   /* subtle card tint              */
+  --color-border:      #E8E6E3;
+  --color-border-2:    #D5D2CF;
+  --color-on-surface:  #1A1614;   /* near-black warm               */
+  --color-on-surface-2:#57534E;   /* muted body text               */
+  --color-on-surface-3:#A8A29E;   /* placeholder / caption         */
+
+  /* ── Semantic Grays (Dark) ── */
+  --color-dark-bg:       #141210;
+  --color-dark-surface:  #1E1A18;
+  --color-dark-surface-2:#272220;
+  --color-dark-border:   #2E2825;
+  --color-dark-text:     #F2F0EE;
+  --color-dark-text-2:   #A8A29E;
+
+  /* ── Status Colors ── */
+  --color-success:  #16A34A;
+  --color-error:    #DC2626;
+  --color-warning:  #D97706;
+  --color-info:     #2563EB;
+
+  /* ── 8dp Spacing Grid ── */
+  --space-1:  8px;
+  --space-2:  16px;
+  --space-3:  24px;
+  --space-4:  32px;
+  --space-5:  40px;
+  --space-6:  48px;
+
+  /* ── Border Radius ── */
+  --radius-sm:   8px;
+  --radius-md:   12px;   /* grid items, chips, inputs */
+  --radius-lg:   16px;   /* cards, main panels        */
+  --radius-xl:   20px;   /* hero banners              */
+  --radius-full: 9999px;
+
+  /* ── Elevations ── */
+  --shadow-card:   0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-raised: 0 4px 12px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
 }
 
-/* Base resets to ensure smooth transition Header */
+/* ── BASE LAYER ────────────────────────────────────────────────── */
 @layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+    text-size-adjust: 100%;
+  }
+
   body {
-    @apply transition-colors duration-500;
-    background-color: var(--color-background);
-    color: var(--color-on-surface);
+    font-family: "Plus Jakarta Sans", sans-serif;
+    background-color: #F9F9F7;
+    color: #1A1614;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 14px;
+    line-height: 1.5;
+    @apply transition-colors duration-300;
   }
-  
+
   .dark body {
-    background-color: var(--color-dark-bg);
-    color: var(--color-dark-text);
+    background-color: #141210;
+    color: #F2F0EE;
+  }
+
+  /* Remove browser tap highlight */
+  button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+
+  /* Gujarati script — Noto Serif Gujarati */
+  .font-gujarati {
+    font-family: "Noto Serif Gujarati", serif !important;
+    line-height: 1.6;
   }
 }
 
-/* Explicit Overrides Header */
-.dark .bg-background { background-color: #1a0a00 !important; }
-.dark .bg-white { background-color: #2b1400 !important; }
-.dark .text-on-surface { color: #ffffff !important; }
+/* ── TYPOGRAPHY SCALE ──────────────────────────────────────────── */
 
-@layer components {
-  .dark-glow {
-    @apply transition-shadow duration-300;
-  }
-  .dark .dark-glow {
-    box-shadow: 0 0 20px rgba(244, 123, 32, 0.2);
-  }
+/* Screen Title — H1 */
+.type-display {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
+/* Card Header — H2 */
+.type-title {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Body Text */
+.type-body {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
+/* Caption / Micro */
+.type-caption {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #A8A29E;
+}
+
+/* Overline label */
+.type-overline {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #A8A29E;
+}
+
+/* Gujarati Display */
+.type-gu-display {
+  font-family: "Noto Serif Gujarati", serif;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+/* Gujarati Title */
+.type-gu-title {
+  font-family: "Noto Serif Gujarati", serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* Gujarati Body */
+.type-gu-body {
+  font-family: "Noto Serif Gujarati", serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+/* Gujarati Caption */
+.type-gu-caption {
+  font-family: "Noto Serif Gujarati", serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* ── COMPONENT TOKENS ──────────────────────────────────────────── */
+
+/* Standard Card */
+.g-card {
+  background: #FFFFFF;
+  border: 1px solid #E8E6E3;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+}
+.dark .g-card {
+  background: #1E1A18;
+  border-color: #2E2825;
+  box-shadow: none;
+}
+
+/* Grid Icon Item — 72×72dp */
+.g-icon-item {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Primary Button */
+.g-btn-primary {
+  background: linear-gradient(135deg, #D97706, #B45309);
+  color: #ffffff;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s ease, opacity 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.g-btn-primary:active { transform: scale(0.96); opacity: 0.88; }
+
+/* Pill Chip */
+.g-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Input Field — outlined */
+.g-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid #E8E6E3;
+  border-radius: 12px;
+  font-family: "Noto Serif Gujarati", serif;
+  font-size: 14px;
+  background: #FFFFFF;
+  color: #1A1614;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.g-input:focus { border-color: #D97706; }
+.dark .g-input { background: #1E1A18; border-color: #2E2825; color: #F2F0EE; }
+.dark .g-input:focus { border-color: #F59E0B; }
+
+/* ── ANIMATIONS ────────────────────────────────────────────────── */
+.animate-fade-in  { animation: fadeIn  0.3s ease-out forwards; }
+.animate-slide-up { animation: slideUp 0.35s cubic-bezier(0.16,1,0.3,1) forwards; }
+.animate-scale-up { animation: scaleUp 0.25s cubic-bezier(0.16,1,0.3,1) forwards; }
+
+@keyframes fadeIn  { from { opacity:0 }                             to { opacity:1 } }
+@keyframes slideUp { from { opacity:0; transform:translateY(12px) } to { opacity:1; transform:translateY(0) } }
+@keyframes scaleUp { from { opacity:0; transform:scale(0.96) }     to { opacity:1; transform:scale(1) } }
+
+/* Tab active underline animation */
+.tab-active-bar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  border-radius: 9999px;
+  background: #D97706;
+  animation: scaleX 0.2s ease-out forwards;
+  transform-origin: center;
+}
+@keyframes scaleX { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+
+/* ── UTILITIES ─────────────────────────────────────────────────── */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Custom print media query style overrides for high-fidelity PDF printing */
+/* Text clamp helpers */
+.line-clamp-1 { display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden; }
+.line-clamp-2 { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.line-clamp-3 { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+
+/* Press effect on mobile */
+.press { transition: transform 0.1s ease; }
+.press:active { transform: scale(0.96); }
+
+/* ── DARK MODE OVERRIDES ───────────────────────────────────────── */
+.dark .bg-white     { background-color: #1E1A18 !important; }
+.dark .bg-surface   { background-color: #272220 !important; }
+.dark .text-on-surface { color: #F2F0EE !important; }
+
+/* ── PRINT ─────────────────────────────────────────────────────── */
 @media print {
-  body, html {
-    background: #ffffff !important;
-    color: #000000 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 21cm !important;
-    height: 29.7cm !important;
-  }
-  
-  header, nav, footer, .print\:hidden {
-    display: none !important;
-  }
-  
-  main {
-    padding-top: 0 !important;
-    margin: 0 !important;
-    width: 100% !important;
-  }
-  
-  #printable-biodata-card {
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    margin: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    min-height: 29.7cm !important;
-    page-break-inside: avoid !important;
-    page-break-after: always !important;
-  }
+  body, html { background:#fff !important; color:#000 !important; margin:0 !important; padding:0 !important; width:21cm !important; }
+  header, nav, footer { display:none !important; }
+  main { padding-top:0 !important; margin:0 !important; width:100% !important; }
+  #printable-biodata-card { border-radius:0 !important; box-shadow:none !important; margin:0 !important; width:100% !important; min-height:29.7cm !important; page-break-inside:avoid !important; }
 }

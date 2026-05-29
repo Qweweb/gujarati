@@ -27,9 +27,12 @@ import {
   getDirectoryListings,
   createDirectoryListing,
   getRelativeTimeString,
-  addReferral
+  addReferral,
+  reportOtloPost,
+  blockOtloUser
 } from '../utils/otlo_helper';
 import RamatoHub from './RamatoHub';
+import MariSociety from './MariSociety';
 
 const SIMULATED_IMAGES = [
   "https://images.unsplash.com/photo-1566378246598-5b11a0ff7f6c?auto=format&fit=crop&q=80&w=800",
@@ -90,13 +93,37 @@ const Community = () => {
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [showCommentsPostId, setShowCommentsPostId] = useState(null);
   const [newCommentText, setNewCommentText] = useState("");
+  const [activeMenuPostId, setActiveMenuPostId] = useState(null);
+
+  // Handle Report Post
+  const handleReportPost = async (postId) => {
+    if (window.confirm("શું તમે આ પોસ્ટને અયોગ્ય કન્ટેન્ટ તરીકે રિપોર્ટ કરવા માંગો છો? રિપોર્ટ કર્યા પછી આ પોસ્ટ તમને ક્યારેય દેખાશે નહીં.")) {
+      await reportOtloPost(postId);
+      triggerToast("⚠️ પોસ્ટ સફળતાપૂર્વક રિપોર્ટ કરવામાં આવી છે.");
+      // Reload feed
+      const postsData = await getOtloPosts(feedFilter);
+      setPosts(postsData);
+    }
+  };
+
+  // Handle Block User
+  const handleBlockUser = async (userId, userName) => {
+    if (window.confirm(`શું તમે યુઝર "${userName}" ને બ્લોક કરવા માંગો છો? બ્લોક કર્યા પછી તેમની કોઈ પણ પોસ્ટ તમને કમ્યુનિટીમાં દેખાશે નહીં.`)) {
+      blockOtloUser(userId);
+      triggerToast(`🚫 યુઝર "${userName}" ને બ્લોક કરવામાં આવ્યા છે.`);
+      // Reload feed
+      const postsData = await getOtloPosts(feedFilter);
+      setPosts(postsData);
+    }
+  };
   
   // Post Creation States
   const [newPostText, setNewPostText] = useState("");
   const [newPostCategory, setNewPostCategory] = useState("news");
   const [newPostVisibility, setNewPostVisibility] = useState("village");
   const [newPostMediaUrl, setNewPostMediaUrl] = useState("");
-  const [selectedImageIndex, setSelectedImageIndex] = useState(-1);
+  const [selectedImageFile, setSelectedImageFile] = useState(null);
+  const fileInputRef = useState(null);
   
   // Search States
   const [searchQuery, setSearchQuery] = useState("");
@@ -348,7 +375,7 @@ const Community = () => {
     setNewPostCategory("news");
     setNewPostVisibility("village");
     setNewPostMediaUrl("");
-    setSelectedImageIndex(-1);
+    setSelectedImageFile(null);
     setShowCreatePost(false);
     
     // Reload state
@@ -516,15 +543,28 @@ const Community = () => {
     triggerToast("✨ તમારો વ્યવસાય ગામ ડિરેક્ટરીમાં સફળતાપૂર્વક ઉમેરાયો!");
   };
 
-  // Media attachment simulated
-  const handleSimulatedImage = () => {
-    const nextIndex = (selectedImageIndex + 1) % SIMULATED_IMAGES.length;
-    setSelectedImageIndex(nextIndex);
-    setNewPostMediaUrl(SIMULATED_IMAGES[nextIndex]);
+  // Real photo upload handler
+  const handleImageFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      alert('કૃપા કરીને ફક્ત ઇમેજ ફાઇલ પસંદ કરો.');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert('ફોટો 5MB થી નાનો હોવો જોઈએ.');
+      return;
+    }
+    setSelectedImageFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setNewPostMediaUrl(reader.result); // base64 preview
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleRemoveImage = () => {
-    setSelectedImageIndex(-1);
+    setSelectedImageFile(null);
     setNewPostMediaUrl("");
   };
 
@@ -866,24 +906,26 @@ const Community = () => {
       </section>
 
       {/* Main Tab bar */}
-      <div className="flex bg-white dark:bg-dark-surface p-1.5 rounded-2xl border border-primary/5 shadow-sm max-w-md mx-auto">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3 max-w-md mx-auto">
         {[
-          { id: "feed", label: "ચર્ચાઓ 💬" },
-          { id: "directory", label: "ડિરેક્ટરી 📞" },
-          { id: "games", label: "રમતો 🎮" },
-          { id: "leaderboard", label: "લીડરબોર્ડ 🏆" },
-          { id: "sabha", label: "ગામ સભા 📢" }
+          { id: "feed", label: "ચર્ચાઓ", icon: "forum" },
+          { id: "directory", label: "ડિરેક્ટરી", icon: "contact_phone" },
+          { id: "society", label: "મારી સોસાયટી", icon: "holiday_village" },
+          { id: "games", label: "રમતો", icon: "sports_esports" },
+          { id: "leaderboard", label: "લીડરબોર્ડ", icon: "emoji_events" },
+          { id: "sabha", label: "ગામ સભા", icon: "campaign" }
         ].map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex-1 py-3 text-center rounded-xl font-gujarati font-black text-xs transition-all active:scale-95 truncate ${
+            className={`flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl transition-all active:scale-95 border ${
               activeTab === tab.id
-                ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md'
-                : 'text-stone-500 hover:text-primary dark:text-stone-400'
+                ? 'bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-md border-transparent'
+                : 'bg-white dark:bg-dark-surface text-stone-600 dark:text-stone-300 border-primary/10 hover:border-primary/30 shadow-sm'
             }`}
           >
-            {tab.label}
+            <span className={`material-symbols-outlined text-2xl sm:text-3xl mb-1.5 ${activeTab === tab.id ? 'text-white' : 'text-primary'}`}>{tab.icon}</span>
+            <span className="font-gujarati font-black text-[10px] sm:text-xs truncate w-full text-center">{tab.label}</span>
           </button>
         ))}
       </div>
@@ -967,32 +1009,28 @@ const Community = () => {
           renderLocationSetup()
         ) : (
           <div className="space-y-6">
-          {/* Discussion Topics (Horizontal) */}
+          {/* Quick topics — removed bhakti & khetivadi as per requirement */}
           <section id="discussion-topics" className="space-y-4">
             <div className="flex justify-between items-center px-2">
                 <div className="flex items-center gap-3">
-                    <h3 className="font-gujarati font-black text-xl text-on-surface">રસના વિષયો</h3>
-                    <ShareButton sectionId="discussion-topics" successMessage="✨ રસના વિષયો વિભાગની લિંક કોપી થઈ ગઈ છે!" />
+                    <h3 className="font-gujarati font-black text-xl text-on-surface">ચર્ચાના વિષયો</h3>
+                    <ShareButton sectionId="discussion-topics" successMessage="✨ ચર્ચા વિભાગની લિંક કૉપી થઈ!" />
                 </div>
             </div>
             <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
               {[
-                { id: "religious", title: "ભક્તિ સંગમ", icon: "temple_hindu", color: "bg-orange-100/70 text-orange-700" },
-                { id: "news", title: "સ્થાનિક વેપાર", icon: "storefront", color: "bg-emerald-100/70 text-emerald-700" },
-                { id: "news", title: "ખેતીવાડી", icon: "agriculture", color: "bg-green-100/70 text-green-700" },
-                { id: "job", title: "નોકરી/વ્યવસાય", icon: "work", color: "bg-blue-100/70 text-blue-700" },
+                { id: "news", title: "સ્થાનિક સમાચાર", icon: "newspaper", color: "bg-blue-100/70 text-blue-700" },
+                { id: "job", title: "નોકરી/વ્યવસાય", icon: "work", color: "bg-emerald-100/70 text-emerald-700" },
+                { id: "event", title: "કાર્યક્રમ", icon: "celebration", color: "bg-purple-100/70 text-purple-700" },
+                { id: "alert", title: "ફરિયાદ", icon: "warning", color: "bg-red-100/70 text-red-700" },
+                { id: "help", title: "Help/સહાય", icon: "volunteer_activism", color: "bg-amber-100/70 text-amber-700" },
               ].map((topic, idx) => (
                 <div 
                   key={idx} 
                   className="flex-shrink-0 flex flex-col items-center gap-3 cursor-pointer active:scale-95 transition-transform"
                   onClick={() => {
-                    if (topic.title === "સ્થાનિક વેપાર") {
-                      setActiveTab("directory");
-                      triggerToast("📞 સ્થાનિક વેપાર જોવા માટે ડાયરેક્ટરી વિભાગ ઓપન થયો છે.");
-                    } else {
-                      setFeedFilter(topic.id);
-                      triggerToast(`📍 હવે તમે "${topic.title}" સંબંધી ચર્ચાઓ જોઈ રહ્યા છો.`);
-                    }
+                    setFeedFilter(topic.id);
+                    triggerToast(`📍 "${topic.title}" ની ચર્ચાઓ જોઈ રહ્યા છો.`);
                   }}
                 >
                   <div className={`h-20 w-20 ${topic.color} rounded-3xl flex items-center justify-center shadow-sm border border-black/5`}>
@@ -1017,8 +1055,10 @@ const Community = () => {
             <div 
               onClick={() => {
                 setShowCreatePost(true);
-                handleSimulatedImage();
-                triggerToast("📸 ચર્ચામાં જોડાવા માટે ફોટો પસંદ કરવામાં આવ્યો છે!");
+                // Trigger file input click after modal opens
+                setTimeout(() => {
+                  document.getElementById('community-photo-input')?.click();
+                }, 300);
               }}
               className="bg-[#f47b20]/10 p-6 rounded-3xl flex flex-col items-center justify-center gap-3 shadow-sm active:scale-95 transition-transform cursor-pointer border border-black/5"
             >
@@ -1108,7 +1148,7 @@ const Community = () => {
                         </div>
                       </div>
                       
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 relative">
                         {post.isPinned && (
                           <span className="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded text-[8px] font-black uppercase">
                             📌 પિન્ડ
@@ -1118,6 +1158,51 @@ const Community = () => {
                           <span>{category.icon}</span>
                           <span>{category.name}</span>
                         </span>
+
+                        {/* UGC Option Menu (Report & Block) */}
+                        {!post.userName.includes("(તમે)") && (
+                          <div className="relative">
+                            <button 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveMenuPostId(activeMenuPostId === post.id ? null : post.id);
+                              }}
+                              className="h-8 w-8 text-stone-400 hover:text-stone-600 rounded-full flex items-center justify-center cursor-pointer active:scale-90"
+                              title="વિકલ્પો"
+                            >
+                              <span className="material-symbols-outlined text-lg">more_vert</span>
+                            </button>
+                            
+                            {activeMenuPostId === post.id && (
+                              <div className="absolute right-0 top-9 w-40 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-850 rounded-2xl shadow-xl z-30 py-2 animate-fade-in font-gujarati text-xs">
+                                <button 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setActiveMenuPostId(null);
+                                    handleReportPost(post.id);
+                                  }}
+                                  className="w-full text-left px-4 py-2.5 text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 flex items-center gap-2 font-bold cursor-pointer"
+                                >
+                                  <span className="material-symbols-outlined text-base text-amber-500 font-bold">warning</span>
+                                  <span>રિપોર્ટ કરો (Report)</span>
+                                </button>
+                                {post.userId && (
+                                  <button 
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setActiveMenuPostId(null);
+                                      handleBlockUser(post.userId, post.userName);
+                                    }}
+                                    className="w-full text-left px-4 py-2.5 text-rose-500 hover:bg-stone-50 dark:hover:bg-stone-800 flex items-center gap-2 font-bold cursor-pointer"
+                                  >
+                                    <span className="material-symbols-outlined text-base text-rose-500 font-bold">block</span>
+                                    <span>બ્લોક કરો (Block)</span>
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -1185,6 +1270,11 @@ const Community = () => {
           </button>
         </div>
         )
+      )}
+
+      {/* SOCIETY MANAGEMENT TAB */}
+      {activeTab === "society" && (
+        <MariSociety />
       )}
 
       {/* 2. LOCAL DIRECTORY TAB */}
@@ -1522,20 +1612,30 @@ const Community = () => {
                 ></textarea>
               </div>
               
-              {/* Image Attachment (Simulated) */}
+              {/* Real Photo Upload */}
               <div className="space-y-3">
                 <label className="font-gujarati font-black text-xs text-stone-600 dark:text-stone-300">ફોટો જોડો (વૈકલ્પિક):</label>
+                
+                {/* Hidden file input */}
+                <input
+                  id="community-photo-input"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageFileChange}
+                />
+
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
-                    onClick={handleSimulatedImage}
+                    onClick={() => document.getElementById('community-photo-input').click()}
                     className="bg-primary/5 hover:bg-primary/10 border border-primary/20 text-primary px-5 py-3 rounded-2xl font-gujarati font-black text-xs flex items-center gap-2 active:scale-95 transition-all"
                   >
                     <span className="material-symbols-outlined text-sm">photo_camera</span>
-                    <span>{selectedImageIndex === -1 ? 'ફોટો પસંદ કરો' : 'બીજો ફોટો બદલો'}</span>
+                    <span>{selectedImageFile ? '✅ ' + selectedImageFile.name.substring(0, 20) : 'ફોટો અપલોડ કરો'}</span>
                   </button>
                   
-                  {selectedImageIndex !== -1 && (
+                  {selectedImageFile && (
                     <button
                       type="button"
                       onClick={handleRemoveImage}
@@ -1548,19 +1648,19 @@ const Community = () => {
                 
                 {newPostMediaUrl && (
                   <div className="h-40 w-full rounded-2xl overflow-hidden relative border border-stone-100 dark:border-stone-800 mt-2">
-                    <img src={newPostMediaUrl} className="w-full h-full object-cover" alt="Attachment preview" />
+                    <img src={newPostMediaUrl} className="w-full h-full object-cover" alt="Preview" />
                   </div>
                 )}
               </div>
               
-              {/* Submit Button */}
+              {/* Submit / Publish Button */}
               <button
                 type="submit"
                 disabled={!newPostText.trim()}
                 className="w-full bg-gradient-to-r from-amber-500 to-orange-500 disabled:from-stone-300 disabled:to-stone-400 disabled:cursor-not-allowed text-white py-4 rounded-2xl font-gujarati font-black text-sm shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-2"
               >
-                <span>ચર્ચા શરૂ કરો</span>
-                <span className="material-symbols-outlined text-sm">send</span>
+                <span className="material-symbols-outlined text-sm">publish</span>
+                <span>પ્રકાશિત કરો (Publish)</span>
               </button>
             </form>
           </div>
