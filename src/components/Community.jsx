@@ -138,6 +138,12 @@ const Community = () => {
   const [newListingPhone, setNewListingPhone] = useState("");
   const [newListingAddress, setNewListingAddress] = useState("");
 
+  const filteredDirectory = directoryListings.filter(listing => 
+    listing.name.toLowerCase().includes(directorySearch.toLowerCase()) || 
+    listing.category.toLowerCase().includes(directorySearch.toLowerCase()) ||
+    listing.address.toLowerCase().includes(directorySearch.toLowerCase())
+  );
+
   // Load data on state updates
   useEffect(() => {
     const loadData = async () => {
