@@ -846,7 +846,12 @@ _(ગુજરાતી શ્રદ્ધાંજલિ કાર્ડ મે
                       <p className="font-black text-[9px] text-stone-600">નકશા લિંક</p>
                       <p>સ્કેન કરો</p>
                     </div>
-                    <img src={qrCodeUrl} alt="Google Maps QR Code" className="w-12 h-12 object-contain" crossOrigin="anonymous" />
+                    <img 
+                      src={qrCodeUrl} 
+                      alt="Google Maps QR Code" 
+                      className="w-12 h-12 object-contain" 
+                      crossOrigin={qrCodeUrl?.startsWith('data:') ? undefined : "anonymous"} 
+                    />
                   </div>
                 )}
               </div>

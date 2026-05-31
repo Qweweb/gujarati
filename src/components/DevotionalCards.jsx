@@ -132,7 +132,8 @@ const DevotionalCards = () => {
     const fetchBase64 = async (url, setter) => {
       if (!url) return;
       try {
-        const res = await fetch(url, { mode: 'cors', cache: 'no-cache' });
+        const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
+        const res = await fetch(proxyUrl, { mode: 'cors', cache: 'no-cache' });
         const blob = await res.blob();
         const reader = new FileReader();
         reader.onloadend = () => setter(reader.result);
@@ -150,7 +151,8 @@ const DevotionalCards = () => {
     const fetchBase64 = async (url, setter) => {
       if (!url) return;
       try {
-        const res = await fetch(url, { mode: 'cors', cache: 'no-cache' });
+        const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
+        const res = await fetch(proxyUrl, { mode: 'cors', cache: 'no-cache' });
         const blob = await res.blob();
         const reader = new FileReader();
         reader.onloadend = () => setter(reader.result);
@@ -205,7 +207,7 @@ const DevotionalCards = () => {
       localStorage.setItem('sanskari_cards_generated_count', (count + 1).toString());
     } catch (err) {
       console.error("Card generation failed:", err);
-      alert("કાર્ડ ડાઉનલોડ કરવામાં ભૂલ આવી. ફરી પ્રયાસ કરો.");
+      alert("Error generating card: " + (err.message || err.toString()));
     } finally {
       setIsGenerating(false);
     }
@@ -387,7 +389,12 @@ const DevotionalCards = () => {
 
               {/* Deity Image */}
               <div className={`mt-4 mb-6 rounded-full overflow-hidden border-4 shadow-xl w-48 h-48`} style={{ borderColor: activeTheme.accent }}>
-                <img src={base64Img || activeDeity.img} alt={activeDeity.name} className="w-full h-full object-cover" crossOrigin="anonymous" />
+                <img 
+                  src={base64Img || activeDeity.img} 
+                  alt={activeDeity.name} 
+                  className="w-full h-full object-cover" 
+                  crossOrigin={base64Img?.startsWith('data:') ? undefined : "anonymous"} 
+                />
               </div>
 
               {/* Quote Area */}
@@ -407,7 +414,12 @@ const DevotionalCards = () => {
               <div className="w-full flex items-center justify-between mt-auto pt-4 pb-2">
                 <div className="flex items-center gap-3">
                   {profile.showPhoto && (
-                    <img src={base64Avatar || profile.photoUrl} alt="User" className="w-8 h-8 rounded-full border border-white/20" crossOrigin="anonymous" />
+                    <img 
+                      src={base64Avatar || profile.photoUrl} 
+                      alt="User" 
+                      className="w-8 h-8 rounded-full border border-white/20" 
+                      crossOrigin={base64Avatar?.startsWith('data:') ? undefined : "anonymous"} 
+                    />
                   )}
                   {profile.showName && (
                     <span className="font-gujarati font-bold text-sm tracking-wide">{profile.name}</span>
