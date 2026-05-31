@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@config "../tailwind.config.js";
 /* ═══════════════════════════════════════════════════════════════
    GUJARATI APP — PREMIUM DESIGN SYSTEM v3.0
    Expert-grade: 8dp grid, strict type scale, unified tokens

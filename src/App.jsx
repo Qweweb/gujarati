@@ -40,9 +40,7 @@ function App() {
     return localStorage.getItem('sanskari_darkMode') === 'true';
   });
 
-  const [hasAgreedConsent, setHasAgreedConsent] = useState(() => {
-    return localStorage.getItem('sanskari_consent') === 'true';
-  });
+
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
@@ -170,10 +168,7 @@ function App() {
 
   const toggleDarkMode = () => setDarkMode(prev => !prev);
 
-  const handleAgreeConsent = () => {
-    localStorage.setItem('sanskari_consent', 'true');
-    setHasAgreedConsent(true);
-  };
+
 
   const handleLogin = () => {
     localStorage.setItem('sanskari_token', 'true');
@@ -192,9 +187,7 @@ function App() {
     );
   }
 
-  if (!hasAgreedConsent) {
-    return <Onboarding onAgree={handleAgreeConsent} />;
-  }
+
 
   if (!isLoggedIn) {
      return <Login onLogin={handleLogin} />;
