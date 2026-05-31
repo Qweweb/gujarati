@@ -176,12 +176,12 @@ const Dashboard = () => {
 
         {/* See Full Panchang */}
         <Link to="/panchang" className="press" style={{
-          flexShrink:0, width:100, borderRadius:20, padding:16, textDecoration:'none',
+          flexShrink:0, width:110, borderRadius:20, padding:12, textDecoration:'none',
           display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:6,
           background:'#FFFFFF', border:'1.5px solid #E8E6E3',
         }}>
           <span className="material-symbols-outlined" style={{ fontSize:28, color:'#B45309', fontVariationSettings:"'FILL' 1" }}>calendar_month</span>
-          <p className="type-gu-caption" style={{ textAlign:'center', lineHeight:1.3, color:'#78716C', whiteSpace: 'nowrap' }}>સંપૂર્ણ<br/>પંચાંગ</p>
+          <p className="type-gu-caption" style={{ textAlign:'center', lineHeight:1.3, color:'#78716C' }}>સંપૂર્ણ<br/>પંચાંગ</p>
         </Link>
       </div>
 

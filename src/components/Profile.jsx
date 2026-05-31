@@ -171,7 +171,7 @@ const Profile = () => {
             )}
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="mt-3 px-4 py-1.5 bg-[#d35400]/10 hover:bg-[#d35400]/20 text-[#d35400] rounded-full font-gujarati font-bold text-xs transition-all active:scale-95"
+              className="mt-3 px-4 py-1.5 bg-orange-600/10 hover:bg-orange-600/20 text-orange-600 rounded-full font-gujarati font-bold text-xs transition-all active:scale-95"
             >
               ✏️ પ્રોફાઇલ એડિટ કરો
             </button>
@@ -215,7 +215,7 @@ const Profile = () => {
       {/* Edit Profile Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-dark-surface rounded-t-[2.5rem] sm:rounded-[2.5rem] p-8 max-w-sm w-full space-y-5 shadow-2xl border-t-8 border-[#d35400] relative animate-scale-up text-left max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-dark-surface rounded-t-[2.5rem] sm:rounded-[2.5rem] p-8 max-w-sm w-full space-y-5 shadow-2xl border-t-8 border-orange-600 relative animate-scale-up text-left max-h-[90vh] overflow-y-auto">
             
             {/* Google User Banner */}
             {googleUser && (
@@ -227,7 +227,7 @@ const Profile = () => {
                   alt="Google"
                 />
                 <div>
-                  <p className="font-gujarati font-bold text-sm text-[#d35400]">Google Account થી Login</p>
+                  <p className="font-gujarati font-bold text-sm text-orange-600">Google Account થી Login</p>
                   <p className="font-label text-xs text-stone-500">{profile.email}</p>
                 </div>
                 <svg className="w-5 h-5 ml-auto text-green-500" viewBox="0 0 24 24" fill="currentColor">
@@ -237,7 +237,7 @@ const Profile = () => {
             )}
 
             <div className="text-center">
-              <h3 className="font-gujarati font-black text-2xl text-[#d35400]">
+              <h3 className="font-gujarati font-black text-2xl text-orange-600">
                 {isFirstLogin ? '🙏 સ્વાગત છે!' : 'પ્રોફાઇલ વિગતો'}
               </h3>
               <p className="font-gujarati text-sm text-stone-500 mt-1">
@@ -256,7 +256,7 @@ const Profile = () => {
                   value={name} 
                   onChange={(e) => setName(e.target.value)} 
                   placeholder="નામ લખો" 
-                  className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-[#d35400] font-gujarati text-sm text-on-surface dark:text-dark-text"
+                  className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-orange-600 font-gujarati text-sm text-on-surface dark:text-dark-text"
                 />
               </div>
 
@@ -268,7 +268,7 @@ const Profile = () => {
                   value={mobile} 
                   onChange={(e) => setMobile(e.target.value.replace(/\D/g, ''))} 
                   placeholder="WhatsApp નંબર" 
-                  className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-[#d35400] font-gujarati text-sm text-on-surface dark:text-dark-text"
+                  className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-orange-600 font-gujarati text-sm text-on-surface dark:text-dark-text"
                 />
               </div>
 
@@ -278,7 +278,7 @@ const Profile = () => {
                   <select 
                     value={gender} 
                     onChange={(e) => setGender(e.target.value)} 
-                    className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-[#d35400] font-gujarati text-sm text-on-surface dark:text-dark-text"
+                    className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-orange-600 font-gujarati text-sm text-on-surface dark:text-dark-text"
                   >
                     <option value="">પસંદ કરો</option>
                     <option value="male">પુરુષ</option>
@@ -293,7 +293,7 @@ const Profile = () => {
                     type="date" 
                     value={dob} 
                     onChange={(e) => setDob(e.target.value)} 
-                    className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-[#d35400] font-gujarati text-sm text-on-surface dark:text-dark-text"
+                    className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-orange-600 font-gujarati text-sm text-on-surface dark:text-dark-text"
                   />
                 </div>
               </div>
@@ -305,7 +305,7 @@ const Profile = () => {
                   value={city} 
                   onChange={(e) => setCity(e.target.value)} 
                   placeholder="દા.ત. અમદાવાદ, સુરત, રાજકોટ..." 
-                  className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-[#d35400] font-gujarati text-sm text-on-surface dark:text-dark-text"
+                  className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-orange-600 font-gujarati text-sm text-on-surface dark:text-dark-text"
                 />
               </div>
 
@@ -323,7 +323,7 @@ const Profile = () => {
                 )}
                 <button 
                   type="submit" 
-                  className="flex-1 py-4 bg-[#d35400] hover:bg-[#b34700] text-white rounded-xl font-gujarati font-black active:scale-95 transition-all text-center"
+                  className="flex-1 py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-gujarati font-black active:scale-95 transition-all text-center"
                 >
                   {isFirstLogin ? '🙏 સ્ટાર્ટ કરો' : 'સેવ કરો'}
                 </button>

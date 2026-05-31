@@ -80,7 +80,7 @@ const Login = ({ onLogin }) => {
   );
 
   const Header = () => (
-    <div className="w-full h-[35vh] bg-gradient-to-b from-[#e67e22] to-[#d35400] relative flex items-center justify-center overflow-hidden">
+    <div className="w-full h-[35vh] bg-gradient-to-b from-orange-500 to-orange-600 relative flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
         <div className="absolute top-0 w-full flex justify-between px-12 opacity-50">
             {[...Array(4)].map((_, i) => (
@@ -109,7 +109,7 @@ const Login = ({ onLogin }) => {
             
             {/* Logo/Icon */}
             <div className="h-24 w-24 bg-white/80 dark:bg-stone-800/80 backdrop-blur-xl rounded-[2rem] shadow-2xl shadow-orange-500/10 flex items-center justify-center border border-white/50 dark:border-stone-700/50 mb-8 transform hover:scale-105 transition-transform duration-500">
-                <span className="material-symbols-outlined text-transparent bg-clip-text bg-gradient-to-br from-[#e67e22] to-[#d35400] text-[50px]" style={{ fontVariationSettings: "'FILL' 1" }}>temple_hindu</span>
+                <span className="material-symbols-outlined text-transparent bg-clip-text bg-gradient-to-br from-orange-500 to-orange-600 text-[50px]" style={{ fontVariationSettings: "'FILL' 1" }}>temple_hindu</span>
             </div>
 
             <div className="text-center space-y-2 mb-10">
@@ -147,7 +147,7 @@ const Login = ({ onLogin }) => {
                         <span className="font-headline font-black text-stone-400">+91</span>
                         <input type="tel" maxLength="10" placeholder="નંબર લખો" value={phone} onChange={handlePhoneChange} className="w-full bg-transparent border-none outline-none font-headline font-black text-xl text-stone-800 dark:text-stone-100 placeholder:text-stone-300" />
                     </div>
-                    <button onClick={handlePhoneSubmit} disabled={phone.length < 10} className={`w-full py-4 rounded-2xl font-gujarati font-black text-lg transition-all duration-300 ${phone.length === 10 ? 'bg-gradient-to-r from-[#e67e22] to-[#d35400] text-white shadow-[0_8px_20px_-6px_rgba(211,84,0,0.5)] hover:shadow-[0_12px_25px_-6px_rgba(211,84,0,0.6)] hover:-translate-y-0.5' : 'bg-stone-200 dark:bg-stone-800 text-stone-400'}`}>OTP મેળવો</button>
+                    <button onClick={handlePhoneSubmit} disabled={phone.length < 10} className={`w-full py-4 rounded-2xl font-gujarati font-black text-lg transition-all duration-300 ${phone.length === 10 ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5' : 'bg-stone-200 dark:bg-stone-800 text-stone-400'}`}>OTP મેળવો</button>
                   </div>
                 )}
             </div>
@@ -172,7 +172,7 @@ const Login = ({ onLogin }) => {
             
             {/* Logo/Icon */}
             <div className="h-20 w-20 bg-white/80 dark:bg-stone-800/80 backdrop-blur-xl rounded-[1.5rem] shadow-xl flex items-center justify-center border border-white/50 dark:border-stone-700/50 mb-6">
-                <span className="material-symbols-outlined text-transparent bg-clip-text bg-gradient-to-br from-[#e67e22] to-[#d35400] text-[40px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified_user</span>
+                <span className="material-symbols-outlined text-transparent bg-clip-text bg-gradient-to-br from-orange-500 to-orange-600 text-[40px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified_user</span>
             </div>
 
             <div className="text-center space-y-1 mb-8">
@@ -183,12 +183,12 @@ const Login = ({ onLogin }) => {
             <div className="w-full bg-white/70 dark:bg-stone-850/70 backdrop-blur-xl rounded-[2.5rem] p-8 shadow-[0_20px_40px_-15px_rgba(211,84,0,0.15)] border border-white/60 dark:border-stone-700/50 space-y-8">
                 <div className="flex justify-center gap-4">
                     {otp.map((digit, idx) => (
-                        <input key={idx} ref={otpRefs[idx]} type="text" maxLength="1" value={digit} onChange={(e) => handleOtpChange(idx, e.target.value)} onKeyDown={(e) => handleOtpKeyDown(idx, e)} className="w-14 h-16 bg-white/50 dark:bg-stone-900/50 rounded-2xl text-center font-headline font-black text-3xl border border-stone-200 dark:border-stone-700 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none text-[#d35400] shadow-inner transition-all" />
+                        <input key={idx} ref={otpRefs[idx]} type="text" maxLength="1" value={digit} onChange={(e) => handleOtpChange(idx, e.target.value)} onKeyDown={(e) => handleOtpKeyDown(idx, e)} className="w-14 h-16 bg-white/50 dark:bg-stone-900/50 rounded-2xl text-center font-headline font-black text-3xl border border-stone-200 dark:border-stone-700 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 outline-none text-orange-600 shadow-inner transition-all" />
                     ))}
                 </div>
                 {error && <p className="text-rose-500 font-gujarati text-sm font-bold text-center bg-rose-50 dark:bg-rose-950/30 py-2 rounded-xl border border-rose-100 dark:border-rose-900">{error}</p>}
                 
-                <button onClick={handleVerifyOtp} disabled={otp.some(d => !d)} className={`w-full py-4 rounded-2xl font-gujarati font-black text-lg transition-all duration-300 ${!otp.some(d => !d) ? 'bg-gradient-to-r from-[#e67e22] to-[#d35400] text-white shadow-[0_8px_20px_-6px_rgba(211,84,0,0.5)] hover:shadow-[0_12px_25px_-6px_rgba(211,84,0,0.6)] hover:-translate-y-0.5' : 'bg-stone-200 dark:bg-stone-800 text-stone-400'}`}>ખાતરી કરો</button>
+                <button onClick={handleVerifyOtp} disabled={otp.some(d => !d)} className={`w-full py-4 rounded-2xl font-gujarati font-black text-lg transition-all duration-300 ${!otp.some(d => !d) ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5' : 'bg-stone-200 dark:bg-stone-800 text-stone-400'}`}>ખાતરી કરો</button>
             </div>
         </div>
       </div>

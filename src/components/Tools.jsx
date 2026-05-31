@@ -161,7 +161,7 @@ const Tools = () => {
             onClick={() => setActiveTab(cat.id)}
             className={`flex items-center gap-2 px-5 py-3 rounded-full text-xs font-bold transition-all duration-300 shrink-0 cursor-pointer active:scale-95 border ${
               activeTab === cat.id
-                ? 'bg-[#d35400] border-[#d35400] text-white shadow-md'
+                ? 'bg-orange-600 border-orange-600 text-white shadow-md'
                 : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-850 hover:bg-stone-50 text-stone-600 dark:text-stone-300'
             }`}
           >

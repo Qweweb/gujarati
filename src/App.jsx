@@ -185,8 +185,8 @@ function App() {
     return (
       <div className="min-h-screen bg-[#F5EEDC] dark:bg-dark-bg flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <span className="material-symbols-outlined text-[#d35400] text-6xl animate-spin">progress_activity</span>
-          <p className="font-gujarati text-[#d35400] font-bold">Loading...</p>
+          <span className="material-symbols-outlined text-orange-600 text-6xl animate-spin">progress_activity</span>
+          <p className="font-gujarati text-orange-600 font-bold">Loading...</p>
         </div>
       </div>
     );
