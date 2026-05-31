@@ -161,7 +161,7 @@ const Tools = () => {
             onClick={() => setActiveTab(cat.id)}
             className={`flex items-center gap-2 px-5 py-3 rounded-full text-xs font-bold transition-all duration-300 shrink-0 cursor-pointer active:scale-95 border ${
               activeTab === cat.id
-                ? 'bg-primary border-primary text-white shadow-md shadow-primary/20'
+                ? 'bg-[#d35400] border-[#d35400] text-white shadow-md'
                 : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-850 hover:bg-stone-50 text-stone-600 dark:text-stone-300'
             }`}
           >
@@ -176,7 +176,7 @@ const Tools = () => {
         
         {/* Muhurt Finder Card */}
         {shouldShow(['spiritual']) && (
-          <section id="muhurt-finder" className="bg-white dark:bg-stone-900/80 backdrop-blur-md rounded-[2.5rem] p-6 shadow-xs hover:shadow-md border border-primary/5 hover:border-primary/10 transition-all duration-300 flex flex-col justify-between space-y-5">
+          <section id="muhurt-finder" onClick={() => navigate('/panchang')} className="cursor-pointer bg-white dark:bg-stone-900/80 backdrop-blur-md rounded-[2.5rem] p-6 shadow-xs hover:shadow-md border border-primary/5 hover:border-primary/10 transition-all duration-300 flex flex-col justify-between space-y-5">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3 text-primary">
@@ -243,7 +243,7 @@ const Tools = () => {
 
         {/* Kundali Generator Card */}
         {shouldShow(['spiritual']) && (
-          <section id="kundali-generator" className="bg-white dark:bg-stone-900/80 backdrop-blur-md rounded-[2.5rem] p-6 shadow-xs hover:shadow-md border border-primary/5 hover:border-primary/10 transition-all duration-300 flex flex-col justify-between space-y-5">
+          <section id="kundali-generator" onClick={() => navigate('/kundali')} className="cursor-pointer bg-white dark:bg-stone-900/80 backdrop-blur-md rounded-[2.5rem] p-6 shadow-xs hover:shadow-md border border-primary/5 hover:border-primary/10 transition-all duration-300 flex flex-col justify-between space-y-5">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3 text-primary">
@@ -278,7 +278,7 @@ const Tools = () => {
 
         {/* Biodata Maker Card */}
         {shouldShow(['business']) && (
-          <section id="biodata-maker" className="bg-white dark:bg-stone-900/80 backdrop-blur-md rounded-[2.5rem] p-6 shadow-xs hover:shadow-md border border-primary/5 hover:border-primary/10 transition-all duration-300 flex flex-col justify-between space-y-5">
+          <section id="biodata-maker" onClick={() => navigate('/biodata')} className="cursor-pointer bg-white dark:bg-stone-900/80 backdrop-blur-md rounded-[2.5rem] p-6 shadow-xs hover:shadow-md border border-primary/5 hover:border-primary/10 transition-all duration-300 flex flex-col justify-between space-y-5">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3 text-primary">
@@ -311,7 +311,7 @@ const Tools = () => {
 
         {/* Digital Business Card & Mini-Website Card */}
         {shouldShow(['business']) && (
-          <section id="digital-card" className="bg-white dark:bg-stone-900/80 backdrop-blur-md rounded-[2.5rem] p-6 shadow-xs hover:shadow-md border border-primary/5 hover:border-primary/10 transition-all duration-300 flex flex-col justify-between space-y-5">
+          <section id="digital-card" onClick={() => navigate('/card')} className="cursor-pointer bg-white dark:bg-stone-900/80 backdrop-blur-md rounded-[2.5rem] p-6 shadow-xs hover:shadow-md border border-primary/5 hover:border-primary/10 transition-all duration-300 flex flex-col justify-between space-y-5">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3 text-primary">
@@ -341,7 +341,7 @@ const Tools = () => {
         
         {/* Shradhanjali Maker Card */}
         {shouldShow(['spiritual']) && (
-          <section id="shradhanjali-maker" className="bg-white dark:bg-stone-900/80 backdrop-blur-md rounded-[2.5rem] p-6 shadow-xs hover:shadow-md border border-primary/5 hover:border-primary/10 transition-all duration-300 flex flex-col justify-between space-y-5">
+          <section id="shradhanjali-maker" onClick={() => navigate('/shradhanjali')} className="cursor-pointer bg-white dark:bg-stone-900/80 backdrop-blur-md rounded-[2.5rem] p-6 shadow-xs hover:shadow-md border border-primary/5 hover:border-primary/10 transition-all duration-300 flex flex-col justify-between space-y-5">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3 text-amber-700">

@@ -78,14 +78,24 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
           gap: '12px',
         }}
       >
-        {/* Hamburger */}
-        <button
-          onClick={() => setIsSidebarOpen(true)}
-          style={{ width:40, height:40, display:'flex', alignItems:'center', justifyContent:'center', borderRadius:10, color: muted, border:'none', background:'transparent', cursor:'pointer' }}
-          aria-label="Menu"
-        >
-          <span className="material-symbols-outlined" style={{ fontSize:22 }}>menu</span>
-        </button>
+        {/* Hamburger or Back Button */}
+        {!['/', '/devotional', '/health', '/tools', '/community'].includes(location.pathname) ? (
+          <button
+            onClick={() => window.history.back()}
+            style={{ width:40, height:40, display:'flex', alignItems:'center', justifyContent:'center', borderRadius:10, color: muted, border:'none', background:'transparent', cursor:'pointer' }}
+            aria-label="Back"
+          >
+            <span className="material-symbols-outlined" style={{ fontSize:24, fontWeight: 700 }}>arrow_back</span>
+          </button>
+        ) : (
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            style={{ width:40, height:40, display:'flex', alignItems:'center', justifyContent:'center', borderRadius:10, color: muted, border:'none', background:'transparent', cursor:'pointer' }}
+            aria-label="Menu"
+          >
+            <span className="material-symbols-outlined" style={{ fontSize:22 }}>menu</span>
+          </button>
+        )}
 
         {/* Logo — centered */}
         <Link to="/" style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', gap:8, textDecoration:'none' }}>
