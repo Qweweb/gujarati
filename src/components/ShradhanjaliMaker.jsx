@@ -354,16 +354,18 @@ _(ગુજરાતી શ્રદ્ધાંજલિ કાર્ડ મે
     : null;
 
   return (
-    <div className="animate-fade-in space-y-8 pb-20 print:p-0 print:pb-0">
+    <div className="animate-fade-in space-y-8 pb-20 print:p-0 print:pb-0 max-w-7xl mx-auto px-4 sm:px-6">
       
       {/* Top Header */}
-      <div className="flex items-center gap-4 print:hidden">
-        <button onClick={() => navigate('/tools')} className="h-10 w-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-primary border border-primary/10 active:scale-95 transition-transform">
-          <span className="material-symbols-outlined">arrow_back</span>
-        </button>
-        <div>
-          <h2 className="font-gujarati font-black text-2xl text-primary">ગુજરાતી શ્રદ્ધાંજલિ અને બેસણું કાર્ડ મેકર</h2>
-          <p className="font-gujarati text-xs text-stone-400">શાંતિ અને આદર સાથે બેસણું કે શોક સભા પત્રિકા બનાવો</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 print:hidden bg-white/70 dark:bg-stone-900/70 backdrop-blur-xl p-5 sm:p-6 rounded-3xl border border-primary/10 shadow-lg mt-4">
+        <div className="flex items-center gap-4">
+          <button onClick={() => navigate('/tools')} className="h-12 w-12 bg-white dark:bg-stone-800 rounded-2xl shadow-sm flex items-center justify-center text-primary dark:text-amber-500 border border-primary/10 hover:bg-primary/5 transition-all active:scale-95">
+            <span className="material-symbols-outlined text-xl">arrow_back</span>
+          </button>
+          <div>
+            <h2 className="font-gujarati font-black text-2xl sm:text-3xl bg-gradient-to-r from-primary to-amber-600 bg-clip-text text-transparent">શ્રદ્ધાંજલિ કાર્ડ મેકર</h2>
+            <p className="font-gujarati text-xs sm:text-sm text-stone-500 dark:text-stone-400 mt-1">શાંતિ અને આદર સાથે બેસણું કે શોક સભા પત્રિકા બનાવો</p>
+          </div>
         </div>
       </div>
 
@@ -586,24 +588,24 @@ _(ગુજરાતી શ્રદ્ધાંજલિ કાર્ડ મે
                 </div>
               </div>
 
-              <div className="space-y-1">
-                <label className="block text-xs font-black text-stone-500 font-gujarati">શોક સંદેશ (Message Content):</label>
+              <div className="space-y-1.5">
+                <label className="block text-xs font-black text-stone-600 dark:text-stone-300 font-gujarati tracking-wide">શોક સંદેશ (Message Content):</label>
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   rows={4}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 text-xs font-gujarati leading-relaxed focus:outline-none focus:border-primary resize-none"
+                  className="w-full px-4 py-3 rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50/50 dark:bg-stone-900 text-xs sm:text-sm font-gujarati leading-relaxed focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-white dark:focus:bg-stone-950 transition-all resize-none text-stone-800 dark:text-stone-100"
                   placeholder="શોક સંદેશ વિગત..."
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="block text-xs font-black text-stone-500 font-gujarati">લિ. / સ્નેહીજનોના નામ:</label>
+              <div className="space-y-1.5">
+                <label className="block text-xs font-black text-stone-600 dark:text-stone-300 font-gujarati tracking-wide">લિ. / સ્નેહીજનોના નામ:</label>
                 <textarea
                   value={relatives}
                   onChange={(e) => setRelatives(e.target.value)}
                   rows={3}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 text-xs font-gujarati leading-relaxed focus:outline-none focus:border-primary resize-none"
+                  className="w-full px-4 py-3 rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50/50 dark:bg-stone-900 text-xs sm:text-sm font-gujarati leading-relaxed focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-white dark:focus:bg-stone-950 transition-all resize-none text-stone-800 dark:text-stone-100"
                   placeholder="લિ. પરિવારોના નામ..."
                 />
               </div>
@@ -848,13 +850,13 @@ _(ગુજરાતી શ્રદ્ધાંજલિ કાર્ડ મે
 // ─── HELPER COMPONENTS ────────────────────────────────────
 function FormInput({ label, value, onChange, placeholder, type = "text" }) {
   return (
-    <div className="space-y-1 w-full text-left">
-      <label className="block text-xs font-black text-stone-500 font-gujarati">{label}:</label>
+    <div className="space-y-1.5 w-full text-left">
+      <label className="block text-xs font-black text-stone-600 dark:text-stone-300 font-gujarati tracking-wide">{label}:</label>
       <input
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 text-xs font-gujarati focus:outline-none focus:border-primary focus:shadow-xs transition-all"
+        className="w-full px-4 py-3 rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50/50 dark:bg-stone-900 text-xs sm:text-sm font-gujarati focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-white dark:focus:bg-stone-950 transition-all text-stone-800 dark:text-stone-100 placeholder-stone-400"
         placeholder={placeholder}
       />
     </div>

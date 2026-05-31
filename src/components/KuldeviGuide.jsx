@@ -625,7 +625,7 @@ const KuldeviGuide = () => {
                                 <button
                                   key={subTab.id}
                                   onClick={() => setActiveSubTab(subTab.id)}
-                                  className={`pb-3 font-gujarati font-black text-xs sm:text-sm border-b-2 transition-all whitespace-nowrap px-1 ${activeSubTab === subTab.id ? 'border-primary text-primary font-black' : 'border-transparent text-stone-500 dark:text-stone-450 hover:text-stone-800 dark:hover:text-stone-200'}`}
+                                  className={`pb-3 font-gujarati font-black text-xs sm:text-sm border-b-2 transition-all whitespace-nowrap px-1 ${activeSubTab === subTab.id ? 'border-primary text-primary dark:border-amber-400 dark:text-amber-400 font-black' : 'border-transparent text-stone-500 dark:text-stone-450 hover:text-stone-800 dark:hover:text-stone-200'}`}
                                 >
                                   {subTab.label}
                                 </button>
@@ -655,7 +655,7 @@ const KuldeviGuide = () => {
                                     <button
                                       onClick={() => handleCopyToClipboard(`નૈવેદ્ય (પ્રસાદ): ${mataji.naivedya}`, 'પ્રસાદ વિગત કોપી કરી લીધી છે!')
                                       }
-                                      className="text-xs text-primary bg-primary/10 hover:bg-primary/20 px-3 py-1.5 rounded-full font-bold flex items-center gap-1 transition"
+                                      className="text-xs text-primary dark:text-amber-400 bg-primary/10 dark:bg-amber-400/10 hover:bg-primary/20 px-3 py-1.5 rounded-full font-bold flex items-center gap-1 transition"
                                     >
                                       <span className="material-symbols-outlined text-xs">content_copy</span> કોપી કરો
                                     </button>

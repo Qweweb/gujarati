@@ -21,6 +21,8 @@ import KbcQuiz from './components/KbcQuiz';
 import InterestCalculator from './components/InterestCalculator';
 import DevotionalCards from './components/DevotionalCards';
 import KuldeviGuide from './components/KuldeviGuide';
+import GitaHub from './components/GitaHub';
+import ShradhanjaliMaker from './components/ShradhanjaliMaker';
 import AdminDashboard from './components/AdminDashboard';
 import DailyChallenge from './components/DailyChallenge';
 import GujaratSafari from './components/GujaratSafari';
@@ -220,6 +222,8 @@ function App() {
           <Route path="/interest-calculator" element={<InterestCalculator />} />
           <Route path="/devotional-cards" element={<DevotionalCards />} />
           <Route path="/kuldevi" element={<KuldeviGuide />} />
+          <Route path="/gita" element={<GitaHub />} />
+          <Route path="/shradhanjali" element={<ShradhanjaliMaker />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/daily-challenge" element={<DailyChallenge />} />
           <Route path="/gujarat-safari" element={<GujaratSafari />} />
