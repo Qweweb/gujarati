@@ -248,6 +248,7 @@ export default function ShradhanjaliMaker() {
   const [showGarland, setShowGarland] = useState(true);
   const [garlandStyle, setGarlandStyle] = useState("marigold"); // 'marigold', 'rose', 'lotus', 'gold_border'
   const [photoFilter, setPhotoFilter] = useState("grayscale"); // 'grayscale' or 'normal'
+  const [base64QrCode, setBase64QrCode] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Font customization
@@ -348,10 +349,28 @@ _(ગુજરાતી શ્રદ્ધાંજલિ કાર્ડ મે
 
   const activeTemplateObj = CARD_TEMPLATES.find(t => t.id === selectedTemplate) || CARD_TEMPLATES[0];
 
-  // QR Code generator API URL
-  const qrCodeUrl = mapsLink.trim()
-    ? `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(mapsLink.trim())}`
-    : null;
+  useEffect(() => {
+    if (!mapsLink.trim()) {
+      setBase64QrCode(null);
+      return;
+    }
+    const url = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(mapsLink.trim())}`;
+    const fetchBase64 = async () => {
+      try {
+        const res = await fetch(url, { mode: 'cors', cache: 'no-cache' });
+        const blob = await res.blob();
+        const reader = new FileReader();
+        reader.onloadend = () => setBase64QrCode(reader.result);
+        reader.readAsDataURL(blob);
+      } catch (e) {
+        console.warn("QR code base64 fetch failed", e);
+        setBase64QrCode(url);
+      }
+    };
+    fetchBase64();
+  }, [mapsLink]);
+
+  const qrCodeUrl = base64QrCode;
 
   return (
     <div className="animate-fade-in space-y-8 pb-20 print:p-0 print:pb-0 max-w-7xl mx-auto px-4 sm:px-6">
@@ -827,7 +846,7 @@ _(ગુજરાતી શ્રદ્ધાંજલિ કાર્ડ મે
                       <p className="font-black text-[9px] text-stone-600">નકશા લિંક</p>
                       <p>સ્કેન કરો</p>
                     </div>
-                    <img src={qrCodeUrl} alt="Google Maps QR Code" className="w-12 h-12 object-contain" />
+                    <img src={qrCodeUrl} alt="Google Maps QR Code" className="w-12 h-12 object-contain" crossOrigin="anonymous" />
                   </div>
                 )}
               </div>

@@ -101,6 +101,8 @@ const DevotionalCards = () => {
   const [activeDeity, setActiveDeity] = useState(DEITIES[1]); // Default Krishna
   const [quoteIndex, setQuoteIndex] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [base64Img, setBase64Img] = useState(activeDeity.img);
+  const [base64Avatar, setBase64Avatar] = useState("");
 
   // Custom Quotes from LocalStorage
   const [customQuotes, setCustomQuotes] = useState(() => {
@@ -124,6 +126,43 @@ const DevotionalCards = () => {
       } catch (e) { }
     }
   }, []);
+
+  // Convert external images to base64 to prevent html2canvas CORS / Tainted Canvas issues
+  useEffect(() => {
+    const fetchBase64 = async (url, setter) => {
+      if (!url) return;
+      try {
+        const res = await fetch(url, { mode: 'cors', cache: 'no-cache' });
+        const blob = await res.blob();
+        const reader = new FileReader();
+        reader.onloadend = () => setter(reader.result);
+        reader.readAsDataURL(blob);
+      } catch (e) {
+        console.warn("Base64 fetch failed, using original url", e);
+        setter(url); // fallback
+      }
+    };
+    
+    fetchBase64(activeDeity.img, setBase64Img);
+  }, [activeDeity]);
+
+  useEffect(() => {
+    const fetchBase64 = async (url, setter) => {
+      if (!url) return;
+      try {
+        const res = await fetch(url, { mode: 'cors', cache: 'no-cache' });
+        const blob = await res.blob();
+        const reader = new FileReader();
+        reader.onloadend = () => setter(reader.result);
+        reader.readAsDataURL(blob);
+      } catch (e) {
+        console.warn("Base64 fetch failed, using original url", e);
+        setter(url); // fallback
+      }
+    };
+    
+    fetchBase64(profile.photoUrl, setBase64Avatar);
+  }, [profile.photoUrl]);
 
   const defaultQuotes = CATEGORY_QUOTES[activeCategory.id] || CATEGORY_QUOTES['bhakti'];
   const userQuotes = customQuotes[activeCategory.id] || [];
@@ -348,7 +387,7 @@ const DevotionalCards = () => {
 
               {/* Deity Image */}
               <div className={`mt-4 mb-6 rounded-full overflow-hidden border-4 shadow-xl w-48 h-48`} style={{ borderColor: activeTheme.accent }}>
-                <img src={activeDeity.img} alt={activeDeity.name} className="w-full h-full object-cover" crossOrigin="anonymous" />
+                <img src={base64Img || activeDeity.img} alt={activeDeity.name} className="w-full h-full object-cover" crossOrigin="anonymous" />
               </div>
 
               {/* Quote Area */}
@@ -368,7 +407,7 @@ const DevotionalCards = () => {
               <div className="w-full flex items-center justify-between mt-auto pt-4 pb-2">
                 <div className="flex items-center gap-3">
                   {profile.showPhoto && (
-                    <img src={profile.photoUrl} alt="User" className="w-8 h-8 rounded-full border border-white/20" crossOrigin="anonymous" />
+                    <img src={base64Avatar || profile.photoUrl} alt="User" className="w-8 h-8 rounded-full border border-white/20" crossOrigin="anonymous" />
                   )}
                   {profile.showName && (
                     <span className="font-gujarati font-bold text-sm tracking-wide">{profile.name}</span>
