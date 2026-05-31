@@ -149,7 +149,7 @@ const Tools = () => {
     <div className="animate-fade-in space-y-8 pb-12 font-gujarati text-on-surface">
       {/* Page Header */}
       <div className="space-y-1">
-        <h2 className="font-gujarati font-black text-4xl text-primary">ઉપયોગી સાધનો</h2>
+        <h2 className="font-gujarati font-black text-4xl text-orange-600">ઉપયોગી સાધનો</h2>
         <p className="font-gujarati text-outline text-lg">તમારા દૈનિક જીવનમાં આધ્યાત્મિકતા અને વિજ્ઞાનનો સમન્વય કરો.</p>
       </div>
 
@@ -179,8 +179,8 @@ const Tools = () => {
           <section id="muhurt-finder" onClick={() => navigate('/panchang')} className="cursor-pointer bg-white dark:bg-stone-900/80 backdrop-blur-md rounded-[2.5rem] p-6 shadow-xs hover:shadow-md border border-primary/5 hover:border-primary/10 transition-all duration-300 flex flex-col justify-between space-y-5">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <div className="flex items-center gap-3 text-primary">
-                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <div className="flex items-center gap-3 text-orange-600">
+                  <div className="h-10 w-10 rounded-xl bg-orange-600/10 flex items-center justify-center">
                     <span className="material-symbols-outlined font-black">event_available</span>
                   </div>
                   <h3 className="font-gujarati font-black text-xl">શુભ મુહૂર્ત શોધક</h3>
@@ -191,9 +191,9 @@ const Tools = () => {
 
               <div className="bg-stone-50 dark:bg-stone-850/50 rounded-2.5xl p-4 border border-stone-100 dark:border-stone-800">
                 <div className="flex justify-between items-center mb-4">
-                  <span onClick={handlePrevMonth} className="material-symbols-outlined text-xs text-outline cursor-pointer hover:text-primary select-none">chevron_left</span>
+                  <span onClick={handlePrevMonth} className="material-symbols-outlined text-xs text-outline cursor-pointer hover:text-orange-600 select-none">chevron_left</span>
                   <p className="font-gujarati font-black text-sm">{monthNamesGu[calendarMonth]} {toGujaratiDigits(calendarYear)}</p>
-                  <span onClick={handleNextMonth} className="material-symbols-outlined text-xs text-outline cursor-pointer hover:text-primary select-none">chevron_right</span>
+                  <span onClick={handleNextMonth} className="material-symbols-outlined text-xs text-outline cursor-pointer hover:text-orange-600 select-none">chevron_right</span>
                 </div>
                 
                 <div className="grid grid-cols-7 gap-1 text-center text-[8px] font-bold text-outline uppercase tracking-wider mb-2">
@@ -221,9 +221,9 @@ const Tools = () => {
                         onClick={() => setSelectedDate(new Date(calendarYear, calendarMonth, cell.day))}
                         className={`h-7 w-7 flex items-center justify-center rounded-lg transition-colors cursor-pointer ${
                           isSelected 
-                            ? 'bg-primary text-white shadow-sm font-black' 
+                            ? 'bg-orange-600 text-white shadow-sm font-black' 
                             : isToday 
-                              ? 'border border-primary/40 text-primary font-bold' 
+                              ? 'border border-orange-600/40 text-orange-600 font-bold' 
                               : 'text-on-surface hover:bg-stone-100 dark:hover:bg-stone-800'
                         }`}
                       >
@@ -235,7 +235,7 @@ const Tools = () => {
               </div>
             </div>
 
-            <button onClick={() => navigate('/panchang')} className="w-full py-3.5 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-2xl font-gujarati font-black text-sm transition-all duration-300 shadow-xs cursor-pointer">
+            <button onClick={() => navigate('/panchang')} className="w-full py-3.5 bg-orange-600/10 text-orange-600 hover:bg-orange-600 hover:text-white rounded-2xl font-gujarati font-black text-sm transition-all duration-300 shadow-xs cursor-pointer">
               નવું મુહૂર્ત શોધો
             </button>
           </section>
@@ -246,8 +246,8 @@ const Tools = () => {
           <section id="kundali-generator" onClick={() => navigate('/kundali')} className="cursor-pointer bg-white dark:bg-stone-900/80 backdrop-blur-md rounded-[2.5rem] p-6 shadow-xs hover:shadow-md border border-primary/5 hover:border-primary/10 transition-all duration-300 flex flex-col justify-between space-y-5">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <div className="flex items-center gap-3 text-primary">
-                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <div className="flex items-center gap-3 text-orange-600">
+                  <div className="h-10 w-10 rounded-xl bg-orange-600/10 flex items-center justify-center">
                     <span className="material-symbols-outlined font-black">stars</span>
                   </div>
                   <h3 className="font-gujarati font-black text-xl">કુંડળી જનરેટર</h3>
@@ -257,20 +257,20 @@ const Tools = () => {
               <p className="font-gujarati text-xs text-outline leading-relaxed">તમારી સચોટ જન્મ વિગતો દાખલ કરો અને ગ્રહોના સ્થાન સહિત વિગતવાર કુંડળી મેળવો.</p>
               
               <div className="relative h-32 bg-stone-50 dark:bg-stone-850/50 rounded-2.5xl flex items-center justify-center p-3 border border-stone-100 dark:border-stone-800 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/5 via-transparent to-primary/5 pointer-events-none"></div>
-                <div className="relative w-28 h-28 border border-primary/20 flex flex-wrap bg-white/70 dark:bg-stone-900/70 backdrop-blur-xs rounded-xl shadow-xs">
-                  <div className="w-1/2 h-1/2 border-r border-b border-primary/10 p-1 text-[8px] font-bold text-primary">૧૨</div>
-                  <div className="w-1/2 h-1/2 border-b border-primary/10 p-1 text-right text-[8px] font-bold text-primary">૨</div>
-                  <div className="w-1/2 h-1/2 border-r border-primary/10 p-1 flex items-end text-[8px] font-bold text-primary">૧૦</div>
-                  <div className="w-1/2 h-1/2 p-1 flex items-end justify-end text-[8px] font-bold text-primary">૪</div>
+                <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/5 via-transparent to-orange-600/5 pointer-events-none"></div>
+                <div className="relative w-28 h-28 border border-orange-600/20 flex flex-wrap bg-white/70 dark:bg-stone-900/70 backdrop-blur-xs rounded-xl shadow-xs">
+                  <div className="w-1/2 h-1/2 border-r border-b border-orange-600/10 p-1 text-[8px] font-bold text-orange-600">૧૨</div>
+                  <div className="w-1/2 h-1/2 border-b border-orange-600/10 p-1 text-right text-[8px] font-bold text-orange-600">૨</div>
+                  <div className="w-1/2 h-1/2 border-r border-orange-600/10 p-1 flex items-end text-[8px] font-bold text-orange-600">૧૦</div>
+                  <div className="w-1/2 h-1/2 p-1 flex items-end justify-end text-[8px] font-bold text-orange-600">૪</div>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="font-gujarati font-black text-[10px] text-primary bg-white/90 dark:bg-stone-800/90 border border-primary/20 px-2 py-0.5 rounded shadow-xs">શુભ</span>
+                    <span className="font-gujarati font-black text-[10px] text-orange-600 bg-white/90 dark:bg-stone-800/90 border border-orange-600/20 px-2 py-0.5 rounded shadow-xs">શુભ</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <button onClick={() => navigate('/kundali')} className="w-full py-3.5 bg-primary hover:bg-primary-hover text-white rounded-2xl font-gujarati font-black text-sm transition-all duration-300 shadow-xs cursor-pointer flex items-center justify-center gap-1">
+            <button onClick={() => navigate('/kundali')} className="w-full py-3.5 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-gujarati font-black text-sm transition-all duration-300 shadow-xs cursor-pointer flex items-center justify-center gap-1">
               <span className="material-symbols-outlined text-sm font-bold">stars</span> ફ્રી કુંડળી બનાવો
             </button>
           </section>
@@ -281,8 +281,8 @@ const Tools = () => {
           <section id="biodata-maker" onClick={() => navigate('/biodata')} className="cursor-pointer bg-white dark:bg-stone-900/80 backdrop-blur-md rounded-[2.5rem] p-6 shadow-xs hover:shadow-md border border-primary/5 hover:border-primary/10 transition-all duration-300 flex flex-col justify-between space-y-5">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <div className="flex items-center gap-3 text-primary">
-                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <div className="flex items-center gap-3 text-orange-600">
+                  <div className="h-10 w-10 rounded-xl bg-orange-600/10 flex items-center justify-center">
                     <span className="material-symbols-outlined font-black">description</span>
                   </div>
                   <h3 className="font-gujarati font-black text-xl">બાયોડેટા મેકર</h3>
@@ -293,17 +293,17 @@ const Tools = () => {
               
               <div className="bg-stone-50 dark:bg-stone-850/50 rounded-2.5xl p-4 flex gap-3 border border-stone-100 dark:border-stone-800 justify-center">
                 <div className="p-3 bg-white dark:bg-stone-900 rounded-xl shadow-xs border border-stone-150 dark:border-stone-800 text-center flex-1">
-                  <span className="material-symbols-outlined text-xl text-primary mb-1">favorite</span>
+                  <span className="material-symbols-outlined text-xl text-orange-600 mb-1">favorite</span>
                   <p className="font-gujarati font-black text-[9px] text-stone-800 dark:text-stone-200">લગ્ન બાયોડેટા</p>
                 </div>
                 <div className="p-3 bg-white dark:bg-stone-900 rounded-xl shadow-xs border border-stone-150 dark:border-stone-800 text-center flex-1">
-                  <span className="material-symbols-outlined text-xl text-primary mb-1">work</span>
+                  <span className="material-symbols-outlined text-xl text-orange-600 mb-1">work</span>
                   <p className="font-gujarati font-black text-[9px] text-stone-800 dark:text-stone-200">પ્રોફેશનલ CV</p>
                 </div>
               </div>
             </div>
 
-            <button onClick={() => navigate('/biodata')} className="w-full py-3.5 bg-primary hover:bg-primary-hover text-white rounded-2xl font-gujarati font-black text-sm transition-all duration-300 shadow-xs cursor-pointer flex items-center justify-center gap-1">
+            <button onClick={() => navigate('/biodata')} className="w-full py-3.5 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-gujarati font-black text-sm transition-all duration-300 shadow-xs cursor-pointer flex items-center justify-center gap-1">
               <span className="material-symbols-outlined text-sm font-bold">description</span> બાયોડેટા બનાવો
             </button>
           </section>
@@ -314,8 +314,8 @@ const Tools = () => {
           <section id="digital-card" onClick={() => navigate('/card')} className="cursor-pointer bg-white dark:bg-stone-900/80 backdrop-blur-md rounded-[2.5rem] p-6 shadow-xs hover:shadow-md border border-primary/5 hover:border-primary/10 transition-all duration-300 flex flex-col justify-between space-y-5">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <div className="flex items-center gap-3 text-primary">
-                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <div className="flex items-center gap-3 text-orange-600">
+                  <div className="h-10 w-10 rounded-xl bg-orange-600/10 flex items-center justify-center">
                     <span className="material-symbols-outlined font-black">badge</span>
                   </div>
                   <h3 className="font-gujarati font-black text-xl">ડિજિટલ બિઝનેસ કાર્ડ</h3>
@@ -324,7 +324,7 @@ const Tools = () => {
               </div>
               <p className="font-gujarati text-xs text-outline leading-relaxed">તમારા વેપાર કે વ્યવસાય માટે પ્રોડક્ટ કેટલોગ અને UPI પેમેન્ટ સાથેની ૧૫+ થીમ્સ વાળી મફત મિની-વેબસાઇટ બનાવો.</p>
               
-              <div className="relative h-20 bg-gradient-to-br from-amber-500/10 via-transparent to-primary/10 dark:from-amber-500/5 dark:to-primary/5 rounded-2.5xl flex items-center justify-center p-3 border border-amber-500/10">
+              <div className="relative h-20 bg-gradient-to-br from-amber-500/10 via-transparent to-orange-600/10 dark:from-amber-500/5 dark:to-orange-600/5 rounded-2.5xl flex items-center justify-center p-3 border border-amber-500/10">
                 <div className="flex gap-2 relative z-10">
                   <span className="bg-white/90 dark:bg-stone-850/90 text-stone-800 dark:text-stone-200 border border-stone-200/55 rounded-lg px-2.5 py-1 text-[8px] font-black shadow-xs">✨ ૧૫+ થીમ્સ</span>
                   <span className="bg-white/90 dark:bg-stone-850/90 text-stone-800 dark:text-stone-200 border border-stone-200/55 rounded-lg px-2.5 py-1 text-[8px] font-black shadow-xs">📦 કેટલોગ</span>
@@ -333,7 +333,7 @@ const Tools = () => {
               </div>
             </div>
 
-            <button onClick={() => navigate('/card')} className="w-full py-3.5 bg-primary hover:bg-primary-hover text-white rounded-2xl font-gujarati font-black text-sm transition-all duration-300 shadow-xs cursor-pointer flex items-center justify-center gap-1">
+            <button onClick={() => navigate('/card')} className="w-full py-3.5 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-gujarati font-black text-sm transition-all duration-300 shadow-xs cursor-pointer flex items-center justify-center gap-1">
               <span className="material-symbols-outlined text-sm font-bold font-black">badge</span> કાર્ડ બનાવો (તદ્દન ફ્રી)
             </button>
           </section>
@@ -379,7 +379,7 @@ const Tools = () => {
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 bg-white dark:bg-stone-850 rounded-xl flex items-center justify-center shadow-xs border border-stone-150 dark:border-stone-800">
-                    <span className="material-symbols-outlined text-primary text-xl">wb_sunny</span>
+                    <span className="material-symbols-outlined text-orange-600 text-xl">wb_sunny</span>
                   </div>
                   <div>
                     <h4 className="font-gujarati font-black text-base leading-tight">આજનું પંચાંગ</h4>

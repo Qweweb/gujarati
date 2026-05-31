@@ -67,7 +67,7 @@ const Login = ({ onLogin }) => {
   const handleVerifyOtp = () => {
     const enteredOtp = otp.join('');
     if (phone === "9999999999" && enteredOtp === "0000") {
-        setStep('profiles');
+        onLogin();
     } else {
         setError("OTP ખોટો છે. (Test OTP: 0000)");
     }
@@ -195,25 +195,7 @@ const Login = ({ onLogin }) => {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-[#F5EEDC] dark:bg-dark-bg flex flex-col items-center justify-center p-8 animate-fade-in text-on-surface dark:text-dark-text">
-        <div className="max-w-4xl w-full space-y-12">
-            <h2 className="font-gujarati font-black text-5xl text-center">કોણ જોઈ રહ્યું છે?</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 px-4">
-                {[
-                  { name: "દાદાજી", role: "વડીલ", icon: "elderly", color: "bg-orange-100" },
-                  { name: "બા", role: "વડીલ", icon: "elderly_woman", color: "bg-rose-100" },
-                  { name: "ચિન્ટુ", role: "બાળક", icon: "child_care", color: "bg-blue-100" }
-                ].map((p, idx) => (
-                    <div key={idx} onClick={onLogin} className="bg-white dark:bg-dark-surface rounded-[3rem] p-10 shadow-xl flex flex-col items-center gap-6 border-4 border-transparent hover:border-primary transition-all cursor-pointer">
-                        <div className={`h-32 w-32 ${p.color} dark:bg-dark-bg rounded-full flex items-center justify-center text-primary dark:text-dark-accent p-4`}><span className="material-symbols-outlined text-7xl" style={{ fontVariationSettings: "'FILL' 1" }}>{p.icon}</span></div>
-                        <div className="text-center"><h4 className="font-gujarati font-black text-3xl mb-1">{p.name}</h4><span className="bg-primary/10 px-4 py-1 rounded-full font-gujarati font-bold text-xs">{p.role}</span></div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    </div>
-  );
+  return null;
 };
 
 export default Login;

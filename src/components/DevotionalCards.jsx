@@ -100,7 +100,6 @@ const DevotionalCards = () => {
   const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]);
   const [activeDeity, setActiveDeity] = useState(DEITIES[1]); // Default Krishna
   const [quoteIndex, setQuoteIndex] = useState(0);
-  const [isStoryFormat, setIsStoryFormat] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Custom Quotes from LocalStorage
@@ -151,9 +150,8 @@ const DevotionalCards = () => {
       await new Promise(r => setTimeout(r, 500));
       
       const canvas = await html2canvas(cardRef.current, {
-        scale: 2, // High resolution (1080p effective)
+        scale: 3, // Higher resolution
         useCORS: true, // For external images
-        allowTaint: true,
         backgroundColor: activeTheme.bg,
       });
 
@@ -323,17 +321,7 @@ const DevotionalCards = () => {
         <div className="lg:col-span-5 flex flex-col items-center">
           
           <div className="w-full flex justify-between items-center mb-4 px-2">
-            <span className="font-gujarati font-bold text-stone-500 text-sm">લાઈવ પ્રિવ્યૂ</span>
-            <div className="flex bg-stone-100 rounded-lg p-1">
-              <button 
-                onClick={() => setIsStoryFormat(false)}
-                className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${!isStoryFormat ? 'bg-white shadow-sm text-stone-900' : 'text-stone-500'}`}
-              >Square</button>
-              <button 
-                onClick={() => setIsStoryFormat(true)}
-                className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${isStoryFormat ? 'bg-white shadow-sm text-stone-900' : 'text-stone-500'}`}
-              >Story</button>
-            </div>
+            <span className="font-gujarati font-bold text-stone-500 text-sm">લાઈવ પ્રિવ્યૂ (Instagram Post Size)</span>
           </div>
 
           {/* CARD CANVAS CONTAINER */}
@@ -342,7 +330,7 @@ const DevotionalCards = () => {
             style={{ 
               width: '100%', 
               maxWidth: '400px', 
-              aspectRatio: isStoryFormat ? '9/16' : '1/1',
+              aspectRatio: '1080/1350',
               backgroundColor: activeTheme.bg,
               color: activeTheme.text
             }}
@@ -359,13 +347,13 @@ const DevotionalCards = () => {
               </div>
 
               {/* Deity Image */}
-              <div className={`mt-4 mb-6 rounded-full overflow-hidden border-4 shadow-xl ${isStoryFormat ? 'w-48 h-48' : 'w-36 h-36'}`} style={{ borderColor: activeTheme.accent }}>
+              <div className={`mt-4 mb-6 rounded-full overflow-hidden border-4 shadow-xl w-48 h-48`} style={{ borderColor: activeTheme.accent }}>
                 <img src={activeDeity.img} alt={activeDeity.name} className="w-full h-full object-cover" crossOrigin="anonymous" />
               </div>
 
               {/* Quote Area */}
               <div className="text-center px-4 flex-1 flex flex-col justify-center">
-                <p className={`font-gujarati font-black leading-relaxed ${isStoryFormat ? 'text-2xl' : 'text-xl'}`} style={{ color: activeTheme.text }}>
+                <p className={`font-gujarati font-black leading-relaxed text-2xl`} style={{ color: activeTheme.text }}>
                   "{currentQuote.text}"
                 </p>
                 <p className="font-gujarati text-sm mt-4 opacity-80" style={{ color: activeTheme.accent }}>
