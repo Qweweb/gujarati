@@ -294,8 +294,19 @@
 
 /* ── PRINT ─────────────────────────────────────────────────────── */
 @media print {
-  body, html { background:#fff !important; color:#000 !important; margin:0 !important; padding:0 !important; width:21cm !important; }
+  @page { size: A4; margin: 0; }
+  body, html { background:#fff !important; color:#000 !important; margin:0 !important; padding:0 !important; width:210mm !important; height:297mm !important; }
   header, nav, footer { display:none !important; }
   main { padding-top:0 !important; margin:0 !important; width:100% !important; }
-  #printable-biodata-card { border-radius:0 !important; box-shadow:none !important; margin:0 !important; width:100% !important; min-height:29.7cm !important; page-break-inside:avoid !important; }
+  #printable-biodata-card { 
+    border-radius:0 !important; 
+    box-shadow:none !important; 
+    margin:0 !important; 
+    width:210mm !important; 
+    min-height:297mm !important; 
+    page-break-inside:avoid !important; 
+    padding: 16mm !important;
+    position: relative;
+    border: none !important;
+  }
 }

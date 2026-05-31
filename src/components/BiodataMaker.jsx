@@ -83,16 +83,15 @@ const MARRIAGE_TEMPLATES = [
     name: "૧. રોયલ કેસરી (Royal Saffron Vine)",
     accentColor: "#b45309",
     headerBg: "bg-amber-600 text-white",
-    cardBg: "bg-gradient-to-br from-amber-50 via-orange-50/40 to-yellow-100/30",
+    cardBg: "bg-[#FFFDF9]",
     textColor: "text-amber-950",
-    borderClass: "border-[10px] border-amber-600/30",
+    borderClass: "border-[2pt] border-[#8B0000]",
     customDecor: (
       <>
-        {/* Golden crawling vine ornaments in the corners */}
-        <div className="absolute top-4 left-4 text-amber-600/50 text-4xl select-none">🍃</div>
-        <div className="absolute top-4 right-4 text-amber-600/50 text-4xl select-none rotate-90">🍃</div>
-        <div className="absolute bottom-4 left-4 text-amber-600/50 text-4xl select-none -rotate-90">🍃</div>
-        <div className="absolute bottom-4 right-4 text-amber-600/50 text-4xl select-none rotate-180">🍃</div>
+        <div className="absolute top-4 left-4 text-[#8B0000]/30 text-4xl select-none">🍃</div>
+        <div className="absolute top-4 right-4 text-[#8B0000]/30 text-4xl select-none rotate-90">🍃</div>
+        <div className="absolute bottom-4 left-4 text-[#8B0000]/30 text-4xl select-none -rotate-90">🍃</div>
+        <div className="absolute bottom-4 right-4 text-[#8B0000]/30 text-4xl select-none rotate-180">🍃</div>
       </>
     )
   },
@@ -101,9 +100,9 @@ const MARRIAGE_TEMPLATES = [
     name: "૨. સનસેટ શિમર (Sunset Shimmer)",
     accentColor: "#be185d",
     headerBg: "bg-rose-600 text-white",
-    cardBg: "bg-gradient-to-br from-yellow-100/40 via-orange-50/30 to-pink-200/50",
+    cardBg: "bg-[#FFFDF9]",
     textColor: "text-rose-950",
-    borderClass: "border-[10px] border-pink-500/20",
+    borderClass: "border-[2pt] border-[#8B0000]",
     customDecor: (
       <>
         <div className="absolute top-4 left-4 text-pink-500/50 text-3xl">🌸</div>
@@ -118,9 +117,9 @@ const MARRIAGE_TEMPLATES = [
     name: "૩. મોરપીંછ ટેલ (Peacock Teal)",
     accentColor: "#0f766e",
     headerBg: "bg-teal-700 text-white",
-    cardBg: "bg-gradient-to-br from-teal-100/30 via-cyan-50/20 to-blue-200/40",
+    cardBg: "bg-[#FFFDF9]",
     textColor: "text-teal-950",
-    borderClass: "border-[10px] border-teal-600/20",
+    borderClass: "border-[2pt] border-[#D4AF37]",
     customDecor: (
       <>
         <div className="absolute top-4 left-4 text-teal-600/40 text-4xl">🪶</div>
@@ -135,15 +134,15 @@ const MARRIAGE_TEMPLATES = [
     name: "૪. વિન્ટેજ આઇવરી (Vintage Ivory)",
     accentColor: "#854d0e",
     headerBg: "bg-yellow-800 text-white",
-    cardBg: "bg-gradient-to-br from-[#fdfbf7] to-[#f5ebd6]",
+    cardBg: "bg-[#FFFDF9]",
     textColor: "text-stone-900",
-    borderClass: "border-[12px] border-double border-yellow-800/40",
+    borderClass: "border-[2pt] border-[#D4AF37]",
     customDecor: (
       <>
-        <div className="absolute top-4 left-4 text-yellow-800/40 text-3xl">⚜️</div>
-        <div className="absolute top-4 right-4 text-yellow-800/40 text-3xl">⚜️</div>
-        <div className="absolute bottom-4 left-4 text-yellow-800/40 text-3xl">⚜️</div>
-        <div className="absolute bottom-4 right-4 text-yellow-800/40 text-3xl">⚜️</div>
+        <div className="absolute top-4 left-4 text-[#D4AF37]/40 text-3xl">⚜️</div>
+        <div className="absolute top-4 right-4 text-[#D4AF37]/40 text-3xl">⚜️</div>
+        <div className="absolute bottom-4 left-4 text-[#D4AF37]/40 text-3xl">⚜️</div>
+        <div className="absolute bottom-4 right-4 text-[#D4AF37]/40 text-3xl">⚜️</div>
       </>
     )
   },
@@ -152,9 +151,9 @@ const MARRIAGE_TEMPLATES = [
     name: "૫. મેઘ મલ્હાર (Cloud Sky)",
     accentColor: "#1e3a8a",
     headerBg: "bg-blue-800 text-white",
-    cardBg: "bg-gradient-to-br from-sky-100/50 via-indigo-50/40 to-purple-100/30",
+    cardBg: "bg-[#FFFDF9]",
     textColor: "text-blue-950",
-    borderClass: "border-[10px] border-blue-500/20",
+    borderClass: "border-[2pt] border-[#8B0000]",
     customDecor: (
       <>
         <div className="absolute top-4 left-4 text-blue-500/30 text-3xl">✨</div>
@@ -173,7 +172,7 @@ const JOB_TEMPLATES = [
     accentColor: "#1e3a8a",
     bgColor: "#ffffff",
     textColor: "text-stone-800",
-    borderStyle: "border border-stone-200 bg-white"
+    borderStyle: "border-0 bg-white"
   },
   {
     id: "slate_grid",
@@ -181,15 +180,15 @@ const JOB_TEMPLATES = [
     accentColor: "#334155",
     bgColor: "#ffffff",
     textColor: "text-stone-950",
-    borderStyle: "border-t-[12px] border-slate-700 bg-white border border-stone-200"
+    borderStyle: "border-0 bg-white"
   },
   {
     id: "clean_modern",
     name: "૩. મિનિમલ મોડર્ન (Minimal Modern)",
     accentColor: "#0d9488",
-    bgColor: "#fcfdfd",
+    bgColor: "#ffffff",
     textColor: "text-stone-900",
-    borderStyle: "border border-stone-100 bg-white"
+    borderStyle: "border-0 bg-white"
   }
 ];
 
@@ -589,63 +588,45 @@ const BiodataMaker = () => {
           {/* Core Printable Sheet Card */}
           <div
             id="printable-biodata-card"
-            className={`w-full max-w-[21cm] min-h-[29.7cm] mx-auto p-8 sm:p-10 rounded-[2rem] relative overflow-hidden transition-all flex flex-col justify-between ${activeTab === 'marriage' ? currentTemplateObj.cardBg : 'bg-white'} ${currentTemplateObj.borderClass} ${currentTemplateObj.textColor} print:shadow-none print:rounded-none print:border-8 print:p-8`}
+            className={`w-full max-w-[21cm] min-h-[29.7cm] mx-auto p-8 sm:p-10 relative overflow-hidden transition-all flex flex-col justify-between ${activeTab === 'marriage' ? currentTemplateObj.cardBg : 'bg-white'} ${activeTab === 'marriage' ? currentTemplateObj.borderClass : 'border-none'} ${activeTab === 'marriage' ? 'font-gujarati' : 'font-sans'} ${currentTemplateObj.textColor}`}
           >
             {/* Custom SVG Decoration overlay */}
             {activeTab === 'marriage' && currentTemplateObj.customDecor}
 
-            {/* Template Top Flourish Accent */}
-            {activeTab === 'job' && (
-              <div className="absolute top-0 inset-x-0 h-4" style={{ backgroundColor: currentTemplateObj.accentColor }}></div>
-            )}
-
-            <div className="space-y-8 flex-1 mt-10">
+            <div className={`flex-1 mt-6 ${activeTab === 'marriage' ? 'space-y-8' : ''}`}>
               
               {/* Marriage Theme Header Rendering */}
               {activeTab === 'marriage' ? (
-                <div className="text-center space-y-3 mt-6">
+                <div className="text-center space-y-3 mt-4">
                   {/* Dynamic God Image or Text Icon */}
                   <div className="flex justify-center select-none">
                     {selectedGod.textIcon ? (
-                      <span className="text-[5rem] leading-none drop-shadow-lg" style={{ color: currentTemplateObj.accentColor }}>{selectedGod.textIcon}</span>
+                      <span className="text-[5rem] leading-none drop-shadow-sm" style={{ color: currentTemplateObj.accentColor }}>{selectedGod.textIcon}</span>
                     ) : (
-                      <img src={selectedGod.imgUrl} alt={selectedGod.name} className="w-24 h-24 object-contain drop-shadow-lg" />
+                      <img src={selectedGod.imgUrl} alt={selectedGod.name} className="w-24 h-24 object-contain" />
                     )}
                   </div>
                   <h1 className="font-gujarati font-black text-3xl sm:text-4xl tracking-wide uppercase" style={{ color: currentTemplateObj.accentColor }}>
                     {labels.titleMain}
                   </h1>
                   {/* Dynamic God Salutation Mantra */}
-                  <p className="font-gujarati font-black text-stone-500/80">
+                  <p className="font-gujarati font-black text-[#8B0000]/80">
                     || {lang === 'gu' ? selectedGod.labelGu : selectedGod.labelEn} ||
                   </p>
-                  <div className="h-[2px] w-48 mx-auto" style={{ backgroundColor: currentTemplateObj.accentColor }}></div>
-                </div>
-              ) : (
-                // Job Header Rendering
-                <div className="flex flex-col sm:flex-row justify-between items-start border-b-4 pb-6 mt-4" style={{ borderColor: currentTemplateObj.accentColor }}>
-                  <div className="space-y-2">
-                    <h1 className="font-gujarati font-black text-3xl text-stone-900 tracking-wide">{jobData.fullName || 'FULL NAME'}</h1>
-                    <p className="font-gujarati font-bold text-lg" style={{ color: currentTemplateObj.accentColor }}>{jobData.title || 'Professional Title'}</p>
-                  </div>
-                  {/* Contact Details */}
-                  <div className="mt-4 sm:mt-0 space-y-1 text-xs text-stone-500 font-sans">
-                    {jobData.mobile && <p>📞 {jobData.mobile}</p>}
-                    {jobData.email && <p>✉️ {jobData.email}</p>}
-                    {jobData.address && <p>📍 {jobData.address}</p>}
-                    {jobData.linkedin && <p>🔗 {jobData.linkedin}</p>}
+                  <div className="flex items-center justify-center gap-2 my-2 text-[#8B0000]/40">
+                    <span>❀</span><span>❀</span><span>❀</span>
                   </div>
                 </div>
-              )}
+              ) : null}
 
               {/* Data Content Body */}
               {activeTab === 'marriage' ? (
-                <div className="space-y-6 text-sm sm:text-base leading-relaxed">
+                <div className="space-y-6 text-sm sm:text-base leading-relaxed mt-4">
                   
                   {/* Photo & Primary personal details inline */}
-                  <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 bg-white/40 p-4 rounded-3xl border border-white/50 shadow-sm">
+                  <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 bg-transparent">
                     {/* Uploaded Profile Photo Display */}
-                    <div className="h-44 w-36 rounded-2xl overflow-hidden border-4 border-white shadow-md flex-shrink-0 flex items-center justify-center bg-stone-100 relative group">
+                    <div className="h-44 w-36 overflow-hidden border border-[#8B0000]/20 flex-shrink-0 flex items-center justify-center bg-stone-50 relative group">
                       {photoUrl ? (
                         <img src={photoUrl} className="w-full h-full object-cover" alt="Profile" />
                       ) : (
@@ -657,7 +638,7 @@ const BiodataMaker = () => {
                     </div>
 
                     <div className="flex-1 space-y-2 w-full">
-                      <div className="px-4 py-1.5 rounded-full text-xs font-black inline-block text-white" style={{ backgroundColor: currentTemplateObj.accentColor }}>
+                      <div className="font-black text-lg border-b border-[#8B0000]/20 pb-1" style={{ color: currentTemplateObj.accentColor }}>
                         {labels.personalHeader}
                       </div>
                       <div className="grid grid-cols-1 gap-y-1 mt-2">
@@ -669,32 +650,38 @@ const BiodataMaker = () => {
                     </div>
                   </div>
 
+                  <div className="flex justify-center text-[#8B0000]/30 text-xs">❈ ❈ ❈</div>
+
                   {/* Rest of Personal details */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 bg-white/30 p-4 rounded-3xl border border-white/40">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
                     <DetailRow label={labels.rashi} value={marriageData.rashi || '----'} />
                     <DetailRow label={labels.height} value={marriageData.height || '----'} />
                     <DetailRow label={labels.complexion} value={marriageData.complexion || '----'} />
                     <DetailRow label={labels.bloodGroup} value={marriageData.bloodGroup || '----'} />
                   </div>
 
+                  <div className="flex justify-center text-[#8B0000]/30 text-xs">❈ ❈ ❈</div>
+
                   {/* Career & Education */}
-                  <div className="space-y-3 bg-white/30 p-4 rounded-3xl border border-white/40">
-                    <div className="px-4 py-1.5 rounded-full text-xs font-black inline-block text-white" style={{ backgroundColor: currentTemplateObj.accentColor }}>
+                  <div className="space-y-3">
+                    <div className="font-black text-lg border-b border-[#8B0000]/20 pb-1" style={{ color: currentTemplateObj.accentColor }}>
                       {labels.careerHeader}
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 pt-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 pt-1">
                       <DetailRow label={labels.education} value={marriageData.education || '----'} />
                       <DetailRow label={labels.occupation} value={marriageData.occupation || '----'} />
                       <DetailRow label={labels.income} value={marriageData.income || '----'} />
                     </div>
                   </div>
 
+                  <div className="flex justify-center text-[#8B0000]/30 text-xs">❈ ❈ ❈</div>
+
                   {/* Family details */}
-                  <div className="space-y-3 bg-white/30 p-4 rounded-3xl border border-white/40">
-                    <div className="px-4 py-1.5 rounded-full text-xs font-black inline-block text-white" style={{ backgroundColor: currentTemplateObj.accentColor }}>
+                  <div className="space-y-3">
+                    <div className="font-black text-lg border-b border-[#8B0000]/20 pb-1" style={{ color: currentTemplateObj.accentColor }}>
                       {labels.familyHeader}
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 pt-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 pt-1">
                       <DetailRow label={labels.fatherName} value={marriageData.fatherName || '----'} />
                       <DetailRow label={labels.fatherOcc} value={marriageData.fatherOcc || '----'} />
                       <DetailRow label={labels.motherName} value={marriageData.motherName || '----'} />
@@ -704,12 +691,14 @@ const BiodataMaker = () => {
                     </div>
                   </div>
 
+                  <div className="flex justify-center text-[#8B0000]/30 text-xs">❈ ❈ ❈</div>
+
                   {/* Contact details */}
-                  <div className="space-y-3 bg-white/30 p-4 rounded-3xl border border-white/40">
-                    <div className="px-4 py-1.5 rounded-full text-xs font-black inline-block text-white" style={{ backgroundColor: currentTemplateObj.accentColor }}>
+                  <div className="space-y-3">
+                    <div className="font-black text-lg border-b border-[#8B0000]/20 pb-1" style={{ color: currentTemplateObj.accentColor }}>
                       {labels.contactHeader}
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 pt-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 pt-1">
                       <DetailRow label={labels.mobile} value={marriageData.mobile || '----'} />
                       <DetailRow label={labels.address} value={marriageData.address || '----'} />
                     </div>
@@ -717,82 +706,89 @@ const BiodataMaker = () => {
 
                 </div>
               ) : (
-                // JOB BIODATA PREVIEW (Resume)
-                <div className="space-y-8 text-sm sm:text-base leading-relaxed">
+                // JOB BIODATA PREVIEW (Resume) Two-Column Grid
+                <div className="flex flex-col sm:flex-row gap-6 h-full font-sans bg-white border-0 text-stone-800 -mx-8 -my-10 sm:-mx-10 h-[calc(100%+5rem)] min-h-[29.7cm]">
                   
-                  {/* Photo inline for Job too */}
-                  <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 bg-stone-50 p-5 rounded-3xl border border-stone-200/50">
-                    <div className="h-44 w-36 rounded-2xl overflow-hidden border-4 border-white shadow-md flex-shrink-0 flex items-center justify-center bg-stone-100 relative">
+                  {/* Left Sidebar 35% */}
+                  <div className="w-full sm:w-[35%] bg-stone-50 p-8 flex flex-col gap-8 border-r border-stone-200 shrink-0">
+                    
+                    {/* Photo */}
+                    <div className="h-48 w-48 mx-auto rounded-full overflow-hidden border border-stone-200 bg-white flex items-center justify-center shrink-0">
                       {photoUrl ? (
                         <img src={photoUrl} className="w-full h-full object-cover" alt="Profile" />
                       ) : (
-                        <div className="text-center p-4">
-                          <span className="material-symbols-outlined text-4xl text-stone-300">person</span>
-                          <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mt-1">NO PHOTO</p>
-                        </div>
+                        <span className="material-symbols-outlined text-5xl text-stone-300">person</span>
                       )}
                     </div>
-                    
-                    <div className="flex-1 space-y-2 w-full">
-                      <h3 className="font-black text-lg border-b pb-1 inline-block" style={{ color: currentTemplateObj.accentColor, borderColor: currentTemplateObj.accentColor }}>
-                        {labels.summaryHeader}
-                      </h3>
-                      <p className="font-sans text-stone-650 leading-relaxed italic">{jobData.summary || 'Summary...'}</p>
-                    </div>
-                  </div>
 
-                  {/* Experience */}
-                  <div className="space-y-3">
-                    <h3 className="font-black text-lg border-b pb-1 inline-block" style={{ color: currentTemplateObj.accentColor, borderColor: currentTemplateObj.accentColor }}>
-                      {labels.expHeader}
-                    </h3>
-                    <div className="whitespace-pre-line bg-stone-50/50 p-4 rounded-2xl border border-stone-200/50 text-stone-700">
-                      {jobData.experience || 'Experience details will render here...'}
+                    {/* Contact Info */}
+                    <div className="space-y-3">
+                      <h3 className="font-bold text-sm tracking-widest uppercase border-b border-stone-300 pb-2 mb-3" style={{ color: currentTemplateObj.accentColor }}>CONTACT</h3>
+                      {jobData.mobile && <p className="text-sm flex items-center gap-2"><span className="material-symbols-outlined text-base">phone</span> {jobData.mobile}</p>}
+                      {jobData.email && <p className="text-sm flex items-center gap-2"><span className="material-symbols-outlined text-base">mail</span> <span className="truncate">{jobData.email}</span></p>}
+                      {jobData.address && <p className="text-sm flex items-start gap-2"><span className="material-symbols-outlined text-base mt-0.5">location_on</span> <span>{jobData.address}</span></p>}
+                      {jobData.linkedin && <p className="text-sm flex items-center gap-2"><span className="material-symbols-outlined text-base">link</span> <span className="truncate">{jobData.linkedin}</span></p>}
                     </div>
-                  </div>
 
-                  {/* Education */}
-                  <div className="space-y-3">
-                    <h3 className="font-black text-lg border-b pb-1 inline-block" style={{ color: currentTemplateObj.accentColor, borderColor: currentTemplateObj.accentColor }}>
-                      {labels.eduHeader}
-                    </h3>
-                    <div className="whitespace-pre-line bg-stone-50/50 p-4 rounded-2xl border border-stone-200/50 text-stone-700">
-                      {jobData.education || 'Education details will render here...'}
-                    </div>
-                  </div>
-
-                  {/* Core skills & languages */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <h3 className="font-black text-lg border-b pb-1 inline-block" style={{ color: currentTemplateObj.accentColor, borderColor: currentTemplateObj.accentColor }}>
-                        {labels.skillsHeader}
-                      </h3>
-                      <div className="p-3 bg-stone-50/50 rounded-xl text-stone-600 text-sm">
-                        {jobData.skills || 'Your skills listed here...'}
+                    {/* Skills */}
+                    <div className="space-y-3">
+                      <h3 className="font-bold text-sm tracking-widest uppercase border-b border-stone-300 pb-2 mb-3" style={{ color: currentTemplateObj.accentColor }}>SKILLS</h3>
+                      <div className="whitespace-pre-line text-sm text-stone-700 leading-relaxed">
+                        {jobData.skills || 'Your skills...'}
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <h3 className="font-black text-lg border-b pb-1 inline-block" style={{ color: currentTemplateObj.accentColor, borderColor: currentTemplateObj.accentColor }}>
-                        {labels.langHeader}
-                      </h3>
-                      <div className="p-3 bg-stone-50/50 rounded-xl text-stone-605 text-sm">
+
+                    {/* Languages */}
+                    <div className="space-y-3">
+                      <h3 className="font-bold text-sm tracking-widest uppercase border-b border-stone-300 pb-2 mb-3" style={{ color: currentTemplateObj.accentColor }}>LANGUAGES</h3>
+                      <div className="whitespace-pre-line text-sm text-stone-700 leading-relaxed">
                         {jobData.languages || 'Languages known...'}
                       </div>
                     </div>
                   </div>
 
+                  {/* Right Content 65% */}
+                  <div className="w-full sm:w-[65%] p-8 pl-2 flex flex-col gap-6">
+                    {/* Header */}
+                    <div className="space-y-1 mb-2">
+                      <h1 className="font-black text-4xl text-stone-900 tracking-tight uppercase" style={{ color: currentTemplateObj.accentColor }}>{jobData.fullName || 'FULL NAME'}</h1>
+                      <p className="font-semibold text-xl text-stone-500 uppercase tracking-widest">{jobData.title || 'Professional Title'}</p>
+                    </div>
+
+                    {/* Summary */}
+                    <div className="space-y-3">
+                      <h3 className="font-bold text-lg border-b-2 pb-1 inline-block" style={{ color: currentTemplateObj.accentColor, borderColor: currentTemplateObj.accentColor }}>{labels.summaryHeader}</h3>
+                      <p className="text-stone-700 leading-relaxed text-sm text-justify">
+                        {jobData.summary || 'Professional summary...'}
+                      </p>
+                    </div>
+
+                    {/* Experience */}
+                    <div className="space-y-3">
+                      <h3 className="font-bold text-lg border-b-2 pb-1 inline-block" style={{ color: currentTemplateObj.accentColor, borderColor: currentTemplateObj.accentColor }}>{labels.expHeader}</h3>
+                      <div className="whitespace-pre-line text-sm text-stone-700 leading-relaxed">
+                        {jobData.experience || 'Experience details...'}
+                      </div>
+                    </div>
+
+                    {/* Education */}
+                    <div className="space-y-3">
+                      <h3 className="font-bold text-lg border-b-2 pb-1 inline-block" style={{ color: currentTemplateObj.accentColor, borderColor: currentTemplateObj.accentColor }}>{labels.eduHeader}</h3>
+                      <div className="whitespace-pre-line text-sm text-stone-700 leading-relaxed">
+                        {jobData.education || 'Education details...'}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
 
-            {/* Footer branding */}
-            <div className="mt-auto pt-4 border-t border-stone-300/30 text-center flex flex-col items-center justify-center gap-1 flex-shrink-0">
-              <p className="font-sans font-bold text-[10px] text-stone-400 tracking-widest uppercase">
-                generated by gujarati app
+            {/* Viral Footer Watermark */}
+            <div className="absolute bottom-[-24px] left-0 right-0 text-center select-none print:bottom-[-20px]">
+              <p className="text-[10px] italic font-normal text-[#888888] opacity-40">
+                આ સુંદર પ્રીમિયમ બાયોડેટા 'ગુજરાતી App' માંથી ફ્રીમાં બનાવેલ છે. ડાઉનલોડ કરો: bit.ly/gujarati-app
               </p>
-              <div className="h-1.5 w-12 rounded-full" style={{ backgroundColor: currentTemplateObj.accentColor }}></div>
             </div>
-
           </div>
         </div>
 
