@@ -9,6 +9,7 @@ import BiodataMaker from './components/BiodataMaker';
 import Community from './components/Community';
 import Tools from './components/Tools';
 import Profile from './components/Profile';
+import DigitalCard from './components/DigitalCard';
 import Onboarding from './components/Onboarding';
 import Login from './components/Login';
 import OfflineSettings from './components/OfflineSettings';
@@ -17,7 +18,7 @@ import Panchang from './components/Panchang';
 import KundaliGenerator from './components/KundaliGenerator';
 import VastuCalculator from './components/VastuCalculator';
 import NamkaranTool from './components/NamkaranTool';
-import KbcQuiz from './components/KbcQuiz';
+
 import InterestCalculator from './components/InterestCalculator';
 import DevotionalCards from './components/DevotionalCards';
 import KuldeviGuide from './components/KuldeviGuide';
@@ -189,7 +190,10 @@ function App() {
 
 
 
-  if (!isLoggedIn) {
+  const currentPath = window.location.pathname;
+  const isPublicCardRoute = currentPath === '/c' || currentPath.startsWith('/c/') || (currentPath.startsWith('/card/') && currentPath !== '/card');
+
+  if (!isLoggedIn && !isPublicCardRoute) {
      return <Login onLogin={handleLogin} />;
   }
 
@@ -211,7 +215,9 @@ function App() {
           <Route path="/vastu" element={<VastuCalculator />} />
           <Route path="/namkaran" element={<NamkaranTool />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/kbc-quiz" element={<KbcQuiz />} />
+          <Route path="/card" element={<DigitalCard />} />
+          <Route path="/card/:slug" element={<DigitalCard />} />
+
           <Route path="/interest-calculator" element={<InterestCalculator />} />
           <Route path="/devotional-cards" element={<DevotionalCards />} />
           <Route path="/kuldevi" element={<KuldeviGuide />} />

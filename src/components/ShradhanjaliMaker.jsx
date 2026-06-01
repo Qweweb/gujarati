@@ -1,6 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 
 // ─── SHOCK MESSAGES PRESETS ───────────────────────────────
 const SHOK_MESSAGES = [
@@ -304,14 +304,12 @@ export default function ShradhanjaliMaker() {
       // Small timeout to allow styles/images to settle
       await new Promise(resolve => setTimeout(resolve, 300));
       
-      const canvas = await html2canvas(printableRef.current, {
-        useCORS: true,
-        scale: 2.5,
-        backgroundColor: '#ffffff',
-        logging: false
+      const dataUri = await toPng(printableRef.current, {
+        pixelRatio: 2.5,
+        cacheBust: true,
+        style: { background: '#ffffff' }
       });
 
-      const dataUri = canvas.toDataURL("image/png");
       const link = document.createElement("a");
       link.download = `shradhanjali_${name.trim().replace(/\s+/g, '_') || 'card'}.png`;
       link.href = dataUri;

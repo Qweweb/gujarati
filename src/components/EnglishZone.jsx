@@ -122,7 +122,9 @@ export default function EnglishZone({ onBack }) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-12 animate-fade-in relative min-h-screen">
+      <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none rounded-[3rem] z-0 mix-blend-multiply dark:mix-blend-overlay"></div>
+      <div className="relative z-10 space-y-6">
       {/* English Hub Header */}
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-stretch sm:items-center bg-gradient-to-r from-indigo-900 via-purple-900 to-indigo-950 p-6 rounded-3xl text-white shadow-xl relative overflow-hidden">
         <div className="absolute right-0 top-0 opacity-10 font-bold text-[120px] select-none translate-y-[-10px] translate-x-[20px]">
@@ -211,7 +213,7 @@ export default function EnglishZone({ onBack }) {
           {/* Games Grid */}
           <div className="space-y-3">
             <h3 className="font-gujarati font-black text-base text-stone-700 dark:text-stone-200">અંગ્રેજી રમતો 🎮</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
               <GameCard 
                 id="word_emoji" 
                 title="🃏 શબ્દ-ઇમોજી જોડી" 
@@ -382,6 +384,7 @@ export default function EnglishZone({ onBack }) {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
@@ -393,16 +396,15 @@ function GameCard({ title, desc, color, onClick }) {
   return (
     <button
       onClick={() => { playSound('click'); onClick(); }}
-      className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-850 p-5 rounded-[2rem] hover:border-indigo-500/50 hover:shadow-lg transition-all active:scale-[0.98] text-left flex gap-4 items-center group relative overflow-hidden"
+      className="bg-white/80 dark:bg-stone-900/80 backdrop-blur-md border border-indigo-100 dark:border-stone-800 p-4 rounded-[1.5rem] md:rounded-[2rem] hover:border-indigo-400 hover:shadow-lg transition-all active:scale-[0.95] text-center flex flex-col gap-3 items-center group relative overflow-hidden"
     >
-      <div className={`h-12 w-12 rounded-2xl bg-gradient-to-br ${color} text-white flex items-center justify-center text-xl shrink-0 shadow-md group-hover:scale-110 transition-transform`}>
+      <div className={`h-14 w-14 rounded-2xl bg-gradient-to-br ${color} text-white flex items-center justify-center text-2xl shrink-0 shadow-md group-hover:scale-110 transition-transform`}>
         {title.split(' ')[0]}
       </div>
-      <div className="space-y-1 pr-6">
-        <h4 className="font-gujarati font-black text-sm text-stone-800 dark:text-stone-100">{title.split(' ').slice(1).join(' ')}</h4>
-        <p className="font-gujarati text-[11px] text-stone-500 dark:text-stone-400 leading-tight">{desc}</p>
+      <div className="space-y-1 w-full">
+        <h4 className="font-gujarati font-black text-sm md:text-base text-stone-800 dark:text-stone-100 leading-tight">{title.split(' ').slice(1).join(' ')}</h4>
+        <p className="font-gujarati text-[9px] md:text-[11px] text-stone-500 dark:text-stone-400 leading-tight line-clamp-2">{desc}</p>
       </div>
-      <span className="material-symbols-outlined absolute right-4 text-stone-300 dark:text-stone-700 group-hover:text-indigo-500 group-hover:translate-x-1 transition-all">chevron_right</span>
     </button>
   );
 }

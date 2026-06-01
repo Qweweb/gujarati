@@ -301,8 +301,7 @@ const MOCK_LEADERBOARD = {
   ]
 };
 
-const KbcQuiz = () => {
-  const navigate = useNavigate();
+const KbcQuizGame = ({ initialMode = 'daily', onBack }) => {
 
   // App Profile State
   const [profile, setProfile] = useState(() => {
@@ -313,10 +312,11 @@ const KbcQuiz = () => {
   const [isRegistered, setIsRegistered] = useState(() => !!localStorage.getItem('sanskari_kbc_profile'));
 
   // Screen View: 'register', 'home', 'quiz', 'result', 'leaderboard', 'challenge_setup'
-  const [screen, setScreen] = useState('home');
+  // Skip home and go straight to quiz based on initialMode
+  const [screen, setScreen] = useState('quiz');
 
   // Quiz Setup State
-  const [quizMode, setQuizMode] = useState('daily'); // daily (10Q), weekly (25Q), monthly (50Q), challenge
+  const [quizMode, setQuizMode] = useState(initialMode); // daily (10Q), weekly (25Q), monthly (50Q), challenge
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -367,7 +367,7 @@ const KbcQuiz = () => {
     setScreen('home');
   };
 
-  // Start Quiz
+  // Start Quiz (auto-started on mount if registered)
   const startQuiz = (mode) => {
     setQuizMode(mode);
     let count = 10;
@@ -395,6 +395,14 @@ const KbcQuiz = () => {
     setScreen('quiz');
     playSound('tick');
   };
+
+  useEffect(() => {
+    if (isRegistered) {
+      startQuiz(initialMode);
+    } else {
+      setScreen('register');
+    }
+  }, [initialMode, isRegistered]);
 
   // Timer Countdown Effect
   useEffect(() => {
@@ -551,8 +559,8 @@ const KbcQuiz = () => {
       
       {/* Top Banner Navigation */}
       <div className="flex items-center justify-between pb-6 border-b border-stone-200/50 mb-8 print:hidden">
-        <button onClick={() => navigate('/community')} className="flex items-center gap-2 text-primary font-bold hover:underline">
-          <span className="material-symbols-outlined">arrow_back</span> બેઠક (Community)
+        <button onClick={onBack} className="flex items-center gap-2 text-primary font-bold hover:underline">
+          <span className="material-symbols-outlined">arrow_back</span> પાછા જાઓ
         </button>
         <div className="flex items-center gap-3">
           <span className="text-2xl">👑</span>
@@ -774,15 +782,17 @@ const KbcQuiz = () => {
 
         </div>
       ) : screen === 'quiz' ? (
-        /* SCREEN 3: ACTIVE Quiz GAMEPLAY */
+        /* KbcQuizGame: ACTIVE Quiz GAMEPLAY */
         <div className="space-y-6 animate-fade-in my-auto">
           
           {/* Header Stats & Timer Countdown Bar */}
           <div className="bg-white p-6 rounded-3xl border border-stone-200 shadow-sm space-y-4">
             <div className="flex items-center justify-between font-gujarati font-bold text-sm">
-              <span className="bg-stone-100 px-3 py-1.5 rounded-xl text-stone-700 uppercase text-xs">
-                {quizMode.toUpperCase()} MODE • Q. {currentIndex + 1} / {questions.length}
-              </span>
+              <div className="text-center print:hidden">
+                <button onClick={onBack} className="text-primary font-bold hover:underline font-gujarati">
+                  ← મુખ્ય મેનુ પર પાછા જાઓ
+                </button>
+              </div>
               <span className="bg-primary/10 text-primary px-4 py-1.5 rounded-xl font-black text-base">
                 🏆 સ્કોર: {score.toLocaleString()} pts
               </span>
@@ -1083,4 +1093,4 @@ const KbcQuiz = () => {
   );
 };
 
-export default KbcQuiz;
+export default KbcQuizGame;

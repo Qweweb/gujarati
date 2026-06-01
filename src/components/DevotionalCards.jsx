@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import html2canvas from 'html2canvas';
+import { toPng, toBlob } from 'html-to-image';
 
 // --- DATA ---
 const THEMES = [
@@ -190,13 +190,12 @@ const DevotionalCards = () => {
       // Small delay to ensure any fonts/images are fully rendered
       await new Promise(r => setTimeout(r, 500));
       
-      const canvas = await html2canvas(cardRef.current, {
-        scale: 3, // Higher resolution
-        useCORS: true, // For external images
-        backgroundColor: activeTheme.bg,
+      const image = await toPng(cardRef.current, {
+        pixelRatio: 3,
+        cacheBust: true,
+        style: { background: activeTheme.bg },
       });
 
-      const image = canvas.toDataURL("image/png", 1.0);
       const link = document.createElement('a');
       link.download = `GujaratiApp_Card_${Date.now()}.png`;
       link.href = image;
@@ -218,20 +217,23 @@ const DevotionalCards = () => {
     setIsGenerating(true);
     
     try {
-      const canvas = await html2canvas(cardRef.current, { scale: 2, useCORS: true, backgroundColor: activeTheme.bg });
+      const blob = await toBlob(cardRef.current, { 
+        pixelRatio: 2, 
+        cacheBust: true,
+        style: { background: activeTheme.bg } 
+      });
       
-      canvas.toBlob(async (blob) => {
-        if (!blob) throw new Error("Canvas is empty");
-        
-        const file = new File([blob], `card_${Date.now()}.png`, { type: 'image/png' });
-        const shareData = {
-          title: 'Gujarati App - Devotional Card',
-          text: `🙏 ${currentQuote.text}\n— ${currentQuote.source}\n\nGujarati App પર રોજ નવા cards મેળવો!`,
-          files: [file]
-        };
+      if (!blob) throw new Error("Image blob is empty");
+      
+      const file = new File([blob], `card_${Date.now()}.png`, { type: 'image/png' });
+      const shareData = {
+        title: 'Gujarati App - Devotional Card',
+        text: `🙏 ${currentQuote.text}\n— ${currentQuote.source}\n\nGujarati App પર રોજ નવા cards મેળવો!`,
+        files: [file]
+      };
 
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          await navigator.share(shareData);
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share(shareData);
           // Track telemetry
           const count = parseInt(localStorage.getItem('sanskari_cards_generated_count') || "0");
           localStorage.setItem('sanskari_cards_generated_count', (count + 1).toString());
@@ -239,11 +241,10 @@ const DevotionalCards = () => {
           // Fallback if Web Share API not supported
           alert("તમારું બ્રાઉઝર ડાયરેક્ટ શેરિંગ સપોર્ટ કરતું નથી. ડાઉનલોડ બટન નો ઉપયોગ કરો.");
         }
-        setIsGenerating(false);
-      }, 'image/png');
-    } catch (error) {
-      console.error("Error sharing:", error);
+    } catch (err) {
+      console.error("Share failed:", err);
       alert("શેર કરવામાં ભૂલ આવી.");
+    } finally {
       setIsGenerating(false);
     }
   };

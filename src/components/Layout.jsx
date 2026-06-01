@@ -59,7 +59,7 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
     { path: '/community',  icon: 'groups',        label: 'બેઠક'     },
   ];
 
-  const isCardViewer = location.pathname === '/c' || location.pathname.startsWith('/c/');
+  const isCardViewer = location.pathname === '/c' || location.pathname.startsWith('/c/') || (location.pathname.startsWith('/card/') && location.pathname !== '/card');
   if (isCardViewer) return <div style={{ background: bg, color: txt, minHeight: '100svh' }}>{children}</div>;
 
   return (
@@ -285,7 +285,7 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
                 <DrawerLink to="/daily-challenge" icon="psychology"        label="આજની શબ્દ રમત"      onClick={() => setIsSidebarOpen(false)} loc={location.pathname} darkMode={darkMode} />
                 <DrawerLink to="/gujarat-safari"  icon="map"               label="ગુજરાત સફારી"        onClick={() => setIsSidebarOpen(false)} loc={location.pathname} darkMode={darkMode} />
                 <DrawerLink to="/swipe-cards"     icon="style"             label="જ્ઞાન કાર્ડ્સ"      onClick={() => setIsSidebarOpen(false)} loc={location.pathname} darkMode={darkMode} />
-                <DrawerLink to="/kbc-quiz"        icon="workspace_premium" label="KBC ક્વિઝ"          onClick={() => setIsSidebarOpen(false)} loc={location.pathname} darkMode={darkMode} />
+
               </DrawerSection>
 
               <DrawerSection label="એકાઉન્ટ" darkMode={darkMode}>

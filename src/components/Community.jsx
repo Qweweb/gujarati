@@ -32,6 +32,7 @@ import {
   blockOtloUser
 } from '../utils/otlo_helper';
 import RamatoHub from './RamatoHub';
+import EnglishZone from './EnglishZone';
 import MariSociety from './MariSociety';
 
 const SIMULATED_IMAGES = [
@@ -78,7 +79,7 @@ const Community = () => {
   const [detectedLocation, setDetectedLocation] = useState(null);
   
   // Navigation & Filter States
-  const [activeTab, setActiveTab] = useState("feed");
+  const [activeTab, setActiveTab] = useState("hub");
   const [feedFilter, setFeedFilter] = useState("all");
   const [followedLocations, setFollowedLocations] = useState(() => getFollowedLocations());
   
@@ -795,7 +796,46 @@ const Community = () => {
   // 2. MAIN FEED SCREEN (WHEN USER LOCATION IS CONFIGURED)
   return (
     <div className="animate-fade-in space-y-6 pb-16">
-      {/* Top Banner Card */}
+            {/* Hub Version of Top Banner Card */}
+      {activeTab === 'hub' && (
+      <section 
+        onClick={() => setActiveTab('feed')}
+        className="bg-gradient-to-br from-amber-600 to-orange-700 p-6 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden cursor-pointer active:scale-95 transition-transform border border-amber-500/20"
+      >
+        <div className="absolute right-[-20px] top-[-20px] opacity-10 select-none pointer-events-none text-9xl">
+          groups
+        </div>
+        <div className="space-y-3 relative z-10">
+          <div className="flex justify-between items-start gap-4">
+            <div className="space-y-1">
+              <span className="bg-white/20 border border-white/20 text-white/95 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider inline-block">
+                હાઈપર-લોકલ સોશિયલ કમ્યુનિટી 🏘️
+              </span>
+              <h2 className="font-gujarati font-black text-3xl">ડિજિટલ ઓટલો</h2>
+            </div>
+          </div>
+          <p className="font-gujarati text-amber-200/90 text-sm max-w-xl">
+            તમારા ગામ અને સોસાયટીના સમાચાર, ચર્ચાઓ, લીડરબોર્ડ અને ડિરેક્ટરી માટે અહીં ક્લિક કરો.
+          </p>
+          <button className="bg-white/20 hover:bg-white/30 text-white px-5 py-2.5 rounded-xl font-headline font-bold text-sm shadow-sm flex items-center gap-2 border border-white/10 w-fit mt-2">
+            ઓટલો ખોલો <span className="material-symbols-outlined text-sm">arrow_forward</span>
+          </button>
+        </div>
+      </section>
+      )}
+
+      {/* Otalo Inner Sections (Feed, Directory, etc) */}
+      {['feed', 'directory', 'leaderboard', 'sabha'].includes(activeTab) && (
+        <div className="space-y-4 animate-fade-in">
+          <button 
+            onClick={() => setActiveTab('hub')}
+            className="flex items-center gap-2 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 px-4 py-2 rounded-xl font-bold active:scale-95 transition-all w-fit"
+          >
+            <span className="material-symbols-outlined text-sm">arrow_back</span>
+            પાછા જાવ
+          </button>
+          
+          {/* Top Banner Card */}
       <section className="bg-gradient-to-br from-amber-600 to-orange-700 p-6 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden">
         <div className="absolute right-[-20px] top-[-20px] opacity-10 select-none pointer-events-none text-9xl">
           groups
@@ -846,6 +886,60 @@ const Community = () => {
               </p>
             </div>
           </div>
+
+        </div>
+      </section>
+          {/* Main Tab bar - 2 columns */}
+          <div className="grid grid-cols-2 gap-3 mt-4">
+            {[
+              { id: "feed", label: "ચર્ચાઓ", icon: "forum" },
+              { id: "directory", label: "ડિરેક્ટરી", icon: "contact_phone" },
+              { id: "leaderboard", label: "લીડરબોર્ડ", icon: "emoji_events" },
+              { id: "sabha", label: "ગામ સભા", icon: "campaign" }
+            ].map((tab, idx) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-3 p-4 rounded-2xl transition-all active:scale-95 border ${
+                  activeTab === tab.id
+                    ? 'bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-md border-transparent'
+                    : 'bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-700 shadow-sm hover:border-orange-400'
+                } `}
+              >
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === tab.id ? 'bg-white/20' : 'bg-orange-100 dark:bg-orange-900/30'}`}>
+                  <span className={`material-symbols-outlined text-xl ${activeTab === tab.id ? 'text-white' : 'text-orange-600 dark:text-orange-400'}`}>{tab.icon}</span>
+                </div>
+                <span className="font-gujarati font-bold text-sm">{tab.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {activeTab === "hub" && (
+      <>
+      
+      {/* Society FEATURE BANNER */}
+      <section 
+        onClick={() => setActiveTab('society')}
+        className="bg-gradient-to-br from-emerald-600 to-teal-800 p-8 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 cursor-pointer active:scale-95 transition-transform"
+      >
+        <div className="absolute right-[-20px] top-[-20px] opacity-10 select-none pointer-events-none text-9xl">
+          holiday_village
+        </div>
+        <div className="space-y-2 z-10 text-center md:text-left flex-1">
+          <span className="bg-emerald-400/20 text-emerald-300 border border-emerald-400/40 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest inline-block mb-1">
+            નવું અપડેટ 🏡
+          </span>
+          <h2 className="font-gujarati font-black text-3xl">મારી સોસાયટી</h2>
+          <p className="font-gujarati text-emerald-100/90 text-sm max-w-sm mx-auto md:mx-0">
+            તમારી સોસાયટીનું મેનેજમેન્ટ, મેન્ટેનન્સ અને ફરિયાદોનો ઉકેલ એક જ જગ્યાએ.
+          </p>
+        </div>
+        <div className="z-10 flex-shrink-0">
+          <button className="bg-white text-emerald-700 px-6 py-3 rounded-2xl font-headline font-black text-sm shadow-lg active:scale-95 transition-all">
+            સોસાયટી ખોલો →
+          </button>
         </div>
       </section>
 
@@ -856,11 +950,11 @@ const Community = () => {
         </div>
         <div className="space-y-2 z-10 text-center md:text-left flex-1">
           <span className="bg-amber-400/20 text-amber-300 border border-amber-400/40 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest inline-block mb-1">
-            નવી ક્વિઝ ગેમ ⚡
+            નવી ક્વિઝ અને રમતો ⚡
           </span>
           <div className="flex items-center justify-center md:justify-start gap-3">
             <h3 className="font-headline font-black text-3xl md:text-4xl text-amber-100 tracking-wide">
-              ગુજરાતી ક્વિઝ
+              ગુજરાતી ક્વિઝ અને રમતો
             </h3>
             <ShareButton 
               sectionId="quiz-banner" 
@@ -869,14 +963,45 @@ const Community = () => {
             />
           </div>
           <p className="font-gujarati text-amber-200/90 text-sm md:text-base max-w-xl mt-2">
-            તમારી ઉંમર મુજબના પ્રશ્નો રમો, 50-50 લાઈફલાઈન વાપરો, મિત્રોને પડકારો અને સર્ટિફિકેટ જીતો!
+            તમારી ઉંમર મુજબના પ્રશ્નો રમો, જ્ઞાન વધારો, મિત્રોને પડકારો અને સર્ટિફિકેટ જીતો!
           </p>
         </div>
         <button
-          onClick={() => navigate('/kbc-quiz')}
+          onClick={() => setActiveTab('games')}
           className="z-10 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-amber-950 px-8 py-4 rounded-2xl font-headline font-black text-lg shadow-2xl active:scale-95 transition whitespace-nowrap flex items-center gap-2 border border-amber-200"
         >
-          <span>🎯</span> ક્વિઝ રમો
+          <span>🎯</span> ક્વિઝ અને રમતો
+        </button>
+      </section>
+
+      {/* English Pathshala FEATURE BANNER */}
+      <section id="english-banner" className="bg-gradient-to-r from-indigo-800 via-indigo-900 to-indigo-950 p-8 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 border-4 border-indigo-500/30">
+        <div className="absolute right-0 top-0 opacity-10 select-none pointer-events-none text-9xl -translate-y-5 translate-x-10">
+          📝
+        </div>
+        <div className="space-y-2 z-10 text-center md:text-left flex-1">
+          <span className="bg-indigo-400/20 text-indigo-300 border border-indigo-400/40 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest inline-block mb-1">
+            નવું ફિચર 🌟
+          </span>
+          <div className="flex items-center justify-center md:justify-start gap-3">
+            <h3 className="font-headline font-black text-3xl md:text-4xl text-indigo-100 tracking-wide">
+              અંગ્રેજી પાઠશાળા
+            </h3>
+            <ShareButton 
+              sectionId="english-banner" 
+              successMessage="✨ અંગ્રેજી પાઠશાળાની લિંક કોપી થઈ ગઈ છે!" 
+              className="bg-white/10 hover:bg-white/20 border-white/20 text-white dark:bg-white/10 dark:hover:bg-white/20 dark:text-white"
+            />
+          </div>
+          <p className="font-gujarati text-indigo-200/90 text-sm md:text-base max-w-xl mt-2">
+            રમત રમીને સરળતાથી સાચું ઇંગ્લિશ શીખો. સ્પેલિંગ, વાક્ય, અને રોજિંદી વાતચીત માટે ખાસ.
+          </p>
+        </div>
+        <button
+          onClick={() => setActiveTab('english')}
+          className="z-10 bg-gradient-to-r from-indigo-400 to-indigo-500 hover:from-indigo-300 hover:to-indigo-400 text-indigo-950 px-8 py-4 rounded-2xl font-headline font-black text-lg shadow-2xl active:scale-95 transition whitespace-nowrap flex items-center gap-2 border border-indigo-200"
+        >
+          <span>📝</span> ઇંગ્લિશ શીખો
         </button>
       </section>
 
@@ -910,33 +1035,12 @@ const Community = () => {
           <span>✨</span> કાર્ડ બનાવો
         </button>
       </section>
+      </>
+      )}
 
-      {/* Main Tab bar */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-3 max-w-md mx-auto">
-        {[
-          { id: "feed", label: "ચર્ચાઓ", icon: "forum" },
-          { id: "directory", label: "ડિરેક્ટરી", icon: "contact_phone" },
-          { id: "society", label: "મારી સોસાયટી", icon: "holiday_village" },
-          { id: "games", label: "રમતો", icon: "sports_esports" },
-          { id: "leaderboard", label: "લીડરબોર્ડ", icon: "emoji_events" },
-          { id: "sabha", label: "ગામ સભા", icon: "campaign" }
-        ].map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl transition-all active:scale-95 border ${
-              activeTab === tab.id
-                ? 'bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-md border-transparent'
-                : 'bg-white dark:bg-dark-surface text-stone-600 dark:text-stone-300 border-primary/10 hover:border-primary/30 shadow-sm'
-            }`}
-          >
-            <span className={`material-symbols-outlined text-2xl sm:text-3xl mb-1.5 ${activeTab === tab.id ? 'text-white' : 'text-primary'}`}>{tab.icon}</span>
-            <span className="font-gujarati font-black text-[10px] sm:text-xs truncate w-full text-center">{tab.label}</span>
-          </button>
-        ))}
-      </div>
-
-      {/* Slide-down Location Search Box */}
+      {!['games', 'english'].includes(activeTab) && (
+      <>
+            {/* Slide-down Location Search Box */}
       {locationSearchOpen && (
         <div className="bg-white dark:bg-dark-surface p-6 rounded-3xl border border-primary/10 shadow-lg space-y-4 animate-fade-in max-w-lg mx-auto">
           <div className="flex items-center justify-between">
@@ -1005,6 +1109,8 @@ const Community = () => {
             <p className="text-center text-xs text-stone-400 font-gujarati py-4">કોઈ લોકેશન મળ્યું નથી.</p>
           )}
         </div>
+      )}
+      </>
       )}
 
       {/* SUB-TAB CONTENTS */}
@@ -1280,7 +1386,16 @@ const Community = () => {
 
       {/* SOCIETY MANAGEMENT TAB */}
       {activeTab === "society" && (
-        <MariSociety />
+        <div className="space-y-4 animate-fade-in">
+          <button 
+            onClick={() => setActiveTab('hub')}
+            className="flex items-center gap-2 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 px-4 py-2 rounded-xl font-bold active:scale-95 transition-all w-fit"
+          >
+            <span className="material-symbols-outlined text-sm">arrow_back</span>
+            પાછા જાવ
+          </button>
+          <MariSociety />
+        </div>
       )}
 
       {/* 2. LOCAL DIRECTORY TAB */}
@@ -1520,7 +1635,12 @@ const Community = () => {
 
       {/* 4B. GAMES TAB */}
       {activeTab === "games" && (
-        <RamatoHub userLocation={userLocation} />
+        <RamatoHub userLocation={userLocation} onBack={() => setActiveTab("feed")} />
+      )}
+
+      {/* 4C. ENGLISH ZONE TAB */}
+      {activeTab === "english" && (
+        <EnglishZone userLocation={userLocation} onBack={() => setActiveTab('feed')} />
       )}
 
       {/* 5. DRAWERS & MODALS */}

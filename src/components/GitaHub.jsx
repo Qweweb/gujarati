@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 import { useNavigate } from 'react-router-dom';
 import { GITA_SHLOKAS, GITA_CHAPTERS, GITA_SITUATIONS, GITA_TAGS, KRISHNA_RESPONSES } from '../data/bhagavadGita';
 
@@ -134,13 +134,20 @@ export default function GitaHub() {
 
   const handleDownloadCard = async () => {
     try {
-      const canvas = await html2canvas(shareCardRef.current, { useCORS: true, scale: 2 });
+      // small delay to let font load
+      await new Promise(r => setTimeout(r, 200));
+      const dataUrl = await toPng(shareCardRef.current, { 
+        pixelRatio: 2, 
+        cacheBust: true,
+        style: { background: 'transparent' }
+      });
       const link = document.createElement('a');
       link.download = `gita_${shareShloka?.id || 'shlok'}.png`;
-      link.href = canvas.toDataURL();
+      link.href = dataUrl;
       link.click();
     } catch (e) {
       console.error(e);
+      alert("Error generating card: " + (e.message || e.toString()));
     }
   };
 
@@ -857,13 +864,20 @@ export default function GitaHub() {
           <button 
             onClick={async () => {
               try {
-                const canvas = await html2canvas(certificateRef.current, { useCORS: true, scale: 2 });
+                // small delay
+                await new Promise(r => setTimeout(r, 200));
+                const dataUrl = await toPng(certificateRef.current, { 
+                  pixelRatio: 2, 
+                  cacheBust: true,
+                  style: { background: 'transparent' }
+                });
                 const link = document.createElement('a');
                 link.download = `gita_challenge_certificate.png`;
-                link.href = canvas.toDataURL();
+                link.href = dataUrl;
                 link.click();
               } catch (e) {
                 console.error(e);
+                alert("Error downloading certificate: " + (e.message || e.toString()));
               }
             }} 
             disabled={!userName}

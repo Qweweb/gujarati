@@ -40,7 +40,7 @@ const TOOLS = [
   { cat:'business',  icon:'groups',           label:'કોમ્યુ.',  path:'/community',            bg:'#ECFDF5', iconBg:'#059669', iconClr:'#fff' },
   // ── Games ────────────────────────────────────────────────────
   { cat:'games',     icon:'psychology',       label:'શબ્દ રમત', path:'/daily-challenge',      bg:'#FFF7ED', iconBg:'#EA580C', iconClr:'#fff' },
-  { cat:'games',     icon:'workspace_premium',label:'KBC ક્વિઝ', path:'/kbc-quiz',            bg:'#FFFBEB', iconBg:'#D97706', iconClr:'#fff' },
+  { cat:'games',     icon:'workspace_premium',label:'સ્પેશિયલ ક્વિઝ', path:'/community',            bg:'#FFFBEB', iconBg:'#D97706', iconClr:'#fff' },
   { cat:'games',     icon:'style',            label:'કાર્ડ્સ',  path:'/swipe-cards',          bg:'#F5F3FF', iconBg:'#7C3AED', iconClr:'#fff' },
   { cat:'games',     icon:'map',              label:'સફારી',    path:'/gujarat-safari',       bg:'#F0FDF4', iconBg:'#16A34A', iconClr:'#fff' },
   { cat:'games',     icon:'menu_book',        label:'પાસપોર્ટ', path:'/passport',             bg:'#EFF6FF', iconBg:'#2563EB', iconClr:'#fff' },
@@ -285,7 +285,7 @@ const Dashboard = () => {
             {/* Half cards */}
             {[
               { to:'/mysteries', emoji:'🕵️', title:'ગુજરાતના રહસ્યો', sub:'અજ્ઞાત સ્થળો', bg:'#1C1917', textClr:'#F5F5F4', subClr:'rgba(245,245,244,0.6)' },
-              { to:'/kbc-quiz',  emoji:'🏆', title:'KBC ક્વિઝ',       sub:'ઇનામ જીતો',   bg:'#78350F', textClr:'#FEF3C7', subClr:'rgba(254,243,199,0.7)' },
+              { to:'/community', emoji:'🏆', title:'સ્પેશિયલ ક્વિઝ',   sub:'ઇનામ જીતો',   bg:'#78350F', textClr:'#FEF3C7', subClr:'rgba(254,243,199,0.7)' },
             ].map(({ to, emoji, title, sub, bg, textClr, subClr }) => (
               <Link key={to} to={to} className="press" style={{ borderRadius:16, padding:16, textDecoration:'none', background:bg }}>
                 <span style={{ fontSize:26 }}>{emoji}</span>
