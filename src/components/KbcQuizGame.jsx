@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import LeaderboardUnified from './LeaderboardUnified';
 import { useNavigate } from 'react-router-dom';
+import { GENERATED_QUESTIONS, EXTRACTED_GAMES_QUESTIONS } from '../data/quizQuestions';
 
 // Web Audio API Sound Synthesizer for Immersive Quiz Experience
 const playSound = (type) => {
@@ -51,7 +52,7 @@ const playSound = (type) => {
 };
 
 // Rich Question Bank across 10 Categories and Age Groups
-const ALL_QUESTIONS = [
+const BASE_QUESTIONS = [
   // History (ઇતિહાસ)
   {
     id: "q1", category: "ઇતિહાસ", difficulty: "easy", ageGroup: ["kids", "youth", "adult", "elder"],
@@ -274,6 +275,8 @@ const ALL_QUESTIONS = [
   }
 ];
 
+const ALL_QUESTIONS = [...BASE_QUESTIONS, ...GENERATED_QUESTIONS, ...EXTRACTED_GAMES_QUESTIONS];
+
 // Leaderboards Mock Data
 const MOCK_LEADERBOARD = {
   daily: [
@@ -408,14 +411,32 @@ const KbcQuizGame = ({ initialMode = 'daily', onBack }) => {
       }
     }
 
-    let count = 15; // Gyan Kasoti is 15 questions
+    let count = 10; // Gyan Kasoti is 10 questions
 
-    // Filter by user's age group
-    let pool = ALL_QUESTIONS.filter(q => q.ageGroup.includes(profile.ageGroup));
-    if (pool.length < count) pool = ALL_QUESTIONS; // Fallback if limited pool
+    // Fetch played question IDs
+    let playedIds = JSON.parse(localStorage.getItem('sanskar_played_qids') || '[]');
+
+    // Filter by user's age group AND not played
+    let pool = ALL_QUESTIONS.filter(q => q.ageGroup.includes(profile.ageGroup) && !playedIds.includes(q.id));
+    
+    // If we run out of unplayed questions in their age group, reset the played list for this age group
+    if (pool.length < count) {
+      playedIds = playedIds.filter(id => {
+        const q = ALL_QUESTIONS.find(qq => qq.id === id);
+        return !q || !q.ageGroup.includes(profile.ageGroup);
+      });
+      localStorage.setItem('sanskar_played_qids', JSON.stringify(playedIds));
+      pool = ALL_QUESTIONS.filter(q => q.ageGroup.includes(profile.ageGroup));
+    }
+
+    if (pool.length < count) pool = ALL_QUESTIONS; // Absolute fallback
 
     // Shuffle and pick
     const shuffled = [...pool].sort(() => 0.5 - Math.random()).slice(0, count);
+
+    // Save picked questions to played list
+    const newlyPlayed = shuffled.map(q => q.id);
+    localStorage.setItem('sanskar_played_qids', JSON.stringify([...playedIds, ...newlyPlayed]));
 
     setQuestions(shuffled);
     setCurrentIndex(0);
@@ -713,10 +734,10 @@ const KbcQuizGame = ({ initialMode = 'daily', onBack }) => {
                   🎯
                 </div>
                 <h3 className="font-black text-2xl text-stone-900 text-center">🏆 આજની જ્ઞાન ચેલેન્જ</h3>
-                <p className="text-stone-500 text-xs leading-relaxed text-center">૧૫ પ્રશ્નો • ૨૦ સેકન્ડ ટાઈમર • દિવસમાં ફક્ત ૧ જ વાર રમી શકાશે • સાચા જવાબ પર +૫ સિક્કા અને પૂર્ણ કરવા પર +૫૦ સિક્કા બોનસ!</p>
+                <p className="text-stone-500 text-xs leading-relaxed text-center">૧૦ પ્રશ્નો • ૨૦ સેકન્ડ ટાઈમર • દિવસમાં ફક્ત ૧ જ વાર રમી શકાશે • સાચા જવાબ પર +૫ સિક્કા અને પૂર્ણ કરવા પર +૫૦ સિક્કા બોનસ!</p>
               </div>
               <button onClick={() => startQuiz('daily')} className="w-full py-3.5 bg-primary hover:bg-primary-container text-white rounded-xl font-bold font-gujarati shadow-md transition active:scale-95">
-                ⚡ રમો (15 Questions)
+                ⚡ રમો (10 Questions)
               </button>
             </div>
 

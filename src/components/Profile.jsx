@@ -27,8 +27,8 @@ const Profile = () => {
   const isFirstLogin = localStorage.getItem('profile_completed') !== 'true';
 
   const [isModalOpen, setIsModalOpen] = useState(isFirstLogin); // Auto-open on first login
-  const [name, setName] = useState(profile.name);
-  const [mobile, setMobile] = useState(profile.mobile);
+  const [name, setName] = useState(profile.name || '');
+  const [mobile, setMobile] = useState(profile.mobile || '');
   const [gender, setGender] = useState(profile.gender || '');
   const [dob, setDob] = useState(profile.dob || '');
   const [city, setCity] = useState(profile.city || '');
@@ -76,20 +76,24 @@ const Profile = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    if (!name.trim() || !gender || !dob || !city.trim()) {
+    const trimmedName = (name || '').trim();
+    const trimmedMobile = (mobile || '').trim();
+    const trimmedCity = (city || '').trim();
+
+    if (!trimmedName || !gender || !dob || !trimmedCity) {
       setError('કૃપા કરી નામ, જાતિ, જન્મ તારીખ અને શહેર ભરો.');
       return;
     }
     
     const updatedProfile = {
       ...profile,
-      name: name.trim(),
-      mobile: mobile.trim(),
+      name: trimmedName,
+      mobile: trimmedMobile,
       gender,
       dob,
-      city: city.trim(),
-      email: profile.email,
-      avatar: profile.avatar,
+      city: trimmedCity,
+      email: profile.email || '',
+      avatar: profile.avatar || '',
     };
     
     localStorage.setItem('user_profile', JSON.stringify(updatedProfile));
@@ -340,7 +344,7 @@ const Profile = () => {
                   type="submit" 
                   className="flex-1 py-4 bg-teal-700 hover:bg-teal-800 text-white rounded-xl font-gujarati font-black active:scale-95 transition-all text-center"
                 >
-                  {isFirstLogin ? '🙏 સ્ટાર્ટ કરો' : 'સેવ કરો'}
+                  {isFirstLogin ? '👌 ઓકે, સેવ કરો' : 'સેવ કરો'}
                 </button>
               </div>
             </form>

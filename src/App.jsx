@@ -222,18 +222,7 @@ function App() {
 
     setupDeepLink();
 
-    // Hardware Back Button Listener (Android)
-    try {
-      CapApp.addListener('backButton', () => {
-        if (window.location.pathname === '/') {
-          CapApp.exitApp();
-        } else {
-          window.history.back();
-        }
-      });
-    } catch (e) {
-      console.warn("Back button listener not supported in browser:", e);
-    }
+    // Hardware Back Button Listener handled in Layout.jsx
 
     return () => {
       subscription.unsubscribe();

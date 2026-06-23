@@ -76,21 +76,12 @@ export default function RamatoHub({ userLocation, onBack }) {
 
   const ALL_15_GAMES = [
     { id: 'kbc_quiz:daily', name: '🎯 દૈનિક ક્વિઝ', desc: '૧૦ પ્રશ્નો • રોજ નવા', color: 'from-amber-500 to-orange-600' },
-    { id: 'kbc_quiz:weekly', name: '🏆 સાપ્તાહિક ક્વિઝ', desc: '૨૫ પ્રશ્નો • લીડરબોર્ડ', color: 'from-blue-500 to-cyan-600' },
-    { id: 'kbc_quiz:monthly', name: '🎖️ માસિક ક્વિઝ', desc: '૫૦ પ્રશ્નો • ગ્રાન્ડ બેજ', color: 'from-purple-500 to-fuchsia-600' },
-    { id: 'kbc_quiz:challenge', name: '⚔️ મિત્ર ચેલેન્જ', desc: 'મિત્રોને હરાવો', color: 'from-emerald-500 to-teal-600' },
     { id: 'word_connect', name: '🔤 શબ્દ જોડો', desc: 'અક્ષરો જોડીને ગુજરાતી શબ્દ બનાવો', color: 'from-amber-400 to-orange-500' },
-    { id: 'visual_quiz', name: '🖼️ ગુજરાત ઓળખો', desc: 'ઝાંખા ચિત્ર પરથી સાચું સ્થળ શોધો', color: 'from-sky-400 to-blue-500' },
     { id: 'math_rush', name: '🧮 ઝડપી ગણિત', desc: 'સમય પૂર્વે ગણિતના જવાબ આપો', color: 'from-emerald-400 to-teal-500' },
-    { id: 'farming', name: '🌾 ખેડૂત ની ખેતી', desc: 'પાક વાવો, લણો અને બજારમાં વેચો', color: 'from-lime-500 to-green-600' },
     { id: 'kahevat', name: '🎰 કહેવત પૂર્ણ કરો', desc: 'દેશી કહેવતો પૂરું કરો અને જ્ઞાન મેળવો', color: 'from-rose-400 to-pink-500' },
     { id: 'map_game', name: '🗺️ ગુજરાત નકશો', desc: 'જિલ્લાના સાચા સ્થાન પર પીન મૂકો', color: 'from-indigo-400 to-purple-500' },
-    { id: 'rangoli', name: '🎨 રંગોળી પૂરો', desc: 'સુંદર રંગોળીમાં મનગમતા રંગો પૂરો', color: 'from-fuchsia-400 to-pink-600' },
     { id: 'word_search', name: '🔍 શબ્દ શોધ', desc: 'અક્ષરોના ગ્રીડમાંથી છુપા શબ્દો શોધો', color: 'from-cyan-400 to-blue-600' },
-    { id: 'cricket', name: '🏏 ક્રિકેટ ક્વિઝ', desc: 'ક્રિકેટ રમતનું જ્ઞાન ચકાસો', color: 'from-orange-500 to-red-600' },
     { id: 'jigsaw', name: '🧩 ગુજરાત Jigsaw', desc: 'મંદિરોના ફોટોના કટકા જોડો', color: 'from-violet-400 to-purple-600' },
-    { id: 'bhajan', name: '🎵 ભજન ઓળખો', desc: 'કાવ્ય પંક્તિ કે ભજનના સાચા કવિ શોધો', color: 'from-pink-500 to-rose-600' },
-    { id: 'gram_trivia', name: '🏘️ ગ્રામ પ્રશ્નોત્તરી', desc: 'તમારા ગામ અને જિલ્લાની ટેસ્ટ લો', color: 'from-amber-500 to-yellow-600' },
     { id: 'speed_tap', name: '⚡ ઝડપ ટૅપ', desc: 'ફક્ત ફળો અને સાચી ચીજો પર ટૅપ કરો', color: 'from-red-400 to-orange-500' },
     { id: 'true_false', name: '🎪 સાચું કે ખોટું', desc: 'ગુજરાતના તથ્યોને ડાબે કે જમણે સ્વાઇપ કરો', color: 'from-teal-400 to-emerald-600' },
     { id: 'riddle', name: '🌟 દૈનિક ઉખાણાં', desc: 'રમુજી ઉખાણાં ઉકેલો અને જ્ઞાન વધારો', color: 'from-blue-500 to-indigo-600' }
@@ -212,17 +203,12 @@ function GameWrapper({ gameId, onClose, userLocation }) {
       {/* Game Content Renderers */}
       <div className="flex-1 flex flex-col justify-center">
         {gameId === 'word_connect' && <WordConnectGame />}
-        {gameId === 'visual_quiz' && <VisualQuizGame />}
         {gameId === 'math_rush' && <MathRushGame />}
-        {gameId === 'farming' && <FarmingGame />}
         {gameId === 'kahevat' && <KahevatGame />}
         {gameId === 'map_game' && <MapGame />}
-        {gameId === 'rangoli' && <RangoliGame />}
         {gameId === 'word_search' && <WordSearchGame />}
-        {gameId === 'cricket' && <CricketQuizGame />}
         {gameId === 'jigsaw' && <JigsawGame />}
-        {gameId === 'bhajan' && <BhajanGame />}
-        {gameId === 'gram_trivia' && <GramTriviaGame userLocation={userLocation} />}
+
         {gameId === 'speed_tap' && <SpeedTapGame />}
         {gameId === 'true_false' && <TrueFalseGame />}
         {gameId === 'riddle' && <RiddleGame />}
@@ -1058,7 +1044,6 @@ function RangoliGame() {
       {/* Template selector */}
       <div className="flex flex-wrap justify-center gap-1.5">
         {[
-          { id: 'rangoli', name: 'રંગોળી 🌸' },
           { id: 'house', name: 'ઘર 🏠' },
           { id: 'car', name: 'ગાડી 🚗' },
           { id: 'diya', name: 'દીવો 🪔' },

@@ -248,87 +248,6 @@ const Dashboard = () => {
       )}
 
       {/* ══════════════════════════════════════════════════════════
-          2. SUVICHAR — Dark navy card
-          ══════════════════════════════════════════════════════════ */}
-      <div id="daily-suvichar" style={{
-        borderRadius:16, padding:'18px 20px',
-        background:'linear-gradient(135deg,#1E1B4B,#312E81)',
-        boxShadow:'0 4px 16px rgba(30,27,75,0.3)',
-      }}>
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
-          <p style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:11, fontWeight:700, letterSpacing:'0.06em', textTransform:'uppercase', color:'rgba(199,210,254,0.8)', margin:0 }}>
-            🔔 આજનો સુવિચાર
-          </p>
-          <ShareButton sectionId="daily-suvichar" successMessage="✨ સુવિચાર શેર!" />
-        </div>
-        <div style={{ position:'relative', padding:'4px 16px' }}>
-          <span style={{ fontFamily:'"Noto Serif Gujarati",serif', fontSize:44, lineHeight:1, color:'#818CF8', opacity:0.4, position:'absolute', top:-4, left:0 }}>"</span>
-          <p className="type-gu-body" style={{ color:'#E0E7FF', fontWeight:700, fontSize:16, lineHeight:1.7, margin:0 }}>
-            {data.suvichar}
-          </p>
-          <span style={{ fontFamily:'"Noto Serif Gujarati",serif', fontSize:44, lineHeight:1, color:'#818CF8', opacity:0.4, position:'absolute', bottom:-12, right:0 }}>"</span>
-        </div>
-      </div>
-
-      {/* ══════════════════════════════════════════════════════════
-          3. MINI GAME CARDS — 2 column
-          ══════════════════════════════════════════════════════════ */}
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
-
-        {/* અંગ્રેજી શીખો */}
-        {getFeatureState('/english') !== 'off' && (
-          <Link
-            to={getFeatureState('/english') === 'coming_soon' ? '#' : '/english'}
-            onClick={(e) => handleFeatureClick('/english', 'અંગ્રેજી શીખો', e)}
-            className="press"
-            style={{
-              borderRadius:20, padding:'20px 14px', textDecoration:'none', position:'relative', overflow:'hidden',
-              background:'linear-gradient(135deg,#0D7377,#14BDBD)',
-              boxShadow:'0 6px 20px rgba(13,115,119,0.35)',
-              display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', gap:10,
-            }}
-          >
-            <div style={{ position:'absolute', top:8, right:8, background:'rgba(255,255,255,0.25)', padding:'3px 8px', borderRadius:10, fontSize:10, fontWeight:800, color:'#fff' }}>
-              નવું
-            </div>
-            <div style={{ width:52, height:52, borderRadius:16, background:'rgba(255,255,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:26 }}>
-              📚
-            </div>
-            <div>
-              <p style={{ fontFamily:'"Noto Serif Gujarati",serif', fontSize:14, fontWeight:900, color:'#fff', margin:0 }}>અંગ્રેજી શીખો</p>
-              <p style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:10, fontWeight:600, color:'rgba(255,255,255,0.8)', margin:'3px 0 0' }}>સરળતાથી શીખો</p>
-            </div>
-          </Link>
-        )}
-
-        {/* ગુજરાતી રમતો */}
-        {getFeatureState('/community') !== 'off' && (
-          <Link
-            to={getFeatureState('/community') === 'coming_soon' ? '#' : '/community'}
-            onClick={(e) => handleFeatureClick('/community', 'ગુજરાતી રમતો', e)}
-            className="press"
-            style={{
-              borderRadius:20, padding:'20px 14px', textDecoration:'none', position:'relative', overflow:'hidden',
-              background:'linear-gradient(135deg,#BE123C,#E11D48)',
-              boxShadow:'0 6px 20px rgba(190,18,60,0.35)',
-              display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', gap:10,
-            }}
-          >
-            <div style={{ position:'absolute', top:8, right:8, background:'rgba(255,255,255,0.25)', padding:'3px 8px', borderRadius:10, fontSize:10, fontWeight:800, color:'#fff' }}>
-              હોટ
-            </div>
-            <div style={{ width:52, height:52, borderRadius:16, background:'rgba(255,255,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:26 }}>
-              🎲
-            </div>
-            <div>
-              <p style={{ fontFamily:'"Noto Serif Gujarati",serif', fontSize:14, fontWeight:900, color:'#fff', margin:0 }}>ગુજરાતી રમતો</p>
-              <p style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:10, fontWeight:600, color:'rgba(255,255,255,0.8)', margin:'3px 0 0' }}>રમો અને શીખો</p>
-            </div>
-          </Link>
-        )}
-      </div>
-
-      {/* ══════════════════════════════════════════════════════════
           4. DAILY CHALLENGE BANNER
           ══════════════════════════════════════════════════════════ */}
       {getFeatureState('/daily-challenge') !== 'off' && (
@@ -420,27 +339,84 @@ const Dashboard = () => {
       )}
 
       {/* ══════════════════════════════════════════════════════════
-          5. TOOL GRID — 16 tools, 4 columns
+          2. SUVICHAR — Dark navy card
           ══════════════════════════════════════════════════════════ */}
-      <div style={{ background:'#FFFFFF', border:'1px solid #E8E6E3', borderRadius:16, padding:'16px 12px' }}>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'16px 8px' }}>
-          {TOOLS.filter(t => getFeatureState(t.path) !== 'off').map(({ icon, label, path, bg, iconBg, iconClr }, i) => {
-            const state = getFeatureState(path);
-            return (
-              <Link key={`${path}-${i}`} to={state === 'coming_soon' ? '#' : path} className="press"
-                onClick={(e) => { if (state === 'coming_soon') { e.preventDefault(); setComingSoonFeature(label); } }}
-                style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:7, textDecoration:'none' }}
-              >
-                <div style={{ width:56, height:56, borderRadius:14, background:bg, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                  <div style={{ width:36, height:36, borderRadius:10, background:iconBg, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                    <span className="material-symbols-outlined" style={{ fontSize:20, color:iconClr, fontVariationSettings:"'FILL' 1" }}>{icon}</span>
-                  </div>
-                </div>
-                <p className="type-gu-caption line-clamp-1" style={{ color:'#57534E', textAlign:'center', fontSize:11 }}>{label}</p>
-              </Link>
-            );
-          })}
+      <div id="daily-suvichar" style={{
+        borderRadius:16, padding:'18px 20px',
+        background:'linear-gradient(135deg,#1E1B4B,#312E81)',
+        boxShadow:'0 4px 16px rgba(30,27,75,0.3)',
+      }}>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
+          <p style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:11, fontWeight:700, letterSpacing:'0.06em', textTransform:'uppercase', color:'rgba(199,210,254,0.8)', margin:0 }}>
+            🔔 આજનો સુવિચાર
+          </p>
+          <ShareButton sectionId="daily-suvichar" successMessage="✨ સુવિચાર શેર!" />
         </div>
+        <div style={{ position:'relative', padding:'4px 16px' }}>
+          <span style={{ fontFamily:'"Noto Serif Gujarati",serif', fontSize:44, lineHeight:1, color:'#818CF8', opacity:0.4, position:'absolute', top:-4, left:0 }}>"</span>
+          <p className="type-gu-body" style={{ color:'#E0E7FF', fontWeight:700, fontSize:16, lineHeight:1.7, margin:0 }}>
+            {data.suvichar}
+          </p>
+          <span style={{ fontFamily:'"Noto Serif Gujarati",serif', fontSize:44, lineHeight:1, color:'#818CF8', opacity:0.4, position:'absolute', bottom:-12, right:0 }}>"</span>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════
+          3. MINI GAME CARDS — 2 column
+          ══════════════════════════════════════════════════════════ */}
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+
+        {/* અંગ્રેજી શીખો */}
+        {getFeatureState('/english') !== 'off' && (
+          <Link
+            to={getFeatureState('/english') === 'coming_soon' ? '#' : '/english'}
+            onClick={(e) => handleFeatureClick('/english', 'અંગ્રેજી શીખો', e)}
+            className="press"
+            style={{
+              borderRadius:20, padding:'20px 14px', textDecoration:'none', position:'relative', overflow:'hidden',
+              background:'linear-gradient(135deg,#0D7377,#14BDBD)',
+              boxShadow:'0 6px 20px rgba(13,115,119,0.35)',
+              display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', gap:10,
+            }}
+          >
+            <div style={{ position:'absolute', top:8, right:8, background:'rgba(255,255,255,0.25)', padding:'3px 8px', borderRadius:10, fontSize:10, fontWeight:800, color:'#fff' }}>
+              નવું
+            </div>
+            <div style={{ width:52, height:52, borderRadius:16, background:'rgba(255,255,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:26 }}>
+              📚
+            </div>
+            <div>
+              <p style={{ fontFamily:'"Noto Serif Gujarati",serif', fontSize:14, fontWeight:900, color:'#fff', margin:0 }}>અંગ્રેજી શીખો</p>
+              <p style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:10, fontWeight:600, color:'rgba(255,255,255,0.8)', margin:'3px 0 0' }}>સરળતાથી શીખો</p>
+            </div>
+          </Link>
+        )}
+
+        {/* ગુજરાતી રમતો */}
+        {getFeatureState('/community') !== 'off' && (
+          <Link
+            to={getFeatureState('/community') === 'coming_soon' ? '#' : '/community'}
+            onClick={(e) => handleFeatureClick('/community', 'ગુજરાતી રમતો', e)}
+            className="press"
+            style={{
+              borderRadius:20, padding:'20px 14px', textDecoration:'none', position:'relative', overflow:'hidden',
+              background:'linear-gradient(135deg,#BE123C,#E11D48)',
+              boxShadow:'0 6px 20px rgba(190,18,60,0.35)',
+              display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', gap:10,
+            }}
+          >
+            <div style={{ position:'absolute', top:8, right:8, background:'rgba(255,255,255,0.25)', padding:'3px 8px', borderRadius:10, fontSize:10, fontWeight:800, color:'#fff' }}>
+              હોટ
+            </div>
+            <div style={{ width:52, height:52, borderRadius:16, background:'rgba(255,255,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:26 }}>
+              🎲
+            </div>
+            <div>
+              <p style={{ fontFamily:'"Noto Serif Gujarati",serif', fontSize:14, fontWeight:900, color:'#fff', margin:0 }}>ગુજરાતી રમતો</p>
+              <p style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:10, fontWeight:600, color:'rgba(255,255,255,0.8)', margin:'3px 0 0' }}>રમો અને શીખો</p>
+            </div>
+          </Link>
+        )}
       </div>
 
       {/* ══════════════════════════════════════════════════════════
@@ -541,6 +517,30 @@ const Dashboard = () => {
           </div>
         </Link>
 
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════
+          5. TOOL GRID — 16 tools, 4 columns
+          ══════════════════════════════════════════════════════════ */}
+      <div style={{ background:'#FFFFFF', border:'1px solid #E8E6E3', borderRadius:16, padding:'16px 12px' }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'16px 8px' }}>
+          {TOOLS.filter(t => getFeatureState(t.path) !== 'off').map(({ icon, label, path, bg, iconBg, iconClr }, i) => {
+            const state = getFeatureState(path);
+            return (
+              <Link key={`${path}-${i}`} to={state === 'coming_soon' ? '#' : path} className="press"
+                onClick={(e) => { if (state === 'coming_soon') { e.preventDefault(); setComingSoonFeature(label); } }}
+                style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:7, textDecoration:'none' }}
+              >
+                <div style={{ width:56, height:56, borderRadius:14, background:bg, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                  <div style={{ width:36, height:36, borderRadius:10, background:iconBg, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                    <span className="material-symbols-outlined" style={{ fontSize:20, color:iconClr, fontVariationSettings:"'FILL' 1" }}>{icon}</span>
+                  </div>
+                </div>
+                <p className="type-gu-caption line-clamp-1" style={{ color:'#57534E', textAlign:'center', fontSize:11 }}>{label}</p>
+              </Link>
+            );
+          })}
+        </div>
       </div>
 
       {/* ══════════════════════════════════════════════════════════

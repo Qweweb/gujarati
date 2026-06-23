@@ -93,6 +93,62 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
     return () => clearInterval(iv);
   }, [location]);
 
+  // Pull to refresh states
+  const [pullStart, setPullStart] = useState(null);
+  const [pullDistance, setPullDistance] = useState(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  useEffect(() => {
+    const handleTouchStart = (e) => {
+      // Pull to refresh only when scrolled to top
+      if (window.scrollY <= 5) {
+        setPullStart(e.touches[0].clientY);
+      }
+    };
+
+    const handleTouchMove = (e) => {
+      if (pullStart === null) return;
+      
+      const currentY = e.touches[0].clientY;
+      const distance = currentY - pullStart;
+      
+      if (distance > 0) {
+        // Apply physics-like resistance
+        const newDistance = Math.min(distance * 0.4, 80);
+        setPullDistance(newDistance);
+        
+        // Prevent default browser refresh action if pulling down
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+      }
+    };
+
+    const handleTouchEnd = () => {
+      if (pullStart === null) return;
+      if (pullDistance > 55) {
+        setIsRefreshing(true);
+        // Dispatch refreshing state / Reloading
+        setTimeout(() => {
+          window.location.reload();
+        }, 800);
+      } else {
+        setPullStart(null);
+        setPullDistance(0);
+      }
+    };
+
+    window.addEventListener('touchstart', handleTouchStart, { passive: false });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [pullStart, pullDistance]);
+
   const navItems = [
     { path: '/',           icon: 'home',         label: 'હોમ'      },
     { path: '/devotional', icon: 'auto_stories',  label: 'ભક્તિ'    },
@@ -108,8 +164,69 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
 
   if (isCardViewer || isFullScreen) return <div style={{ background: bg, color: txt, minHeight: '100svh' }}>{children}</div>;
 
+  const pullProgress = Math.min(pullDistance / 55, 1);
+
   return (
     <div style={{ background: bg, color: txt, minHeight: '100svh' }} className="font-body pb-24 transition-colors duration-300">
+
+      {/* ══ PULL TO REFRESH INDICATOR ══════════════════════════════ */}
+      <div
+        style={{
+          position: 'fixed',
+          top: `calc(${safeTop} + 4px)`,
+          left: '50%',
+          transform: `translateX(-50%) translateY(${Math.max(0, pullDistance - 4)}px)`,
+          zIndex: 9998,
+          pointerEvents: 'none',
+          opacity: pullDistance > 8 || isRefreshing ? 1 : 0,
+          transition: isRefreshing ? 'opacity 0.2s ease' : 'none',
+        }}
+      >
+        <div style={{
+          width: 42,
+          height: 42,
+          borderRadius: '50%',
+          background: darkMode ? 'rgba(30,26,24,0.95)' : 'rgba(255,255,255,0.95)',
+          border: `2px solid ${activeTheme.primaryAccent || '#B45309'}`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: `0 6px 20px rgba(0,0,0,0.18), 0 0 0 3px ${darkMode ? 'rgba(30,26,24,0.5)' : 'rgba(255,255,255,0.5)'}`,
+          backdropFilter: 'blur(12px)',
+        }}>
+          <span
+            className="material-symbols-outlined"
+            style={{
+              fontSize: 22,
+              color: activeTheme.primaryAccent || '#B45309',
+              transform: isRefreshing
+                ? 'rotate(0deg)'
+                : `rotate(${pullProgress * 360}deg)`,
+              animation: isRefreshing ? 'spin 0.7s linear infinite' : 'none',
+              transition: isRefreshing ? 'none' : 'transform 0.05s linear',
+              fontVariationSettings: "'FILL' 1",
+            }}
+          >
+            {isRefreshing ? 'sync' : 'arrow_downward'}
+          </span>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slideUp {
+          from { transform: translateY(40px) scale(0.92); opacity: 0; }
+          to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+      `}</style>
+
 
       {/* ══ TOP HEADER — 56dp ══════════════════════════════════════ */}
       <header
