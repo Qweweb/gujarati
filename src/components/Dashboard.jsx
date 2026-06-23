@@ -333,28 +333,89 @@ const Dashboard = () => {
           ══════════════════════════════════════════════════════════ */}
       {getFeatureState('/daily-challenge') !== 'off' && (
         <div style={{
-          display:'flex', alignItems:'center', gap:12, padding:'14px 16px', borderRadius:16,
+          display:'flex', flexDirection:'column', gap:12, padding:'16px', borderRadius:16,
           background:'#FFF8EF', border:'1.5px solid #FDE68A',
         }}>
-          <div style={{ width:48, height:48, borderRadius:14, background:'linear-gradient(135deg,#F97316,#B45309)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-            <span className="material-symbols-outlined" style={{ color:'#fff', fontSize:24, fontVariationSettings:"'FILL' 1" }}>psychology</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width:48, height:48, borderRadius:14, background:'linear-gradient(135deg,#F97316,#B45309)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+              <span className="material-symbols-outlined" style={{ color:'#fff', fontSize:24, fontVariationSettings:"'FILL' 1" }}>psychology</span>
+            </div>
+            <div style={{ flex:1, minWidth:0 }}>
+              <p className="type-gu-body" style={{ fontWeight:700, color:'#1A1614', margin:0, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
+                {hasPlayed ? `✅ આજ પૂર્ણ · ${challengeStreak} Day Streak` : '🧠 આજની શબ્દ રમત'}
+              </p>
+              <p className="type-caption" style={{ color:'#78716C', margin:'2px 0 0' }}>
+                {hasPlayed ? 'આવતીકાલ ફ્રી.' : '+15 Coins · અત્યારે રમો'}
+              </p>
+            </div>
+            <Link
+              to={getFeatureState('/daily-challenge') === 'coming_soon' ? '#' : '/daily-challenge'}
+              onClick={(e) => handleFeatureClick('/daily-challenge', 'ડેઇલી ચેલેન્જ', e)}
+              className="g-btn-primary press"
+              style={{ flexShrink:0, padding:'8px 14px', borderRadius:10, fontSize:13, textDecoration:'none' }}
+            >
+              {hasPlayed ? 'જુઓ →' : 'રમો →'}
+            </Link>
           </div>
-          <div style={{ flex:1, minWidth:0 }}>
-            <p className="type-gu-body" style={{ fontWeight:700, color:'#1A1614', margin:0, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
-              {hasPlayed ? `✅ આજ પૂર્ણ · ${challengeStreak} Day Streak` : '🧠 આજની શબ્દ રમત'}
-            </p>
-            <p className="type-caption" style={{ color:'#78716C', margin:'2px 0 0' }}>
-              {hasPlayed ? 'આવતીકાલ ફ્રી.' : '+15 Coins · અત્યારે રમો'}
-            </p>
+
+          {/* Daily Login Streak Progress Bar */}
+          <div style={{ padding: '8px 12px 12px 12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+              <span className="font-gujarati text-[10px] font-bold text-stone-500 uppercase tracking-wide">ડેઇલી ચેલેન્જ સ્ટ્રીક</span>
+              <span className="font-sans text-[10px] font-black text-amber-600">{challengeStreak} / 30 Days</span>
+            </div>
+            
+            {/* Progress Track */}
+            <div style={{ position: 'relative', height: '6px', background: '#E2E8F0', borderRadius: '3px', margin: '0 8px' }}>
+              {/* Fill */}
+              <div style={{ 
+                position: 'absolute', left: 0, top: 0, bottom: 0, 
+                width: `${Math.min(100, (challengeStreak / 30) * 100)}%`, 
+                background: 'linear-gradient(90deg, #F59E0B, #EF4444)', 
+                borderRadius: '3px',
+                transition: 'width 1s ease-out'
+              }} />
+
+              {/* Milestone 1: 10 Days */}
+              <div style={{
+                position: 'absolute', left: '33.33%', top: '50%', transform: 'translate(-50%, -50%)',
+                width: '18px', height: '18px', borderRadius: '50%',
+                background: challengeStreak >= 10 ? '#F59E0B' : '#CBD5E1',
+                border: '2px solid #fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.15)'
+              }} title="10 Days Milestone">
+                <span className="font-sans text-[8px] font-black text-white">10</span>
+              </div>
+              <span className="font-gujarati text-[9px] font-bold text-amber-600" style={{ position: 'absolute', left: '33.33%', top: '16px', transform: 'translateX(-50%)' }}>૧૦ દિવસ</span>
+
+              {/* Milestone 2: 20 Days */}
+              <div style={{
+                position: 'absolute', left: '66.66%', top: '50%', transform: 'translate(-50%, -50%)',
+                width: '18px', height: '18px', borderRadius: '50%',
+                background: challengeStreak >= 20 ? '#F97316' : '#CBD5E1',
+                border: '2px solid #fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.15)'
+              }} title="20 Days Milestone">
+                <span className="font-sans text-[8px] font-black text-white">20</span>
+              </div>
+              <span className="font-gujarati text-[9px] font-bold text-amber-600" style={{ position: 'absolute', left: '66.66%', top: '16px', transform: 'translateX(-50%)' }}>૨૦ દિવસ</span>
+
+              {/* Milestone 3: 30 Days */}
+              <div style={{
+                position: 'absolute', left: '100%', top: '50%', transform: 'translate(-50%, -50%)',
+                width: '18px', height: '18px', borderRadius: '50%',
+                background: challengeStreak >= 30 ? '#EF4444' : '#CBD5E1',
+                border: '2px solid #fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.15)'
+              }} title="30 Days Milestone">
+                <span className="font-sans text-[8px] font-black text-white">30</span>
+              </div>
+              <span className="font-gujarati text-[9px] font-bold text-amber-600" style={{ position: 'absolute', left: '100%', top: '16px', transform: 'translateX(-50%)' }}>૩૦ દિવસ</span>
+            </div>
           </div>
-          <Link
-            to={getFeatureState('/daily-challenge') === 'coming_soon' ? '#' : '/daily-challenge'}
-            onClick={(e) => handleFeatureClick('/daily-challenge', 'ડેઇલી ચેલેન્જ', e)}
-            className="g-btn-primary press"
-            style={{ flexShrink:0, padding:'8px 14px', borderRadius:10, fontSize:13, textDecoration:'none' }}
-          >
-            {hasPlayed ? 'જુઓ →' : 'રમો →'}
-          </Link>
         </div>
       )}
 
