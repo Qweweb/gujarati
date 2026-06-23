@@ -229,8 +229,8 @@ const Profile = () => {
 
       {/* Edit Profile Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-dark-surface rounded-t-[2.5rem] sm:rounded-[2.5rem] p-8 max-w-sm w-full space-y-5 shadow-2xl border-t-8 border-teal-700 relative animate-scale-up text-left max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white dark:bg-dark-surface rounded-[2.5rem] p-8 max-w-sm w-full space-y-5 shadow-2xl border-t-8 border-teal-700 relative animate-scale-up text-left max-h-[80vh] overflow-y-auto">
             
             {/* Google User Banner */}
             {googleUser && (
