@@ -306,6 +306,10 @@ export const syncUserProfile = async () => {
 
   const city = localProfile.city || (userLoc ? userLoc.villageNameGu : null);
   const challengeStreak = parseInt(localStorage.getItem('otlo_challenge_streak') || '0', 10);
+  const email = localProfile.email || user?.email || localStorage.getItem('google_email') || null;
+  const gender = localProfile.gender || null;
+  const dob = localProfile.dob || null;
+  const avatar = localProfile.avatar || user?.user_metadata?.avatar_url || localStorage.getItem('google_avatar') || null;
 
   const { error } = await supabase
     .from('users')
@@ -319,7 +323,11 @@ export const syncUserProfile = async () => {
       ward: ward,
       city: city,
       challenge_streak: challengeStreak,
-      last_active: new Date().toISOString().split('T')[0]
+      last_active: new Date().toISOString().split('T')[0],
+      email: email,
+      gender: gender,
+      dob: dob,
+      photo_url: avatar
     }, { onConflict: 'id' });
 
   if (error) {

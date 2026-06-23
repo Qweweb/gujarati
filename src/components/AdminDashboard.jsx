@@ -114,6 +114,14 @@ const AdminDashboard = () => {
   const [isAlertSaving, setIsAlertSaving] = useState(false);
   const [isAlertLoading, setIsAlertLoading] = useState(false);
 
+  // User Management State
+  const [users, setUsers] = useState([]);
+  const [isLoadingUsers, setIsLoadingUsers] = useState(false);
+  const [usersSearch, setUsersSearch] = useState("");
+  const [userFilter, setUserFilter] = useState("all");
+  const [userCityFilter, setUserCityFilter] = useState("");
+  const [isSavingUser, setIsSavingUser] = useState(null);
+
   const fetchOffersAndAnalytics = async () => {
     setLoadingOffers(true);
     setDbError(false);
@@ -467,7 +475,99 @@ const AdminDashboard = () => {
     }
   };
 
+  const fetchUsers = async () => {
+    setIsLoadingUsers(true);
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error("Error fetching users:", error);
+      } else {
+        setUsers(data || []);
+      }
+    } catch (e) {
+      console.error("Exception in fetchUsers:", e);
+    } finally {
+      setIsLoadingUsers(false);
+    }
+  };
+
+  const toggleUserVerification = async (userId, currentVerified) => {
+    setIsSavingUser(userId);
+    const newStatus = !currentVerified;
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({ verified_badge: newStatus })
+        .eq('id', userId);
+
+      if (error) {
+        alert("વેરિફિકેશન અપડેટ કરવામાં ભૂલ: " + error.message);
+      } else {
+        setUsers(prev => prev.map(u => u.id === userId ? { ...u, verified_badge: newStatus } : u));
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSavingUser(null);
+    }
+  };
+
+  const toggleUserRepresentative = async (userId, currentRepStatus) => {
+    setIsSavingUser(userId);
+    const newStatus = !currentRepStatus;
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({ is_representative: newStatus })
+        .eq('id', userId);
+
+      if (error) {
+        alert("પ્રતિનિધિ સ્ટેટસ અપડેટ કરવામાં ભૂલ: " + error.message);
+      } else {
+        setUsers(prev => prev.map(u => u.id === userId ? { ...u, is_representative: newStatus } : u));
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSavingUser(null);
+    }
+  };
+
+  const getFilteredUsers = () => {
+    return users.filter(user => {
+      const query = usersSearch.toLowerCase().trim();
+      const nameMatch = user.name?.toLowerCase().includes(query);
+      const mobileMatch = user.mobile?.includes(query);
+      const emailMatch = user.email?.toLowerCase().includes(query);
+      const cityMatch = user.city?.toLowerCase().includes(query);
+      const searchOk = !query || nameMatch || mobileMatch || emailMatch || cityMatch;
+
+      let statusOk = true;
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      if (userFilter === "active") {
+        statusOk = user.last_active && new Date(user.last_active) >= thirtyDaysAgo;
+      } else if (userFilter === "inactive") {
+        statusOk = !user.last_active || new Date(user.last_active) < thirtyDaysAgo;
+      } else if (userFilter === "verified") {
+        statusOk = !!user.verified_badge;
+      }
+
+      const cityQuery = userCityFilter.toLowerCase().trim();
+      const cityFilterOk = !cityQuery || user.city?.toLowerCase().includes(cityQuery);
+
+      return searchOk && statusOk && cityFilterOk;
+    });
+  };
+
   useEffect(() => {
+    if (activeTab === 'users_management') {
+      fetchUsers();
+    }
     if (activeTab === 'section_control') {
       fetchAdminFeatureFlags();
     }
@@ -811,6 +911,17 @@ const AdminDashboard = () => {
             >
               <span className="material-symbols-outlined text-lg">post_add</span>
               પોસ્ટ પબ્લિશ કરો
+            </button>
+            <button 
+              onClick={() => setActiveTab("users_management")}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-gujarati font-bold text-sm transition-all ${
+                activeTab === "users_management" 
+                  ? 'bg-amber-500 text-white shadow-md shadow-amber-500/10' 
+                  : 'text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900'
+              }`}
+            >
+              <span className="material-symbols-outlined text-lg">group</span>
+              👤 યુઝર મેનેજમેન્ટ
             </button>
             <button 
               onClick={() => setActiveTab("mataji")}
@@ -1621,6 +1732,277 @@ const AdminDashboard = () => {
                   </div>
                 )}
               </div>
+            </div>
+          )}
+
+          {/* TAB: USER MANAGEMENT & ANALYTICS */}
+          {activeTab === "users_management" && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="flex justify-between items-center mb-4">
+                <div>
+                  <h3 className="font-headline font-black text-lg text-stone-900 dark:text-stone-100">👤 વપરાશકર્તા વ્યવસ્થાપન અને વિશ્લેષણ (User Management)</h3>
+                  <p className="font-gujarati text-xs text-stone-500 mt-1">બધા સક્રિય અને નિષ્ક્રિય યુઝર્સની યાદી અને મૂળભૂત વિગતો</p>
+                </div>
+                <button 
+                  onClick={fetchUsers}
+                  className="flex items-center gap-2 bg-stone-100 hover:bg-stone-200 dark:bg-stone-850 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300 px-4 py-2 rounded-xl text-xs font-gujarati font-bold transition-all border border-stone-200/50 dark:border-stone-800"
+                >
+                  <span className="material-symbols-outlined text-xs">refresh</span>
+                  રીફ્રેશ કરો
+                </button>
+              </div>
+
+              {/* Loader */}
+              {isLoadingUsers ? (
+                <div className="py-20 flex flex-col items-center justify-center gap-3">
+                  <div className="w-10 h-10 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+                  <span className="font-gujarati text-xs text-stone-500">યુઝર્સ લોડ થઈ રહ્યા છે...</span>
+                </div>
+              ) : (
+                <>
+                  {/* Stats Cards */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-white dark:bg-stone-905 p-5 rounded-3xl border border-stone-200/50 dark:border-stone-850 shadow-sm flex flex-col justify-between">
+                      <span className="text-stone-400 font-gujarati text-xs">કુલ ઇન્સ્ટોલ (Total Installs)</span>
+                      <span className="font-headline font-black text-2xl text-amber-500 mt-2">{users.length}</span>
+                      <span className="text-[10px] text-stone-500 font-bold mt-1">નોંધાયેલા ઉપકરણો</span>
+                    </div>
+                    <div className="bg-white dark:bg-stone-905 p-5 rounded-3xl border border-stone-200/50 dark:border-stone-850 shadow-sm flex flex-col justify-between">
+                      <span className="text-stone-400 font-gujarati text-xs">આજે એક્ટિવ યુઝર્સ</span>
+                      <span className="font-headline font-black text-2xl text-emerald-600 mt-2">
+                        {users.filter(u => u.last_active === new Date().toISOString().split('T')[0]).length}
+                      </span>
+                      <span className="text-[10px] text-emerald-500 font-bold mt-1">છેલ્લા ૨૪ કલાકમાં</span>
+                    </div>
+                    <div className="bg-white dark:bg-stone-905 p-5 rounded-3xl border border-stone-200/50 dark:border-stone-850 shadow-sm flex flex-col justify-between">
+                      <span className="text-stone-400 font-gujarati text-xs">નવા યુઝર્સ (છેલ્લા ૭ દિવસ)</span>
+                      <span className="font-headline font-black text-2xl text-blue-600 mt-2">
+                        {users.filter(u => {
+                          const sevenDaysAgo = new Date();
+                          sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+                          return new Date(u.created_at) >= sevenDaysAgo;
+                        }).length}
+                      </span>
+                      <span className="text-[10px] text-blue-500 font-bold mt-1">નવા ઇન્સ્ટોલેશન્સ</span>
+                    </div>
+                    <div className="bg-white dark:bg-stone-905 p-5 rounded-3xl border border-stone-200/50 dark:border-stone-850 shadow-sm flex flex-col justify-between">
+                      <span className="text-stone-400 font-gujarati text-xs">નિષ્ક્રિય / અનઇન્સ્ટોલ (Est.)</span>
+                      <span className="font-headline font-black text-2xl text-rose-500 mt-2">
+                        {users.filter(u => {
+                          const thirtyDaysAgo = new Date();
+                          thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                          return !u.last_active || new Date(u.last_active) < thirtyDaysAgo;
+                        }).length}
+                      </span>
+                      <span className="text-[10px] text-rose-500 font-bold mt-1">૩૦+ દિવસથી નિષ્ક્રિય</span>
+                    </div>
+                  </div>
+
+                  {/* Filters Grid */}
+                  <div className="bg-white dark:bg-stone-900 p-4 rounded-3xl border border-stone-200/50 dark:border-stone-850 shadow-sm grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Search Field */}
+                    <div className="relative">
+                      <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">search</span>
+                      <input 
+                        type="text" 
+                        placeholder="નામ, મોબાઈલ, ઈમેલ અથવા શહેર શોધો..." 
+                        value={usersSearch}
+                        onChange={(e) => setUsersSearch(e.target.value)}
+                        className="w-full pl-9 pr-4 py-2.5 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl text-xs font-gujarati outline-none focus:border-amber-500 transition-all text-stone-800 dark:text-stone-200"
+                      />
+                    </div>
+                    
+                    {/* City filter */}
+                    <div className="relative">
+                      <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">location_city</span>
+                      <input 
+                        type="text" 
+                        placeholder="શહેર/ગામ દ્વારા ફિલ્ટર..." 
+                        value={userCityFilter}
+                        onChange={(e) => setUserCityFilter(e.target.value)}
+                        className="w-full pl-9 pr-4 py-2.5 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl text-xs font-gujarati outline-none focus:border-amber-500 transition-all text-stone-800 dark:text-stone-200"
+                      />
+                    </div>
+
+                    {/* Status filter */}
+                    <div className="relative">
+                      <select 
+                        value={userFilter}
+                        onChange={(e) => setUserFilter(e.target.value)}
+                        className="w-full px-4 py-2.5 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl text-xs font-gujarati outline-none focus:border-amber-500 transition-all text-stone-800 dark:text-stone-200"
+                      >
+                        <option value="all">બધા યુઝર્સ દર્શાવો</option>
+                        <option value="active">સક્રિય યુઝર્સ (છેલ્લા ૩૦ દિવસમાં)</option>
+                        <option value="inactive">નિષ્ક્રિય યુઝર્સ (૩૦+ દિવસથી)</option>
+                        <option value="verified">ફક્ત વેરિફાઈડ (બ્લુ ટીક)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Users Table */}
+                  <div className="bg-white dark:bg-stone-900 rounded-[2rem] border border-stone-200/50 dark:border-stone-850 shadow-sm overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse text-left">
+                        <thead>
+                          <tr className="bg-stone-50 dark:bg-stone-950 border-b border-stone-100 dark:border-stone-900 text-stone-500 font-gujarati text-[10px] uppercase font-bold tracking-wider">
+                            <th className="px-6 py-4">યુઝર</th>
+                            <th className="px-6 py-4">સંપર્ક (Mobile/Email)</th>
+                            <th className="px-6 py-4">પ્રોફાઇલ (જાતિ/જન્મ/શહેર)</th>
+                            <th className="px-6 py-4 text-center">ગેમ્સ XP & Streak</th>
+                            <th className="px-6 py-4">એક્ટિવિટી</th>
+                            <th className="px-6 py-4 text-right">એક્શન</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-stone-100 dark:divide-stone-900 font-gujarati text-xs">
+                          {getFilteredUsers().length === 0 ? (
+                            <tr>
+                              <td colSpan="6" className="text-center py-12 text-stone-500 font-gujarati">
+                                કોઈ યુઝર મળ્યા નથી.
+                              </td>
+                            </tr>
+                          ) : (
+                            getFilteredUsers().map((user) => {
+                              const initials = user.name ? user.name.split(' ').map(n => n[0]).join('').slice(0, 2) : "યુ";
+                              const isTodayActive = user.last_active === new Date().toISOString().split('T')[0];
+                              const isVerified = !!user.verified_badge;
+                              const isRepresentative = !!user.is_representative;
+                              const regDate = user.created_at ? new Date(user.created_at).toLocaleDateString('gu-IN', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric'
+                              }) : "નથી ઉપલબ્ધ";
+
+                              return (
+                                <tr key={user.id} className="hover:bg-stone-50/50 dark:hover:bg-stone-900/30 transition-colors">
+                                  {/* Avatar and Name */}
+                                  <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="flex items-center gap-3">
+                                      {user.photo_url ? (
+                                        <img 
+                                          src={user.photo_url} 
+                                          alt={user.name} 
+                                          className="w-8 h-8 rounded-full object-cover border border-stone-200 dark:border-stone-850"
+                                          onError={(e) => { e.target.style.display = 'none'; }}
+                                        />
+                                      ) : (
+                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-amber-600 text-white flex items-center justify-center font-bold text-[10px]">
+                                          {initials}
+                                        </div>
+                                      )}
+                                      <div>
+                                        <div className="flex items-center gap-1 font-bold text-stone-800 dark:text-stone-200">
+                                          {user.name || "અજ્ઞાત સાધક"}
+                                          {isVerified && (
+                                            <span className="material-symbols-outlined text-[14px] text-blue-500 font-bold fill-current">check_circle</span>
+                                          )}
+                                        </div>
+                                        <div className="text-[10px] text-stone-400">ID: {user.id.slice(0, 8)}...</div>
+                                      </div>
+                                    </div>
+                                  </td>
+
+                                  {/* Contact */}
+                                  <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="space-y-0.5 text-stone-700 dark:text-stone-300">
+                                      <div className="flex items-center gap-1">
+                                        <span className="material-symbols-outlined text-[12px] text-stone-400">call</span>
+                                        {user.mobile || "મોબાઇલ નથી"}
+                                      </div>
+                                      <div className="flex items-center gap-1 text-[10px] text-stone-400">
+                                        <span className="material-symbols-outlined text-[10px]">mail</span>
+                                        {user.email || "ઈમેલ નથી"}
+                                      </div>
+                                    </div>
+                                  </td>
+
+                                  {/* Profile Details */}
+                                  <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="space-y-0.5 text-stone-600 dark:text-stone-400">
+                                      <div>
+                                        <span className="font-bold">જાતિ:</span> {user.gender === 'male' ? 'પુરુષ' : user.gender === 'female' ? 'સ્ત્રી' : user.gender || "નથી ભરેલ"}
+                                      </div>
+                                      <div className="text-[10px]">
+                                        <span className="font-bold">જન્મ તારીખ:</span> {user.dob || "નથી ભરેલ"}
+                                      </div>
+                                      <div className="text-[10px] flex items-center gap-1">
+                                        <span className="material-symbols-outlined text-[10px]">location_on</span>
+                                        {user.city || "શહેર નથી"}
+                                      </div>
+                                    </div>
+                                  </td>
+
+                                  {/* Gamification Stats */}
+                                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                                    <div className="inline-block text-left bg-stone-50 dark:bg-stone-950 p-2 rounded-xl border border-stone-100 dark:border-stone-900">
+                                      <div className="text-[10px] text-stone-600 dark:text-stone-400">
+                                        🎮 English XP: <span className="font-bold text-amber-600">{user.english_xp || 0}</span>
+                                      </div>
+                                      <div className="text-[10px] text-stone-600 dark:text-stone-400">
+                                        🔥 English Streak: <span className="font-bold text-amber-600">{user.english_streak || 0}</span>
+                                      </div>
+                                      <div className="text-[10px] text-stone-600 dark:text-stone-400">
+                                        📅 Challenge Streak: <span className="font-bold text-emerald-600">{user.streak_count || user.challenge_streak || 0}</span>
+                                      </div>
+                                    </div>
+                                  </td>
+
+                                  {/* Activity Times */}
+                                  <td className="px-6 py-4 whitespace-nowrap text-stone-600 dark:text-stone-400">
+                                    <div className="space-y-0.5">
+                                      <div className="text-[10px]">
+                                        <span className="font-bold">જોડાણ તારીખ:</span> {regDate}
+                                      </div>
+                                      <div className="flex items-center gap-1.5 mt-1">
+                                        <span className={`w-1.5 h-1.5 rounded-full ${isTodayActive ? 'bg-emerald-500 animate-pulse' : 'bg-stone-300 dark:bg-stone-700'}`}></span>
+                                        <span className="text-[10px]">
+                                          <span className="font-bold">છેલ્લે સક્રિય:</span> {user.last_active || "નિષ્ક્રિય"}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </td>
+
+                                  {/* Actions */}
+                                  <td className="px-6 py-4 whitespace-nowrap text-right">
+                                    <div className="flex justify-end items-center gap-2">
+                                      {/* Verified badge toggle */}
+                                      <button 
+                                        onClick={() => toggleUserVerification(user.id, isVerified)}
+                                        disabled={isSavingUser === user.id}
+                                        className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-gujarati font-bold transition-all ${
+                                          isVerified 
+                                            ? 'bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200' 
+                                            : 'bg-stone-100 text-stone-600 hover:bg-stone-200 border border-stone-200/50'
+                                        }`}
+                                      >
+                                        <span className="material-symbols-outlined text-[12px]">{isVerified ? 'verified' : 'new_releases'}</span>
+                                        {isVerified ? 'વેરિફાઈડ દૂર કરો' : 'વેરિફાય કરો'}
+                                      </button>
+
+                                      {/* Representative toggle */}
+                                      <button 
+                                        onClick={() => toggleUserRepresentative(user.id, isRepresentative)}
+                                        disabled={isSavingUser === user.id}
+                                        className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-gujarati font-bold transition-all ${
+                                          isRepresentative 
+                                            ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200' 
+                                            : 'bg-stone-100 text-stone-600 hover:bg-stone-200 border border-stone-200/50'
+                                        }`}
+                                      >
+                                        <span className="material-symbols-outlined text-[12px]">shield_person</span>
+                                        {isRepresentative ? 'પ્રતિનિધિ હટાવો' : 'પ્રતિનિધિ બનાવો'}
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            })
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
