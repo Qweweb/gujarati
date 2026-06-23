@@ -57,15 +57,15 @@ export default function DailyChallenge() {
     try {
       const { data, error } = await supabase
         .from('users')
-        .select('id, name, photo_url, challenge_streak, city')
-        .order('challenge_streak', { ascending: false })
+        .select('id, name, photo_url, streak_count, city')
+        .order('streak_count', { ascending: false })
         .limit(100);
       
       let selectData = data || [];
       const currentUserId = localStorage.getItem('supabase_user_id');
 
       if (error) {
-        console.warn("Retrying leaderboard fetch without challenge_streak...");
+        console.warn("Retrying leaderboard fetch without streak_count...");
         const retryResult = await supabase
           .from('users')
           .select('id, name, photo_url, city')
@@ -73,7 +73,7 @@ export default function DailyChallenge() {
         if (retryResult.error) throw retryResult.error;
         selectData = (retryResult.data || []).map(u => ({
           ...u,
-          challenge_streak: String(u.id) === String(currentUserId)
+          streak_count: String(u.id) === String(currentUserId)
             ? parseInt(localStorage.getItem('otlo_challenge_streak') || '0', 10)
             : 0
         }));
@@ -94,7 +94,7 @@ export default function DailyChallenge() {
           unique.push(item);
         }
       }
-      unique.sort((a, b) => (b.challenge_streak || 0) - (a.challenge_streak || 0));
+      unique.sort((a, b) => (b.streak_count || 0) - (a.streak_count || 0));
       const top10 = unique.slice(0, 10);
 
       const formatted = top10.map(u => {
@@ -102,7 +102,7 @@ export default function DailyChallenge() {
         return {
           name: u.name || 'અજ્ઞાત',
           avatar: u.photo_url,
-          streak: u.challenge_streak || 0,
+          streak: u.streak_count || 0,
           city: isUser ? (u.city || JSON.parse(localStorage.getItem('user_profile') || '{}').city) : u.city,
           isUser
         };

@@ -322,7 +322,7 @@ export const syncUserProfile = async () => {
       village_id: village_id,
       ward: ward,
       city: city,
-      challenge_streak: challengeStreak,
+      streak_count: challengeStreak,
       last_active: new Date().toISOString().split('T')[0],
       email: email,
       gender: gender,
