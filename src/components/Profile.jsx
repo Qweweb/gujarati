@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { syncUserProfile } from '../utils/otlo_helper';
+import { useTheme } from '../context/ThemeContext';
 
 const Profile = () => {
+  const { activeTheme, changeTheme, themes } = useTheme();
   const [profile, setProfile] = useState(() => {
     try {
       const saved = localStorage.getItem('user_profile');
@@ -105,16 +107,6 @@ const Profile = () => {
     setError('');
   };
 
-  const settings = [
-    { title: "મારા ઇનામો (My Rewards)", icon: "card_giftcard", desc: "ક્વિઝ અને પ્રવાસ દ્વારા મેળવેલી કૂપન્સ જુઓ", link: "/rewards" },
-    { title: "ગુજરાત ટ્રાવેલ પાસપોર્ટ (Gujarat Travel Passport)", icon: "menu_book", desc: "ગુજરાત સફારી પ્રવાસ બુક અને સ્ટેમ્પ્સ", link: "/passport" },
-    { title: "સ્વાસ્થ્ય ડેટા સેટિંગ્સ", icon: "health_and_safety", desc: "BP અને Sugar રેકોર્ડ્સ મેનેજ કરો" },
-    { title: "પરિવારની પ્રોફાઇલ", icon: "family_restroom", desc: "સભ્યો ઉમેરો અથવા બદલો" },
-    { title: "સામાન્ય સેટિંગ્સ", icon: "settings", desc: "નોટિફિકેશન અને એપ કંટ્રોલ", link: "/settings" },
-    { title: "ડાઉનલોડ્સ (ઓફલાઇન)", icon: "download_for_offline", desc: "વાર્તા અને પંચાંગ ડાઉનલોડ કરો", link: "/offline" },
-    { title: "ભાષા (Language)", icon: "language", desc: "ગુજરાતી - ગુજરાતી" },
-  ];
-
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
@@ -127,6 +119,18 @@ const Profile = () => {
     localStorage.removeItem('google_avatar');
     window.location.reload();
   };
+
+  const settings = [
+    { title: "ડિજિટલ બિઝનેસ કાર્ડ (My vCard)", icon: "contact_mail", desc: "તમારું સ્માર્ટ ડિજિટલ કાર્ડ મેનેજ કરો", link: "/card" },
+    { title: "મારા ઇનામો (My Rewards)", icon: "card_giftcard", desc: "ક્વિઝ અને પ્રવાસ દ્વારા મેળવેલી કૂપન્સ જુઓ", link: "/rewards" },
+    { title: "ગુજરાત ટ્રાવેલ પાસપોર્ટ (Gujarat Travel Passport)", icon: "menu_book", desc: "ગુજરાત સફારી પ્રવાસ બુક અને સ્ટેમ્પ્સ", link: "/passport" },
+    { title: "સ્વાસ્થ્ય ડેટા સેટિંગ્સ", icon: "health_and_safety", desc: "BP અને Sugar રેકોર્ડ્સ મેનેજ કરો" },
+    { title: "પરિવારની પ્રોફાઇલ", icon: "family_restroom", desc: "સભ્યો ઉમેરો અથવા બદલો" },
+    { title: "સેટિંગ્સ (Settings)", icon: "settings", desc: "થીમ બદલો અને નોટિફિકેશન", link: "/settings" },
+    { title: "ઓફલાઇન (ડાઉનલોડ)", icon: "download_for_offline", desc: "ઇન્ટરનેટ વગર સાહિત્ય વાંચવા માટે", link: "/offline" },
+    { title: "ભાષા (Language)", icon: "language", desc: "ગુજરાતી - ગુજરાતી" },
+    { title: "લોગ-આઉટ (Logout)", icon: "logout", desc: "તમારું એકાઉન્ટ સેફ્ટીથી બંધ કરો", isAction: true, isDanger: true, action: handleLogout },
+  ];
 
   const avatarSrc = profile.avatar || `https://i.pravatar.cc/100?u=${profile.name || 'gujarati'}`;
   const displayName = profile.name || profile.email || 'ગુજરાતી યુઝર';
@@ -163,15 +167,15 @@ const Profile = () => {
               </p>
             )}
             {isFirstLogin && (
-              <div className="mt-3 px-4 py-2 bg-amber-50 border border-amber-200 rounded-2xl">
-                <p className="font-gujarati text-amber-700 text-xs font-bold">
+              <div className="mt-3 px-4 py-2 bg-yellow-50 border border-yellow-200 rounded-2xl">
+                <p className="font-gujarati text-yellow-800 text-xs font-bold">
                   ⚠️ પ્રોફાઇલ પૂર્ણ કરો — નીચે Edit બટન દબાવો
                 </p>
               </div>
             )}
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="mt-3 px-4 py-1.5 bg-orange-600/10 hover:bg-orange-600/20 text-orange-600 rounded-full font-gujarati font-bold text-xs transition-all active:scale-95"
+              className="mt-3 px-4 py-1.5 bg-teal-700/10 hover:bg-teal-700/20 text-teal-700 rounded-full font-gujarati font-bold text-xs transition-all active:scale-95"
             >
               ✏️ પ્રોફાઇલ એડિટ કરો
             </button>
@@ -183,12 +187,28 @@ const Profile = () => {
         <p className="font-gujarati font-bold text-outline text-xs uppercase tracking-widest pl-4">સેટિંગ્સ</p>
         <div className="space-y-3">
             {settings.map((s, idx) => (
+              s.isAction ? (
+                <button 
+                    key={idx} 
+                    onClick={s.action} 
+                    className="w-full text-left bg-white dark:bg-dark-surface p-6 rounded-[2rem] shadow-sm border border-black/5 dark:border-dark-accent/5 flex items-center gap-6 group hover:border-error/20 transition-all block"
+                >
+                    <div className={`w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 ${s.isDanger ? 'bg-error/10 text-error' : 'bg-primary/10 text-primary dark:bg-dark-accent/10 dark:text-dark-text'}`}>
+                        <span className="material-symbols-outlined text-3xl font-bold">{s.icon}</span>
+                    </div>
+                    <div className="flex-1 text-left">
+                        <h4 className={`font-gujarati font-black text-xl ${s.isDanger ? 'text-error' : 'text-on-surface dark:text-dark-text'}`}>{s.title}</h4>
+                        <p className="font-gujarati text-sm text-outline dark:text-dark-text-dim">{s.desc}</p>
+                    </div>
+                    <span className="material-symbols-outlined text-outline">chevron_right</span>
+                </button>
+              ) : (
                 <Link 
                     key={idx} 
                     to={s.link || "/"} 
                     className="bg-white dark:bg-dark-surface p-6 rounded-[2rem] shadow-sm border border-black/5 dark:border-dark-accent/5 flex items-center gap-6 group hover:border-primary/20 transition-all block"
                 >
-                    <div className="h-14 w-14 bg-surface-container dark:bg-dark-bg rounded-2xl flex items-center justify-center text-outline group-hover:text-primary transition-all">
+                    <div className="w-14 h-14 rounded-full bg-primary/10 text-primary dark:bg-dark-accent/10 dark:text-dark-text flex items-center justify-center flex-shrink-0">
                         <span className="material-symbols-outlined text-3xl font-bold">{s.icon}</span>
                     </div>
                     <div className="flex-1 text-left">
@@ -196,30 +216,25 @@ const Profile = () => {
                         <p className="font-gujarati text-sm text-outline dark:text-dark-text-dim">{s.desc}</p>
                     </div>
                     <span className="material-symbols-outlined text-outline">chevron_right</span>
-                </Link>
+                  </Link>
+              )
             ))}
         </div>
       </section>
 
       {/* Logout */}
       <section className="pt-6">
-        <button 
-            onClick={handleLogout}
-            className="w-full py-5 bg-error/5 text-error rounded-2xl font-gujarati font-black text-xl border border-error/10 active:scale-95 transition-all text-center"
-        >
-            લોગ-આઉટ કરો
-        </button>
         <p className="text-center text-outline text-[10px] mt-6 font-label uppercase tracking-widest">Version 1.0.0 (Beta)</p>
       </section>
 
       {/* Edit Profile Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-dark-surface rounded-t-[2.5rem] sm:rounded-[2.5rem] p-8 max-w-sm w-full space-y-5 shadow-2xl border-t-8 border-orange-600 relative animate-scale-up text-left max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-dark-surface rounded-t-[2.5rem] sm:rounded-[2.5rem] p-8 max-w-sm w-full space-y-5 shadow-2xl border-t-8 border-teal-700 relative animate-scale-up text-left max-h-[90vh] overflow-y-auto">
             
             {/* Google User Banner */}
             {googleUser && (
-              <div className="flex items-center gap-3 p-3 bg-orange-50 dark:bg-orange-900/20 rounded-2xl">
+              <div className="flex items-center gap-3 p-3 bg-teal-50 dark:bg-teal-950/20 rounded-2xl">
                 <img 
                   src={profile.avatar || `https://i.pravatar.cc/40`}
                   className="w-10 h-10 rounded-full object-cover"
@@ -227,7 +242,7 @@ const Profile = () => {
                   alt="Google"
                 />
                 <div>
-                  <p className="font-gujarati font-bold text-sm text-orange-600">Google Account થી Login</p>
+                  <p className="font-gujarati font-bold text-sm text-teal-700">Google Account થી Login</p>
                   <p className="font-label text-xs text-stone-500">{profile.email}</p>
                 </div>
                 <svg className="w-5 h-5 ml-auto text-green-500" viewBox="0 0 24 24" fill="currentColor">
@@ -237,7 +252,7 @@ const Profile = () => {
             )}
 
             <div className="text-center">
-              <h3 className="font-gujarati font-black text-2xl text-orange-600">
+              <h3 className="font-gujarati font-black text-2xl text-teal-700">
                 {isFirstLogin ? '🙏 સ્વાગત છે!' : 'પ્રોફાઇલ વિગતો'}
               </h3>
               <p className="font-gujarati text-sm text-stone-500 mt-1">
@@ -256,7 +271,7 @@ const Profile = () => {
                   value={name} 
                   onChange={(e) => setName(e.target.value)} 
                   placeholder="નામ લખો" 
-                  className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-orange-600 font-gujarati text-sm text-on-surface dark:text-dark-text"
+                  className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-teal-700 font-gujarati text-sm text-on-surface dark:text-dark-text"
                 />
               </div>
 
@@ -268,7 +283,7 @@ const Profile = () => {
                   value={mobile} 
                   onChange={(e) => setMobile(e.target.value.replace(/\D/g, ''))} 
                   placeholder="WhatsApp નંબર" 
-                  className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-orange-600 font-gujarati text-sm text-on-surface dark:text-dark-text"
+                  className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-teal-700 font-gujarati text-sm text-on-surface dark:text-dark-text"
                 />
               </div>
 
@@ -278,7 +293,7 @@ const Profile = () => {
                   <select 
                     value={gender} 
                     onChange={(e) => setGender(e.target.value)} 
-                    className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-orange-600 font-gujarati text-sm text-on-surface dark:text-dark-text"
+                    className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-teal-700 font-gujarati text-sm text-on-surface dark:text-dark-text"
                   >
                     <option value="">પસંદ કરો</option>
                     <option value="male">પુરુષ</option>
@@ -293,7 +308,7 @@ const Profile = () => {
                     type="date" 
                     value={dob} 
                     onChange={(e) => setDob(e.target.value)} 
-                    className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-orange-600 font-gujarati text-sm text-on-surface dark:text-dark-text"
+                    className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-teal-700 font-gujarati text-sm text-on-surface dark:text-dark-text"
                   />
                 </div>
               </div>
@@ -305,7 +320,7 @@ const Profile = () => {
                   value={city} 
                   onChange={(e) => setCity(e.target.value)} 
                   placeholder="દા.ત. અમદાવાદ, સુરત, રાજકોટ..." 
-                  className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-orange-600 font-gujarati text-sm text-on-surface dark:text-dark-text"
+                  className="w-full p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-[#F5EEDC]/20 dark:bg-dark-bg outline-none focus:border-teal-700 font-gujarati text-sm text-on-surface dark:text-dark-text"
                 />
               </div>
 
@@ -323,7 +338,7 @@ const Profile = () => {
                 )}
                 <button 
                   type="submit" 
-                  className="flex-1 py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-gujarati font-black active:scale-95 transition-all text-center"
+                  className="flex-1 py-4 bg-teal-700 hover:bg-teal-800 text-white rounded-xl font-gujarati font-black active:scale-95 transition-all text-center"
                 >
                   {isFirstLogin ? '🙏 સ્ટાર્ટ કરો' : 'સેવ કરો'}
                 </button>

@@ -1,6 +1,8 @@
+import { uploadToCloudinary } from '../utils/cloudinaryHelper';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ShareButton from './ShareButton';
+import CommunityFeed from './CommunityFeed';
 import { 
   DISTRICTS, 
   TALUKAS, 
@@ -32,8 +34,6 @@ import {
   blockOtloUser
 } from '../utils/otlo_helper';
 import RamatoHub from './RamatoHub';
-import EnglishZone from './EnglishZone';
-import MariSociety from './MariSociety';
 
 const SIMULATED_IMAGES = [
   "https://images.unsplash.com/photo-1566378246598-5b11a0ff7f6c?auto=format&fit=crop&q=80&w=800",
@@ -45,6 +45,11 @@ const SIMULATED_IMAGES = [
 
 const Community = () => {
   const navigate = useNavigate();
+
+  const [isDev] = useState(() => localStorage.getItem('user_phone') === '9999999999');
+
+  // Global isDev check removed so users can access other sections
+
   
   // Dynamic villages database state
   const [allVillages, setAllVillages] = useState(null);
@@ -377,7 +382,18 @@ const Community = () => {
       return;
     }
     
-    await createOtloPost(newPostText.trim(), newPostCategory, newPostVisibility, newPostMediaUrl);
+    // Upload image to Cloudinary if one is selected
+    let finalMediaUrl = "";
+    if (selectedImageFile) {
+      try {
+        triggerToast("📤 ফোটো અપલોડ થઈ રહ્યો છે...");
+        finalMediaUrl = await uploadToCloudinary(selectedImageFile);
+      } catch (err) {
+        alert("ফোটো અপলোড নিষ্ফল. কৃপা করীনে ফরী প্রয়াস করো.");
+        return;
+      }
+    }
+    await createOtloPost(newPostText.trim(), newPostCategory, newPostVisibility, finalMediaUrl);
     setNewPostText("");
     setNewPostCategory("news");
     setNewPostVisibility("village");
@@ -514,7 +530,7 @@ const Community = () => {
 
   // Invite referrals
   const handleInviteReferral = () => {
-    const inviteUrl = `${window.location.origin}/community?ref=user_${Date.now()}`;
+    const inviteUrl = `https://gujaratiapp.in/community?ref=user_${Date.now()}`;
     navigator.clipboard.writeText(inviteUrl)
       .then(() => {
         addReferral();
@@ -611,7 +627,7 @@ const Community = () => {
             <button
               onClick={handleGPSAutoDetect}
               disabled={gpsLoading}
-              className="bg-[#fef8f1] dark:bg-dark-bg border-2 border-primary/20 hover:border-primary/50 text-[#994700] dark:text-dark-accent px-6 py-4 rounded-2xl font-gujarati font-black text-sm active:scale-95 transition-transform flex items-center justify-center gap-2 w-full shadow-sm"
+              className="bg-[#F4F4F0] dark:bg-dark-bg border-2 border-primary/20 hover:border-primary/50 text-[#2D3748] dark:text-dark-accent px-6 py-4 rounded-2xl font-gujarati font-black text-sm active:scale-95 transition-transform flex items-center justify-center gap-2 w-full shadow-sm"
             >
               <span className="material-symbols-outlined text-xl animate-pulse">location_on</span>
               <span>{gpsLoading ? "લોકેશન શોધી રહ્યા છીએ..." : "મારું GPS લોકેશન વાપરો 📍"}</span>
@@ -634,7 +650,7 @@ const Community = () => {
               <select
                 value={districtId}
                 onChange={(e) => handleDistrictChange(e.target.value)}
-                className="w-full bg-[#fef8f1] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3.5 font-gujarati text-sm focus:outline-none focus:border-primary text-on-surface"
+                className="w-full bg-[#F4F4F0] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3.5 font-gujarati text-sm focus:outline-none focus:border-primary text-on-surface"
               >
                 <option value="">જિલ્લો પસંદ કરો</option>
                 {DISTRICTS.map(d => (
@@ -649,7 +665,7 @@ const Community = () => {
                 value={talukaId}
                 onChange={(e) => handleTalukaChange(e.target.value)}
                 disabled={!districtId}
-                className="w-full bg-[#fef8f1] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3.5 font-gujarati text-sm focus:outline-none focus:border-primary disabled:opacity-50 disabled:bg-stone-100/50 text-on-surface"
+                className="w-full bg-[#F4F4F0] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3.5 font-gujarati text-sm focus:outline-none focus:border-primary disabled:opacity-50 disabled:bg-stone-100/50 text-on-surface"
               >
                 <option value="">તાલુકો પસંદ કરો</option>
                 {districtId && (
@@ -662,8 +678,8 @@ const Community = () => {
             </div>
 
             {talukaId === "district_city" && (
-              <div className="bg-amber-50 dark:bg-stone-800/40 p-4 rounded-2xl border border-amber-200/50 dark:border-stone-800 flex items-center gap-2">
-                <span className="material-symbols-outlined text-amber-500">info</span>
+              <div className="bg-yellow-50 dark:bg-stone-800/40 p-4 rounded-2xl border border-yellow-200/50 dark:border-stone-800 flex items-center gap-2">
+                <span className="material-symbols-outlined text-yellow-600">info</span>
                 <p className="font-gujarati text-xs text-stone-600 dark:text-stone-300 leading-normal">
                   મુખ્ય શહેરી વિસ્તાર (સિટી) હોવાથી ગામડાંની પસંદગી જરૂરી નથી. તમે વૈકલ્પિક રીતે નીચે તમારો વૉર્ડ કે સોસાયટી વિસ્તાર લખી શકો છો.
                 </p>
@@ -685,7 +701,7 @@ const Community = () => {
                       }
                     }}
                     disabled={!talukaId || villagesLoading}
-                    className="w-full bg-[#fef8f1] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3.5 font-gujarati text-sm focus:outline-none focus:border-primary disabled:opacity-50 disabled:bg-stone-100/50 text-on-surface"
+                    className="w-full bg-[#F4F4F0] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3.5 font-gujarati text-sm focus:outline-none focus:border-primary disabled:opacity-50 disabled:bg-stone-100/50 text-on-surface"
                   >
                     <option value="">{villagesLoading ? "ગામો લોડ થઈ રહ્યા છે..." : "ગામ પસંદ કરો"}</option>
                     {talukaId && (
@@ -703,7 +719,7 @@ const Community = () => {
                       value={customVillageName}
                       onChange={(e) => setCustomVillageName(e.target.value)}
                       placeholder="તમારા ગામ/શહેરનું નામ લખો"
-                      className="w-full bg-[#fef8f1] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3.5 font-gujarati text-sm focus:outline-none focus:border-primary text-on-surface"
+                      className="w-full bg-[#F4F4F0] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3.5 font-gujarati text-sm focus:outline-none focus:border-primary text-on-surface"
                     />
                     <button
                       type="button"
@@ -724,13 +740,13 @@ const Community = () => {
                 value={ward}
                 onChange={(e) => setWard(e.target.value)}
                 placeholder="દા.ત. નડિયાદ ગેટ પાસે, વૉર્ડ ૧"
-                className="w-full bg-[#fef8f1] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3.5 font-gujarati text-sm focus:outline-none focus:border-primary text-on-surface"
+                className="w-full bg-[#F4F4F0] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3.5 font-gujarati text-sm focus:outline-none focus:border-primary text-on-surface"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white py-4 rounded-2xl font-gujarati font-black text-base shadow-xl active:scale-95 transition-transform mt-4"
+              className="w-full bg-[#2D3748] hover:bg-[#2D3748]/90 text-[#F4F4F0] py-4 rounded-2xl font-gujarati font-black text-base shadow-xl active:scale-95 transition-transform mt-4"
             >
               બેઠક શરૂ કરો 🚀
             </button>
@@ -749,7 +765,7 @@ const Community = () => {
                 </p>
               </div>
               
-              <div className="bg-[#fef8f1] dark:bg-dark-bg p-5 rounded-2xl border border-primary/10 space-y-3">
+              <div className="bg-[#F4F4F0] dark:bg-dark-bg p-5 rounded-2xl border border-primary/10 space-y-3">
                 <div className="flex justify-between items-center text-sm border-b border-primary/5 pb-2">
                   <span className="font-gujarati font-bold text-stone-400">જિલ્લો:</span>
                   <span className="font-gujarati font-black text-on-surface">
@@ -774,7 +790,7 @@ const Community = () => {
                 <button 
                   type="button"
                   onClick={handleConfirmGps}
-                  className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white py-3.5 rounded-2xl font-gujarati font-black text-sm shadow-lg active:scale-95 transition-transform"
+                  className="w-full bg-[#2D3748] hover:bg-[#2D3748]/90 text-[#F4F4F0] py-3.5 rounded-2xl font-gujarati font-black text-sm shadow-lg active:scale-95 transition-transform"
                 >
                   હા, આ જ છે! ✓
                 </button>
@@ -796,33 +812,7 @@ const Community = () => {
   // 2. MAIN FEED SCREEN (WHEN USER LOCATION IS CONFIGURED)
   return (
     <div className="animate-fade-in space-y-6 pb-16">
-            {/* Hub Version of Top Banner Card */}
-      {activeTab === 'hub' && (
-      <section 
-        onClick={() => setActiveTab('feed')}
-        className="bg-gradient-to-br from-amber-600 to-orange-700 p-6 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden cursor-pointer active:scale-95 transition-transform border border-amber-500/20"
-      >
-        <div className="absolute right-[-20px] top-[-20px] opacity-10 select-none pointer-events-none text-9xl">
-          groups
-        </div>
-        <div className="space-y-3 relative z-10">
-          <div className="flex justify-between items-start gap-4">
-            <div className="space-y-1">
-              <span className="bg-white/20 border border-white/20 text-white/95 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider inline-block">
-                હાઈપર-લોકલ સોશિયલ કમ્યુનિટી 🏘️
-              </span>
-              <h2 className="font-gujarati font-black text-3xl">ડિજિટલ ઓટલો</h2>
-            </div>
-          </div>
-          <p className="font-gujarati text-amber-200/90 text-sm max-w-xl">
-            તમારા ગામ અને સોસાયટીના સમાચાર, ચર્ચાઓ, લીડરબોર્ડ અને ડિરેક્ટરી માટે અહીં ક્લિક કરો.
-          </p>
-          <button className="bg-white/20 hover:bg-white/30 text-white px-5 py-2.5 rounded-xl font-headline font-bold text-sm shadow-sm flex items-center gap-2 border border-white/10 w-fit mt-2">
-            ઓટલો ખોલો <span className="material-symbols-outlined text-sm">arrow_forward</span>
-          </button>
-        </div>
-      </section>
-      )}
+            
 
       {/* Otalo Inner Sections (Feed, Directory, etc) */}
       {['feed', 'directory', 'leaderboard', 'sabha'].includes(activeTab) && (
@@ -836,17 +826,17 @@ const Community = () => {
           </button>
           
           {/* Top Banner Card */}
-      <section className="bg-gradient-to-br from-amber-600 to-orange-700 p-6 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden">
+      <section className="bg-[#2D3748] p-6 rounded-[2.5rem] text-[#F4F4F0] shadow-sm relative overflow-hidden border border-[#0D9488]/30">
         <div className="absolute right-[-20px] top-[-20px] opacity-10 select-none pointer-events-none text-9xl">
           groups
         </div>
         <div className="space-y-4">
           <div className="flex justify-between items-start gap-4">
             <div className="space-y-1">
-              <span className="bg-white/20 border border-white/20 text-white/95 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider inline-block">
+              <span className="bg-[#0D9488]/20 border border-[#0D9488]/50 text-[#0D9488] px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider inline-block">
                 હાઈપર-લોકલ સોશિયલ કમ્યુનિટી 🏘️
               </span>
-              <h2 className="font-gujarati font-black text-3xl">ડિજિટલ ઓટલો</h2>
+              <h2 className="font-gujarati font-black text-3xl">ડિજિટલ બેઠક</h2>
             </div>
             <div className="flex items-center gap-2">
               <button 
@@ -860,7 +850,7 @@ const Community = () => {
                 <button
                   onClick={handleResetLocation}
                   className="h-10 w-10 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl flex items-center justify-center transition-all active:scale-90 shadow-sm"
-                  title="ઓટલો બદલો"
+                  title="બેઠક બદલો"
                 >
                   <span className="material-symbols-outlined text-xl">settings</span>
                 </button>
@@ -871,7 +861,7 @@ const Community = () => {
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10 flex items-center gap-3">
             <span className="material-symbols-outlined text-yellow-300">location_on</span>
             <div className="flex-1 min-w-0">
-              <p className="font-gujarati text-[10px] text-orange-200">ચાલુ સ્થાનિક બેઠક:</p>
+              <p className="font-gujarati text-[10px] text-teal-200">ચાલુ સ્થાનિક બેઠક:</p>
               <p className="font-gujarati font-bold text-sm truncate">
                 {userLocation ? (
                   userLocation.talukaId === "district_city" ? (
@@ -902,12 +892,12 @@ const Community = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-3 p-4 rounded-2xl transition-all active:scale-95 border ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-md border-transparent'
-                    : 'bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-700 shadow-sm hover:border-orange-400'
+                    ? 'bg-[#2D3748] text-[#F4F4F0] shadow-md border-[#0D9488]/30'
+                    : 'bg-[#F4F4F0] dark:bg-[#1E1A18] text-[#2D3748] dark:text-[#F4F4F0] border-[#0D9488]/30 shadow-sm hover:border-[#2D3748]'
                 } `}
               >
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === tab.id ? 'bg-white/20' : 'bg-orange-100 dark:bg-orange-900/30'}`}>
-                  <span className={`material-symbols-outlined text-xl ${activeTab === tab.id ? 'text-white' : 'text-orange-600 dark:text-orange-400'}`}>{tab.icon}</span>
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === tab.id ? 'bg-[#0D9488]/20' : 'bg-[#0D9488]/10'}`}>
+                  <span className={`material-symbols-outlined text-xl font-bold ${activeTab === tab.id ? 'text-[#0D9488]' : 'text-[#2D3748] dark:text-[#0D9488]'}`}>{tab.icon}</span>
                 </div>
                 <span className="font-gujarati font-bold text-sm">{tab.label}</span>
               </button>
@@ -917,125 +907,107 @@ const Community = () => {
       )}
 
       {activeTab === "hub" && (
-      <>
+      <div className="space-y-4 pt-2">
       
-      {/* Society FEATURE BANNER */}
-      <section 
-        onClick={() => setActiveTab('society')}
-        className="bg-gradient-to-br from-emerald-600 to-teal-800 p-8 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 cursor-pointer active:scale-95 transition-transform"
-      >
-        <div className="absolute right-[-20px] top-[-20px] opacity-10 select-none pointer-events-none text-9xl">
-          holiday_village
-        </div>
-        <div className="space-y-2 z-10 text-center md:text-left flex-1">
-          <span className="bg-emerald-400/20 text-emerald-300 border border-emerald-400/40 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest inline-block mb-1">
-            નવું અપડેટ 🏡
-          </span>
-          <h2 className="font-gujarati font-black text-3xl">મારી સોસાયટી</h2>
-          <p className="font-gujarati text-emerald-100/90 text-sm max-w-sm mx-auto md:mx-0">
-            તમારી સોસાયટીનું મેનેજમેન્ટ, મેન્ટેનન્સ અને ફરિયાદોનો ઉકેલ એક જ જગ્યાએ.
-          </p>
-        </div>
-        <div className="z-10 flex-shrink-0">
-          <button className="bg-white text-emerald-700 px-6 py-3 rounded-2xl font-headline font-black text-sm shadow-lg active:scale-95 transition-all">
-            સોસાયટી ખોલો →
-          </button>
-        </div>
-      </section>
+        {/* ROW 1: 2 Cards (Digital Bethak & My Society) */}
+        <div className="grid grid-cols-2 gap-4">
+          <section 
+            onClick={() => setActiveTab("feed")}
+            className="bg-[#2D3748] p-5 rounded-3xl text-center flex flex-col items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform border border-[#0D9488]/30 relative overflow-hidden cursor-pointer min-h-[140px]"
+          >
+            <div className="absolute right-[-10px] top-[-10px] opacity-10 select-none pointer-events-none text-7xl">
+              groups
+            </div>
+            <div className="h-12 w-12 bg-[#0D9488]/20 rounded-2xl flex items-center justify-center relative z-10 shrink-0">
+              <span className="material-symbols-outlined text-[#0D9488] text-2xl font-bold">groups</span>
+            </div>
+            <div className="relative z-10 mt-1">
+              <h2 className="font-gujarati font-black text-base text-[#F4F4F0]">ડિજિટલ બેઠક</h2>
+              <p className="font-gujarati text-[10px] text-teal-200 mt-1">ગામના સમાચાર ને ચર્ચા</p>
+            </div>
+          </section>
 
-      {/* Quiz GUJARATI FEATURE BANNER */}
-      <section id="quiz-banner" className="bg-gradient-to-r from-amber-700 via-amber-800 to-amber-950 p-8 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 border-4 border-amber-500/30">
-        <div className="absolute right-0 top-0 opacity-10 select-none pointer-events-none text-9xl -translate-y-10 translate-x-10">
-          👑
+          <section 
+            onClick={() => navigate("/society")}
+            className="bg-[#F4F4F0] dark:bg-[#1E1A18] p-5 rounded-3xl text-center flex flex-col items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform border border-[#0D9488]/30 relative overflow-hidden cursor-pointer min-h-[140px]"
+          >
+            <div className="absolute right-[-10px] top-[-10px] opacity-[0.03] dark:opacity-5 select-none pointer-events-none text-7xl">
+              holiday_village
+            </div>
+            <div className="h-12 w-12 bg-teal-50 dark:bg-teal-900/30 rounded-2xl flex items-center justify-center relative z-10 shrink-0">
+              <span className="material-symbols-outlined text-[#0D9488] text-2xl font-bold">holiday_village</span>
+            </div>
+            <div className="relative z-10 mt-1">
+              <h2 className="font-gujarati font-black text-base text-[#2D3748] dark:text-[#F4F4F0]">મારી સોસાયટી</h2>
+              <p className="font-gujarati text-[10px] text-[#0D9488] font-bold mt-1">મેનેજમેન્ટ અને સુવિધા</p>
+            </div>
+          </section>
         </div>
-        <div className="space-y-2 z-10 text-center md:text-left flex-1">
-          <span className="bg-amber-400/20 text-amber-300 border border-amber-400/40 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest inline-block mb-1">
-            નવી ક્વિઝ અને રમતો ⚡
-          </span>
-          <div className="flex items-center justify-center md:justify-start gap-3">
-            <h3 className="font-headline font-black text-3xl md:text-4xl text-amber-100 tracking-wide">
-              ગુજરાતી ક્વિઝ અને રમતો
-            </h3>
-            <ShareButton 
-              sectionId="quiz-banner" 
-              successMessage="✨ ગુજરાતી ક્વિઝની લિંક કોપી થઈ ગઈ છે!" 
-              className="bg-white/10 hover:bg-white/20 border-white/20 text-white dark:bg-white/10 dark:hover:bg-white/20 dark:text-white"
-            />
-          </div>
-          <p className="font-gujarati text-amber-200/90 text-sm md:text-base max-w-xl mt-2">
-            તમારી ઉંમર મુજબના પ્રશ્નો રમો, જ્ઞાન વધારો, મિત્રોને પડકારો અને સર્ટિફિકેટ જીતો!
-          </p>
-        </div>
-        <button
-          onClick={() => setActiveTab('games')}
-          className="z-10 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-amber-950 px-8 py-4 rounded-2xl font-headline font-black text-lg shadow-2xl active:scale-95 transition whitespace-nowrap flex items-center gap-2 border border-amber-200"
+
+        {/* ROW 2: 1 Card (Bhakti Cards Maker) */}
+        <section 
+          id="cards-banner"
+          onClick={() => navigate("/devotional-cards")}
+          className="bg-[#F4F4F0] dark:bg-[#1E1A18] p-6 rounded-[2rem] shadow-sm relative overflow-hidden flex flex-row items-center justify-between gap-4 border border-[#0D9488]/30 cursor-pointer active:scale-95 transition-transform"
         >
-          <span>🎯</span> ક્વિઝ અને રમતો
-        </button>
-      </section>
-
-      {/* English Pathshala FEATURE BANNER */}
-      <section id="english-banner" className="bg-gradient-to-r from-indigo-800 via-indigo-900 to-indigo-950 p-8 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 border-4 border-indigo-500/30">
-        <div className="absolute right-0 top-0 opacity-10 select-none pointer-events-none text-9xl -translate-y-5 translate-x-10">
-          📝
-        </div>
-        <div className="space-y-2 z-10 text-center md:text-left flex-1">
-          <span className="bg-indigo-400/20 text-indigo-300 border border-indigo-400/40 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest inline-block mb-1">
-            નવું ફિચર 🌟
-          </span>
-          <div className="flex items-center justify-center md:justify-start gap-3">
-            <h3 className="font-headline font-black text-3xl md:text-4xl text-indigo-100 tracking-wide">
-              અંગ્રેજી પાઠશાળા
-            </h3>
-            <ShareButton 
-              sectionId="english-banner" 
-              successMessage="✨ અંગ્રેજી પાઠશાળાની લિંક કોપી થઈ ગઈ છે!" 
-              className="bg-white/10 hover:bg-white/20 border-white/20 text-white dark:bg-white/10 dark:hover:bg-white/20 dark:text-white"
-            />
+          <div className="absolute right-0 top-0 opacity-[0.03] dark:opacity-5 select-none pointer-events-none text-8xl translate-x-4 -translate-y-4">
+            🕉️
           </div>
-          <p className="font-gujarati text-indigo-200/90 text-sm md:text-base max-w-xl mt-2">
-            રમત રમીને સરળતાથી સાચું ઇંગ્લિશ શીખો. સ્પેલિંગ, વાક્ય, અને રોજિંદી વાતચીત માટે ખાસ.
-          </p>
-        </div>
-        <button
-          onClick={() => setActiveTab('english')}
-          className="z-10 bg-gradient-to-r from-indigo-400 to-indigo-500 hover:from-indigo-300 hover:to-indigo-400 text-indigo-950 px-8 py-4 rounded-2xl font-headline font-black text-lg shadow-2xl active:scale-95 transition whitespace-nowrap flex items-center gap-2 border border-indigo-200"
-        >
-          <span>📝</span> ઇંગ્લિશ શીખો
-        </button>
-      </section>
-
-      {/* Devotional Cards FEATURE BANNER */}
-      <section id="cards-banner" className="bg-gradient-to-r from-indigo-800 via-indigo-900 to-indigo-950 p-8 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 border-4 border-indigo-500/30">
-        <div className="absolute right-0 top-0 opacity-10 select-none pointer-events-none text-9xl -translate-y-5 translate-x-10">
-          🕉️
-        </div>
-        <div className="space-y-2 z-10 text-center md:text-left flex-1">
-          <span className="bg-indigo-400/20 text-indigo-300 border border-indigo-400/40 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest inline-block mb-1">
-            નવું ફિચર 🌟
-          </span>
-          <div className="flex items-center justify-center md:justify-start gap-3">
-            <h3 className="font-headline font-black text-3xl md:text-4xl text-indigo-100 tracking-wide">
+          <div className="flex-1 space-y-1 relative z-10 text-left pr-8">
+            <span className="bg-[#2D3748]/10 text-[#2D3748] dark:bg-[#0D9488]/10 dark:text-[#0D9488] border border-[#2D3748]/20 dark:border-[#0D9488]/20 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest inline-block mb-1">
+              નવું ફિચર 🌟
+            </span>
+            <h3 className="font-headline font-black text-2xl text-[#2D3748] dark:text-[#F4F4F0] tracking-wide">
               ભક્તિ Cards મેકર
             </h3>
-            <ShareButton 
-              sectionId="cards-banner" 
-              successMessage="✨ ભક્તિ કાર્ડ મેકરની લિંક કોપી થઈ ગઈ છે!" 
-              className="bg-white/10 hover:bg-white/20 border-white/20 text-white dark:bg-white/10 dark:hover:bg-white/20 dark:text-white"
-            />
+            <p className="font-gujarati text-[#0D9488] font-bold text-xs max-w-[200px] mt-1">
+              તમારું નામ અને ફોટો લગાવી સુંદર ભગવાનના સુવિચાર બનાવો.
+            </p>
           </div>
-          <p className="font-gujarati text-indigo-200/90 text-sm md:text-base max-w-xl mt-2">
-            તમારું નામ અને ફોટો લગાવીને સુંદર ભગવાનના સુવિચાર કાર્ડ્સ બનાવો અને મિત્રોને શેર કરો.
-          </p>
+          <div className="h-10 w-10 bg-[#2D3748] rounded-full flex items-center justify-center relative z-10 shrink-0 shadow-md text-[#F4F4F0]">
+            <span className="material-symbols-outlined font-bold text-lg">arrow_forward</span>
+          </div>
+        </section>
+
+        {/* ROW 3: 2 Cards (Quiz & English) */}
+        <div className="grid grid-cols-2 gap-4">
+          <section 
+            id="quiz-banner"
+            onClick={() => navigate("/games")}
+            className="bg-[#F4F4F0] dark:bg-[#1E1A18] p-5 rounded-3xl text-center flex flex-col items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform border border-[#0D9488]/30 relative overflow-hidden cursor-pointer min-h-[140px]"
+          >
+            <div className="absolute right-[-10px] top-[-10px] opacity-[0.03] dark:opacity-5 select-none pointer-events-none text-7xl">
+              👑
+            </div>
+            <div className="h-12 w-12 bg-amber-50 dark:bg-amber-900/20 rounded-2xl flex items-center justify-center relative z-10 shrink-0">
+              <span className="material-symbols-outlined text-amber-600 dark:text-amber-500 text-2xl font-bold">sports_esports</span>
+            </div>
+            <div className="relative z-10 mt-1">
+              <h2 className="font-gujarati font-black text-base text-[#2D3748] dark:text-[#F4F4F0] leading-tight">ક્વિઝ અને રમતો</h2>
+              <p className="font-gujarati text-[10px] text-[#0D9488] font-bold mt-1">જ્ઞાન વધારો ને રમો</p>
+            </div>
+          </section>
+
+          <section 
+            id="english-banner"
+            onClick={() => navigate("/english")}
+            className="bg-[#2D3748] p-5 rounded-3xl text-center flex flex-col items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform border border-[#0D9488]/30 relative overflow-hidden cursor-pointer min-h-[140px]"
+          >
+            <div className="absolute right-[-10px] top-[-10px] opacity-10 select-none pointer-events-none text-7xl">
+              📝
+            </div>
+            <div className="h-12 w-12 bg-[#0D9488]/20 rounded-2xl flex items-center justify-center relative z-10 shrink-0">
+              <span className="material-symbols-outlined text-[#0D9488] text-2xl font-bold">school</span>
+            </div>
+            <div className="relative z-10 mt-1">
+              <h2 className="font-gujarati font-black text-base text-[#F4F4F0] leading-tight">અંગ્રેજી પાઠશાળા</h2>
+              <p className="font-gujarati text-[10px] text-teal-200 mt-1">સરળતાથી ઇંગ્લિશ શીખો</p>
+            </div>
+          </section>
         </div>
-        <button
-          onClick={() => navigate('/devotional-cards')}
-          className="z-10 bg-gradient-to-r from-indigo-400 to-indigo-500 hover:from-indigo-300 hover:to-indigo-400 text-indigo-950 px-8 py-4 rounded-2xl font-headline font-black text-lg shadow-2xl active:scale-95 transition whitespace-nowrap flex items-center gap-2 border border-indigo-200"
-        >
-          <span>✨</span> કાર્ડ બનાવો
-        </button>
-      </section>
-      </>
+        
+        <CommunityFeed />
+      </div>
       )}
 
       {!['games', 'english'].includes(activeTab) && (
@@ -1057,7 +1029,7 @@ const Community = () => {
             value={searchQuery}
             onChange={(e) => handleLocationSearch(e.target.value)}
             placeholder="ગામ, તાલુકો અથવા જિલ્લો શોધો..."
-            className="w-full bg-[#fef8f1] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-sm focus:outline-none focus:border-primary text-on-surface"
+            className="w-full bg-[#F4F4F0] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-sm focus:outline-none focus:border-primary text-on-surface"
           />
           
           {locationSearchResults.length > 0 && (
@@ -1093,7 +1065,7 @@ const Community = () => {
                       ) : (
                         <button 
                           onClick={(e) => { e.stopPropagation(); handleFollowLocation(item); }}
-                          className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-95"
+                          className="bg-[#2D3748] hover:bg-[#2D3748]/90 text-[#F4F4F0] px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-95"
                         >
                           ફોલો ➕
                         </button>
@@ -1126,7 +1098,6 @@ const Community = () => {
             <div className="flex justify-between items-center px-2">
                 <div className="flex items-center gap-3">
                     <h3 className="font-gujarati font-black text-xl text-on-surface">ચર્ચાના વિષયો</h3>
-                    <ShareButton sectionId="discussion-topics" successMessage="✨ ચર્ચા વિભાગની લિંક કૉપી થઈ!" />
                 </div>
             </div>
             <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
@@ -1134,8 +1105,8 @@ const Community = () => {
                 { id: "news", title: "સ્થાનિક સમાચાર", icon: "newspaper", color: "bg-blue-100/70 text-blue-700" },
                 { id: "job", title: "નોકરી/વ્યવસાય", icon: "work", color: "bg-emerald-100/70 text-emerald-700" },
                 { id: "event", title: "કાર્યક્રમ", icon: "celebration", color: "bg-purple-100/70 text-purple-700" },
-                { id: "alert", title: "ફરિયાદ", icon: "warning", color: "bg-red-100/70 text-red-700" },
-                { id: "help", title: "Help/સહાય", icon: "volunteer_activism", color: "bg-amber-100/70 text-amber-700" },
+                { id: "alert", title: "ફરિયાદ", icon: "warning", color: "bg-[#E11D48]/10 text-[#E11D48]" },
+                { id: "help", title: "Help/સહાય", icon: "volunteer_activism", color: "bg-yellow-100/70 text-yellow-800" },
               ].map((topic, idx) => (
                 <div 
                   key={idx} 
@@ -1216,7 +1187,7 @@ const Community = () => {
                 className={`flex-shrink-0 px-4 py-2 rounded-full font-gujarati font-bold text-xs border transition-all active:scale-95 ${
                   feedFilter === chip.id
                     ? 'bg-primary text-white border-primary shadow-sm'
-                    : 'bg-[#fef8f1] dark:bg-dark-surface text-stone-600 dark:text-stone-300 border-primary/10'
+                    : 'bg-[#F4F4F0] dark:bg-dark-surface text-stone-600 dark:text-stone-300 border-primary/10'
                 }`}
               >
                 {chip.label}
@@ -1247,7 +1218,7 @@ const Community = () => {
                           <div className="flex items-center gap-1.5 flex-wrap">
                             <h4 className="font-gujarati font-black text-sm text-on-surface">{post.userName}</h4>
                             {post.isRep && (
-                              <span className="bg-amber-100 text-amber-800 border border-amber-300 text-[8px] font-black px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                              <span className="bg-yellow-100 text-yellow-900 border border-yellow-300 text-[8px] font-black px-1.5 py-0.5 rounded flex items-center gap-0.5">
                                 👑 પ્રતિનિધિ
                               </span>
                             )}
@@ -1262,7 +1233,7 @@ const Community = () => {
                       
                       <div className="flex items-center gap-2 relative">
                         {post.isPinned && (
-                          <span className="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded text-[8px] font-black uppercase">
+                          <span className="bg-yellow-50 text-yellow-800 border border-yellow-200 px-2 py-0.5 rounded text-[8px] font-black uppercase">
                             📌 પિન્ડ
                           </span>
                         )}
@@ -1295,7 +1266,7 @@ const Community = () => {
                                   }}
                                   className="w-full text-left px-4 py-2.5 text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 flex items-center gap-2 font-bold cursor-pointer"
                                 >
-                                  <span className="material-symbols-outlined text-base text-amber-500 font-bold">warning</span>
+                                  <span className="material-symbols-outlined text-base text-yellow-600 font-bold">warning</span>
                                   <span>રિપોર્ટ કરો (Report)</span>
                                 </button>
                                 {post.userId && (
@@ -1305,9 +1276,9 @@ const Community = () => {
                                       setActiveMenuPostId(null);
                                       handleBlockUser(post.userId, post.userName);
                                     }}
-                                    className="w-full text-left px-4 py-2.5 text-rose-500 hover:bg-stone-50 dark:hover:bg-stone-800 flex items-center gap-2 font-bold cursor-pointer"
+                                    className="w-full text-left px-4 py-2.5 text-emerald-500 hover:bg-stone-50 dark:hover:bg-stone-800 flex items-center gap-2 font-bold cursor-pointer"
                                   >
-                                    <span className="material-symbols-outlined text-base text-rose-500 font-bold">block</span>
+                                    <span className="material-symbols-outlined text-base text-emerald-500 font-bold">block</span>
                                     <span>બ્લોક કરો (Block)</span>
                                   </button>
                                 )}
@@ -1325,10 +1296,10 @@ const Community = () => {
 
                     {/* Image Attachment */}
                     {post.mediaUrl && (
-                      <div className="h-48 md:h-64 rounded-2xl overflow-hidden relative border border-stone-100 dark:border-stone-800">
+                      <div className="w-full bg-stone-50 dark:bg-stone-900/50 overflow-hidden flex justify-center rounded-2xl border border-stone-100 dark:border-stone-800">
                         <img 
                           src={post.mediaUrl} 
-                          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+                          className="w-full h-auto max-h-[500px] object-contain transition-transform duration-500 hover:scale-105" 
                           alt="Discussion Media" 
                         />
                       </div>
@@ -1339,7 +1310,7 @@ const Community = () => {
                       <button 
                         onClick={() => handleLikePost(post.id)}
                         className={`flex items-center gap-2 cursor-pointer transition-all active:scale-75 ${
-                          liked ? 'text-red-500 font-bold scale-105' : 'hover:text-red-500'
+                          liked ? 'text-emerald-600 font-bold scale-105' : 'hover:text-emerald-600'
                         }`}
                       >
                         <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: liked ? "'FILL' 1" : "" }}>
@@ -1375,27 +1346,13 @@ const Community = () => {
           {/* Floating Action Button (FAB) for Post Creation */}
           <button
             onClick={() => setShowCreatePost(true)}
-            className="fixed bottom-24 right-6 h-14 w-14 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-full flex items-center justify-center shadow-2xl active:scale-90 transition-all z-40 border border-orange-400"
+            className="fixed bottom-24 right-6 h-14 w-14 bg-[#2D3748] text-[#F4F4F0] rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-all z-40 border border-[#0D9488]/30"
             title="નવી પોસ્ટ લખો"
           >
-            <span className="material-symbols-outlined text-2xl font-bold">add</span>
+            <span className="material-symbols-outlined text-2xl font-black">add</span>
           </button>
         </div>
         )
-      )}
-
-      {/* SOCIETY MANAGEMENT TAB */}
-      {activeTab === "society" && (
-        <div className="space-y-4 animate-fade-in">
-          <button 
-            onClick={() => setActiveTab('hub')}
-            className="flex items-center gap-2 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 px-4 py-2 rounded-xl font-bold active:scale-95 transition-all w-fit"
-          >
-            <span className="material-symbols-outlined text-sm">arrow_back</span>
-            પાછા જાવ
-          </button>
-          <MariSociety />
-        </div>
       )}
 
       {/* 2. LOCAL DIRECTORY TAB */}
@@ -1412,11 +1369,11 @@ const Community = () => {
                 value={directorySearch}
                 onChange={(e) => setDirectorySearch(e.target.value)}
                 placeholder="પ્લમ્બર, ગૅરેજ કે વેપાર શોધો..."
-                className="flex-1 bg-[#fef8f1] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-sm focus:outline-none focus:border-primary text-on-surface"
+                className="flex-1 bg-[#F4F4F0] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-sm focus:outline-none focus:border-primary text-on-surface"
               />
               <button
                 onClick={() => setShowAddListing(true)}
-                className="bg-primary text-white px-4 rounded-2xl font-gujarati font-black text-xs shadow-md active:scale-95 transition-transform flex items-center gap-1.5"
+                className="bg-[#2D3748] text-[#F4F4F0] px-4 rounded-2xl font-gujarati font-black text-xs shadow-md active:scale-95 transition-transform flex items-center gap-1.5 border border-[#0D9488]/30"
               >
                 <span className="material-symbols-outlined text-sm">add</span>
                 <span>ઉમેરો</span>
@@ -1446,7 +1403,7 @@ const Community = () => {
                   </div>
                   <a
                     href={`tel:${listing.phone.replace(/\s+/g, '')}`}
-                    className="w-full bg-[#fef8f1] dark:bg-stone-900 border border-primary/20 hover:border-primary/50 text-[#994700] dark:text-dark-accent py-2.5 rounded-xl font-gujarati font-black text-xs text-center flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-sm"
+                    className="w-full bg-[#F4F4F0] dark:bg-stone-900 border border-primary/20 hover:border-primary/50 text-[#2D3748] dark:text-dark-accent py-2.5 rounded-xl font-gujarati font-black text-xs text-center flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-sm"
                   >
                     <span className="material-symbols-outlined text-sm">phone</span>
                     <span>કોલ કરો: {listing.phone}</span>
@@ -1467,34 +1424,34 @@ const Community = () => {
       {activeTab === "leaderboard" && (
         <div className="space-y-6 max-w-md mx-auto">
           {/* User Score Card */}
-          <div className="bg-gradient-to-br from-amber-500 to-orange-600 p-6 rounded-[2.5rem] text-white shadow-xl space-y-4 relative overflow-hidden">
-            <div className="absolute right-[-15px] top-[-15px] opacity-10 select-none pointer-events-none text-9xl">
+          <div className="bg-[#2D3748] p-6 rounded-[2.5rem] text-[#F4F4F0] shadow-sm space-y-4 relative overflow-hidden border border-[#0D9488]/30">
+            <div className="absolute right-[-15px] top-[-15px] opacity-[0.03] dark:opacity-10 select-none pointer-events-none text-9xl">
               emoji_events
             </div>
             
             <div className="space-y-1">
               <h3 className="font-gujarati font-black text-xl">તમારો સ્કોર અને પ્રગતિ 🏆</h3>
-              <p className="font-gujarati text-xs text-amber-200">ગામમાં અગ્રણી ભૂમિકા ભજવવા માટે સક્રિય બનો.</p>
+              <p className="font-gujarati text-xs text-yellow-200">ગામમાં અગ્રણી ભૂમિકા ભજવવા માટે સક્રિય બનો.</p>
             </div>
 
             <div className="grid grid-cols-3 gap-3 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10 text-center">
               <div>
                 <p className="font-headline font-black text-xl text-yellow-300">{repData.score}</p>
-                <p className="font-gujarati text-[9px] text-amber-100">કુલ સ્કોર</p>
+                <p className="font-gujarati text-[9px] text-yellow-100">કુલ સ્કોર</p>
               </div>
               <div className="border-x border-white/10">
                 <p className="font-headline font-black text-xl">{repData.followers}</p>
-                <p className="font-gujarati text-[9px] text-amber-100">ફોલોઅર્સ</p>
+                <p className="font-gujarati text-[9px] text-yellow-100">ફોલોઅર્સ</p>
               </div>
               <div>
                 <p className="font-headline font-black text-xl">{repData.referrals}</p>
-                <p className="font-gujarati text-[9px] text-amber-100">આમંત્રણો</p>
+                <p className="font-gujarati text-[9px] text-yellow-100">આમંત્રણો</p>
               </div>
             </div>
 
             <button
               onClick={handleInviteReferral}
-              className="w-full bg-white text-orange-950 hover:bg-amber-50 py-3.5 rounded-2xl font-gujarati font-black text-xs shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-1.5"
+              className="w-full bg-[#F4F4F0] text-[#2D3748] py-3.5 rounded-2xl font-gujarati font-black text-xs shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-1.5"
             >
               <span className="material-symbols-outlined text-sm">share</span>
               <span>મિત્રોને આમંત્રિત કરો (+૧૦ પોઈન્ટ) 🤝</span>
@@ -1513,30 +1470,30 @@ const Community = () => {
                     key={idx} 
                     className={`p-4 rounded-2xl flex items-center justify-between border ${
                       isMe 
-                        ? 'bg-amber-50/50 dark:bg-amber-900/10 border-amber-300' 
-                        : 'bg-[#fef8f1] dark:bg-dark-bg border-stone-100 dark:border-stone-800'
+                        ? 'bg-yellow-50/50 dark:bg-yellow-900/10 border-yellow-300' 
+                        : 'bg-[#F4F4F0] dark:bg-dark-bg border-stone-100 dark:border-stone-800'
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <span className={`h-8 w-8 rounded-full flex items-center justify-center font-bold font-headline ${
-                        idx === 0 ? 'bg-amber-400 text-amber-950 text-base' :
+                        idx === 0 ? 'bg-yellow-400 text-yellow-950 text-base' :
                         idx === 1 ? 'bg-stone-300 text-stone-900 text-base' :
-                        idx === 2 ? 'bg-amber-600 text-white text-base' :
+                        idx === 2 ? 'bg-yellow-700 text-white text-base' :
                         'bg-stone-100 text-stone-600 dark:bg-stone-800 dark:text-stone-400 text-xs'
                       }`}>
                         {idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : idx + 1}
                       </span>
                       <div>
-                        <p className={`font-gujarati font-black text-sm ${isMe ? 'text-amber-950 dark:text-amber-200' : 'text-on-surface'}`}>
+                        <p className={`font-gujarati font-black text-sm ${isMe ? 'text-yellow-950 dark:text-yellow-200' : 'text-on-surface'}`}>
                           {user.name}
                         </p>
                         <p className="font-gujarati text-[10px] text-stone-400">ગામ: {user.village}</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-headline font-black text-sm text-[#994700] dark:text-dark-accent">{user.score} pts</p>
+                      <p className="font-headline font-black text-sm text-[#2D3748] dark:text-dark-accent">{user.score} pts</p>
                       {user.isRep && (
-                        <span className="bg-amber-100 text-amber-800 border border-amber-200 px-2 py-0.5 rounded text-[8px] font-black uppercase">
+                        <span className="bg-yellow-100 text-yellow-900 border border-yellow-200 px-2 py-0.5 rounded text-[8px] font-black uppercase">
                           પ્રતિનિધિ 👑
                         </span>
                       )}
@@ -1557,9 +1514,9 @@ const Community = () => {
             <h3 className="font-gujarati font-black text-xl text-primary dark:text-dark-accent">ગામની સભા અને પ્રતિનિધિ 📢</h3>
             
             <div className="space-y-3 flex flex-col items-center">
-              <div className="h-20 w-20 rounded-full border-4 border-amber-400 overflow-hidden shadow-lg relative">
+              <div className="h-20 w-20 rounded-full border-4 border-yellow-400 overflow-hidden shadow-lg relative">
                 <img src="https://i.pravatar.cc/150?img=11" className="w-full h-full object-cover" alt="Representative Dinesh Patel" />
-                <span className="absolute bottom-0 right-0 bg-amber-400 text-amber-950 text-[10px] rounded-full h-5 w-5 flex items-center justify-center font-bold">👑</span>
+                <span className="absolute bottom-0 right-0 bg-yellow-400 text-yellow-950 text-[10px] rounded-full h-5 w-5 flex items-center justify-center font-bold">👑</span>
               </div>
               <div>
                 <h4 className="font-gujarati font-black text-lg text-on-surface">દિનેશભાઈ પટેલ</h4>
@@ -1569,7 +1526,7 @@ const Community = () => {
             </div>
 
             <div className="bg-stone-50 dark:bg-stone-900/50 p-4 rounded-2xl border border-stone-100 dark:border-stone-800 text-left">
-              <h5 className="font-gujarati font-black text-xs text-amber-700 dark:text-dark-accent mb-1 flex items-center gap-1">
+              <h5 className="font-gujarati font-black text-xs text-yellow-800 dark:text-dark-accent mb-1 flex items-center gap-1">
                 <span className="material-symbols-outlined text-sm">campaign</span>
                 <span>તાજી અગત્યની ઘોષણા:</span>
               </h5>
@@ -1580,7 +1537,7 @@ const Community = () => {
 
             <button
               onClick={() => triggerToast("💬 પ્રતિનિધિ સાથે સીધો ચેટ સપોર્ટ ટૂંક સમયમાં શરૂ થશે!")}
-              className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white py-3.5 rounded-2xl font-gujarati font-black text-xs shadow-md active:scale-95 transition-transform flex items-center justify-center gap-1.5"
+              className="w-full bg-[#2D3748] hover:bg-[#2D3748]/90 text-[#F4F4F0] py-3.5 rounded-2xl font-gujarati font-black text-xs shadow-md active:scale-95 transition-transform flex items-center justify-center gap-1.5 border border-[#0D9488]/30"
             >
               <span className="material-symbols-outlined text-sm">chat</span>
               <span>પ્રશ્ન પૂછો / રજૂઆત કરો</span>
@@ -1605,9 +1562,9 @@ const Community = () => {
                     <span className="font-headline font-black text-primary dark:text-dark-accent">{userScore} / {repThreshold} pts</span>
                   </div>
                   
-                  <div className="w-full bg-stone-100 dark:bg-stone-800 rounded-full h-3 overflow-hidden">
+                  <div className="w-full bg-stone-100 dark:bg-stone-800 rounded-full h-3 overflow-hidden border border-[#0D9488]/20">
                     <div 
-                      className="bg-gradient-to-r from-amber-500 to-orange-500 h-3 rounded-full transition-all duration-500" 
+                      className="bg-[#0D9488] h-3 rounded-full transition-all duration-500" 
                       style={{ width: `${progressPercent}%` }}
                     ></div>
                   </div>
@@ -1634,14 +1591,7 @@ const Community = () => {
       )}
 
       {/* 4B. GAMES TAB */}
-      {activeTab === "games" && (
-        <RamatoHub userLocation={userLocation} onBack={() => setActiveTab("feed")} />
-      )}
-
-      {/* 4C. ENGLISH ZONE TAB */}
-      {activeTab === "english" && (
-        <EnglishZone userLocation={userLocation} onBack={() => setActiveTab('feed')} />
-      )}
+      
 
       {/* 5. DRAWERS & MODALS */}
 
@@ -1655,7 +1605,7 @@ const Community = () => {
             {/* Modal Header */}
             <div className="px-6 py-4 border-b border-primary/5 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#994700] dark:text-dark-accent">add_box</span>
+                <span className="material-symbols-outlined text-[#2D3748] dark:text-dark-accent">add_box</span>
                 <h3 className="font-gujarati font-black text-lg text-on-surface">નવી ચર્ચા લખો</h3>
               </div>
               <button 
@@ -1681,8 +1631,8 @@ const Community = () => {
                         onClick={() => setNewPostCategory(type.id)}
                         className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-2xl border text-xs font-gujarati font-bold transition-all active:scale-95 ${
                           isActive 
-                            ? 'bg-primary text-white border-primary shadow-sm' 
-                            : 'bg-[#fef8f1] border-stone-200 text-stone-600 dark:bg-stone-800 dark:border-stone-700 dark:text-stone-300'
+                            ? 'bg-[#2D3748] text-[#F4F4F0] border-[#0D9488]/30 shadow-sm' 
+                            : 'bg-[#F4F4F0] border-stone-200 text-stone-600 dark:bg-stone-800 dark:border-stone-700 dark:text-stone-300'
                         }`}
                       >
                         <span>{type.icon}</span>
@@ -1706,8 +1656,8 @@ const Community = () => {
                         onClick={() => setNewPostVisibility(v.id)}
                         className={`py-3 px-4 rounded-2xl border font-gujarati font-bold text-xs transition-all active:scale-95 ${
                           isActive 
-                            ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white border-orange-400 shadow-sm' 
-                            : 'bg-[#fef8f1] border-stone-200 text-stone-600 dark:bg-stone-800 dark:border-stone-700 dark:text-stone-300'
+                            ? 'bg-[#2D3748] text-[#F4F4F0] border-[#0D9488]/30 shadow-sm' 
+                            : 'bg-[#F4F4F0] border-stone-200 text-stone-600 dark:bg-stone-800 dark:border-stone-700 dark:text-stone-300'
                         }`}
                       >
                         {v.label}
@@ -1721,7 +1671,7 @@ const Community = () => {
               <div className="space-y-1">
                 <div className="flex justify-between items-center">
                   <label className="font-gujarati font-black text-xs text-stone-600 dark:text-stone-300">સંદેશો લખો:</label>
-                  <span className={`text-xs font-headline ${newPostText.length > 450 ? 'text-red-500 font-bold' : newPostText.length > 400 ? 'text-amber-500' : 'text-stone-400'}`}>
+                  <span className={`text-xs font-headline ${newPostText.length > 450 ? 'text-emerald-600 font-bold' : newPostText.length > 400 ? 'text-yellow-600' : 'text-stone-400'}`}>
                     {newPostText.length}/500
                   </span>
                 </div>
@@ -1734,7 +1684,7 @@ const Community = () => {
                   }}
                   placeholder="ગામ કે સોસાયટીમાં ચર્ચા કરવા અહીં લખો..."
                   rows={4}
-                  className="w-full bg-[#fef8f1] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-sm focus:outline-none focus:border-primary text-on-surface leading-relaxed"
+                  className="w-full bg-[#F4F4F0] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-sm focus:outline-none focus:border-primary text-on-surface leading-relaxed"
                 ></textarea>
               </div>
               
@@ -1765,7 +1715,7 @@ const Community = () => {
                     <button
                       type="button"
                       onClick={handleRemoveImage}
-                      className="bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 px-3 py-3 rounded-2xl font-gujarati font-bold text-xs flex items-center justify-center active:scale-95 transition-all"
+                      className="bg-[#E11D48]/10 hover:bg-[#E11D48]/20 border border-[#E11D48]/30 text-[#E11D48] px-3 py-3 rounded-2xl font-gujarati font-bold text-xs flex items-center justify-center active:scale-95 transition-all"
                     >
                       <span className="material-symbols-outlined text-sm">delete</span>
                     </button>
@@ -1783,7 +1733,7 @@ const Community = () => {
               <button
                 type="submit"
                 disabled={!newPostText.trim()}
-                className="w-full bg-gradient-to-r from-amber-500 to-orange-500 disabled:from-stone-300 disabled:to-stone-400 disabled:cursor-not-allowed text-white py-4 rounded-2xl font-gujarati font-black text-sm shadow-xl active:scale-95 transition-transform flex items-center justify-center gap-2"
+                className="w-full bg-[#2D3748] disabled:bg-stone-300 disabled:cursor-not-allowed text-[#F4F4F0] py-4 rounded-2xl font-gujarati font-black text-sm shadow-sm active:scale-95 transition-transform flex items-center justify-center gap-2 border border-[#0D9488]/30"
               >
                 <span className="material-symbols-outlined text-sm">publish</span>
                 <span>પ્રકાશિત કરો (Publish)</span>
@@ -1803,7 +1753,7 @@ const Community = () => {
             {/* Header */}
             <div className="px-6 py-4 border-b border-primary/5 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#994700] dark:text-dark-accent">chat_bubble</span>
+                <span className="material-symbols-outlined text-[#2D3748] dark:text-dark-accent">chat_bubble</span>
                 <h3 className="font-gujarati font-black text-lg text-on-surface">ચર્ચા પર ટિપ્પણીઓ</h3>
               </div>
               <button 
@@ -1841,11 +1791,11 @@ const Community = () => {
                 value={newCommentText}
                 onChange={(e) => setNewCommentText(e.target.value)}
                 placeholder="ટિપ્પણી લખો..."
-                className="flex-1 bg-[#fef8f1] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-xs focus:outline-none focus:border-primary text-on-surface"
+                className="flex-1 bg-[#F4F4F0] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-xs focus:outline-none focus:border-primary text-on-surface"
               />
               <button 
                 type="submit"
-                className="bg-gradient-to-r from-amber-500 to-orange-500 text-white h-11 px-5 rounded-2xl font-gujarati font-black text-xs flex items-center gap-1 shadow-md active:scale-95 transition-all"
+                className="bg-[#2D3748] hover:bg-[#2D3748]/90 text-[#F4F4F0] h-11 px-5 rounded-2xl font-gujarati font-black text-xs flex items-center gap-1 shadow-sm active:scale-95 transition-all border border-[#0D9488]/30"
               >
                 <span>મોકલો</span>
                 <span className="material-symbols-outlined text-sm">send</span>
@@ -1886,7 +1836,7 @@ const Community = () => {
                   value={newListingName}
                   onChange={(e) => setNewListingName(e.target.value)}
                   placeholder="દા.ત. અંબિકા કિરાણા સ્ટોર"
-                  className="w-full bg-[#fef8f1] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-xs focus:outline-none focus:border-primary text-on-surface"
+                  className="w-full bg-[#F4F4F0] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-xs focus:outline-none focus:border-primary text-on-surface"
                 />
               </div>
 
@@ -1895,7 +1845,7 @@ const Community = () => {
                 <select
                   value={newListingCategory}
                   onChange={(e) => setNewListingCategory(e.target.value)}
-                  className="w-full bg-[#fef8f1] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-xs focus:outline-none focus:border-primary text-on-surface"
+                  className="w-full bg-[#F4F4F0] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-xs focus:outline-none focus:border-primary text-on-surface"
                 >
                   {["કરિયાણું", "ગૅરેજ", "આરોગ્ય / દવા", "ઇલેક્ટ્રિશિયન", "પ્લમ્બર", "કપડાં / રેડીમેડ", "ખાણી-પીણી", "અન્ય"].map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
@@ -1910,7 +1860,7 @@ const Community = () => {
                   value={newListingPhone}
                   onChange={(e) => setNewListingPhone(e.target.value)}
                   placeholder="દા.ત. 98765 43210"
-                  className="w-full bg-[#fef8f1] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-xs focus:outline-none focus:border-primary text-on-surface"
+                  className="w-full bg-[#F4F4F0] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-xs focus:outline-none focus:border-primary text-on-surface"
                 />
               </div>
 
@@ -1921,13 +1871,13 @@ const Community = () => {
                   value={newListingAddress}
                   onChange={(e) => setNewListingAddress(e.target.value)}
                   placeholder="દા.ત. બજાર ચોક, રામજી મંદિર પાસે"
-                  className="w-full bg-[#fef8f1] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-xs focus:outline-none focus:border-primary text-on-surface"
+                  className="w-full bg-[#F4F4F0] dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-xs focus:outline-none focus:border-primary text-on-surface"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white py-3.5 rounded-2xl font-gujarati font-black text-xs shadow-lg active:scale-95 transition-transform"
+                className="w-full bg-[#2D3748] hover:bg-[#2D3748]/90 text-[#F4F4F0] py-3.5 rounded-2xl font-gujarati font-black text-xs shadow-lg active:scale-95 transition-transform"
               >
                 સબમિટ કરો ✓
               </button>

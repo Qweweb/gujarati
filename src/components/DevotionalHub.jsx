@@ -38,25 +38,25 @@ const CHAUPAIS = [
   {
     verse: "उघरे अंत न होइ निबाहू। कालनेमि जिमि रावन राहू॥",
     category: "અશુભ / સાવધાન (Caution Required)",
-    badgeColor: "bg-rose-600 text-white border-rose-400",
+    badgeColor: "bg-emerald-600 text-white border-rose-400",
     meaning: "આ સંકેત સૂચવે છે કે આ કાર્યની શરૂઆત ભલે સારી લાગે, પણ લાંબા ગાળે તેનું પરિણામ હિતકારક નથી. કાર્ય કરવાથી નુકસાન કે પસ્તાવો થઈ શકે છે, માટે અત્યારે આ નિર્ણય મોકૂફ રાખવો યોગ્ય રહેશે."
   },
   {
     verse: "बिधि बस सुजन कुसंगत परहीं। फनि मनि सम निज गुन नहिं हरहीं॥",
     category: "मધ્યમ / સાવધાની (Caution / Alert)",
-    badgeColor: "bg-orange-500 text-white border-orange-300",
+    badgeColor: "bg-teal-600 text-white border-teal-300",
     meaning: "આ કાર્યમાં સંગતની ખાસ કાળજી રાખવાની જરૂર છે. કોઈ અયોગ્ય કે સ્વાર્થી વ્યક્તિ તમને નુકસાન પહોંચાડી શકે છે. સાવધાની રાખીને વિવેકપૂર્ણ નિર્ણય લેવા સલાહ છે."
   },
   {
     verse: "होइहै सोई जो राम रचि राखा। को करि तरक बढ़ावै साखा॥",
     category: "ઈશ્વર ઈચ્છા (Destiny / Trust God)",
-    badgeColor: "bg-indigo-600 text-white border-indigo-400",
+    badgeColor: "bg-teal-600 text-white border-teal-400",
     meaning: "વ્યર્થ ચિંતા કરવાનું છોડી દો. જે પ્રભુ શ્રી રામે વિધાતાના વિધાન અનુસાર નક્કી કર્યું છે તે જ થવાનું છે. પ્રભુના શરણે રહો અને કર્તવ્ય પથ પર આગળ વધો, ફળ માટે થોડી ધીરજ રાખો."
   },
   {
     verse: "जौं जनम संकट हरन को। मंगल करन अमंगल हरन को॥",
     category: "અતિ મંગલમય (Auspicious)",
-    badgeColor: "bg-amber-600 text-white border-amber-400",
+    badgeColor: "bg-yellow-700 text-white border-yellow-400",
     meaning: "તમારા તમામ કષ્ટો, ચિંતાઓ અને વિઘ્નોનો અંત આવી રહ્યો છે. આ ખૂબ જ પવિત્ર સંકેત છે. કાર્ય કરવાથી કલ્યાણ અને ખૂબ જ શુભ પરિણામો મળશે."
   },
   {
@@ -105,21 +105,21 @@ const DURGA_PRASHNAVALI_ANSWERS = [
     name: "૪. કુષ્માંડા",
     shloka: "शरणागतदीनार्तपरित्राणपरायणे। सर्वस्यार्तिहरे देवि नारायणि नमोऽस्तुते॥",
     category: "ધીરજ રાખો (Caution / Wait)",
-    badgeColor: "bg-rose-600 text-white border-rose-400",
+    badgeColor: "bg-emerald-600 text-white border-rose-400",
     meaning: "આ કાર્યમાં થોડી મુશ્કેલીઓ, વિઘ્નો કે અડચણ આવી શકે છે. અત્યારે ગુસ્સો કે ઉતાવળમાં કોઈ નિર્ણય ન લેવો. શાંતિ અને ધીરજપૂર્વક સમય પસાર કરવો યોગ્ય રહેશે."
   },
   {
     name: "૫. સ્કંદમાતા",
     shloka: "या देवी सर्वभूतेषु शक्तिरूपेण संस्थिता। नमस्तस्यै नमस्तस्यै नमस्तस्यै नमो नमः॥",
     category: "સતત પ્રયાસ / વિલંબ (Patience Needed)",
-    badgeColor: "bg-orange-500 text-white border-orange-300",
+    badgeColor: "bg-teal-600 text-white border-teal-300",
     meaning: "આ કાર્ય સિદ્ધ થવામાં થોડો સમય લાગશે અને વધુ મહેનતની જરૂર પડશે. હિંમત હાર્યા વિના માં ભવાની પર અતૂટ શ્રદ્ધા રાખીને સતત પ્રયત્નો ચાલુ રાખો, અંતે વિજય થશે."
   },
   {
     name: "૬. કાત્યાયની",
     shloka: "देहि सौभाग्यमारोग्यं देहि मे परमं सुखम्। रूपं देहि जयं देहि यशो देहि द्विषो जहि॥",
     category: "સાવધાની રાખો (Caution / Alert)",
-    badgeColor: "bg-rose-600 text-white border-rose-400",
+    badgeColor: "bg-emerald-600 text-white border-rose-400",
     meaning: "આર્થિક રોકાણ, પૈસાની લેવડ-દેવડ કે તબિયત અંગે ખાસ સાવધાની રાખવી. અત્યારે કોઈ નવો જોખમી સોદો કે કોઈના પર આંધળો વિશ્વાસ કરવો હિતકારક નથી."
   },
   {
@@ -133,7 +133,7 @@ const DURGA_PRASHNAVALI_ANSWERS = [
     name: "૮. મહાગૌરી",
     shloka: "सर्वबाधाप्रशमनं त्रैलोक्यस्याखिलेश्वरि। एवमेव त्वया कार्यमस्मद्वैरिविनाशनम्॥",
     category: "સંકટ મુક્તિ (Relief / Auspicious)",
-    badgeColor: "bg-amber-600 text-white border-amber-400",
+    badgeColor: "bg-yellow-700 text-white border-yellow-400",
     meaning: "લાંબા સમયથી ચાલી રહેલી માનસિક ચિંતા, જૂનું સંકટ, બીમારી કે આર્થિક મુશ્કેલીઓ આપોઆપ દૂર થઈ જશે. માં ગૌરીની અસીમ કૃપાથી તમારો સારો સમય શરૂ થઈ રહ્યો છે."
   },
   {
@@ -154,7 +154,7 @@ const DURGA_PRASHNAVALI_ANSWERS = [
     name: "૧૧. ભદ્રકાલી",
     shloka: "ॐ जयन्ती मङ्गला काली भद्रकाली कपालिनी॥",
     category: "પરમ સૌભાગ્ય (Highly Auspicious)",
-    badgeColor: "bg-amber-600 text-white border-amber-400",
+    badgeColor: "bg-yellow-700 text-white border-yellow-400",
     meaning: "તમારું ભાગ્ય અત્યારે સાનુકૂળ ચાલી રહ્યું છે. તમે જે પણ કામ હાથમાં લેશો, તેમાં ચોક્કસ સફળતા, યશ અને સામાજિક પ્રતિષ્ઠા પ્રાપ્ત થશે."
   },
   {
@@ -182,7 +182,7 @@ const DURGA_PRASHNAVALI_ANSWERS = [
     name: "૧૫. અંબે",
     shloka: "ॐ अम्बे अम्बिकेऽम्बालिके न मा नयति कश्चन॥",
     category: "રાહ જુઓ / પ્રતિકૂળ સમય (Wait / Pray)",
-    badgeColor: "bg-indigo-600 text-white border-indigo-400",
+    badgeColor: "bg-teal-600 text-white border-teal-400",
     meaning: "અત્યારનો સમય નવું સાહસ કે મોટો નિર્ણય લેવા માટે અનુકૂળ નથી. કોઈપણ નવું સાહસ ટાળવું અને રોજ નિયમિત માં અંબાની પૂજા-આરાધના ચાલુ રાખવી."
   }
 ];
@@ -190,7 +190,8 @@ const DURGA_PRASHNAVALI_ANSWERS = [
 const MANTRA_DEITIES = [
   {
     id: "shiva",
-    name: "🔱 ભગવાન શિવ",
+    name: "ભગવાન શિવ",
+    image: "/gods/shiv.avif",
     color: "from-sky-700 to-slate-800",
     badgeColor: "bg-sky-50 dark:bg-sky-950/20 text-sky-700 border-sky-200",
     mantras: [
@@ -203,9 +204,10 @@ const MANTRA_DEITIES = [
   },
   {
     id: "vishnu",
-    name: "🌸 વિષ્ણુ / કૃષ્ણ",
-    color: "from-amber-600 to-yellow-500",
-    badgeColor: "bg-amber-50 dark:bg-amber-950/20 text-amber-700 border-amber-200",
+    name: "વિષ્ણુ / કૃષ્ણ",
+    image: "/gods/vishnu-krishna.webp",
+    color: "from-yellow-700 to-yellow-500",
+    badgeColor: "bg-yellow-50 dark:bg-yellow-950/20 text-yellow-800 border-yellow-200",
     mantras: [
       { name: "ૐ નમો ભગવતે વાસુદેવાય", defaultCount: 108 },
       { name: "હરે કૃષ્ણ મહામંત્ર", defaultCount: 108 },
@@ -216,9 +218,10 @@ const MANTRA_DEITIES = [
   },
   {
     id: "hanuman",
-    name: "🚩 હનુમાનજી",
-    color: "from-orange-650 to-red-600",
-    badgeColor: "bg-orange-50 dark:bg-orange-950/20 text-orange-700 border-orange-200",
+    name: "હનુમાનજી",
+    image: "/gods/hanuman.jpg",
+    color: "from-teal-800 to-emerald-700",
+    badgeColor: "bg-teal-50 dark:bg-teal-950/20 text-teal-800 border-teal-200",
     mantras: [
       { name: "હનુમાન ચાલીસા", defaultCount: 7 },
       { name: "ૐ હં હનુમતે નમઃ", defaultCount: 108 },
@@ -228,9 +231,10 @@ const MANTRA_DEITIES = [
   },
   {
     id: "devi",
-    name: "🌺 આદિશક્તિ દેવી",
-    color: "from-rose-700 to-pink-650",
-    badgeColor: "bg-rose-50 dark:bg-rose-950/20 text-rose-700 border-rose-200",
+    name: "આદિશક્તિ દેવી",
+    image: "/gods/aadishakti-devi.webp",
+    color: "from-emerald-700 to-pink-650",
+    badgeColor: "bg-rose-50 dark:bg-rose-950/20 text-emerald-700 border-rose-200",
     mantras: [
       { name: "નવાર્ણ મંત્ર", defaultCount: 108 },
       { name: "દુર્ગા ચાલીસા", defaultCount: 7 },
@@ -243,9 +247,10 @@ const MANTRA_DEITIES = [
   },
   {
     id: "ganesha",
-    name: "🐘 ગણેશજી",
-    color: "from-amber-700 to-red-500",
-    badgeColor: "bg-amber-50 dark:bg-amber-950/20 text-amber-700 border-amber-200",
+    name: "ગણેશજી",
+    image: "/gods/ganesh.png",
+    color: "from-yellow-800 to-emerald-600",
+    badgeColor: "bg-yellow-50 dark:bg-yellow-950/20 text-yellow-800 border-yellow-200",
     mantras: [
       { name: "ૐ ગં ગણપતયે નમઃ", defaultCount: 108 },
       { name: "ગણેશ ચાલીસા", defaultCount: 3 },
@@ -255,8 +260,9 @@ const MANTRA_DEITIES = [
   },
   {
     id: "surya",
-    name: "☀️ સૂર્ય / ગ્રહ",
-    color: "from-yellow-600 to-orange-500",
+    name: "સૂર્ય / ગ્રહ",
+    image: "/gods/surya-navgraha.webp",
+    color: "from-yellow-600 to-teal-600",
     badgeColor: "bg-yellow-50 dark:bg-yellow-950/20 text-yellow-700 border-yellow-200",
     mantras: [
       { name: "ગાયત્રી મંત્ર", defaultCount: 108 },
@@ -268,9 +274,10 @@ const MANTRA_DEITIES = [
   },
   {
     id: "ram",
-    name: "🏹 પ્રભુ શ્રી રામ",
-    color: "from-orange-500 to-amber-600",
-    badgeColor: "bg-orange-50 dark:bg-orange-950/20 text-orange-700 border-orange-200",
+    name: "પ્રભુ શ્રી રામ",
+    image: "/gods/shri-raam.jpg",
+    color: "from-teal-600 to-yellow-700",
+    badgeColor: "bg-teal-50 dark:bg-teal-950/20 text-teal-800 border-teal-200",
     mantras: [
       { name: "શ્રી રામ જય રામ", defaultCount: 108 },
       { name: "રામ નામ", defaultCount: 108 },
@@ -280,9 +287,10 @@ const MANTRA_DEITIES = [
   },
   {
     id: "universal",
-    name: "🌟 સનાતન મંત્રો",
-    color: "from-indigo-600 to-purple-650",
-    badgeColor: "bg-indigo-50 dark:bg-indigo-950/20 text-indigo-700 border-indigo-200",
+    name: "સનાતન મંત્રો",
+    image: "/gods/mantra.webp",
+    color: "from-teal-600 to-purple-650",
+    badgeColor: "bg-teal-50 dark:bg-teal-950/20 text-teal-700 border-teal-200",
     mantras: [
       { name: "ૐ", defaultCount: 108 },
       { name: "ૐ શાંતિ", defaultCount: 3 },
@@ -975,6 +983,9 @@ const DevotionalHub = () => {
         setPlayingStory(fest.title);
         const speech = new SpeechSynthesisUtterance(fest.story);
         speech.lang = 'gu-IN';
+        const voices = window.speechSynthesis.getVoices();
+        const guVoice = voices.find(v => v.lang.toLowerCase().includes('gu') || v.lang.toLowerCase().includes('hi'));
+        if (guVoice) speech.voice = guVoice;
         window.speechSynthesis.speak(speech);
         speech.onend = () => setPlayingStory(null);
     }
@@ -992,15 +1003,15 @@ const DevotionalHub = () => {
       <section id="gita-section" className="space-y-0">
         <div
           onClick={() => navigate('/gita')}
-          className="relative overflow-hidden rounded-[2.5rem] cursor-pointer hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 shadow-2xl border border-amber-400/20"
-          style={{ background: 'linear-gradient(135deg, #0d1b6e 0%, #1a237e 30%, #1565c0 60%, #0d47a1 100%)' }}
+          className="relative overflow-hidden rounded-[2.5rem] cursor-pointer hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 shadow-sm border border-[#0D9488]/50"
+          style={{ background: 'linear-gradient(135deg, #2D3748 0%, #082D2A 100%)' }}
         >
           {/* Animated dot grid */}
           <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '18px 18px' }}></div>
 
           {/* Golden top border */}
-          <div className="absolute top-0 left-0 right-0 h-1" style={{ background: 'linear-gradient(90deg, #FFD700, #FFA000, #FFD700)' }}></div>
-          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-400/30"></div>
+          <div className="absolute top-0 left-0 right-0 h-1 bg-[#0D9488]"></div>
+          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#0D9488]/30"></div>
 
           {/* Decorative Om symbol */}
           <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[100px] select-none pointer-events-none opacity-10 text-white">🕉️</div>
@@ -1009,21 +1020,21 @@ const DevotionalHub = () => {
             <div className="space-y-3">
               {/* Badge */}
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="bg-yellow-400/15 text-yellow-300 border border-yellow-400/30 px-3 py-1 rounded-full text-[10px] font-black tracking-wider uppercase flex items-center gap-1.5">
+                <span className="bg-[#0D9488]/15 text-[#0D9488] border border-[#0D9488]/30 px-3 py-1 rounded-full text-[10px] font-black tracking-wider uppercase flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-xs" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
                   Bhakti Section — New
                 </span>
-                <span className="bg-emerald-400/15 text-emerald-300 border border-emerald-400/30 px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                <span className="bg-[#0D9488]/15 text-[#0D9488] border border-[#0D9488]/30 px-3 py-1 rounded-full text-[10px] font-black uppercase">
                   100% Free
                 </span>
               </div>
 
               {/* Title */}
               <div>
-                <h2 className="font-gujarati font-black text-3xl sm:text-4xl text-yellow-300 leading-tight">
+                <h2 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-3xl sm:text-4xl text-[#0D9488] leading-tight">
                   ભગવદ ગીતા
                 </h2>
-                <p className="text-white/60 text-sm font-gujarati mt-1">ભગવાન કૃષ્ણ અને અર્જુન — Eternal Wisdom</p>
+                <p className="text-[#F8FAFC]/80 text-sm font-gujarati mt-1">ભગવાન કૃષ્ણ અને અર્જુન — Eternal Wisdom</p>
               </div>
 
               {/* Stats */}
@@ -1034,9 +1045,9 @@ const DevotionalHub = () => {
                   { icon: 'record_voice_over', label: 'Audio (TTS)' },
                   { icon: 'share', label: 'Share Cards' },
                 ].map(stat => (
-                  <div key={stat.label} className="flex items-center gap-1.5 bg-white/10 rounded-full px-3 py-1 border border-white/10">
-                    <span className="material-symbols-outlined text-sm text-yellow-300">{stat.icon}</span>
-                    <span className="text-white/80 text-[11px] font-gujarati font-bold">{stat.label}</span>
+                  <div key={stat.label} className="flex items-center gap-1.5 bg-[#FFFFFF]/10 rounded-full px-3 py-1 border border-[#FFFFFF]/10">
+                    <span className="material-symbols-outlined text-sm text-[#0D9488]">{stat.icon}</span>
+                    <span className="text-[#F8FAFC]/90 text-[11px] font-gujarati font-bold">{stat.label}</span>
                   </div>
                 ))}
               </div>
@@ -1044,7 +1055,7 @@ const DevotionalHub = () => {
 
             {/* CTA Button */}
             <div className="flex-shrink-0">
-              <div className="bg-yellow-400 hover:bg-yellow-300 text-blue-900 font-gujarati font-black px-7 py-4 rounded-2xl flex items-center gap-2.5 shadow-lg group-hover:translate-x-1 transition-all whitespace-nowrap">
+              <div className="bg-[#0D9488] hover:bg-[#0D9488]/80 text-[#2D3748] font-gujarati font-black px-7 py-4 rounded-2xl flex items-center gap-2.5 shadow-sm group-hover:translate-x-1 transition-all whitespace-nowrap">
                 <span className="text-lg">📖</span>
                 <span>ગીતા જ્ઞાન ખોલો</span>
                 <span className="material-symbols-outlined text-lg">arrow_forward</span>
@@ -1057,41 +1068,40 @@ const DevotionalHub = () => {
       {/* Featured Festivals Section - KEPT AS TEAL/MAROON AS REQUESTED Header */}
 
       <section id="festivals-section" className="space-y-6">
-        <div className="relative bg-teal p-8 rounded-[2.5rem] text-white shadow-xl overflow-hidden group">
-            <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]"></div>
-            <div className="absolute top-0 left-0 right-0 h-1.5 bg-maroon"></div>
-            <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-maroon"></div>
+        <div className="relative bg-[#F8FAFC] p-8 rounded-[2.5rem] text-[#2D3748] shadow-sm overflow-hidden group border border-[#E8E6E3]">
+            <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#2D3748_1px,transparent_1px)] [background-size:20px_20px]"></div>
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#0D9488]"></div>
+            <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[#0D9488]"></div>
             
             <div className="relative flex justify-between items-center z-10">
                 <div className="space-y-1">
                     <div className="flex items-center gap-3">
-                        <h2 className="font-gujarati font-black text-3xl">તહેવાર-વ્રતો</h2>
-                        <ShareButton sectionId="festivals-section" successMessage="📅 તહેવાર-વ્રતો વિભાગની ડાયરેક્ટ લિંક કોપી થઈ ગઈ છે!" />
+                        <h2 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-3xl">તહેવાર-વ્રતો</h2>
                     </div>
-                    <p className="font-gujarati text-white/70 text-sm">{festivalSectionTitle}</p>
+                    <p className="font-gujarati text-[#78716C] text-sm">{festivalSectionTitle}</p>
                 </div>
-                <span className="material-symbols-outlined text-4xl text-white/50">event_available</span>
+                <span className="material-symbols-outlined text-4xl text-[#0D9488]">event_available</span>
             </div>
         </div>
         
         <div className="space-y-4">
             {festivals.length === 0 ? (
-                <div className="p-6 bg-white rounded-3xl shadow-sm border border-teal/5 text-center font-gujarati text-charcoal/60">
+                <div className="p-6 bg-[#FFFFFF] rounded-3xl shadow-sm border border-[#E8E6E3] text-center font-gujarati text-[#1A1614]">
                     આ સમયગાળા માટે કોઈ તહેવાર કે વિશેષ દિવસો ઉપલબ્ધ નથી.
                 </div>
             ) : (
                 festivals.map((fest, idx) => (
-                    <div key={idx} className="flex gap-4 p-5 bg-white rounded-3xl shadow-sm border border-teal/5 group border-l-8 border-l-maroon">
+                    <div key={idx} className="flex gap-4 p-5 bg-[#FFFFFF] rounded-3xl shadow-sm border border-[#E8E6E3] group border-l-8 border-l-[#0D9488]">
                         <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-inner flex-shrink-0">
                             <img src={fest.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform" alt={fest.title} />
                         </div>
                         <div className="flex-1 flex flex-col justify-center">
-                            <p className="font-gujarati text-maroon text-xs font-bold uppercase tracking-wider">{fest.date} • {fest.tithi} • {fest.weekday}</p>
-                            <h4 className="font-gujarati font-black text-2xl text-teal mt-1">{fest.title}</h4>
-                            <p className="font-gujarati text-charcoal/80 text-sm mt-1 line-clamp-1">{fest.significance}</p>
+                            <p className="font-gujarati text-[#0D9488] text-xs font-bold uppercase tracking-wider">{fest.date} • {fest.tithi} • {fest.weekday}</p>
+                            <h4 className="font-gujarati font-black text-2xl text-[#2D3748] mt-1">{fest.title}</h4>
+                            <p className="font-gujarati text-[#1A1614]/80 text-sm mt-1 line-clamp-1">{fest.significance}</p>
                             <button 
                                 onClick={() => setSelectedFestival(fest)}
-                                className="mt-2.5 flex items-center gap-1.5 font-gujarati text-sm font-bold text-outline hover:text-maroon transition-colors w-fit"
+                                className="mt-2.5 flex items-center gap-1.5 font-gujarati text-sm font-bold text-[#78716C] hover:text-[#0D9488] transition-colors w-fit"
                             >
                                 <span className="material-symbols-outlined text-lg">menu_book</span>
                                 વિશેષ મહત્વ અને કથા જુઓ
@@ -1108,9 +1118,8 @@ const DevotionalHub = () => {
         <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
                 <h2 className="font-gujarati font-black text-3xl text-primary">લાઈવ મંદિર દર્શન</h2>
-                <ShareButton sectionId="mandir-section" successMessage="🪔 લાઈવ મંદિર દર્શન વિભાગની ડાયરેક્ટ લિંક કોપી થઈ ગઈ છે!" />
             </div>
-            <span className="flex items-center gap-1.5 bg-red-600 text-white px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">
+            <span className="flex items-center gap-1.5 bg-emerald-700 text-white px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">
                 <span className="h-2 w-2 bg-white rounded-full animate-pulse"></span> LIVE
             </span>
         </div>
@@ -1123,7 +1132,7 @@ const DevotionalHub = () => {
                 image: "/somnath_temple.png",
                 channelId: "UCT1egsvA08YcdMLiEu1DTRg",
                 ytUrl: "https://www.youtube.com/@SomnathTempleOfficialChannel/live",
-                color: "from-orange-900/90 via-orange-800/60"
+                color: "from-teal-950/90 via-teal-900/60"
               },
               {
                 name: "દ્વારકાધીશ મંદિર",
@@ -1139,7 +1148,7 @@ const DevotionalHub = () => {
                 image: "/sarangpur_hanuman.png",
                 channelId: "UCI1r_MNxzyvUPHyTdWDe4NA",
                 ytUrl: "https://www.youtube.com/@salangpurhanumanji/live",
-                color: "from-red-900/90 via-red-800/60"
+                color: "from-emerald-950/90 via-emerald-900/60"
               },
               {
                 name: "અંબાજી શક્તિપીઠ",
@@ -1155,7 +1164,7 @@ const DevotionalHub = () => {
                 image: "/vaishno_devi_temple.png",
                 channelId: "UCziZy6xAlJWPzgIY4duxAeQ",
                 ytUrl: "https://www.youtube.com/@MHONESHRADDHA/live",
-                color: "from-indigo-900/90 via-indigo-800/60"
+                color: "from-teal-900/90 via-teal-800/60"
               },
             ].map((mandir, idx) => (
               <div
@@ -1172,7 +1181,7 @@ const DevotionalHub = () => {
                 <div className={`absolute inset-0 bg-gradient-to-t ${mandir.color} to-transparent`}></div>
                 
                 {/* Live badge */}
-                <div className="absolute top-4 left-4 bg-red-600 text-white px-2.5 py-1 rounded-full text-[9px] font-black tracking-widest flex items-center gap-1 uppercase shadow-lg">
+                <div className="absolute top-4 left-4 bg-emerald-700 text-white px-2.5 py-1 rounded-full text-[9px] font-black tracking-widest flex items-center gap-1 uppercase shadow-lg">
                     <span className="h-1.5 w-1.5 bg-white rounded-full animate-pulse"></span> LIVE
                 </div>
                 
@@ -1196,11 +1205,13 @@ const DevotionalHub = () => {
         </div>
       </section>
 
-      {/* Kuldevi Guide Banner */}
-      <section id="kuldevi-section" className="space-y-6">
+      {/* Grid for Kuldevi and Temples */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Kuldevi Guide Banner */}
+        <section id="kuldevi-section" className="space-y-6 h-full flex flex-col">
         <div 
           onClick={() => navigate('/kuldevi')}
-          className="relative bg-gradient-to-r from-amber-600 via-orange-600 to-red-650 p-6 sm:p-8 rounded-[2.5rem] text-white shadow-xl overflow-hidden group cursor-pointer hover:scale-[1.01] active:scale-[0.99] transition-all duration-305 border-2 border-amber-500/20"
+          className="relative flex-1 bg-gradient-to-r from-yellow-700 via-teal-700 to-emerald-800 p-6 sm:p-8 rounded-[2.5rem] text-white shadow-xl overflow-hidden group cursor-pointer hover:scale-[1.01] active:scale-[0.99] transition-all duration-305 border-2 border-yellow-600/20"
         >
           {/* Decorative Background */}
           <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]"></div>
@@ -1208,18 +1219,13 @@ const DevotionalHub = () => {
             <span className="material-symbols-outlined text-[150px]" style={{ fontVariationSettings: "'FILL' 1" }}>brightness_5</span>
           </div>
           
-          <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-6 z-10">
+          <div className="relative flex flex-col sm:flex-col lg:flex-row sm:items-start lg:items-center justify-between gap-6 z-10 h-full">
             <div className="space-y-2 max-w-xl">
               <div className="flex items-center gap-3">
-                <span className="bg-amber-500/25 text-amber-200 border border-amber-400/30 px-3 py-1 rounded-full text-xs font-gujarati font-bold uppercase tracking-wider inline-flex items-center gap-1.5">
+                <span className="bg-yellow-600/25 text-yellow-200 border border-yellow-400/30 px-3 py-1 rounded-full text-xs font-gujarati font-bold uppercase tracking-wider inline-flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-xs" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
                   નવું ફીચર
                 </span>
-                <ShareButton 
-                  sectionId="kuldevi-section" 
-                  successMessage="🌸 કુળદેવી માર્ગદર્શિકાની ડાયરેક્ટ લિંક કોપી થઈ ગઈ છે!" 
-                  className="bg-white/10 hover:bg-white/20 border-white/20 text-white dark:bg-white/10 dark:hover:bg-white/20 dark:text-white"
-                />
               </div>
               <h2 className="font-gujarati font-black text-2xl sm:text-3xl text-yellow-300">માતાજીનો ઇતિહાસ અને કુળદેવી માર્ગદર્શિકા</h2>
               <p className="font-gujarati text-white/90 text-sm leading-relaxed">
@@ -1236,11 +1242,11 @@ const DevotionalHub = () => {
         </div>
       </section>
 
-      {/* Famous Temples of Gujarat Banner */}
-      <section id="temples-section" className="space-y-6">
+        {/* Famous Temples of Gujarat Banner */}
+        <section id="temples-section" className="space-y-6 h-full flex flex-col">
         <div 
           onClick={() => { setShowTemplesModal(true); playTempleBell(); }}
-          className="relative bg-gradient-to-r from-rose-900 via-red-950 to-orange-950 p-6 sm:p-8 rounded-[2.5rem] text-white shadow-xl overflow-hidden group cursor-pointer hover:scale-[1.01] active:scale-[0.99] transition-all duration-305 border-2 border-amber-500/20"
+          className="relative flex-1 bg-gradient-to-r from-emerald-900 via-emerald-950 to-teal-950 p-6 sm:p-8 rounded-[2.5rem] text-white shadow-xl overflow-hidden group cursor-pointer hover:scale-[1.01] active:scale-[0.99] transition-all duration-305 border-2 border-yellow-600/20"
         >
           {/* Decorative Background */}
           <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]"></div>
@@ -1248,19 +1254,13 @@ const DevotionalHub = () => {
             <span className="material-symbols-outlined text-[150px]" style={{ fontVariationSettings: "'FILL' 1" }}>temple_hindu</span>
           </div>
           
-          <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-6 z-10">
+          <div className="relative flex flex-col sm:flex-col lg:flex-row sm:items-start lg:items-center justify-between gap-6 z-10 h-full">
             <div className="space-y-2 max-w-xl">
               <div className="flex items-center gap-3">
-                <span className="bg-amber-500/25 text-amber-200 border border-amber-400/30 px-3 py-1 rounded-full text-xs font-gujarati font-bold uppercase tracking-wider inline-flex items-center gap-1.5">
+                <span className="bg-yellow-600/25 text-yellow-200 border border-yellow-400/30 px-3 py-1 rounded-full text-xs font-gujarati font-bold uppercase tracking-wider inline-flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-xs" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
                   પ્રસિદ્ધ યાત્રાધામો
                 </span>
-                <ShareButton 
-                  sectionId="temples" 
-                  successMessage="🛕 ગુજરાતના પ્રસિદ્ધ મંદિરો વિભાગની ડાયરેક્ટ લિંક કોપી થઈ ગઈ છે!" 
-                  className="bg-white/10 hover:bg-white/20 border-white/20 text-white dark:bg-white/10 dark:hover:bg-white/20 dark:text-white"
-                  onClick={(e) => e.stopPropagation()}
-                />
               </div>
               <h2 className="font-gujarati font-black text-2xl sm:text-3xl text-yellow-300">ગુજરાતના પ્રસિદ્ધ મંદિરો (Famous Temples of Gujarat)</h2>
               <p className="font-gujarati text-white/90 text-sm leading-relaxed">
@@ -1276,11 +1276,12 @@ const DevotionalHub = () => {
           </div>
         </div>
       </section>
+      </div>
 
       {/* Sacred Oracle Hub (Interactive Ram Shalaka & Durga Prashnavali Grid) */}
       <section id="oracle-section" className="space-y-6 relative">
         <div id="ram-shalaka" className="absolute -mt-24"></div>
-        <div className={`relative p-8 rounded-[2.5rem] text-white shadow-xl overflow-hidden group transition-all duration-500 bg-gradient-to-r from-orange-600 to-amber-500`}>
+        <div className={`relative p-8 rounded-[2.5rem] text-white shadow-xl overflow-hidden group transition-all duration-500 bg-gradient-to-r from-teal-700 to-yellow-600`}>
             <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]"></div>
             <div className={`absolute top-0 left-0 right-0 h-1.5 transition-colors duration-500 bg-yellow-400`}></div>
             <div className={`absolute bottom-0 left-0 right-0 h-1.5 transition-colors duration-500 bg-yellow-400`}></div>
@@ -1291,11 +1292,6 @@ const DevotionalHub = () => {
                         <h2 className="font-gujarati font-black text-3xl">
                             શ્રી રામ શલાકા
                         </h2>
-                        <ShareButton 
-                          sectionId="ram-shalaka" 
-                          successMessage="🏹 શ્રી રામ શલાકાની ડાયરેક્ટ લિંક કોપી થઈ ગઈ છે!"
-                          className="bg-white/10 hover:bg-white/20 border-white/20 text-white dark:bg-white/10 dark:hover:bg-white/20 dark:text-white"
-                        />
                     </div>
                     <p className="font-gujarati text-white/80 text-sm">
                         રામચરિતમાનસ પ્રશ્નાવલી
@@ -1311,7 +1307,7 @@ const DevotionalHub = () => {
         <div className="max-w-md mx-auto text-center">
             <button 
                 onClick={() => setShowRules(prev => !prev)}
-                className={`px-6 py-2.5 rounded-full text-xs font-gujarati font-black tracking-wider shadow-sm transition-all duration-300 flex items-center justify-center gap-2 mx-auto border ${showRules ? 'bg-amber-100 border-amber-300 text-amber-950 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-200' : 'bg-stone-50 hover:bg-stone-100 border-stone-200 dark:bg-stone-900/60 dark:border-stone-800 dark:text-stone-300 text-stone-700'}`}
+                className={`px-6 py-2.5 rounded-full text-xs font-gujarati font-black tracking-wider shadow-sm transition-all duration-300 flex items-center justify-center gap-2 mx-auto border ${showRules ? 'bg-yellow-100 border-yellow-300 text-yellow-950 dark:bg-yellow-950/40 dark:border-yellow-900 dark:text-yellow-200' : 'bg-stone-50 hover:bg-stone-100 border-stone-200 dark:bg-stone-900/60 dark:border-stone-800 dark:text-stone-300 text-stone-700'}`}
             >
                 <span className="material-symbols-outlined text-base animate-pulse">menu_book</span>
                 {showRules ? "📖 ઉપયોગ વિધિ અને નિયમો છુપાવો" : "📖 ઉપયોગ વિધિ અને નિયમો જુઓ"}
@@ -1326,23 +1322,23 @@ const DevotionalHub = () => {
             <div className="max-w-4xl mx-auto bg-stone-50 dark:bg-stone-900/40 p-6 sm:p-8 rounded-[2.5rem] border border-stone-200/60 dark:border-stone-850 space-y-8 animate-fade-in shadow-inner">
                     {/* RAM SHALAKA RULES */}
                     <div className="space-y-6">
-                        <div className="flex items-center gap-3 border-b border-orange-200/50 pb-4 dark:border-stone-800">
-                            <span className="material-symbols-outlined text-2xl text-orange-650">temple_hindu</span>
-                            <h3 className="font-gujarati font-black text-xl text-orange-950 dark:text-orange-200">🏹 શ્રી રામ શલાકા ઉપયોગ વિધિ અને મર્યાદા</h3>
+                        <div className="flex items-center gap-3 border-b border-teal-200/50 pb-4 dark:border-stone-800">
+                            <span className="material-symbols-outlined text-2xl text-teal-800">temple_hindu</span>
+                            <h3 className="font-gujarati font-black text-xl text-teal-950 dark:text-teal-200">🏹 શ્રી રામ શલાકા ઉપયોગ વિધિ અને મર્યાદા</h3>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {/* Ritual (વિધિ) */}
-                            <div className="bg-white dark:bg-dark-surface p-5 rounded-3xl border border-orange-100/50 dark:border-stone-800 space-y-4 shadow-sm">
-                                <h4 className="font-gujarati font-black text-amber-900 dark:text-amber-400 flex items-center gap-2 text-sm border-b pb-2 dark:border-stone-800">
+                            <div className="bg-white dark:bg-dark-surface p-5 rounded-3xl border border-teal-100/50 dark:border-stone-800 space-y-4 shadow-sm">
+                                <h4 className="font-gujarati font-black text-yellow-900 dark:text-yellow-400 flex items-center gap-2 text-sm border-b pb-2 dark:border-stone-800">
                                     <span className="material-symbols-outlined text-lg">settings_suggest</span> 🪔 પૂજન વિધિ અને ક્રમ
                                 </h4>
                                 <ul className="space-y-2 text-xs text-stone-600 dark:text-stone-300 leading-relaxed font-gujarati font-bold">
-                                    <li className="flex gap-2"><span className="text-orange-600">૧.</span> મન એકદમ શાંત અને પવિત્ર રાખો.</li>
-                                    <li className="flex gap-2"><span className="text-orange-600">૨.</span> મનમાં તમારો પ્રશ્ન સ્પષ્ટ રીતે ધારો.</li>
-                                    <li className="flex gap-2"><span className="text-orange-600">૩.</span> આંખો બંધ કરી પ્રભુ શ્રી રામનું સ્મરણ કરો.</li>
-                                    <li className="flex gap-2"><span className="text-orange-600">૪.</span> પૂર્ણ શ્રદ્ધા સાથે કોષ્ટકમાં કોઈ પણ સ્થાન પર ક્લિક કરો.</li>
-                                    <li className="flex gap-2"><span className="text-orange-600">૫.</span> પ્રાપ્ત થયેલી ચોપાઈનો અર્થ અને આશીર્વાદ શાંતિથી વિચારો.</li>
+                                    <li className="flex gap-2"><span className="text-teal-700">૧.</span> મન એકદમ શાંત અને પવિત્ર રાખો.</li>
+                                    <li className="flex gap-2"><span className="text-teal-700">૨.</span> મનમાં તમારો પ્રશ્ન સ્પષ્ટ રીતે ધારો.</li>
+                                    <li className="flex gap-2"><span className="text-teal-700">૩.</span> આંખો બંધ કરી પ્રભુ શ્રી રામનું સ્મરણ કરો.</li>
+                                    <li className="flex gap-2"><span className="text-teal-700">૪.</span> પૂર્ણ શ્રદ્ધા સાથે કોષ્ટકમાં કોઈ પણ સ્થાન પર ક્લિક કરો.</li>
+                                    <li className="flex gap-2"><span className="text-teal-700">૫.</span> પ્રાપ્ત થયેલી ચોપાઈનો અર્થ અને આશીર્વાદ શાંતિથી વિચારો.</li>
                                 </ul>
                             </div>
 
@@ -1378,10 +1374,10 @@ const DevotionalHub = () => {
 
 
                 {/* Important Caution Callout */}
-                <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 dark:from-amber-950/20 dark:to-orange-950/20 p-5 rounded-3xl border border-amber-200/50 dark:border-amber-900/50 flex gap-4 items-start">
-                    <span className="material-symbols-outlined text-3xl text-amber-600 animate-bounce">info</span>
+                <div className="bg-gradient-to-r from-yellow-600/10 to-teal-600/10 dark:from-yellow-950/20 dark:to-teal-950/20 p-5 rounded-3xl border border-yellow-200/50 dark:border-yellow-900/50 flex gap-4 items-start">
+                    <span className="material-symbols-outlined text-3xl text-yellow-700 animate-bounce">info</span>
                     <div className="space-y-1">
-                        <h5 className="font-gujarati font-black text-amber-950 dark:text-amber-300 text-sm">🙏 સૌથી મહત્વપૂર્ણ બાબત ધ્યાનમાં રાખો</h5>
+                        <h5 className="font-gujarati font-black text-yellow-950 dark:text-yellow-300 text-sm">🙏 સૌથી મહત્વપૂર્ણ બાબત ધ્યાનમાં રાખો</h5>
                         <p className="font-gujarati text-xs text-stone-700 dark:text-stone-300 leading-relaxed font-bold">
                             આ બંને પવિત્ર સાધનો શ્રદ્ધાળુઓના દિવ્ય માર્ગદર્શન અને સદ્બુદ્ધિ માટે છે, આપણાં જીવનના અંતિમ નિર્ણયો તેના પર થોપવા માટે નથી. તમારા જીવનનો આખરી નિર્ણય હંમેશા તમારી પોતાની બુદ્ધિ, સદ્વિવેક, અવિરત મહેનત અને સાચા પુરુષાર્થ પર જ આધારિત હોવો જોઈએ. માં ભગવતી અને પ્રભુ શ્રી રામ આપણને સદ્કર્મ કરવાની શક્તિ આપે! 🌺
                         </p>
@@ -1395,7 +1391,7 @@ const DevotionalHub = () => {
                 !showResult ? (
                     <div className="space-y-6 text-center">
                         <div className="max-w-md mx-auto space-y-2">
-                            <p className="font-gujarati font-black text-lg text-amber-900 dark:text-amber-400">
+                            <p className="font-gujarati font-black text-lg text-yellow-900 dark:text-yellow-400">
                                 {animating ? "ગણતરી ચાલી રહી છે, કૃપા કરીને સ્મરણ ચાલુ રાખો..." : "૧. પ્રભુ શ્રી રામનું સ્મરણ કરો અને તમારો પ્રશ્ન મનમાં ધારો."}
                             </p>
                             <p className="font-gujarati text-stone-500 dark:text-stone-400 text-sm">
@@ -1405,7 +1401,7 @@ const DevotionalHub = () => {
 
                         {/* Interactive 15x15 Saffron Grid */}
                         <div className="relative max-w-md mx-auto">
-                            <div className="grid grid-cols-15 gap-0.5 sm:gap-1 p-2 sm:p-4 bg-orange-50/50 dark:bg-dark-bg/50 rounded-3xl border-2 border-orange-200/50 shadow-inner">
+                            <div className="grid grid-cols-15 gap-0.5 sm:gap-1 p-2 sm:p-4 bg-[#0D9488]/10 dark:bg-dark-bg/50 rounded-3xl border-2 border-[#0D9488]/30 shadow-inner">
                                 {RAM_SHALAKA_LETTERS.map((letter, idx) => {
                                     const isHighlighted = highlightedCells.includes(idx);
                                     const isSelected = selectedIdx === idx;
@@ -1416,10 +1412,10 @@ const DevotionalHub = () => {
                                             disabled={animating}
                                             className={`w-full aspect-square text-[9px] sm:text-xs font-black flex items-center justify-center rounded transition-all duration-150 relative ${
                                                 isSelected 
-                                                    ? 'bg-gradient-to-br from-red-600 to-orange-600 text-white font-black scale-125 z-20 shadow-lg border-2 border-yellow-300 animate-pulse' 
+                                                    ? 'bg-[#2D3748] text-[#0D9488] font-black scale-125 z-20 shadow-sm border border-[#0D9488] animate-pulse' 
                                                     : isHighlighted 
-                                                        ? 'bg-gradient-to-br from-amber-500 to-orange-500 text-white font-black scale-110 shadow-md animate-pulse z-10' 
-                                                        : 'bg-white dark:bg-dark-surface hover:bg-amber-100 hover:text-amber-950 dark:hover:bg-amber-950/40 dark:hover:text-amber-200 hover:shadow hover:scale-110 text-stone-700 dark:text-stone-300 border border-stone-100 dark:border-stone-800/50'
+                                                        ? 'bg-[#F8FAFC] text-[#2D3748] font-black scale-110 shadow-sm animate-pulse z-10 border border-[#2D3748]' 
+                                                        : 'bg-white dark:bg-dark-surface hover:bg-[#0D9488]/20 hover:text-[#2D3748] dark:hover:bg-yellow-950/40 dark:hover:text-yellow-200 hover:shadow hover:scale-110 text-stone-700 dark:text-stone-300 border border-[#D6C2A0]/30 dark:border-stone-800/50'
                                             }`}
                                         >
                                             {letter}
@@ -1431,7 +1427,7 @@ const DevotionalHub = () => {
                     </div>
                 ) : (
                     <div className="space-y-6 text-center animate-fade-in py-4">
-                        <div className="max-w-md mx-auto p-6 rounded-[2.5rem] bg-gradient-to-tr from-orange-50 to-amber-50/30 dark:from-dark-bg dark:to-dark-bg border-2 border-orange-200/50 shadow-lg relative overflow-hidden space-y-6">
+                        <div className="max-w-md mx-auto p-6 rounded-[2.5rem] bg-gradient-to-tr from-teal-50 to-yellow-50/30 dark:from-dark-bg dark:to-dark-bg border-2 border-teal-200/50 shadow-lg relative overflow-hidden space-y-6">
                             <div className="absolute right-0 top-0 opacity-5 pointer-events-none">
                                 <span className="material-symbols-outlined text-[120px]">temple_hindu</span>
                             </div>
@@ -1445,17 +1441,17 @@ const DevotionalHub = () => {
 
                             {/* Sacred Verse (Chaupai) */}
                             <div className="space-y-2">
-                                <p className="font-label text-[10px] text-orange-600/70 font-black uppercase tracking-[0.2em]">રામચરિતમાનસ ચોપાઈ</p>
-                                <p className="font-sans font-black text-2xl text-orange-950 dark:text-orange-200 leading-relaxed px-4">
+                                <p className="font-label text-[10px] text-teal-700/70 font-black uppercase tracking-[0.2em]">રામચરિતમાનસ ચોપાઈ</p>
+                                <p className="font-sans font-black text-2xl text-teal-950 dark:text-teal-200 leading-relaxed px-4">
                                     "{CHAUPAIS[selectedIdx % 9].verse}"
                                 </p>
                             </div>
 
-                            <div className="h-[2px] w-24 bg-gradient-to-r from-transparent via-orange-400 to-transparent mx-auto"></div>
+                            <div className="h-[2px] w-24 bg-gradient-to-r from-transparent via-teal-400 to-transparent mx-auto"></div>
 
                             {/* Gujarati Meaning */}
                             <div className="space-y-2 px-2">
-                                <p className="font-label text-[10px] text-amber-900/60 dark:text-amber-400/60 font-black uppercase tracking-[0.2em]">ચોપાઈ ફળ કથન</p>
+                                <p className="font-label text-[10px] text-yellow-900/60 dark:text-yellow-400/60 font-black uppercase tracking-[0.2em]">ચોપાઈ ફળ કથન</p>
                                 <p className="font-gujarati font-black text-base text-stone-800 dark:text-stone-300 leading-relaxed">
                                     {CHAUPAIS[selectedIdx % 9].meaning}
                                 </p>
@@ -1464,7 +1460,7 @@ const DevotionalHub = () => {
                             {/* Reset Button */}
                             <button
                                 onClick={resetShalaka}
-                                className="w-full bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-700 hover:to-amber-600 text-white font-gujarati font-black py-4 px-6 rounded-2xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-2 border-b-4 border-orange-800"
+                                className="w-full bg-gradient-to-r from-teal-700 to-yellow-600 hover:from-teal-800 hover:to-yellow-700 text-white font-gujarati font-black py-4 px-6 rounded-2xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-2 border-b-4 border-teal-900"
                             >
                                 <span className="material-symbols-outlined text-lg">autorenew</span>
                                 શ્રી રામને પ્રણામ કરી ફરીથી પ્રશ્ન પૂછો
@@ -1481,7 +1477,6 @@ const DevotionalHub = () => {
         <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
                 <h3 className="font-gujarati font-black text-2xl text-on-surface">ભજન અને સ્તોત્ર</h3>
-                <ShareButton sectionId="bhajans-section" successMessage="🎶 ભજન અને સ્તોત્ર વિભાગની ડાયરેક્ટ લિંક કોપી થઈ ગઈ છે!" />
             </div>
             <span className="material-symbols-outlined text-primary-container">menu_book</span>
         </div>
@@ -1503,33 +1498,28 @@ const DevotionalHub = () => {
       </section>
 
       {/* 5. GORGEOUS MANTRA JAAP HUB */}
-      <section id="mantra-jaap-section" className="bg-gradient-to-br from-stone-900 via-amber-950 to-stone-900 rounded-[2.5rem] p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden space-y-8 border-2 border-amber-500/20">
+      <section id="mantra-jaap-section" className="bg-[#2D3748] rounded-[2.5rem] p-6 sm:p-10 text-[#F8FAFC] shadow-sm relative overflow-hidden space-y-8 border border-[#2D3748]">
         <div className="absolute right-0 top-0 opacity-5 pointer-events-none">
           <span className="material-symbols-outlined text-[200px]">filter_vintage</span>
         </div>
 
         {/* Global Hub Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pb-6 border-b border-amber-500/10">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pb-6 border-b border-[#0D9488]/20">
           <div className="text-center sm:text-left space-y-1">
             <div className="flex items-center justify-center sm:justify-start gap-3">
-              <h3 className="font-gujarati font-black text-3xl text-amber-400 flex items-center justify-center sm:justify-start gap-2">
+              <h3 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-3xl text-[#0D9488] flex items-center justify-center sm:justify-start gap-2">
                 <span className="material-symbols-outlined text-3xl animate-spin" style={{ animationDuration: '6s' }}>spa</span>
                 મંત્ર જાપ અનુષ્ઠાન
               </h3>
-              <ShareButton 
-                sectionId="mantra-jaap-section" 
-                successMessage="📿 મંત્ર જાપ અનુષ્ઠાન વિભાગની ડાયરેક્ટ લિંક કોપી થઈ ગઈ છે!" 
-                className="bg-white/10 hover:bg-white/20 border-white/20 text-white dark:bg-white/10 dark:hover:bg-white/20 dark:text-white"
-              />
             </div>
-            <p className="font-gujarati text-xs text-amber-200/70">
+            <p className="font-gujarati text-xs text-[#0D9488]/70">
               અત્યાર સુધી {communityCount.toLocaleString('gu-IN')} લોકોએ ઓનલાઇન જાપ કર્યા
             </p>
           </div>
           
           {/* Streak Badge */}
           {streakCount > 0 && (
-            <div className="bg-gradient-to-r from-orange-600 to-amber-500 px-4 py-2 rounded-2xl flex items-center gap-2 shadow-md animate-bounce border border-yellow-400/30">
+            <div className="bg-[#0D9488] text-[#2D3748] px-4 py-2 rounded-2xl flex items-center gap-2 shadow-sm animate-bounce border border-[#0D9488]">
               <span className="material-symbols-outlined text-lg fill-1">local_fire_department</span>
               <span className="font-gujarati font-black text-xs">{streakCount} દિવસની લીંક</span>
             </div>
@@ -1540,7 +1530,7 @@ const DevotionalHub = () => {
         {mantraScreen === 'deity' && (
           <div className="space-y-6">
             <div className="text-center space-y-1">
-              <h4 className="font-gujarati font-black text-xl text-amber-100">૧. જાપ કરવા માટે દેવ/દેવી પસંદ કરો</h4>
+              <h4 className="font-gujarati font-black text-xl text-yellow-100">૧. જાપ કરવા માટે દેવ/દેવી પસંદ કરો</h4>
               <p className="font-gujarati text-stone-400 text-xs">આપની આરાધના શરૂ કરવા માટે પવિત્ર નામ પર ક્લિક કરો</p>
             </div>
             
@@ -1549,13 +1539,13 @@ const DevotionalHub = () => {
                 <button
                   key={deity.id}
                   onClick={() => { setSelectedDeity(deity); setMantraScreen('mantra'); }}
-                  className="bg-stone-900/60 hover:bg-stone-850 border border-stone-800 hover:border-amber-500/30 rounded-3xl p-5 text-center flex flex-col items-center gap-3 transition-all duration-305 group hover:scale-[1.03] hover:shadow-lg active:scale-95"
+                  className="bg-[#FFFFFF]/10 hover:bg-[#FFFFFF]/20 border border-[#FFFFFF]/10 hover:border-[#0D9488] rounded-3xl p-5 text-center flex flex-col items-center gap-3 transition-all duration-305 group hover:scale-[1.03] hover:shadow-sm active:scale-95"
                 >
-                  <div className={`h-14 w-14 rounded-2xl bg-gradient-to-tr ${deity.color} flex items-center justify-center text-2xl shadow-md group-hover:rotate-12 transition-transform`}>
-                    {deity.name.split(' ')[0]}
+                  <div className="h-16 w-16 rounded-full overflow-hidden shadow-md border-2 border-[#2D3748] group-hover:border-[#0D9488] group-hover:scale-110 transition-all bg-[#0D9488]">
+                    <img src={deity.image} alt={deity.name} className="w-full h-full object-cover" />
                   </div>
-                  <span className="font-gujarati font-black text-sm text-stone-200 group-hover:text-amber-400 transition-colors">
-                    {deity.name.split(' ').slice(1).join(' ')}
+                  <span className="font-gujarati font-black text-sm text-[#F8FAFC] group-hover:text-[#0D9488] transition-colors">
+                    {deity.name}
                   </span>
                 </button>
               ))}
@@ -1569,13 +1559,13 @@ const DevotionalHub = () => {
             <div className="flex items-center gap-3">
               <button 
                 onClick={() => setMantraScreen('deity')}
-                className="h-10 w-10 bg-stone-850 rounded-full flex items-center justify-center border border-stone-850 hover:bg-stone-800 active:scale-90 transition-transform"
+                className="h-10 w-10 bg-[#0D9488] rounded-full flex items-center justify-center border border-[#2D3748] hover:bg-[#0D9488]/80 active:scale-90 transition-transform"
               >
-                <span className="material-symbols-outlined text-sm text-stone-300">arrow_back</span>
+                <span className="material-symbols-outlined text-sm text-[#2D3748]">arrow_back</span>
               </button>
               <div className="space-y-0.5">
-                <h4 className="font-gujarati font-black text-lg text-amber-100">{selectedDeity.name} ના પવિત્ર મંત્રો</h4>
-                <p className="font-gujarati text-stone-400 text-xs">૨. આપની આસ્થા મુજબનો એક મંત્ર પસંદ કરો</p>
+                <h4 className="font-gujarati font-black text-lg text-[#0D9488]">{selectedDeity.name} ના પવિત્ર મંત્રો</h4>
+                <p className="font-gujarati text-[#F8FAFC]/70 text-xs">૨. આપની આસ્થા મુજબનો એક મંત્ર પસંદ કરો</p>
               </div>
             </div>
 
@@ -1588,13 +1578,13 @@ const DevotionalHub = () => {
                     setMantraTarget(mantra.defaultCount);
                     setMantraScreen('target'); 
                   }}
-                  className="bg-stone-900/60 hover:bg-stone-850 border border-stone-800 hover:border-amber-500/30 rounded-3xl p-5 text-left flex justify-between items-center transition-all duration-305 group hover:scale-[1.01] active:scale-[0.99]"
+                  className="bg-[#FFFFFF]/10 hover:bg-[#FFFFFF]/20 border border-[#FFFFFF]/10 hover:border-[#0D9488] rounded-3xl p-5 text-left flex justify-between items-center transition-all duration-305 group hover:scale-[1.01] active:scale-[0.99]"
                 >
                   <div className="space-y-1">
-                    <p className="font-gujarati font-black text-base text-stone-150 group-hover:text-amber-400 transition-colors">{mantra.name}</p>
-                    <span className="font-gujarati text-[10px] text-stone-500">સામાન્ય જાપ સંખ્યા: {mantra.defaultCount}</span>
+                    <p className="font-gujarati font-black text-base text-[#F8FAFC] group-hover:text-[#0D9488] transition-colors">{mantra.name}</p>
+                    <span className="font-gujarati text-[10px] text-[#F8FAFC]/60">સામાન્ય જાપ સંખ્યા: {mantra.defaultCount}</span>
                   </div>
-                  <span className="material-symbols-outlined text-stone-500 group-hover:translate-x-1 transition-transform">chevron_right</span>
+                  <span className="material-symbols-outlined text-[#F8FAFC]/60 group-hover:translate-x-1 transition-transform group-hover:text-[#0D9488]">chevron_right</span>
                 </button>
               ))}
             </div>
@@ -1607,20 +1597,20 @@ const DevotionalHub = () => {
             <div className="flex items-center gap-3">
               <button 
                 onClick={() => setMantraScreen('mantra')}
-                className="h-10 w-10 bg-stone-850 rounded-full flex items-center justify-center border border-stone-850 hover:bg-stone-800 active:scale-90 transition-transform"
+                className="h-10 w-10 bg-[#0D9488] rounded-full flex items-center justify-center border border-[#2D3748] hover:bg-[#0D9488]/80 active:scale-90 transition-transform"
               >
-                <span className="material-symbols-outlined text-sm text-stone-300">arrow_back</span>
+                <span className="material-symbols-outlined text-sm text-[#2D3748]">arrow_back</span>
               </button>
               <div className="space-y-0.5">
-                <h4 className="font-gujarati font-black text-lg text-amber-100">{selectedMantra.name}</h4>
-                <p className="font-gujarati text-stone-400 text-xs">૩. જપ કરવા માટે કુલ સંખ્યા નક્કી કરો</p>
+                <h4 className="font-gujarati font-black text-lg text-[#0D9488]">{selectedMantra.name}</h4>
+                <p className="font-gujarati text-[#F8FAFC]/70 text-xs">૩. જપ કરવા માટે કુલ સંખ્યા નક્કી કરો</p>
               </div>
             </div>
 
-            <div className="bg-stone-900/60 rounded-3xl p-6 border border-stone-800 space-y-6 max-w-md mx-auto">
+            <div className="bg-[#FFFFFF]/10 rounded-3xl p-6 border border-[#FFFFFF]/10 space-y-6 max-w-md mx-auto">
               <div className="text-center space-y-1">
-                <p className="font-gujarati text-[10px] text-stone-550 uppercase tracking-widest">લક્ષ્ય જપ સંખ્યા</p>
-                <div className="font-headline font-black text-5xl text-amber-400 leading-none">
+                <p className="font-gujarati text-[10px] text-[#F8FAFC]/60 uppercase tracking-widest">લક્ષ્ય જપ સંખ્યા</p>
+                <div className="font-headline font-black text-5xl text-[#0D9488] leading-none">
                   {mantraTarget}
                 </div>
               </div>
@@ -1631,7 +1621,7 @@ const DevotionalHub = () => {
                   <button
                     key={val}
                     onClick={() => setMantraTarget(val)}
-                    className={`py-3.5 rounded-2xl text-xs font-black transition-all ${mantraTarget === val ? 'bg-gradient-to-r from-orange-600 to-amber-500 text-white shadow-md' : 'bg-stone-800 text-stone-300 hover:bg-stone-750'}`}
+                    className={`py-3.5 rounded-2xl text-xs font-black transition-all ${mantraTarget === val ? 'bg-[#0D9488] text-[#2D3748] shadow-sm' : 'bg-[#FFFFFF]/10 text-[#F8FAFC] hover:bg-[#FFFFFF]/20'}`}
                   >
                     {val}
                   </button>
@@ -1639,17 +1629,17 @@ const DevotionalHub = () => {
               </div>
 
               {/* Custom Count Stepper */}
-              <div className="flex justify-center items-center gap-4 pt-4 border-t border-stone-800">
+              <div className="flex justify-center items-center gap-4 pt-4 border-t border-[#FFFFFF]/10">
                 <button
                   onClick={() => setMantraTarget(prev => Math.max(1, prev - 1))}
-                  className="h-10 w-10 bg-stone-800 hover:bg-stone-750 rounded-full flex items-center justify-center active:scale-90 transition-transform"
+                  className="h-10 w-10 bg-[#FFFFFF]/10 hover:bg-[#FFFFFF]/20 rounded-full flex items-center justify-center active:scale-90 transition-transform text-[#0D9488]"
                 >
                   <span className="material-symbols-outlined text-sm">remove</span>
                 </button>
-                <span className="font-gujarati text-xs text-stone-400 font-bold">કસ્ટમ સેટ કરો</span>
+                <span className="font-gujarati text-xs text-[#F8FAFC] font-bold">કસ્ટમ સેટ કરો</span>
                 <button
                   onClick={() => setMantraTarget(prev => prev + 1)}
-                  className="h-10 w-10 bg-stone-800 hover:bg-stone-750 rounded-full flex items-center justify-center active:scale-90 transition-transform"
+                  className="h-10 w-10 bg-[#FFFFFF]/10 hover:bg-[#FFFFFF]/20 rounded-full flex items-center justify-center active:scale-90 transition-transform text-[#0D9488]"
                 >
                   <span className="material-symbols-outlined text-sm">add</span>
                 </button>
@@ -1658,7 +1648,7 @@ const DevotionalHub = () => {
               {/* Start Button */}
               <button
                 onClick={() => { setMantraCount(0); setCompletedMalas(0); setMantraScreen('active'); playTempleBell(); }}
-                className="w-full bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-700 hover:to-amber-600 text-white font-gujarati font-black py-4 px-6 rounded-2xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 border-b-4 border-orange-850"
+                className="w-full bg-[#0D9488] hover:bg-[#0D9488]/90 text-[#2D3748] font-gujarati font-black py-4 px-6 rounded-2xl shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2 border-b-4 border-[#2D3748]/20"
               >
                 <span className="material-symbols-outlined text-lg">play_arrow</span>
                 ▶️ અનુષ્ઠાન શરૂ કરો
@@ -1672,11 +1662,11 @@ const DevotionalHub = () => {
           <div className="space-y-8 text-center">
             {/* Header info */}
             <div className="space-y-1">
-              <span className={`px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase border inline-block ${selectedDeity?.badgeColor}`}>
+              <span className={`px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase border border-[#0D9488] text-[#0D9488] inline-block`}>
                 {selectedDeity?.name.split(' ').slice(1).join(' ')}
               </span>
-              <h4 className="font-gujarati font-black text-2xl text-amber-100">{selectedMantra.name}</h4>
-              <p className="font-gujarati text-stone-400 text-xs">કુલ લક્ષ્ય: {mantraTarget} જપ</p>
+              <h4 className="font-gujarati font-black text-2xl text-[#F8FAFC]">{selectedMantra.name}</h4>
+              <p className="font-gujarati text-[#F8FAFC]/70 text-xs">કુલ લક્ષ્ય: {mantraTarget} જપ</p>
             </div>
 
             {/* Circular Progress Ring Counter */}
@@ -1699,19 +1689,19 @@ const DevotionalHub = () => {
                 />
                 <defs>
                   <linearGradient id="japaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#ea580c" />
-                    <stop offset="100%" stopColor="#f59e0b" />
+                    <stop offset="0%" stopColor="#2D3748" />
+                    <stop offset="100%" stopColor="#0D9488" />
                   </linearGradient>
                 </defs>
               </svg>
 
               {/* Centered digits */}
               <div className="space-y-1 z-10">
-                <span className="font-gujarati text-[10px] text-stone-500 uppercase tracking-widest block">ચાલુ જપ</span>
-                <span className="font-headline font-black text-6xl leading-none text-white block">
+                <span className="font-gujarati text-[10px] text-[#0D9488]/70 uppercase tracking-widest block">ચાલુ જપ</span>
+                <span className="font-headline font-black text-6xl leading-none text-[#F8FAFC] block">
                   {String(mantraCount).padStart(3, '0')}
                 </span>
-                <span className="font-gujarati text-xs text-amber-505 font-bold block">
+                <span className="font-gujarati text-xs text-[#0D9488] font-bold block">
                   માળા: {completedMalas} ({completedMalas * 108 + (mantraCount % 108)} / {mantraTarget})
                 </span>
               </div>
@@ -1721,11 +1711,11 @@ const DevotionalHub = () => {
             <div className="space-y-4">
               <button
                 onClick={incrementJapa}
-                className="h-36 w-36 bg-gradient-to-br from-amber-600 to-amber-900 border-8 border-stone-900 shadow-2xl rounded-full mx-auto flex flex-col items-center justify-center active:scale-90 active:shadow-inner transition-all hover:scale-[1.03] group relative overflow-hidden"
+                className="h-36 w-36 bg-[#0D9488] border-4 border-[#2D3748] shadow-sm rounded-full mx-auto flex flex-col items-center justify-center active:scale-90 active:shadow-inner transition-all hover:scale-[1.03] group relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.25)_0%,transparent_60%)] pointer-events-none"></div>
-                <span className="material-symbols-outlined text-4xl text-yellow-300 animate-pulse group-hover:scale-115 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>brightness_5</span>
-                <span className="font-gujarati font-black text-xs text-amber-100 mt-2 tracking-wider">અહીં દબાવો</span>
+                <span className="material-symbols-outlined text-4xl text-[#2D3748] animate-pulse group-hover:scale-115 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>brightness_5</span>
+                <span className="font-gujarati font-black text-xs text-yellow-100 mt-2 tracking-wider">અહીં દબાવો</span>
               </button>
               <p className="font-gujarati text-stone-400 text-xs">માળાનો એક-એક મણકો ફેરવી જાપ કરવા માટે ટેપ કરો</p>
             </div>
@@ -1734,7 +1724,7 @@ const DevotionalHub = () => {
             <div className="max-w-xs mx-auto p-4 bg-stone-900/60 rounded-2xl border border-stone-800 flex justify-between items-center gap-4">
               <div className="text-left">
                 <span className="font-gujarati font-black text-xs text-stone-200 flex items-center gap-1">
-                  <span className="material-symbols-outlined text-sm animate-bounce text-orange-500">sensors</span>
+                  <span className="material-symbols-outlined text-sm animate-bounce text-teal-600">sensors</span>
                   ડિવાઇસ હલાવીને જાપ (Gyro)
                 </span>
                 <p className="text-[10px] text-stone-500 font-gujarati leading-tight mt-0.5">મોબાઈલ હાથમાં રાખી હલાવતા જાવ</p>
@@ -1754,23 +1744,23 @@ const DevotionalHub = () => {
                     setMotionActive(false);
                   }
                 }}
-                className={`w-14 h-8 rounded-full p-1 transition-colors relative flex items-center ${motionActive ? 'bg-orange-600 justify-end' : 'bg-stone-700 justify-start'}`}
+                className={`w-14 h-8 rounded-full p-1 transition-colors relative flex items-center ${motionActive ? 'bg-teal-700 justify-end' : 'bg-stone-700 justify-start'}`}
               >
                 <div className="h-6 w-6 bg-white rounded-full shadow-md"></div>
               </button>
             </div>
 
             {/* Exit controls */}
-            <div className="pt-4 border-t border-stone-800 flex justify-center gap-4 max-w-sm mx-auto">
+            <div className="pt-4 border-t border-[#FFFFFF]/10 flex justify-center gap-4 max-w-sm mx-auto">
               <button
                 onClick={() => { if (window.confirm("શું આપ ખરેખર જપ અધૂરા છોડી બહાર જવા માંગો છો?")) resetMantraJapa(); }}
-                className="flex-1 bg-stone-950/40 hover:bg-stone-900 border border-stone-850 py-3.5 px-4 rounded-2xl font-gujarati font-black text-xs text-stone-300 active:scale-95 transition-transform"
+                className="flex-1 bg-[#FFFFFF]/10 hover:bg-[#FFFFFF]/20 border border-[#FFFFFF]/10 py-3.5 px-4 rounded-2xl font-gujarati font-black text-xs text-[#F8FAFC] active:scale-95 transition-transform"
               >
                 🛑 જપ બંધ કરો
               </button>
               <button
                 onClick={incrementJapa}
-                className="flex-1 bg-gradient-to-r from-orange-600 to-amber-500 py-3.5 px-4 rounded-2xl font-gujarati font-black text-xs text-white active:scale-95 transition-transform"
+                className="flex-1 bg-[#0D9488] py-3.5 px-4 rounded-2xl font-gujarati font-black text-xs text-[#2D3748] active:scale-95 transition-transform"
               >
                 📿 આગળ વધો +1
               </button>
@@ -1781,11 +1771,11 @@ const DevotionalHub = () => {
         {/* --- SCREEN 5: COMPLETION CERTIFICATE SCREEN --- */}
         {mantraScreen === 'certificate' && selectedMantra && (
           <div className="space-y-8 animate-fade-in py-4">
-            <div className="max-w-md mx-auto p-6 sm:p-8 rounded-[2.5rem] bg-gradient-to-b from-stone-900 to-stone-950 border-4 border-double border-amber-500 shadow-2xl relative overflow-hidden space-y-6 text-center">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.05)_0%,transparent_70%)] pointer-events-none"></div>
+            <div className="max-w-md mx-auto p-6 sm:p-8 rounded-[2.5rem] bg-[#F8FAFC] border-4 border-double border-[#0D9488] shadow-sm relative overflow-hidden space-y-6 text-center">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(196,159,103,0.1)_0%,transparent_70%)] pointer-events-none"></div>
               
               {/* Traditional sacred motifs */}
-              <div className="flex justify-between items-center text-amber-500/40 px-4">
+              <div className="flex justify-between items-center text-[#0D9488]/60 px-4">
                 <span className="material-symbols-outlined">filter_vintage</span>
                 <span className="material-symbols-outlined text-2xl">brightness_5</span>
                 <span className="material-symbols-outlined">filter_vintage</span>
@@ -1793,41 +1783,41 @@ const DevotionalHub = () => {
 
               {/* Certificate Heading */}
               <div className="space-y-1">
-                <p className="font-label text-[10px] text-amber-500/70 font-black uppercase tracking-[0.25em]">જપ અનુષ્ઠાન પ્રમાણપત્ર</p>
-                <h4 className="font-gujarati font-black text-2xl text-amber-400">🪔 ભક્તિ રત્ન પ્રમાણપત્ર 🪔</h4>
+                <p className="font-label text-[10px] text-[#2D3748]/70 font-black uppercase tracking-[0.25em]">જપ અનુષ્ઠાન પ્રમાણપત્ર</p>
+                <h4 className="font-gujarati font-black text-2xl text-[#2D3748]">🪔 ભક્તિ રત્ન પ્રમાણપત્ર 🪔</h4>
               </div>
 
-              <div className="h-[2px] w-36 bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-auto"></div>
+              <div className="h-[2px] w-36 bg-gradient-to-r from-transparent via-[#0D9488] to-transparent mx-auto"></div>
 
               {/* Custom message content */}
               <div className="space-y-4 px-2">
-                <p className="font-gujarati text-sm text-stone-300 leading-relaxed">
+                <p className="font-gujarati text-sm text-[#1A1614] leading-relaxed">
                   આથી પ્રમાણિત કરવામાં આવે છે કે આપની અપાર ભક્તિ અને નિષ્ઠા સાથે શ્રદ્ધાપૂર્વક
                 </p>
-                <div className="py-3 px-4 bg-amber-500/10 rounded-2xl border border-amber-500/20 inline-block">
-                  <p className="font-gujarati font-black text-lg text-amber-300 leading-none">
+                <div className="py-3 px-4 bg-[#0D9488]/10 rounded-2xl border border-[#0D9488] inline-block">
+                  <p className="font-gujarati font-black text-lg text-[#2D3748] leading-none">
                     "{selectedMantra.name}"
                   </p>
                 </div>
-                <p className="font-gujarati text-sm text-stone-300 leading-relaxed">
-                  મંત્રના <span className="font-black text-amber-400 text-lg">{mantraTarget}</span> પવિત્ર જપ પૂર્ણ કરી આપશ્રીએ જપ અનુષ્ઠાન સંપન્ન કર્યું છે.
+                <p className="font-gujarati text-sm text-[#1A1614] leading-relaxed">
+                  મંત્રના <span className="font-black text-[#2D3748] text-lg">{mantraTarget}</span> પવિત્ર જપ પૂર્ણ કરી આપશ્રીએ જપ અનુષ્ઠાન સંપન્ન કર્યું છે.
                 </p>
-                <p className="font-gujarati text-xs text-stone-400 leading-relaxed italic">
+                <p className="font-gujarati text-xs text-[#78716C] leading-relaxed italic">
                   પ્રભુ આપની સર્વ આધ્યાત્મિક અને લૌકિક મનોકામનાઓ શીઘ્ર અતિ શીઘ્ર પૂર્ણ કરે તેવા શુભ આશીર્વાદ!
                 </p>
               </div>
 
               {/* Signature section */}
-              <div className="pt-4 border-t border-amber-500/10 flex justify-between items-center text-left">
+              <div className="pt-4 border-t border-[#0D9488] flex justify-between items-center text-left">
                 <div>
-                  <p className="text-[10px] font-gujarati text-stone-500">અનુષ્ઠાન તારીખ</p>
-                  <p className="font-gujarati text-xs text-stone-300 font-bold">
+                  <p className="text-[10px] font-gujarati text-[#78716C]">અનુષ્ઠાન તારીખ</p>
+                  <p className="font-gujarati text-xs text-[#2D3748] font-bold">
                     {new Date().toLocaleDateString('gu-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
                   </p>
                 </div>
                 <div className="text-right">
                   <p className="text-[10px] font-gujarati text-stone-500">પ્રમાણિત કરનાર</p>
-                  <p className="font-gujarati text-xs text-amber-500 font-bold">ૐ ગુજરાતી એપ</p>
+                  <p className="font-gujarati text-xs text-yellow-600 font-bold">ૐ ગુજરાતી એપ</p>
                 </div>
               </div>
 
@@ -1867,23 +1857,23 @@ const DevotionalHub = () => {
       {/* 6. FAMOUS TEMPLES OF GUJARAT MODAL OVERLAY */}
       {showTemplesModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm animate-fade-in">
-          <div className="relative w-full max-w-5xl h-[85vh] bg-[#fdfaf6] dark:bg-stone-950 rounded-[2.5rem] shadow-2xl border border-amber-500/20 overflow-hidden flex flex-col">
+          <div className="relative w-full max-w-5xl h-[85vh] bg-[#fdfaf6] dark:bg-stone-950 rounded-[2.5rem] shadow-2xl border border-yellow-600/20 overflow-hidden flex flex-col">
             {/* Traditional golden border accents */}
-            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-600 via-yellow-400 to-amber-600"></div>
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-yellow-700 via-yellow-400 to-yellow-700"></div>
             
             {/* Modal Header */}
-            <div className="p-6 sm:p-8 bg-gradient-to-b from-amber-50 to-transparent dark:from-stone-900/40 border-b border-amber-500/10 flex justify-between items-center shrink-0">
+            <div className="p-6 sm:p-8 bg-gradient-to-b from-yellow-50 to-transparent dark:from-stone-900/40 border-b border-yellow-600/10 flex justify-between items-center shrink-0">
               <div className="space-y-1">
-                <span className="bg-amber-500/10 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400 border border-amber-500/20 px-3 py-1 rounded-full text-[10px] font-gujarati font-black uppercase tracking-wider inline-block">
+                <span className="bg-yellow-600/10 text-yellow-800 dark:bg-yellow-950/30 dark:text-yellow-400 border border-yellow-600/20 px-3 py-1 rounded-full text-[10px] font-gujarati font-black uppercase tracking-wider inline-block">
                   🛕 પવિત્ર યાત્રાધામો દર્શન
                 </span>
-                <h3 className="font-gujarati font-black text-2xl sm:text-3xl text-amber-950 dark:text-amber-200">
+                <h3 className="font-gujarati font-black text-2xl sm:text-3xl text-yellow-950 dark:text-yellow-200">
                   ગુજરાતના પ્રસિદ્ધ મંદિરો (Famous Temples)
                 </h3>
               </div>
               <button 
                 onClick={() => { setShowTemplesModal(false); setHighlightedTempleId(null); }}
-                className="h-10 w-10 bg-amber-900/10 dark:bg-stone-900 hover:bg-amber-900/20 dark:hover:bg-stone-850 rounded-full flex items-center justify-center border border-transparent dark:border-stone-800 text-amber-950 dark:text-stone-300 transition-colors cursor-pointer active:scale-90"
+                className="h-10 w-10 bg-yellow-900/10 dark:bg-stone-900 hover:bg-yellow-900/20 dark:hover:bg-stone-850 rounded-full flex items-center justify-center border border-transparent dark:border-stone-800 text-yellow-950 dark:text-stone-300 transition-colors cursor-pointer active:scale-90"
               >
                 <span className="material-symbols-outlined text-lg">close</span>
               </button>
@@ -1902,8 +1892,8 @@ const DevotionalHub = () => {
                       onClick={() => { setActiveTempleCategory(cat.id); playTempleBell(); }}
                       className={`flex-shrink-0 py-3.5 px-5 rounded-2xl text-xs sm:text-sm font-gujarati font-black transition-all flex items-center gap-2 cursor-pointer border ${
                         isActive 
-                          ? 'bg-gradient-to-r from-amber-700 to-orange-850 border-amber-500 text-white shadow-md' 
-                          : 'bg-white dark:bg-stone-900 hover:bg-amber-50 dark:hover:bg-stone-850 border-stone-200 dark:border-stone-800 text-stone-700 dark:text-stone-300'
+                          ? 'bg-gradient-to-r from-yellow-800 to-orange-850 border-yellow-600 text-white shadow-md' 
+                          : 'bg-white dark:bg-stone-900 hover:bg-yellow-50 dark:hover:bg-stone-850 border-stone-200 dark:border-stone-800 text-stone-700 dark:text-stone-300'
                       }`}
                     >
                       <span>{cat.emoji}</span>
@@ -1919,7 +1909,7 @@ const DevotionalHub = () => {
                   <div 
                     key={temple.id} 
                     id={`temple-${temple.id}`}
-                    className={`p-6 rounded-3xl border flex flex-col justify-between gap-4 shadow-sm hover:shadow-md transition-all hover:scale-[1.005] group relative overflow-hidden ${highlightedTempleId === temple.id ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-500 ring-4 ring-amber-500/30' : 'bg-white dark:bg-stone-900 border-stone-200/60 dark:border-stone-850/80'}`}
+                    className={`p-6 rounded-3xl border flex flex-col justify-between gap-4 shadow-sm hover:shadow-md transition-all hover:scale-[1.005] group relative overflow-hidden ${highlightedTempleId === temple.id ? 'bg-yellow-50 dark:bg-yellow-950/20 border-yellow-600 ring-4 ring-yellow-600/30' : 'bg-white dark:bg-stone-900 border-stone-200/60 dark:border-stone-850/80'}`}
                   >
                     {/* Corner decorative light */}
                     <div className="absolute right-0 top-0 opacity-5 pointer-events-none group-hover:scale-110 transition-transform">
@@ -1930,7 +1920,7 @@ const DevotionalHub = () => {
                       {/* Title & Badge */}
                       <div className="flex justify-between items-start gap-4">
                         <div className="space-y-0.5">
-                          <h4 className="font-gujarati font-black text-xl sm:text-2xl text-amber-900 dark:text-amber-400 flex items-center gap-2 leading-tight">
+                          <h4 className="font-gujarati font-black text-xl sm:text-2xl text-yellow-900 dark:text-yellow-400 flex items-center gap-2 leading-tight">
                             <span>{temple.emoji}</span>
                             <span>{temple.name_gu}</span>
                           </h4>
@@ -1938,13 +1928,13 @@ const DevotionalHub = () => {
                             {temple.name_en}
                           </p>
                         </div>
-                        <span className="bg-amber-500/10 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300 px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-gujarati font-black border border-amber-500/20 whitespace-nowrap shadow-sm shrink-0">
+                        <span className="bg-yellow-600/10 text-yellow-900 dark:bg-yellow-950/40 dark:text-yellow-300 px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-gujarati font-black border border-yellow-600/20 whitespace-nowrap shadow-sm shrink-0">
                           {temple.highlight_gu}
                         </span>
                       </div>
 
                       {/* Location Badge */}
-                      <div className="flex items-center gap-1 text-xs text-rose-700 dark:text-rose-400 font-gujarati font-bold bg-rose-50/50 dark:bg-rose-950/15 py-1 px-2.5 rounded-lg w-fit border border-rose-100/30">
+                      <div className="flex items-center gap-1 text-xs text-emerald-700 dark:text-rose-400 font-gujarati font-bold bg-rose-50/50 dark:bg-rose-950/15 py-1 px-2.5 rounded-lg w-fit border border-rose-100/30">
                         <span className="material-symbols-outlined text-sm">location_on</span>
                         <span>{temple.location_gu} ({temple.location_en.split(', ')[1]})</span>
                       </div>
@@ -1971,7 +1961,7 @@ const DevotionalHub = () => {
                         href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(temple.name_en + ' ' + temple.location_en)}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="bg-[#fef8f1] hover:bg-amber-100 dark:bg-stone-850 dark:hover:bg-stone-800 text-amber-900 dark:text-amber-300 border border-amber-500/20 py-2 px-4 rounded-xl font-gujarati font-black text-xs transition-colors flex items-center gap-1 active:scale-95 shadow-sm"
+                        className="bg-[#F8FAFC] hover:bg-yellow-100 dark:bg-stone-850 dark:hover:bg-stone-800 text-yellow-900 dark:text-yellow-300 border border-yellow-600/20 py-2 px-4 rounded-xl font-gujarati font-black text-xs transition-colors flex items-center gap-1 active:scale-95 shadow-sm"
                       >
                         <span className="material-symbols-outlined text-sm">map</span>
                         નકશો ➔
@@ -1983,7 +1973,7 @@ const DevotionalHub = () => {
             </div>
             
             {/* Traditional footer border */}
-            <div className="p-4 bg-amber-50/30 dark:bg-stone-900/20 border-t border-amber-500/10 text-center shrink-0">
+            <div className="p-4 bg-yellow-50/30 dark:bg-stone-900/20 border-t border-yellow-600/10 text-center shrink-0">
               <p className="font-gujarati text-[10px] sm:text-xs text-stone-400 dark:text-stone-500 font-bold leading-none">
                 🌺 આપના મનની શાંતિ અને દિવ્ય માર્ગદર્શન માટે ગુજરાતી એપ 🌺
               </p>
@@ -2124,15 +2114,15 @@ const DevotionalHub = () => {
         };
         return (
           <div
-            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/90 backdrop-blur-md animate-fade-in"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-md animate-fade-in p-4"
             onClick={(e) => { if (e.target === e.currentTarget) setActiveLiveMandir(null); }}
           >
-            <div className="w-full sm:max-w-2xl bg-black rounded-t-[2.5rem] sm:rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 animate-scale-in">
+            <div className="w-full max-w-2xl bg-black rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 animate-scale-in">
               
               {/* Modal Header */}
               <div className="relative flex items-center justify-between px-5 py-3.5 bg-gradient-to-r from-[#0f0f0f] to-[#1a1a1a] border-b border-white/10">
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1.5 bg-red-600 text-white px-2.5 py-1 rounded-full text-[9px] font-black tracking-widest uppercase">
+                  <div className="flex items-center gap-1.5 bg-emerald-700 text-white px-2.5 py-1 rounded-full text-[9px] font-black tracking-widest uppercase">
                     <span className="h-1.5 w-1.5 bg-white rounded-full animate-pulse"></span> LIVE
                   </div>
                   <div>
@@ -2143,7 +2133,7 @@ const DevotionalHub = () => {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleOpenYouTube}
-                    className="h-8 px-3 bg-red-600 hover:bg-red-500 active:scale-95 rounded-xl flex items-center gap-1.5 text-white text-[11px] font-bold transition-all"
+                    className="h-8 px-3 bg-emerald-700 hover:bg-emerald-600 active:scale-95 rounded-xl flex items-center gap-1.5 text-white text-[11px] font-bold transition-all"
                   >
                     <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>
                     YouTube પર જુઓ
@@ -2188,7 +2178,7 @@ const DevotionalHub = () => {
                 </p>
                 <button
                   onClick={handleOpenYouTube}
-                  className="flex-shrink-0 flex items-center gap-2 bg-red-600 hover:bg-red-500 active:scale-95 text-white font-gujarati font-bold text-xs px-4 py-2.5 rounded-2xl transition-all shadow-lg"
+                  className="flex-shrink-0 flex items-center gap-2 bg-emerald-700 hover:bg-emerald-600 active:scale-95 text-white font-gujarati font-bold text-xs px-4 py-2.5 rounded-2xl transition-all shadow-lg"
                 >
                   <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: "'FILL' 1" }}>smart_display</span>
                   YouTube Live ખોલો

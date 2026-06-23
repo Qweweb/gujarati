@@ -264,10 +264,10 @@ function WordConnectGame() {
   const [score, setScore] = useState(0);
   const [success, setSuccess] = useState(false);
   
-  // Choose a random word of length 3 or 4
+  // Choose a random word of length 4 to 6 (minimum 4 syllables)
   const pool = WORDS_DB.filter(w => {
     const syllables = splitGujaratiWord(w);
-    return syllables.length >= 3 && syllables.length <= 4;
+    return syllables.length >= 4 && syllables.length <= 6;
   });
   const [wordData, setWordData] = useState(() => pool[Math.floor(Math.random() * pool.length)]);
   
@@ -276,9 +276,18 @@ function WordConnectGame() {
   
   useEffect(() => {
     if (wordData) {
-      const arr = splitGujaratiWord(wordData);
-      // Shuffle
-      arr.sort(() => Math.random() - 0.5);
+      const original = splitGujaratiWord(wordData);
+      let arr = [...original];
+      
+      // Shuffle until the order is different from the original word
+      let attempts = 0;
+      while (attempts < 100) {
+        arr.sort(() => Math.random() - 0.5);
+        const isSame = arr.every((val, index) => val === original[index]);
+        if (!isSame) break;
+        attempts++;
+      }
+      
       setLetters(arr);
       setSelectedLetters([]);
       setCurrentWord('');
@@ -1116,18 +1125,156 @@ function RangoliGame() {
 /* ========================================================
    GAME H: WORD SEARCH (શબ્દ શોધ)
    ======================================================= */
-function WordSearchGame() {
-  const [grid, setGrid] = useState([
-    ['ક', 'મ', 'ળ', 'ર', 'જ'],
-    ['ગ', 'ા', 'મ', 'ડ', 'ા'],
-    ['ખ', 'ે', 'ત', 'ી', 'ન'],
-    ['ગ', 'ા', 'ય', 'ત', 'લ'],
-    ['દ', 'વ', 'ા', 'જ', 'ય']
-  ]);
+// Filtered Gujarati Word Pool (5000+ Gujarati words of length 2-5 graphemes)
+const WORD_POOL = WORDS_DB.filter(word => {
+  const graphemes = splitGujaratiWord(word);
+  return graphemes.length >= 2 && graphemes.length <= 5 && /^[\u0A80-\u0AFF\u200D]+$/.test(word);
+});
+
+const getPlayedWords = () => {
+  try {
+    return JSON.parse(localStorage.getItem('sanskar_wordsearch_played_words') || '[]');
+  } catch (e) {
+    return [];
+  }
+};
+
+const markWordsPlayed = (words) => {
+  try {
+    const played = getPlayedWords();
+    const updated = Array.from(new Set([...played, ...words]));
+    if (updated.length > 4000) {
+      localStorage.setItem('sanskar_wordsearch_played_words', JSON.stringify(updated.slice(2000)));
+    } else {
+      localStorage.setItem('sanskar_wordsearch_played_words', JSON.stringify(updated));
+    }
+  } catch (e) {}
+};
+
+const pickTargetWords = () => {
+  const played = getPlayedWords();
+  let available = WORD_POOL.filter(w => !played.includes(w));
+  if (available.length < 50) {
+    localStorage.removeItem('sanskar_wordsearch_played_words');
+    available = WORD_POOL;
+  }
   
-  const targetWords = ['કમળ', 'ગામડા', 'ખેતી', 'ગાય', 'દવા', 'જય'];
+  const shuffled = [...available].sort(() => 0.5 - Math.random());
+  const selected = [];
+  for (const word of shuffled) {
+    const len = splitGujaratiWord(word).length;
+    if (len >= 2 && len <= 5) {
+      selected.push(word);
+      if (selected.length === 5) break;
+    }
+  }
+  
+  if (selected.length < 3) {
+    return ['કમળ', 'ગામડા', 'ખેતી', 'ગાય', 'દવા', 'જય', 'પવન', 'સરસ'].slice(0, 5);
+  }
+  return selected;
+};
+
+const createGrid = (words) => {
+  const size = 5;
+  let attempts = 0;
+  
+  while (attempts < 200) {
+    attempts++;
+    const tempGrid = Array(size).fill(null).map(() => Array(size).fill(''));
+    let success = true;
+    
+    for (const word of words) {
+      const graphemes = splitGujaratiWord(word);
+      const len = graphemes.length;
+      let placed = false;
+      let wordAttempts = 0;
+      
+      while (wordAttempts < 100) {
+        wordAttempts++;
+        const r = Math.floor(Math.random() * size);
+        const c = Math.floor(Math.random() * size);
+        const dir = Math.random() > 0.5 ? 'H' : 'V';
+        
+        if (dir === 'H' && c + len <= size) {
+          let ok = true;
+          for (let i = 0; i < len; i++) {
+            const current = tempGrid[r][c + i];
+            if (current !== '' && current !== graphemes[i]) {
+              ok = false;
+              break;
+            }
+          }
+          if (ok) {
+            for (let i = 0; i < len; i++) {
+              tempGrid[r][c + i] = graphemes[i];
+            }
+            placed = true;
+            break;
+          }
+        } else if (dir === 'V' && r + len <= size) {
+          let ok = true;
+          for (let i = 0; i < len; i++) {
+            const current = tempGrid[r + i][c];
+            if (current !== '' && current !== graphemes[i]) {
+              ok = false;
+              break;
+            }
+          }
+          if (ok) {
+            for (let i = 0; i < len; i++) {
+              tempGrid[r + i][c] = graphemes[i];
+            }
+            placed = true;
+            break;
+          }
+        }
+      }
+      
+      if (!placed) {
+        success = false;
+        break;
+      }
+    }
+    
+    if (success) {
+      const allGraphemes = words.flatMap(w => splitGujaratiWord(w));
+      const fallbackLetters = ['ક', 'મ', 'ળ', 'ર', 'સ', 'પ', 'વ', 'ન', 'દ', 'વા', 'જ', 'ય', 'ખે', 'તી', 'ગા', 'ડા'];
+      const fillPool = allGraphemes.concat(fallbackLetters);
+      
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          if (tempGrid[r][c] === '') {
+            tempGrid[r][c] = fillPool[Math.floor(Math.random() * fillPool.length)];
+          }
+        }
+      }
+      return tempGrid;
+    }
+  }
+  
+  return [
+    ['ક',  'મ',  'ળ',  'ખે', 'તી'],
+    ['ગા', 'મ',  'ડા', 'દ',  'વા'],
+    ['ગા', 'ય',  'જ',  'ય',  'ન' ],
+    ['પ',  'વ',  'ન',  'મ',  'ન' ],
+    ['સ',  'ર',  'સ',  'ફ',  'ળ' ]
+  ];
+};
+
+function WordSearchGame() {
+  const [gameData, setGameData] = useState(() => {
+    const words = pickTargetWords();
+    const initialGrid = createGrid(words);
+    return { words, grid: initialGrid };
+  });
+  
+  const targetWords = gameData.words;
+  const grid = gameData.grid;
+  
   const [foundWords, setFoundWords] = useState([]);
   const [selectedCells, setSelectedCells] = useState([]);
+  const [gameCompleted, setGameCompleted] = useState(false);
 
   const currentSelectionString = selectedCells.map(cell => grid[cell.r][cell.c]).join('');
 
@@ -1153,12 +1300,58 @@ function WordSearchGame() {
     
     if (match && !foundWords.includes(match)) {
       playSound('correct');
-      setFoundWords(prev => [...prev, match]);
+      const nextFound = [...foundWords, match];
+      setFoundWords(nextFound);
       setSelectedCells([]); // Reset on match
       addCoins(10);
       triggerToast(`🎉 તમે "${match}" શબ્દ શોધ્યો! +૧૦ કોઈન્સ`);
+
+      if (nextFound.length === targetWords.length) {
+        playSound('win');
+        markWordsPlayed(targetWords);
+        addCoins(50); // Completion bonus: +50 coins
+        setGameCompleted(true);
+      }
     }
   };
+
+  const handleNextGame = () => {
+    playSound('click');
+    setGameCompleted(false);
+    setFoundWords([]);
+    setSelectedCells([]);
+    
+    const nextWords = pickTargetWords();
+    const nextGrid = createGrid(nextWords);
+    setGameData({ words: nextWords, grid: nextGrid });
+  };
+
+  if (gameCompleted) {
+    return (
+      <div className="text-center space-y-6 max-w-sm mx-auto py-12 px-6 animate-fade-in font-gujarati bg-white dark:bg-stone-900 rounded-[2.5rem] shadow-xl border border-emerald-500/20">
+        <div className="space-y-4">
+          <div className="text-7xl animate-bounce">🏆</div>
+          <h3 className="font-headline font-black text-2xl text-stone-900 dark:text-white">ખૂબ ખૂબ અભિનંદન! 🎉</h3>
+          <p className="text-stone-500 dark:text-stone-400 text-sm leading-relaxed">
+            તમે ગ્રીડમાંથી બધા જ શબ્દો સફળતાપૂર્વક શોધી લીધા છે!
+          </p>
+          <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-250 dark:border-emerald-900/40 p-4 rounded-2xl inline-block shadow-sm">
+            <span className="text-emerald-700 dark:text-emerald-450 font-black text-sm flex items-center justify-center gap-1.5">
+              <span>💰 પૂર્ણ કરવા બદલ બોનસ:</span>
+              <span className="text-base text-emerald-600 dark:text-emerald-400">+૫૦ કોઈન્સ</span>
+            </span>
+          </div>
+        </div>
+
+        <button 
+          onClick={handleNextGame}
+          className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-2xl font-black text-lg shadow-lg shadow-orange-500/25 transition active:scale-95 flex items-center justify-center gap-2"
+        >
+          <span>આગળ રમો ➡️</span>
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="text-center space-y-4 max-w-sm mx-auto py-2">

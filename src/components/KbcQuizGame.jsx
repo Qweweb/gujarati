@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import LeaderboardUnified from './LeaderboardUnified';
 import { useNavigate } from 'react-router-dom';
 
 // Web Audio API Sound Synthesizer for Immersive Quiz Experience
@@ -301,18 +302,59 @@ const MOCK_LEADERBOARD = {
   ]
 };
 
+function enrichLeaderboardData(dataArray, currentProfile) {
+  return dataArray.map(item => ({
+    name: item.name,
+    score: item.score,
+    streak: item.streak,
+    avatar: item.avatar,
+    isUser: item.name.includes(currentProfile.name),
+    city: item.name.includes(currentProfile.name) ? currentProfile.city : null,
+  }));
+}
+
 const KbcQuizGame = ({ initialMode = 'daily', onBack }) => {
 
   // App Profile State
   const [profile, setProfile] = useState(() => {
-    const saved = localStorage.getItem('sanskari_kbc_profile');
-    if (saved) return JSON.parse(saved);
-    return { name: "", age: 25, ageGroup: "adult", photo: "https://i.pravatar.cc/150?img=12", streak: 1 };
+    const mainProfile = JSON.parse(localStorage.getItem('user_profile') || '{"name": "સાધક", "ageGroup": "adult", "photo": "https://i.pravatar.cc/150?img=12", "streak": 1}');
+    return mainProfile;
   });
-  const [isRegistered, setIsRegistered] = useState(() => !!localStorage.getItem('sanskari_kbc_profile'));
 
-  // Screen View: 'register', 'home', 'quiz', 'result', 'leaderboard', 'challenge_setup'
-  // Skip home and go straight to quiz based on initialMode
+  const [isRegistered, setIsRegistered] = useState(() => {
+    const saved = localStorage.getItem('sanskar_quiz_registered');
+    return saved === 'true';
+  });
+
+  const handleRegisterChange = (key, value) => {
+    setProfile(prev => {
+      const updated = { ...prev, [key]: value };
+      if (key === 'age') {
+        const ageNum = parseInt(value, 10);
+        if (ageNum >= 6 && ageNum <= 12) {
+          updated.ageGroup = 'kids';
+        } else if (ageNum >= 13 && ageNum <= 25) {
+          updated.ageGroup = 'youth';
+        } else if (ageNum >= 26 && ageNum <= 50) {
+          updated.ageGroup = 'adult';
+        } else if (ageNum > 50) {
+          updated.ageGroup = 'elder';
+        } else {
+          updated.ageGroup = 'adult';
+        }
+      }
+      return updated;
+    });
+  };
+
+  const saveProfile = (e) => {
+    e.preventDefault();
+    localStorage.setItem('sanskar_quiz_registered', 'true');
+    localStorage.setItem('user_profile', JSON.stringify(profile));
+    setIsRegistered(true);
+  };
+
+  // Screen View
   const [screen, setScreen] = useState('quiz');
 
   // Quiz Setup State
@@ -344,35 +386,29 @@ const KbcQuizGame = ({ initialMode = 'daily', onBack }) => {
   const [friendName, setFriendName] = useState("");
   const [challengeLink, setChallengeLink] = useState("");
 
-  // Registration Auto Age Group
-  const handleRegisterChange = (field, val) => {
-    let newProfile = { ...profile, [field]: val };
-    if (field === 'age') {
-      const ageNum = parseInt(val) || 0;
-      let group = 'adult';
-      if (ageNum >= 6 && ageNum <= 12) group = 'kids';
-      else if (ageNum >= 13 && ageNum <= 25) group = 'youth';
-      else if (ageNum >= 26 && ageNum <= 50) group = 'adult';
-      else if (ageNum > 50) group = 'elder';
-      newProfile.ageGroup = group;
-    }
-    setProfile(newProfile);
-  };
 
-  const saveProfile = (e) => {
-    e.preventDefault();
-    if (!profile.name) return;
-    localStorage.setItem('sanskari_kbc_profile', JSON.stringify(profile));
-    setIsRegistered(true);
-    setScreen('home');
+
+  const addCoins = (amount) => {
+    const cur = parseInt(localStorage.getItem('sanskar_coins') || '100') + amount;
+    localStorage.setItem('sanskar_coins', cur.toString());
+    window.dispatchEvent(new Event('coins-updated'));
   };
 
   // Start Quiz (auto-started on mount if registered)
   const startQuiz = (mode) => {
     setQuizMode(mode);
-    let count = 10;
-    if (mode === 'weekly') count = 25;
-    if (mode === 'monthly') count = 50;
+    
+    // Check if daily challenge has already been played today
+    if (mode === 'daily') {
+      const todayStr = new Date().toDateString();
+      const lastPlayDate = localStorage.getItem('sanskar_last_quiz_play_date');
+      if (lastPlayDate === todayStr) {
+        setScreen('already_played');
+        return;
+      }
+    }
+
+    let count = 15; // Gyan Kasoti is 15 questions
 
     // Filter by user's age group
     let pool = ALL_QUESTIONS.filter(q => q.ageGroup.includes(profile.ageGroup));
@@ -390,7 +426,7 @@ const KbcQuizGame = ({ initialMode = 'daily', onBack }) => {
     setDisabledOptions([]);
     setActiveLifelineMsg("");
     setLifelines({ fiftyFifty: true, friendHelp: true, changeQuestion: true });
-    setTimer(30);
+    setTimer(20); // 20 seconds time limit
     setIsTimerRunning(true);
     setScreen('quiz');
     playSound('tick');
@@ -447,9 +483,10 @@ const KbcQuizGame = ({ initialMode = 'daily', onBack }) => {
       playSound('correct');
       // Calculate Points
       let pts = 100;
-      if (timer >= 20) pts += 50; // fast bonus
+      if (timer >= 15) pts += 50; // fast bonus (since limit is 20s)
       setScore(prev => prev + pts);
       setCorrectCount(prev => prev + 1);
+      addCoins(5); // +5 coins for each correct answer
     } else {
       playSound('wrong');
     }
@@ -465,7 +502,7 @@ const KbcQuizGame = ({ initialMode = 'daily', onBack }) => {
 
     if (currentIndex + 1 < questions.length) {
       setCurrentIndex(prev => prev + 1);
-      setTimer(30);
+      setTimer(20); // Reset timer to 20 seconds
       setIsTimerRunning(true);
     } else {
       // Quiz Finished!
@@ -475,6 +512,13 @@ const KbcQuizGame = ({ initialMode = 'daily', onBack }) => {
       finalProfile.streak = (finalProfile.streak || 1) + 1;
       setProfile(finalProfile);
       localStorage.setItem('sanskari_kbc_profile', JSON.stringify(finalProfile));
+      
+      // Prevent multiple plays today:
+      if (quizMode === 'daily') {
+        localStorage.setItem('sanskar_last_quiz_play_date', new Date().toDateString());
+        addCoins(50); // Completion bonus: +50 coins
+      }
+
       setScreen('result');
     }
   };
@@ -568,7 +612,7 @@ const KbcQuizGame = ({ initialMode = 'daily', onBack }) => {
         </div>
         <div className="flex items-center gap-2 bg-amber-100 text-amber-900 px-3 py-1.5 rounded-full text-xs font-bold shadow-xs">
           <span>🔥 {profile.streak || 1} Days</span>
-          <button onClick={() => setScreen('register')} className="hover:underline text-primary">({profile.name || "પ્રોફાઇલ"})</button>
+          <span className="font-bold text-primary px-1">({profile.name})</span>
         </div>
       </div>
 
@@ -660,61 +704,19 @@ const KbcQuizGame = ({ initialMode = 'daily', onBack }) => {
           </div>
 
           {/* Quiz Types Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="max-w-xl mx-auto">
             
-            {/* Daily Quiz */}
+            {/* Gyan Challenge */}
             <div className="bg-white p-6 md:p-8 rounded-3xl border border-stone-200 shadow-sm hover:shadow-xl hover:border-primary/50 transition-all flex flex-col justify-between space-y-4 group">
-              <div className="space-y-3">
-                <div className="h-16 w-16 bg-amber-50 text-amber-800 rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+              <div className="space-y-3 font-gujarati">
+                <div className="h-16 w-16 bg-amber-50 text-amber-800 rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform mx-auto">
                   🎯
                 </div>
-                <h3 className="font-gujarati font-black text-2xl text-stone-900">દૈનિક ક્વિઝ</h3>
-                <p className="text-stone-500 text-xs leading-relaxed font-gujarati">૧૦ પ્રશ્નો • ૩૦ સેકન્ડ ટાઈમર • રોજ મધ્યરાત્રીએ નવા પ્રશ્નો અપડેટ થાય.</p>
+                <h3 className="font-black text-2xl text-stone-900 text-center">🏆 આજની જ્ઞાન ચેલેન્જ</h3>
+                <p className="text-stone-500 text-xs leading-relaxed text-center">૧૫ પ્રશ્નો • ૨૦ સેકન્ડ ટાઈમર • દિવસમાં ફક્ત ૧ જ વાર રમી શકાશે • સાચા જવાબ પર +૫ સિક્કા અને પૂર્ણ કરવા પર +૫૦ સિક્કા બોનસ!</p>
               </div>
               <button onClick={() => startQuiz('daily')} className="w-full py-3.5 bg-primary hover:bg-primary-container text-white rounded-xl font-bold font-gujarati shadow-md transition active:scale-95">
-                ⚡ રમો (10 Questions)
-              </button>
-            </div>
-
-            {/* Weekly Quiz */}
-            <div className="bg-white p-6 md:p-8 rounded-3xl border border-stone-200 shadow-sm hover:shadow-xl hover:border-blue-600/50 transition-all flex flex-col justify-between space-y-4 group">
-              <div className="space-y-3">
-                <div className="h-16 w-16 bg-blue-50 text-blue-800 rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
-                  🏆
-                </div>
-                <h3 className="font-gujarati font-black text-2xl text-stone-900">સાપ્તાહિક ક્વિઝ</h3>
-                <p className="text-stone-500 text-xs leading-relaxed font-gujarati">૨૫ પ્રશ્નો • રવિવારે રિસેટ • ટોપ ૧૦ લીડરબોર્ડ અને સર્ટિફિકેટ.</p>
-              </div>
-              <button onClick={() => startQuiz('weekly')} className="w-full py-3.5 bg-blue-700 hover:bg-blue-800 text-white rounded-xl font-bold font-gujarati shadow-md transition active:scale-95">
-                🚀 રમો (25 Questions)
-              </button>
-            </div>
-
-            {/* Monthly Quiz */}
-            <div className="bg-white p-6 md:p-8 rounded-3xl border border-stone-200 shadow-sm hover:shadow-xl hover:border-purple-600/50 transition-all flex flex-col justify-between space-y-4 group">
-              <div className="space-y-3">
-                <div className="h-16 w-16 bg-purple-50 text-purple-800 rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
-                  🎖️
-                </div>
-                <h3 className="font-gujarati font-black text-2xl text-stone-900">માસિક ગ્રાન્ડ ક્વિઝ</h3>
-                <p className="text-stone-500 text-xs leading-relaxed font-gujarati">૫0 પ્રશ્નો • મહિનાના અંતે ગ્રાન્ડ સર્ટિફિકેટ અને સ્પેશિયલ ગોલ્ડન બેજ.</p>
-              </div>
-              <button onClick={() => startQuiz('monthly')} className="w-full py-3.5 bg-purple-700 hover:bg-purple-800 text-white rounded-xl font-bold font-gujarati shadow-md transition active:scale-95">
-                👑 રમો (50 Questions)
-              </button>
-            </div>
-
-            {/* Challenge Mode */}
-            <div className="bg-white p-6 md:p-8 rounded-3xl border border-stone-200 shadow-sm hover:shadow-xl hover:border-emerald-600/50 transition-all flex flex-col justify-between space-y-4 group">
-              <div className="space-y-3">
-                <div className="h-16 w-16 bg-emerald-50 text-emerald-800 rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
-                  ⚔️
-                </div>
-                <h3 className="font-gujarati font-black text-2xl text-stone-900">મિત્ર ચેલેન્જ મોડ</h3>
-                <p className="text-stone-500 text-xs leading-relaxed font-gujarati">તમારા મિત્રને વોટ્સએપ પર ચેલેન્જ મોકલો અને સ્કોરની સરખામણી કરો.</p>
-              </div>
-              <button onClick={() => setScreen('challenge_setup')} className="w-full py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold font-gujarati shadow-md transition active:scale-95">
-                🔗 ચેલેન્જ મોકલો
+                ⚡ રમો (15 Questions)
               </button>
             </div>
 
@@ -728,55 +730,26 @@ const KbcQuizGame = ({ initialMode = 'daily', onBack }) => {
                 ગુજરાતી જ્ઞાન લીડરબોર્ડ
               </h3>
               <div className="flex gap-2">
-                {['daily', 'weekly', 'monthly', 'allTime'].map((tab) => (
+                {['daily', 'allTime'].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setLeaderboardTab(tab)}
                     className={`px-4 py-2 rounded-xl text-xs font-bold transition ${leaderboardTab === tab ? 'bg-primary text-white shadow-sm' : 'bg-stone-100 hover:bg-stone-200 text-stone-600'}`}
                   >
-                    {tab === 'daily' && "દૈનિક"}
-                    {tab === 'weekly' && "સાપ્તાહિક"}
-                    {tab === 'monthly' && "માસિક"}
-                    {tab === 'allTime' && "Hall of Fame"}
+                    {tab === 'daily' && "આજનું લીડરબોર્ડ"}
+                    {tab === 'allTime' && "ઓલ-ટાઇમ શ્રેષ્ઠ"}
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Leaderboard Table List */}
-            <div className="space-y-3 font-gujarati">
-              {MOCK_LEADERBOARD[leaderboardTab].map((user) => (
-                <div key={user.rank} className={`flex items-center justify-between p-4 rounded-2xl border ${user.name.includes(profile.name) ? 'bg-amber-50 border-amber-300 shadow-sm' : 'border-stone-100 bg-stone-50/50'}`}>
-                  <div className="flex items-center gap-4">
-                    <span className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-sm ${user.rank === 1 ? 'bg-amber-500 text-white' : user.rank === 2 ? 'bg-stone-400 text-white' : user.rank === 3 ? 'bg-amber-700 text-white' : 'bg-stone-200 text-stone-700'}`}>
-                      {user.rank}
-                    </span>
-                    <img src={user.avatar} className="w-10 h-10 rounded-full border border-stone-300" alt="Avatar" />
-                    <div>
-                      <h4 className="font-black text-stone-900 text-base">{user.name}</h4>
-                      <span className="text-xs text-stone-500">🔥 {user.streak} Days Streak</span>
-                    </div>
-                  </div>
-                  <div className="font-headline font-black text-lg text-primary">
-                    {user.score.toLocaleString()} <span className="text-xs font-normal text-stone-400">pts</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* User Rank Highlight Footer */}
-            <div className="p-4 bg-primary/5 rounded-2xl border border-primary/20 flex items-center justify-between font-gujarati">
-              <div className="flex items-center gap-3">
-                <img src={profile.photo} className="w-10 h-10 rounded-full border-2 border-primary" alt="My avatar" />
-                <div>
-                  <h4 className="font-black text-stone-900">{profile.name} (તમે)</h4>
-                  <span className="text-xs text-stone-500">તમારો રેન્ક: #૧૪ (ટોપ ૧૦માં પહોંચવા વધુ ક્વિઝ રમો!)</span>
-                </div>
-              </div>
-              <button onClick={() => startQuiz('daily')} className="bg-primary text-white px-5 py-2 rounded-xl font-bold text-xs shadow hover:bg-primary-container transition">
-                સ્કોર વધારો ⚡
-              </button>
-            </div>
+            <LeaderboardUnified 
+              data={enrichLeaderboardData(MOCK_LEADERBOARD[leaderboardTab] || MOCK_LEADERBOARD.daily, profile)}
+              scoreLabel="pts"
+              showStreak={true}
+              userRank={14}
+            />
 
           </div>
 
@@ -1079,6 +1052,32 @@ const KbcQuizGame = ({ initialMode = 'daily', onBack }) => {
           <div className="text-center">
             <button onClick={() => setScreen('home')} className="text-stone-500 font-bold hover:underline font-gujarati text-sm">
               ← મુખ્ય મેનુ પર પાછા
+            </button>
+          </div>
+        </div>
+      ) : screen === 'already_played' ? (
+        <div className="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-primary/10 max-w-lg mx-auto w-full my-auto animate-fade-in space-y-6 text-center">
+          <div className="space-y-3">
+            <div className="h-24 w-24 bg-amber-50 text-amber-800 rounded-full flex items-center justify-center mx-auto text-5xl shadow-inner animate-bounce">
+              🚫
+            </div>
+            <h2 className="font-headline font-black text-3xl text-stone-900 font-gujarati">આજની લિમિટ પૂરી થઈ ગઈ છે!</h2>
+            <p className="text-stone-600 font-gujarati leading-relaxed">
+              તમે આજની જ્ઞાન ચેલેન્જ રમી લીધી છે. દરેક ખેલાડી દિવસમાં માત્ર એક જ વાર આ ચેલેન્જ રમી શકે છે.
+            </p>
+          </div>
+          
+          <div className="bg-amber-50 p-6 rounded-3xl border border-amber-200/60 font-gujarati space-y-2">
+            <p className="text-amber-900 font-black text-sm">🔥 તમારી કરન્ટ સ્ટ્રીક: {profile.streak || 1} દિવસ</p>
+            <p className="text-stone-500 text-xs">આવતીકાલે નવી જ્ઞાન ચેલેન્જ માટે ફરીથી પધારો!</p>
+          </div>
+
+          <div className="space-y-3 pt-2">
+            <button
+              onClick={() => setScreen('home')}
+              className="w-full py-4 bg-primary text-white rounded-2xl font-black text-base shadow-lg hover:bg-primary-container transition active:scale-95 font-gujarati"
+            >
+              ← હોમ મેનુ પર પાછા જાઓ
             </button>
           </div>
         </div>

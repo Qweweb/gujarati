@@ -75,7 +75,7 @@ export default function GujaratSafari() {
       const utterance = new SpeechSynthesisUtterance(mascot.soundText);
       // Try to find a Gujarati or Hindi voice for phonetic reading
       const voices = window.speechSynthesis.getVoices();
-      const guVoice = voices.find(v => v.lang.includes('gu') || v.lang.includes('hi'));
+      const guVoice = voices.find(v => v.lang.toLowerCase().includes('gu') || v.lang.toLowerCase().includes('hi'));
       if (guVoice) {
         utterance.voice = guVoice;
       }
@@ -117,10 +117,10 @@ export default function GujaratSafari() {
       <div className="flex flex-col lg:flex-row gap-6 items-stretch">
         
         {/* Animated Map Panel */}
-        <div className="flex-1 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-stone-950 dark:to-stone-900 border-4 border-amber-500/20 rounded-[2.5rem] p-6 shadow-sm min-h-[400px] relative overflow-hidden flex items-center justify-center select-none">
+        <div className="flex-1 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-stone-950 dark:to-stone-900 border-4 border-yellow-600/20 rounded-[2.5rem] p-6 shadow-sm min-h-[400px] relative overflow-hidden flex items-center justify-center select-none">
           
           {/* Simulated Map Contour Graphics */}
-          <div className="absolute inset-0 opacity-15 dark:opacity-5 mix-blend-overlay pointer-events-none bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-500/50 via-stone-500/30 to-stone-900/80"></div>
+          <div className="absolute inset-0 opacity-15 dark:opacity-5 mix-blend-overlay pointer-events-none bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-yellow-600/50 via-stone-500/30 to-stone-900/80"></div>
           
           {/* Gujarat Outline Placeholder shape */}
           <div className="w-[85%] h-[80%] border-4 border-dashed border-primary/10 rounded-[3rem] relative bg-white/20 dark:bg-stone-900/10 backdrop-blur-xs flex items-center justify-center">
@@ -135,7 +135,7 @@ export default function GujaratSafari() {
                 key={mascot.id}
                 onClick={() => handleMascotClick(mascot)}
                 style={{ left: mascot.x, top: mascot.y }}
-                className={`absolute h-16 w-16 bg-white dark:bg-stone-800 rounded-full border-4 border-amber-500 shadow-xl flex items-center justify-center text-3xl transition-all cursor-pointer select-none active:scale-90 ${selectedMascot?.id === mascot.id ? 'scale-125 ring-4 ring-primary animate-bounce-short z-30' : 'hover:scale-110 animate-pulse z-10'}`}
+                className={`absolute h-16 w-16 bg-white dark:bg-stone-800 rounded-full border-4 border-yellow-600 shadow-xl flex items-center justify-center text-3xl transition-all cursor-pointer select-none active:scale-90 ${selectedMascot?.id === mascot.id ? 'scale-125 ring-4 ring-primary animate-bounce-short z-30' : 'hover:scale-110 animate-pulse z-10'}`}
                 title={mascot.name_gu}
               >
                 {mascot.avatar}
@@ -152,7 +152,7 @@ export default function GujaratSafari() {
                 
                 {/* Mascot Header */}
                 <div className="flex gap-4 items-center border-b border-stone-100 dark:border-stone-800 pb-4">
-                  <div className="h-16 w-16 bg-amber-50 dark:bg-stone-800 rounded-2xl flex items-center justify-center text-4xl shadow-inner select-none">
+                  <div className="h-16 w-16 bg-yellow-50 dark:bg-stone-800 rounded-2xl flex items-center justify-center text-4xl shadow-inner select-none">
                     {selectedMascot.avatar}
                   </div>
                   <div>
@@ -162,8 +162,8 @@ export default function GujaratSafari() {
                 </div>
 
                 {/* Speech Bubble Talk */}
-                <div className="relative bg-[#fef8f1] dark:bg-stone-950 p-5 rounded-3xl border border-primary/5 flex flex-col gap-3">
-                  <div className="absolute top-4 -left-2.5 w-0 h-0 border-t-[8px] border-t-transparent border-r-[10px] border-r-[#fef8f1] dark:border-r-stone-950 border-b-[8px] border-b-transparent"></div>
+                <div className="relative bg-[#F8FAFC] dark:bg-stone-950 p-5 rounded-3xl border border-primary/5 flex flex-col gap-3">
+                  <div className="absolute top-4 -left-2.5 w-0 h-0 border-t-[8px] border-t-transparent border-r-[10px] border-r-[#F8FAFC] dark:border-r-stone-950 border-b-[8px] border-b-transparent"></div>
                   <p className="font-gujarati font-bold text-sm text-stone-700 dark:text-stone-300 leading-relaxed">
                     "{selectedMascot.desc}"
                   </p>
@@ -177,7 +177,7 @@ export default function GujaratSafari() {
                     <div className="flex flex-col gap-3">
                       <button
                         onClick={handleStopAudio}
-                        className="w-full bg-red-500 hover:bg-red-400 text-white py-3.5 rounded-2xl font-gujarati font-black text-xs flex items-center justify-center gap-1 shadow-md active:scale-95 transition-all"
+                        className="w-full bg-emerald-600 hover:bg-red-400 text-white py-3.5 rounded-2xl font-gujarati font-black text-xs flex items-center justify-center gap-1 shadow-md active:scale-95 transition-all"
                       >
                         <span className="material-symbols-outlined text-sm">volume_off</span>
                         અવાજ બંધ કરો 🔇
@@ -192,7 +192,7 @@ export default function GujaratSafari() {
                   ) : (
                     <button
                       onClick={() => handleMascotClick(selectedMascot)}
-                      className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white py-3.5 rounded-2xl font-gujarati font-black text-xs flex items-center justify-center gap-1 shadow-lg active:scale-95 transition-all"
+                      className="w-full bg-gradient-to-r from-yellow-600 to-teal-600 hover:from-yellow-400 hover:to-teal-400 text-white py-3.5 rounded-2xl font-gujarati font-black text-xs flex items-center justify-center gap-1 shadow-lg active:scale-95 transition-all"
                     >
                       <span className="material-symbols-outlined text-sm">volume_up</span>
                       માસ્કોટનો અવાજ સાંભળો 🎧

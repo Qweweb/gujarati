@@ -4,3 +4,6 @@
   margin: 0 auto;
   text-align: center;
 }
+
+@page { size: A4; margin: 0; }
+#printable-biodata-card { width: 794px; min-height: 1123px; background: white; overflow: hidden; }

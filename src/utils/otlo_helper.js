@@ -4,16 +4,41 @@
 import { getDistrictName, getTalukaName, getVillageName } from './location_database';
 import { supabase } from '../supabaseClient';
 
+export const syncLiveEnglishStats = async (streakVal, xpVal) => {
+  try {
+    const userId = getOrCreateUserId();
+    if (!userId) return;
+    const profile = JSON.parse(localStorage.getItem('sanskari_kbc_profile') || '{}');
+    const name = profile.name || JSON.parse(localStorage.getItem('user_profile') || '{}').name || localStorage.getItem('google_name') || localStorage.getItem('user_full_name') || "અજ્ઞાત સાધક";
+    const rawAvatar = profile.photo || JSON.parse(localStorage.getItem('user_profile') || '{}').avatar || localStorage.getItem('google_avatar') || null;
+    const avatar = (rawAvatar && !rawAvatar.includes('pravatar.cc')) ? rawAvatar : null;
+    const localProfile = JSON.parse(localStorage.getItem('user_profile') || '{}');
+    const city = localProfile.city || null;
+    
+    await supabase.from('users').upsert({
+      id: userId,
+      name: name,
+      photo_url: avatar,
+      city: city,
+      english_xp: xpVal,
+      english_streak: streakVal,
+      last_active: new Date().toISOString().split('T')[0]
+    }, { onConflict: 'id' });
+  } catch (e) {
+    console.error("Live English stats sync failed:", e);
+  }
+};
+
 
 // 1. Post categories and visibilities
 export const POST_TYPES = [
   { id: "news", name: "સ્થાનિક સમાચાર", icon: "📰", color: "bg-blue-50 text-blue-700 border-blue-200" },
   { id: "event", name: "કાર્યક્રમ/ઇવેન્ટ", icon: "📅", color: "bg-purple-50 text-purple-700 border-purple-200" },
-  { id: "alert", name: "ફરિયાદ/Alert", icon: "⚠️", color: "bg-red-50 text-red-700 border-red-200" },
-  { id: "religious", name: "ધાર્મિક", icon: "🕉️", color: "bg-orange-50 text-orange-700 border-orange-200" },
+  { id: "alert", name: "ફરિયાદ/Alert", icon: "⚠️", color: "bg-[#E11D48]/10 text-[#E11D48] border-[#E11D48]/30" },
+  { id: "religious", name: "ધાર્મિક", icon: "🕉️", color: "bg-teal-50 text-teal-800 border-teal-200" },
   { id: "job", name: "નોકરી/વ્યવસાય", icon: "💼", color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
   { id: "health", name: "આરોગ્ય camp", icon: "🏥", color: "bg-teal-50 text-teal-700 border-teal-200" },
-  { id: "help", name: "Help/સહાય", icon: "🤝", color: "bg-amber-50 text-amber-700 border-amber-200" },
+  { id: "help", name: "Help/સહાય", icon: "🤝", color: "bg-yellow-50 text-yellow-800 border-yellow-200" },
   { id: "ad", name: "જાહેરાત", icon: "📢", color: "bg-stone-50 text-stone-700 border-stone-200" }
 ];
 
@@ -259,8 +284,8 @@ export const syncUserProfile = async () => {
   const userId = user ? user.id : getOrCreateUserId();
   const userLoc = getOtloLocation();
   
-  const name = user?.user_metadata?.full_name || localStorage.getItem('user_full_name') || "નરેન્દ્રભાઈ પટેલ";
-  
+  const localProfile = JSON.parse(localStorage.getItem('user_profile') || '{}');
+  const name = localProfile.name || user?.user_metadata?.full_name || localStorage.getItem('user_full_name') || "અજ્ઞાત સાધક";
   let userMobile = user?.phone || localStorage.getItem('supabase_user_mobile');
   if (!userMobile) {
     userMobile = '99' + Math.floor(10000000 + Math.random() * 90000000);
@@ -279,6 +304,9 @@ export const syncUserProfile = async () => {
   const village_id = userLoc ? stringToHash(userLoc.villageId) : null;
   const ward = userLoc ? userLoc.ward : null;
 
+  const city = localProfile.city || (userLoc ? userLoc.villageNameGu : null);
+  const challengeStreak = parseInt(localStorage.getItem('otlo_challenge_streak') || '0', 10);
+
   const { error } = await supabase
     .from('users')
     .upsert({
@@ -289,6 +317,8 @@ export const syncUserProfile = async () => {
       taluka_id: taluka_id,
       village_id: village_id,
       ward: ward,
+      city: city,
+      challenge_streak: challengeStreak,
       last_active: new Date().toISOString().split('T')[0]
     }, { onConflict: 'id' });
 
@@ -303,7 +333,7 @@ export const getOtloPosts = async (filterLevel = 'all', followedLocationIds = []
   const userLoc = getOtloLocation();
   
   let postsData = [];
-  // Try to query with comments
+  // Try to query with comments and reactions
   let { data, error } = await supabase
     .from('posts')
     .select(`
@@ -319,12 +349,16 @@ export const getOtloPosts = async (filterLevel = 'all', followedLocationIds = []
         user_name,
         content,
         created_at
+      ),
+      post_reactions (
+        reaction_type,
+        user_phone
       )
     `)
     .eq('status', 'active');
 
   if (error) {
-    console.warn("Could not fetch comments from Supabase, attempting to fetch posts only:", error);
+    console.warn("Could not fetch comments/reactions from Supabase, attempting to fetch posts only:", error);
     // Fallback: Query posts only
     const fallbackResult = await supabase
       .from('posts')
@@ -356,6 +390,12 @@ export const getOtloPosts = async (filterLevel = 'all', followedLocationIds = []
       content: c.content,
       createdAt: c.created_at
     }));
+    
+    const reactionsData = post.post_reactions || [];
+    const reactionCounts = {};
+    reactionsData.forEach(r => {
+      reactionCounts[r.reaction_type] = (reactionCounts[r.reaction_type] || 0) + 1;
+    });
 
     let locationLabel = "ગુજરાત";
     if (post.visibility === 'village' && userLoc) {
@@ -382,6 +422,9 @@ export const getOtloPosts = async (filterLevel = 'all', followedLocationIds = []
       likes: post.likes || 0,
       comments: commentsList,
       shares: post.shares || 0,
+      views: post.views || 0,
+      reactionCounts: reactionCounts,
+      userReaction: reactionsData.find(r => r.user_phone === (localStorage.getItem('supabase_user_mobile') || localStorage.getItem('user_phone') || ''))?.reaction_type || null,
       isPinned: post.is_pinned || false,
       isRep: post.users?.is_representative || false,
       repLevel: post.users?.rep_level || "",
@@ -408,11 +451,10 @@ export const getOtloPosts = async (filterLevel = 'all', followedLocationIds = []
 export const createOtloPost = async (postContent, type, visibility, mediaUrl = "") => {
   const userId = await syncUserProfile();
   const userLoc = getOtloLocation();
-  if (!userLoc) return null;
 
-  const village_id = visibility === 'village' ? stringToHash(userLoc.villageId) : null;
-  const taluka_id = (visibility === 'village' || visibility === 'taluka') ? stringToHash(userLoc.talukaId) : null;
-  const district_id = (visibility === 'village' || visibility === 'taluka' || visibility === 'district') ? stringToHash(userLoc.districtId) : null;
+  const village_id = (visibility === 'village' && userLoc) ? stringToHash(userLoc.villageId) : null;
+  const taluka_id = ((visibility === 'village' || visibility === 'taluka') && userLoc) ? stringToHash(userLoc.talukaId) : null;
+  const district_id = ((visibility === 'village' || visibility === 'taluka' || visibility === 'district') && userLoc) ? stringToHash(userLoc.districtId) : null;
 
   const { data, error } = await supabase
     .from('posts')
@@ -435,11 +477,11 @@ export const createOtloPost = async (postContent, type, visibility, mediaUrl = "
   }
 
   let locationLabel = "ગુજરાત";
-  if (visibility === 'village') {
+  if (visibility === 'village' && userLoc) {
     locationLabel = userLoc.villageNameGu || getVillageName(userLoc.talukaId, userLoc.villageId);
-  } else if (visibility === 'taluka') {
+  } else if (visibility === 'taluka' && userLoc) {
     locationLabel = getTalukaName(userLoc.districtId, userLoc.talukaId);
-  } else if (visibility === 'district') {
+  } else if (visibility === 'district' && userLoc) {
     locationLabel = getDistrictName(userLoc.districtId);
   }
 
@@ -483,6 +525,105 @@ export const likeOtloPost = async (postId) => {
       .update({ likes: newLikes })
       .eq('id', postId);
   }
+};
+
+// Update an existing post in Supabase
+export const updateOtloPost = async (postId, postContent, type, visibility, mediaUrl = "") => {
+  const { data, error } = await supabase
+    .from('posts')
+    .update({
+      content: postContent,
+      post_type: type,
+      visibility: visibility,
+      media_urls: mediaUrl ? [mediaUrl] : []
+    })
+    .eq('id', postId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error updating post in Supabase:", error);
+    return null;
+  }
+  return data;
+};
+
+// Delete a post on Supabase
+export const deleteOtloPost = async (postId) => {
+  const { error } = await supabase
+    .from('posts')
+    .delete()
+    .eq('id', postId);
+  
+  if (error) {
+    console.error("Error deleting post from Supabase:", error);
+    return false;
+  }
+  return true;
+};
+
+// Toggle a reaction on a post
+export const togglePostReaction = async (postId, reactionType) => {
+  const userPhone = localStorage.getItem('supabase_user_mobile') || localStorage.getItem('user_phone');
+  if (!userPhone) return false;
+
+  // First check if reaction exists, getting an array to avoid .single() error if duplicates exist
+  const { data: existingArray } = await supabase
+    .from('post_reactions')
+    .select('reaction_type')
+    .eq('post_id', postId)
+    .eq('user_phone', userPhone);
+
+  const existing = existingArray && existingArray.length > 0 ? existingArray[0] : null;
+
+  if (existing) {
+    // If same reaction, remove it (delete all for this user to clean duplicates)
+    if (existing.reaction_type === reactionType) {
+      await supabase
+        .from('post_reactions')
+        .delete()
+        .eq('post_id', postId)
+        .eq('user_phone', userPhone);
+      return { action: 'removed' };
+    } else {
+      // If different reaction, safely delete existing ones and insert new
+      await supabase
+        .from('post_reactions')
+        .delete()
+        .eq('post_id', postId)
+        .eq('user_phone', userPhone);
+
+      await supabase
+        .from('post_reactions')
+        .insert({
+          post_id: postId,
+          user_phone: userPhone,
+          reaction_type: reactionType
+        });
+      return { action: 'updated', previous: existing.reaction_type };
+    }
+  } else {
+    // Insert new reaction
+    await supabase
+      .from('post_reactions')
+      .insert({
+        post_id: postId,
+        user_phone: userPhone,
+        reaction_type: reactionType
+      });
+    return { action: 'added' };
+  }
+};
+
+// Increment post view safely
+export const incrementPostView = async (postId) => {
+  // Use RPC call to safely increment views
+  const { error } = await supabase.rpc('increment_post_view', { post_id: postId });
+  if (error) {
+    console.error("Error incrementing post view:", error);
+    return false;
+  }
+  return true;
 };
 
 // Add a comment to a post on Supabase
@@ -689,4 +830,26 @@ export const deleteUserAccount = async () => {
   // 3. Reload window to direct back to onboarding / login
   window.location.reload();
 };
+
+// Helper to fetch cities for user IDs
+export const fetchCitiesForUserIds = async (userIds) => {
+  if (!userIds || userIds.length === 0) return {};
+  const cityMap = {};
+  try {
+    const { data } = await supabase
+      .from('users')
+      .select('id, city')
+      .in('id', userIds);
+    
+    if (data) {
+      data.forEach(u => {
+        if (u.city) cityMap[u.id] = u.city;
+      });
+    }
+  } catch (e) {
+    console.error("Error fetching cities for user IDs:", e);
+  }
+  return cityMap;
+};
+
 

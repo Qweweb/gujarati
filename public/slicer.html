@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Slicer Engine</title>
+    <!-- Fonts: Noto Serif Gujarati + Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Gujarati:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; }
+        canvas { display: block; width: 100%; height: 100%; }
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .score-box { position: absolute; top: 20px; left: 20px; font-family: "Plus Jakarta Sans", sans-serif; font-size: 24px; font-weight: 800; color: #FFF; text-shadow: 2px 2px 4px #000; }
+        .level-box { position: absolute; top: 55px; left: 20px; font-family: "Plus Jakarta Sans", sans-serif; font-size: 16px; font-weight: 800; color: #FF8E1F; text-shadow: 2px 2px 4px #000; }
+        .lives-box { position: absolute; top: 20px; right: 20px; font-size: 24px; letter-spacing: 3px; text-shadow: 2px 2px 4px #000; }
+        .mode-farasan .score-box {
+            top: 36px !important;
+            left: 36px !important;
+            font-size: 20px !important;
+            color: #FAE8D7 !important; /* Soft cream */
+            text-shadow: 1.5px 1.5px 0px #2B1814 !important; /* Dark espresso outline */
+        }
+        .mode-farasan .level-box {
+            top: 65px !important;
+            left: 36px !important;
+            font-size: 15px !important;
+            color: #FF8E1F !important;
+            text-shadow: 1.5px 1.5px 0px #2B1814 !important;
+        }
+        .mode-farasan .lives-box {
+            top: 32px !important;
+            right: 36px !important;
+            letter-spacing: 2px !important;
+        }
+        .hidden { display: none !important; }
+        
+        #game-over-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(2px); pointer-events: auto; }
+        h1 { font-family: "Plus Jakarta Sans", sans-serif; font-size: 64px; margin: 0; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; background: linear-gradient(135deg, #FFF, #FFD700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 4px 15px rgba(255,215,0,0.4)); text-align: center; line-height: 1.1; }
+        h2 { color: #FFF; font-family: "Plus Jakarta Sans", sans-serif; font-size: 36px; margin: 20px 0; font-weight: 700; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        button { padding: 18px 50px; font-size: 26px; border-radius: 40px; border: none; background: linear-gradient(135deg, #FF6B00, #FF3300); color: #FFF; cursor: pointer; font-weight: 800; font-family: "Plus Jakarta Sans", sans-serif; letter-spacing: 1.5px; box-shadow: 0 8px 25px rgba(255,51,0,0.5); margin-top: 30px; transition: all 0.2s ease; text-transform: uppercase; }
+        button:active { transform: scale(0.95); box-shadow: 0 4px 15px rgba(255,51,0,0.5); }
+
+        /* 3D Chunky Start Screen Style overrides for Slicer/Kite */
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            font-family: "Plus Jakarta Sans", sans-serif;
+            pointer-events: auto;
+        }
+
+        .mode-farasan #start-screen {
+            background: radial-gradient(circle at 50% 35%, rgba(240, 136, 51, 0.15) 0%, rgba(43, 24, 20, 0.85) 75%);
+            backdrop-filter: blur(1.5px);
+        }
+        
+        .mode-kite #start-screen {
+            background: radial-gradient(circle at 50% 35%, rgba(14, 165, 233, 0.25) 0%, rgba(15, 23, 42, 0.98) 75%);
+        }
+
+        .menu-card {
+            border: 4px solid #0C0F19;
+            border-radius: 28px;
+            padding: 40px 24px 24px 24px;
+            box-shadow: 0 12px 0 #0C0F19, 0 20px 25px rgba(0, 0, 0, 0.5);
+            max-width: 350px;
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            margin-top: 30px;
+        }
+
+        .mode-farasan .menu-card {
+            background: #2E1005; /* Deep Warm Saffron/Brown card */
+        }
+        .mode-kite .menu-card {
+            background: #172554; /* Deep Navy/Blue card */
+        }
+
+        .badge-offset {
+            width: 80px;
+            height: 80px;
+            border: 4px solid #0C0F19;
+            border-radius: 50%;
+            position: absolute;
+            top: -45px;
+            left: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulseScale 2.5s ease-in-out infinite;
+        }
+        .badge-offset span {
+            font-size: 44px;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+        }
+
+        .mode-farasan .badge-offset {
+            background: #EA580C;
+            box-shadow: 0 6px 0 #0C0F19, 0 0 15px rgba(234, 88, 12, 0.4);
+        }
+        .mode-kite .badge-offset {
+            background: #0EA5E9;
+            box-shadow: 0 6px 0 #0C0F19, 0 0 15px rgba(14, 165, 233, 0.4);
+        }
+
+        @keyframes pulseScale {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.06); }
+        }
+
+        .ribbon-title {
+            border: 4px solid #0C0F19;
+            border-radius: 16px;
+            padding: 8px 20px;
+            box-shadow: 0 6px 0 #0C0F19;
+            text-align: center;
+            transform: rotate(-1.5deg);
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+
+        .mode-farasan .ribbon-title {
+            background: #EAB308; /* Saffron Gold ribbon */
+        }
+        .mode-kite .ribbon-title {
+            background: #2563EB; /* Sky blue ribbon */
+        }
+
+        .ribbon-text-main {
+            color: #FFFFFF;
+            font-size: 20px !important;
+            font-weight: 850;
+            margin: 0;
+            letter-spacing: 1.5px;
+            line-height: 1;
+            text-shadow: 2px 2px 0 #0C0F19;
+            text-transform: uppercase;
+        }
+
+        .game-gu-title {
+            font-family: "Noto Serif Gujarati", serif;
+            font-size: 15px !important;
+            font-weight: 950;
+            color: #E2E8F0;
+            margin: 8px 0 12px 0;
+            text-shadow: none;
+        }
+
+        .info-box {
+            border: 4px solid #0C0F19;
+            border-radius: 20px;
+            padding: 16px 20px;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: inset 0 6px 0 rgba(0,0,0,0.25);
+            margin-bottom: 20px;
+        }
+
+        .mode-farasan .info-box {
+            background: #451A03;
+        }
+        .mode-kite .info-box {
+            background: #1E3A8A;
+        }
+
+        .info-box p {
+            margin: 8px 0;
+            font-size: 12.5px;
+            line-height: 1.5;
+            color: #F8FAFC;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .buttons-stack {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* chunky 3D buttons */
+        .btn {
+            width: 100%;
+            max-width: 280px;
+            padding: 12px 18px;
+            font-size: 15px;
+            font-weight: 900;
+            border: 4px solid #0C0F19;
+            border-radius: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            position: relative;
+            outline: none;
+            display: inline-block;
+        }
+
+        .mode-farasan .btn-play {
+            background: #EA580C; /* Vibrant Orange */
+            color: #FFFFFF;
+            box-shadow: inset 0 -6px 0 #9A3412, 0 6px 0 #0C0F19;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+        }
+        .mode-farasan .btn-play:hover {
+            transform: translateY(2px);
+            box-shadow: inset 0 -4px 0 #9A3412, 0 4px 0 #0C0F19;
+        }
+        .mode-farasan .btn-play:active {
+            transform: translateY(6px);
+            box-shadow: inset 0 0px 0 #9A3412, 0 0px 0 #0C0F19;
+        }
+
+        .mode-kite .btn-play {
+            background: #0EA5E9; /* Vibrant Cyan */
+            color: #FFFFFF;
+            box-shadow: inset 0 -6px 0 #0369A1, 0 6px 0 #0C0F19;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+        }
+        .mode-kite .btn-play:hover {
+            transform: translateY(2px);
+            box-shadow: inset 0 -4px 0 #0369A1, 0 4px 0 #0C0F19;
+        }
+        .mode-kite .btn-play:active {
+            transform: translateY(6px);
+            box-shadow: inset 0 0px 0 #0369A1, 0 0px 0 #0C0F19;
+        }
+
+        .btn-leaderboard {
+            background: #8B5CF6; /* Vibrant Purple */
+            color: #FFFFFF;
+            box-shadow: inset 0 -6px 0 #6D28D9, 0 6px 0 #0C0F19;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+        }
+        .btn-leaderboard:hover {
+            transform: translateY(2px);
+            box-shadow: inset 0 -4px 0 #6D28D9, 0 4px 0 #0C0F19;
+        }
+        .btn-leaderboard:active {
+            transform: translateY(6px);
+            box-shadow: inset 0 0px 0 #6D28D9, 0 0px 0 #0C0F19;
+        }
+
+        .welcome-tag {
+            color: #E2E8F0;
+            font-size: 13px;
+            margin-top: 5px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    
+    <div id="ui-layer">
+        <div class="score-box">Score: <span id="score-val">0</span></div>
+        <div class="level-box" id="level-val">લેવલ: ૧</div>
+        <div class="lives-box" id="lives-val">❤️❤️❤️</div>
+        
+        <div id="start-screen">
+            <div class="menu-card">
+                <!-- Glowing Pulsing Badge Offset -->
+                <div class="badge-offset">
+                    <span id="badge-emoji">🥘</span>
+                </div>
+                
+                <!-- Ribbon Title -->
+                <div class="ribbon-title">
+                    <h1 id="title-text" class="ribbon-text-main">Slicer Game</h1>
+                </div>
+                
+                <h3 id="title-gu-text" class="game-gu-title">ફરસાણ સ્લાઇસર</h3>
+
+                <!-- Info Box -->
+                <div class="info-box">
+                    <p id="instruction-text">Swipe screen to slice snacks! Avoid sutli bombs!</p>
+                </div>
+                
+                <!-- Buttons Wrapper -->
+                <div class="buttons-stack">
+                    <button class="btn btn-play" id="start-btn">PLAY NOW</button>
+                    <button class="btn btn-leaderboard" id="menu-leaderboard-btn">🏆 LEADERBOARD</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="game-over-screen" class="hidden">
+            <h1>GAME OVER</h1>
+            <h2>Final Score: <span id="final-score">0</span></h2>
+            <button id="restart-btn">PLAY AGAIN</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const ui = {
+            score: document.getElementById('score-val'),
+            lives: document.getElementById('lives-val'),
+            start: document.getElementById('start-screen'),
+            gameover: document.getElementById('game-over-screen'),
+            finalScore: document.getElementById('final-score'),
+            title: document.getElementById('title-text')
+        };
+        
+        let width, height;
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Parse URL params for mode
+        const urlParams = new URLSearchParams(window.location.search);
+        const mode = urlParams.get('mode') || 'farasan'; // 'farasan' or 'kite'
+        
+        document.body.classList.add('mode-' + mode);
+        
+        if (mode === 'farasan') {
+            ui.title.innerText = 'FARASAN SLICER';
+            document.getElementById('title-gu-text').innerText = 'ફરસાણ સ્લાઇસર';
+            document.getElementById('badge-emoji').innerText = '🥘';
+            document.getElementById('instruction-text').innerHTML = '👈 <b>સ્ક્રીન પર સ્વાઇપ કરો</b> 👉<br>બધા ફરસાણ (ખમણ, ફાફડા, દાબેલી) ને કાપો!<br><span style="color:#FFCC80; font-weight:700;">🚨 સુતળી બોમ્બથી બચો!</span>';
+        } else {
+            ui.title.innerText = 'PATANG KAAPO!';
+            document.getElementById('title-gu-text').innerText = 'પતંગ કાપો!';
+            document.getElementById('badge-emoji').innerText = '🪁';
+            document.getElementById('instruction-text').innerHTML = '👈 <b>સ્ક્રીન પર સ્વાઇપ કરો</b> 👉<br>આકાશમાં ઉડતા પતંગ કાપો!<br><span style="color:#FFAB91; font-weight:700;">🐦 કબૂતર અને બોમ્બથી બચો!</span>';
+        }
+
+        // Assets
+        const assets = {};
+        const imagesToLoad = mode === 'farasan' 
+            ? ['khaman', 'dabeli', 'fafda', 'sutli_bomb', 'farasan_bg']
+            : ['red_kite', 'blue_kite', 'pigeon', 'sutli_bomb']; 
+
+        imagesToLoad.forEach(name => {
+            const img = new Image();
+            img.src = name + '.png';
+            assets[name] = img;
+        });
+
+        // Audio Synth
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+        
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
+        }
+
+        function playSliceSound() {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.15);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start();
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+            setTimeout(() => osc.stop(), 200);
+        }
+
+        function playBombSound() {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(20, audioCtx.currentTime + 0.5);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start();
+            gain.gain.setValueAtTime(1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+            setTimeout(() => osc.stop(), 600);
+        }
+
+        // Game State
+        let state = 'START'; // START, PLAYING, GAMEOVER
+        let score = 0;
+        let lives = 3;
+        let level = 1;
+        let levelScoreTarget = 150;
+        let frenzyTimer = 0;
+        let levelUpBannerTimer = 0;
+        let fruits = [];
+        let particles = [];
+        let swipeTrail = [];
+        let splats = [];
+        let floatingTexts = [];
+        let recentSlices = [];
+        let reqId;
+
+        function toGujaratiNum(num) {
+            const map = { '0':'૦', '1':'૧', '2':'૨', '3':'૩', '4':'૪', '5':'૫', '6':'૬', '7':'૭', '8':'૮', '9':'૯' };
+            return num.toString().split('').map(char => map[char] || char).join('');
+        }
+
+        class FloatingText {
+            constructor(x, y, text, color, size = 20, isBold = true) {
+                this.x = x; this.y = y; this.text = text; this.color = color;
+                this.size = size; this.isBold = isBold;
+                this.vy = -2.0;
+                this.alpha = 1.0;
+            }
+            update() {
+                this.y += this.vy;
+                this.alpha -= 0.02;
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, this.alpha);
+                ctx.fillStyle = this.color;
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 4;
+                ctx.font = `${this.isBold ? '900' : 'normal'} ${this.size}px "Plus Jakarta Sans", sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.strokeText(this.text, this.x, this.y);
+                ctx.fillText(this.text, this.x, this.y);
+                ctx.restore();
+            }
+        }
+
+        class Splat {
+            constructor(x, y, color) {
+                this.x = x; this.y = y; this.color = color;
+                this.alpha = 0.6;
+                this.circles = [];
+                const numCircles = Math.floor(Math.random() * 5) + 3;
+                for (let i = 0; i < numCircles; i++) {
+                    this.circles.push({
+                        dx: (Math.random() - 0.5) * 50,
+                        dy: (Math.random() - 0.5) * 50,
+                        r: Math.random() * 12 + 6
+                    });
+                }
+            }
+            update() {
+                this.alpha -= 0.003;
+            }
+            draw() {
+                if (this.alpha <= 0) return;
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                this.circles.forEach(c => {
+                    ctx.beginPath();
+                    ctx.arc(this.x + c.dx, this.y + c.dy, c.r, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                ctx.restore();
+            }
+        }
+        
+        // Settings
+        const GRAVITY = 0.15;
+        
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x; this.y = y; this.color = color;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 5 + 2;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.life = 1.0;
+                this.size = Math.random() * 8 + 4;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                this.vy += 0.1; // gravity
+                this.life -= 0.02;
+            }
+            draw() {
+                ctx.globalAlpha = Math.max(0, this.life);
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+                ctx.fill();
+                ctx.globalAlpha = 1.0;
+            }
+        }
+
+        class Half {
+            constructor(img, x, y, size, vx, vy, rot, dRot, isLeft) {
+                this.img = img; this.x = x; this.y = y; this.size = size;
+                this.vx = vx; this.vy = vy; this.rot = rot; this.dRot = dRot;
+                this.isLeft = isLeft;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                this.vy += GRAVITY;
+                this.rot += this.dRot;
+            }
+            draw() {
+                if(!this.img.complete) return;
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rot);
+                ctx.beginPath();
+                if(this.isLeft) {
+                    ctx.rect(-this.size/2, -this.size/2, this.size/2, this.size);
+                } else {
+                    ctx.rect(0, -this.size/2, this.size/2, this.size);
+                }
+                ctx.clip();
+                ctx.drawImage(this.img, -this.size/2, -this.size/2, this.size, this.size);
+                ctx.restore();
+            }
+        }
+
+        class Fruit {
+            constructor() {
+                this.size = width > 600 ? 120 : 80;
+                this.x = Math.random() * (width - this.size*2) + this.size;
+                this.y = height + this.size;
+                
+                const targetX = width / 2 + (Math.random() - 0.5) * 200;
+                const framesToApex = 60 + Math.random() * 40;
+                
+                const speedFactor = 1 + (level - 1) * 0.08;
+                this.vy = -(GRAVITY * framesToApex) * speedFactor;
+                this.vx = ((targetX - this.x) / (framesToApex * 2)) * speedFactor;
+                
+                this.rot = 0;
+                this.dRot = (Math.random() - 0.5) * 0.1;
+                
+                this.sliced = false;
+                this.isGolden = Math.random() < 0.05 + (level * 0.01);
+                
+                const rand = Math.random();
+                if (mode === 'farasan') {
+                    if (rand < 0.15) { this.type = 'bomb'; this.name = 'sutli_bomb'; this.color = '#7F7F7F'; }
+                    else if (rand < 0.4) { this.type = 'fruit'; this.name = 'khaman'; this.color = '#FFD700'; }
+                    else if (rand < 0.6) { this.type = 'fruit'; this.name = 'fafda'; this.color = '#FFA500'; }
+                    else { this.type = 'fruit'; this.name = 'dabeli'; this.color = '#FF4500'; }
+                } else {
+                    if (rand < 0.15) { this.type = 'bomb'; this.name = 'sutli_bomb'; this.color = '#7F7F7F'; }
+                    else if (rand < 0.3) { this.type = 'bomb'; this.name = 'pigeon'; this.color = '#E5E7EB'; } 
+                    else if (rand < 0.6) { this.type = 'fruit'; this.name = 'red_kite'; this.color = '#FF0000'; }
+                    else { this.type = 'fruit'; this.name = 'blue_kite'; this.color = '#0000FF'; }
+                }
+                
+                if (this.isGolden && this.type !== 'bomb') {
+                    this.color = '#FFD700';
+                }
+                
+                this.img = assets[this.name];
+                this.halves = [];
+            }
+            update() {
+                if(!this.sliced) {
+                    this.x += this.vx; this.y += this.vy;
+                    this.vy += GRAVITY;
+                    this.rot += this.dRot;
+                } else {
+                    this.halves.forEach(h => h.update());
+                }
+            }
+            draw() {
+                if(!this.sliced) {
+                    if(!this.img.complete) return;
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    if (this.isGolden && this.type !== 'bomb') {
+                        ctx.shadowColor = '#FFD700';
+                        ctx.shadowBlur = 25;
+                        const pulse = 1 + Math.sin(Date.now() / 100) * 0.1;
+                        ctx.scale(pulse, pulse);
+                    }
+                    ctx.rotate(this.rot);
+                    ctx.drawImage(this.img, -this.size/2, -this.size/2, this.size, this.size);
+                    ctx.restore();
+                } else {
+                    this.halves.forEach(h => h.draw());
+                }
+            }
+            slice() {
+                if(this.sliced) return;
+                this.sliced = true;
+                
+                if (this.type === 'bomb') {
+                    playBombSound();
+                    loseLife(3); 
+                    for(let i=0; i<30; i++) particles.push(new Particle(this.x, this.y, '#FF0000'));
+                } else {
+                    playSliceSound();
+                    score += 10;
+                    ui.score.innerText = toGujaratiNum(score);
+                    for(let i=0; i<15; i++) particles.push(new Particle(this.x, this.y, this.color || '#00FF00'));
+                    
+                    // Add Splat to background
+                    splats.push(new Splat(this.x, this.y, this.color || '#00FF00'));
+
+                    // Check Combo Slicing
+                    const now = Date.now();
+                    recentSlices.push({ time: now, x: this.x, y: this.y });
+                    recentSlices = recentSlices.filter(s => now - s.time < 400);
+                    
+                    if (recentSlices.length >= 3) {
+                        const count = recentSlices.length;
+                        const comboBonus = count * 5;
+                        score += comboBonus;
+                        ui.score.innerText = toGujaratiNum(score);
+                        
+                        const avgX = recentSlices.reduce((sum, s) => sum + s.x, 0) / count;
+                        const avgY = recentSlices.reduce((sum, s) => sum + s.y, 0) / count;
+                        
+                        floatingTexts.push(new FloatingText(avgX, avgY - 30, `${toGujaratiNum(count)}x Combo! +${toGujaratiNum(comboBonus)}`, '#FFD700', 26));
+                        playComboSound();
+                        recentSlices = [];
+                    }
+
+                    // Check Critical Hit
+                    if (Math.random() < 0.1) {
+                        score += 25;
+                        ui.score.innerText = toGujaratiNum(score);
+                        floatingTexts.push(new FloatingText(this.x, this.y - 50, `CRITICAL! +૨૫`, '#00FFFF', 24));
+                        for(let i=0; i<15; i++) particles.push(new Particle(this.x, this.y, '#00FFFF'));
+                    }
+
+                    // Trigger Frenzy Mode
+                    if (this.isGolden && this.type !== 'bomb') {
+                        frenzyTimer = 300;
+                        floatingTexts.push(new FloatingText(this.x, this.y - 70, `✨ FRENZY MODE! ✨`, '#FFD700', 26));
+                        playLevelUpSound();
+                    }
+
+                    // Check Level Up
+                    if (score >= levelScoreTarget) {
+                        level++;
+                        levelScoreTarget += 150 * level;
+                        playLevelUpSound();
+                        levelUpBannerTimer = 120;
+                        const levelValEl = document.getElementById('level-val');
+                        if (levelValEl) levelValEl.innerText = `લેવલ: ${toGujaratiNum(level)}`;
+                        
+                        if (lives < 3) {
+                            lives++;
+                            updateLivesUI();
+                            floatingTexts.push(new FloatingText(width / 2, height / 2 + 80, `❤️ +૧ લાઈફ!`, '#FF3366', 22));
+                        }
+                    }
+
+                    this.halves.push(new Half(this.img, this.x, this.y, this.size, this.vx - 2, this.vy, this.rot, this.dRot - 0.05, true));
+                    this.halves.push(new Half(this.img, this.x, this.y, this.size, this.vx + 2, this.vy, this.rot, this.dRot + 0.05, false));
+                }
+            }
+        }
+
+        let isSwiping = false;
+        
+        function handleStart(e) {
+            if(state !== 'PLAYING') return;
+            isSwiping = true;
+            swipeTrail = [];
+            addPoint(e);
+        }
+        function handleMove(e) {
+            if(!isSwiping || state !== 'PLAYING') return;
+            addPoint(e);
+            checkSlices();
+        }
+        function handleEnd() {
+            isSwiping = false;
+        }
+        function addPoint(e) {
+            e.preventDefault();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            swipeTrail.push({x: clientX, y: clientY, life: 1.0});
+            if(swipeTrail.length > 10) swipeTrail.shift();
+        }
+
+        function distToSegment(p, v, w) {
+            const l2 = (w.x - v.x)**2 + (w.y - v.y)**2;
+            if (l2 === 0) return Math.hypot(p.x - v.x, p.y - v.y);
+            let t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+            t = Math.max(0, Math.min(1, t));
+            return Math.hypot(p.x - (v.x + t * (w.x - v.x)), p.y - (v.y + t * (w.y - v.y)));
+        }
+
+        function checkSlices() {
+            if (swipeTrail.length < 2) return;
+            const last = swipeTrail[swipeTrail.length - 1];
+            const prev = swipeTrail[swipeTrail.length - 2];
+            
+            fruits.forEach(f => {
+                if (!f.sliced && f.y < height && f.y > 0) {
+                    const dist = distToSegment({x: f.x, y: f.y}, prev, last);
+                    if (dist < f.size / 2) {
+                        f.slice();
+                    }
+                }
+            });
+        }
+
+        window.addEventListener('mousedown', handleStart, {passive: false});
+        window.addEventListener('mousemove', handleMove, {passive: false});
+        window.addEventListener('mouseup', handleEnd, {passive: false});
+        window.addEventListener('touchstart', handleStart, {passive: false});
+        window.addEventListener('touchmove', handleMove, {passive: false});
+        window.addEventListener('touchend', handleEnd, {passive: false});
+
+        function updateLivesUI() {
+            if (mode === 'kite') {
+                let hearts = '';
+                for(let i=0; i<lives; i++) hearts += '❤️';
+                for(let i=lives; i<3; i++) hearts += '🖤';
+                ui.lives.innerText = hearts;
+            } else {
+                let html = '';
+                for(let i=0; i<3; i++) {
+                    if (i < lives) {
+                        html += `<span style="color: #73322B; text-shadow: 1px 1px 0px #2B1814, 0 0 4px rgba(115, 50, 43, 0.4); margin-left: 5px; font-size: 24px; font-weight:900;">♥</span>`;
+                    } else {
+                        html += `<span style="color: #352726; text-shadow: 1px 1px 0px rgba(0,0,0,0.5); margin-left: 5px; font-size: 24px; font-weight:900; opacity: 0.4;">♥</span>`;
+                    }
+                }
+                ui.lives.innerHTML = html;
+            }
+        }
+
+        function loseLife(amount = 1) {
+            lives -= amount;
+            if (lives < 0) lives = 0;
+            updateLivesUI();
+            
+            if (lives === 0) {
+                gameOver();
+            }
+        }
+
+        let bgBirds = [];
+        for(let i=0; i<5; i++) {
+            bgBirds.push({ x: Math.random() * 800, y: Math.random() * 300 + 50, speed: Math.random() * 1 + 0.5, scale: Math.random() * 0.5 + 0.5 });
+        }
+
+        let emblemRotation = 0;
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches && e.touches[0]) {
+                mouseX = e.touches[0].clientX;
+                mouseY = e.touches[0].clientY;
+            }
+        });
+
+        function drawTraditionalBorder(padding, w, h) {
+            ctx.save();
+            ctx.globalAlpha = 0.5; // 50% opacity!
+            
+            // 1. Outer Saffron Border Line
+            ctx.strokeStyle = '#D97706'; // Gold/Saffron thread
+            ctx.lineWidth = 2;
+            ctx.strokeRect(padding, padding, w - padding * 2, h - padding * 2);
+            
+            // 2. Triangles Band
+            const triSize = 6;
+            const spacing = 12; // spacing between triangles
+            
+            // Top border triangles pointing down
+            for (let x = padding + spacing; x < w - padding - spacing; x += spacing) {
+                ctx.fillStyle = (Math.floor(x / spacing) % 2 === 0) ? '#F08833' : '#10B981';
+                
+                ctx.beginPath();
+                ctx.moveTo(x - triSize/2, padding + 2);
+                ctx.lineTo(x + triSize/2, padding + 2);
+                ctx.lineTo(x, padding + 2 + triSize);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Draw a white dot between triangles
+                ctx.fillStyle = '#FFFFFF';
+                ctx.beginPath();
+                ctx.arc(x + spacing/2, padding + 4, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Bottom border triangles pointing up
+            for (let x = padding + spacing; x < w - padding - spacing; x += spacing) {
+                ctx.fillStyle = (Math.floor(x / spacing) % 2 === 0) ? '#F08833' : '#10B981';
+                
+                ctx.beginPath();
+                ctx.moveTo(x - triSize/2, h - padding - 2);
+                ctx.lineTo(x + triSize/2, h - padding - 2);
+                ctx.lineTo(x, h - padding - 2 - triSize);
+                ctx.closePath();
+                ctx.fill();
+                
+                ctx.fillStyle = '#FFFFFF';
+                ctx.beginPath();
+                ctx.arc(x + spacing/2, h - padding - 4, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Left border triangles pointing right
+            for (let y = padding + spacing; y < h - padding - spacing; y += spacing) {
+                ctx.fillStyle = (Math.floor(y / spacing) % 2 === 0) ? '#F08833' : '#10B981';
+                
+                ctx.beginPath();
+                ctx.moveTo(padding + 2, y - triSize/2);
+                ctx.lineTo(padding + 2, y + triSize/2);
+                ctx.lineTo(padding + 2 + triSize, y);
+                ctx.closePath();
+                ctx.fill();
+                
+                ctx.fillStyle = '#FFFFFF';
+                ctx.beginPath();
+                ctx.arc(padding + 4, y + spacing/2, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Right border triangles pointing left
+            for (let y = padding + spacing; y < h - padding - spacing; y += spacing) {
+                ctx.fillStyle = (Math.floor(y / spacing) % 2 === 0) ? '#F08833' : '#10B981';
+                
+                ctx.beginPath();
+                ctx.moveTo(w - padding - 2, y - triSize/2);
+                ctx.lineTo(w - padding - 2, y + triSize/2);
+                ctx.lineTo(w - padding - 2 - triSize, y);
+                ctx.closePath();
+                ctx.fill();
+                
+                ctx.fillStyle = '#FFFFFF';
+                ctx.beginPath();
+                ctx.arc(w - padding - 4, y + spacing/2, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // 3. Inner Saffron Border Line
+            ctx.strokeStyle = '#D97706';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(padding + triSize + 4, padding + triSize + 4, w - (padding + triSize + 4) * 2, h - (padding + triSize + 4) * 2);
+            
+            ctx.restore();
+        }
+
+        function drawBackgroundPattern(w, h) {
+            ctx.save();
+            ctx.fillStyle = 'rgba(240, 136, 51, 0.035)'; // Faint orange/gold
+            ctx.strokeStyle = 'rgba(240, 136, 51, 0.02)';
+            ctx.lineWidth = 1;
+            
+            const gridSize = 100;
+            for (let x = 50; x < w; x += gridSize) {
+                for (let y = 50; y < h; y += gridSize) {
+                    // Draw a subtle diamond grid intersection accent
+                    ctx.beginPath();
+                    ctx.arc(x, y, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Draw a faint traditional diamond stitch outline
+                    ctx.beginPath();
+                    ctx.moveTo(x, y - 25);
+                    ctx.lineTo(x + 25, y);
+                    ctx.lineTo(x, y + 25);
+                    ctx.lineTo(x - 25, y);
+                    ctx.closePath();
+                    ctx.stroke();
+                }
+            }
+            ctx.restore();
+        }
+
+        function drawTurban(cx, cy, scale) {
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.scale(scale, scale);
+            
+            const facets = [
+                // Top Left Dome
+                { pts: [[0, -50], [-25, -45], [-20, -20], [0, -25]], color: '#FE9D4B' },
+                // Top Right Dome
+                { pts: [[0, -50], [25, -45], [20, -20], [0, -25]], color: '#FF8E1F' },
+                // Left Upper Fold
+                { pts: [[-25, -45], [-45, -20], [-20, -20]], color: '#F08833' },
+                // Right Upper Fold
+                { pts: [[25, -45], [45, -20], [20, -20]], color: '#FF8E1F' },
+                // Left Main Wrap
+                { pts: [[-45, -20], [-40, 10], [-15, 0], [-20, -20]], color: '#D97706' },
+                // Right Main Wrap
+                { pts: [[45, -20], [40, 10], [15, 0], [20, -20]], color: '#F59E0B' },
+                // Central V-Fold Left
+                { pts: [[0, -25], [-20, -20], [-15, 0], [0, -5]], color: '#FF8E1F' },
+                // Central V-Fold Right
+                { pts: [[0, -25], [20, -20], [15, 0], [0, -5]], color: '#FE9D4B' },
+                // Left Ear wrap
+                { pts: [[-40, 10], [-35, 25], [-10, 15], [-15, 0]], color: '#F08833' },
+                // Right Ear wrap
+                { pts: [[40, 10], [35, 25], [10, 15], [15, 0]], color: '#D97706' },
+                // Bottom central peak left
+                { pts: [[0, -5], [-15, 0], [-10, 15], [0, 10]], color: '#D97706' },
+                // Bottom central peak right
+                { pts: [[0, -5], [15, 0], [10, 15], [0, 10]], color: '#FF8E1F' }
+            ];
+            
+            // Draw each facet of the feto
+            facets.forEach(f => {
+                ctx.fillStyle = f.color;
+                ctx.beginPath();
+                ctx.moveTo(f.pts[0][0], f.pts[0][1]);
+                for(let i=1; i<f.pts.length; i++) {
+                    ctx.lineTo(f.pts[i][0], f.pts[i][1]);
+                }
+                ctx.closePath();
+                ctx.fill();
+                
+                // Add extremely subtle highlight line on facet borders
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+            
+            ctx.restore();
+        }
+
+        function drawMustache(cx, cy, scale) {
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.scale(scale, scale);
+            
+            ctx.fillStyle = '#FFFFFF';
+            ctx.strokeStyle = '#2B1814';
+            ctx.lineWidth = 3;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            
+            ctx.beginPath();
+            // Start at center bottom
+            ctx.moveTo(0, 15);
+            
+            // Left mustache half
+            ctx.quadraticCurveTo(-15, 28, -32, 20); // main body bottom
+            ctx.quadraticCurveTo(-42, 10, -32, 8);  // curl tip top
+            ctx.quadraticCurveTo(-28, 6, -26, 12);  // curl inner curve
+            ctx.quadraticCurveTo(-15, 14, 0, 8);   // bridge top
+            
+            // Right mustache half
+            ctx.quadraticCurveTo(15, 14, 26, 12);
+            ctx.quadraticCurveTo(28, 6, 32, 8);
+            ctx.quadraticCurveTo(42, 10, 32, 20);
+            ctx.quadraticCurveTo(15, 28, 0, 15);
+            
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.restore();
+        }
+
+        function drawEmblemFrame(cx, cy, r) {
+            ctx.save();
+            ctx.translate(cx, cy);
+            
+            // 1. Faint outer golden circle
+            ctx.strokeStyle = '#D97706';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(0, 0, r, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // 2. Dash white stitch ring
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.arc(0, 0, r - 6, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // 3. Ring of alternating green and orange triangles
+            const triangleCount = 36;
+            const triWidth = (Math.PI * 2) / triangleCount;
+            const triHeight = 8;
+            const triRadius = r - 12;
+            
+            for (let i = 0; i < triangleCount; i++) {
+                const angle = i * triWidth + emblemRotation;
+                ctx.save();
+                ctx.rotate(angle);
+                
+                // Color: alternate orange and green from Dribbble shot
+                ctx.fillStyle = i % 2 === 0 ? '#F08833' : '#10B981';
+                
+                ctx.beginPath();
+                ctx.moveTo(triRadius, -4);
+                ctx.lineTo(triRadius + triHeight, 0);
+                ctx.lineTo(triRadius, 4);
+                ctx.closePath();
+                ctx.fill();
+                
+                ctx.restore();
+            }
+            
+            // 4. Inner golden circle
+            ctx.strokeStyle = '#D97706';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(0, 0, r - 16, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            ctx.restore();
+        }
+
+        function drawCentralEmblem(cx, cy) {
+            ctx.save();
+            ctx.globalAlpha = 0.5; // 50% opacity!
+            
+            const outerRadius = Math.min(width, height) * 0.22;
+            
+            // Draw the rotating outer mandala border frame
+            drawEmblemFrame(cx, cy, outerRadius);
+            
+            // Draw the static feto (turban) and mustache (mish) inside it!
+            const scale = outerRadius * 0.012; // scale factor to fit within the circle
+            drawTurban(cx, cy - (outerRadius * 0.12), scale);
+            drawMustache(cx, cy + (outerRadius * 0.16), scale * 0.95);
+            
+            ctx.restore();
+        }
+
+        // Old Toran and leaf drawing methods removed to fit exactly the Dribbble border design
+
+        let spawnTimer = 0;
+        function spawnFruit() {
+            spawnTimer++;
+            
+            // Frenzy mode: spawn very fast!
+            if (frenzyTimer > 0) {
+                if (spawnTimer > 25) {
+                    const count = Math.floor(Math.random() * 2) + 2; // 2-3 items at once
+                    for(let i=0; i<count; i++) {
+                        setTimeout(() => { 
+                            if(state === 'PLAYING') {
+                                const f = new Fruit();
+                                // Frenzy fruits are thrown from sides inwards
+                                f.x = Math.random() > 0.5 ? -f.size : width + f.size;
+                                f.y = Math.random() * (height * 0.4) + height * 0.3;
+                                f.vy = -Math.random() * 5 - 5;
+                                f.vx = f.x < 0 ? Math.random() * 8 + 5 : -Math.random() * 8 - 5;
+                                if (f.type === 'bomb') {
+                                    f.type = 'fruit';
+                                    f.name = mode === 'farasan' ? 'khaman' : 'red_kite';
+                                    f.color = mode === 'farasan' ? '#FFD700' : '#FF0000';
+                                    f.img = assets[f.name];
+                                }
+                                fruits.push(f);
+                            }
+                        }, i * 150);
+                    }
+                    spawnTimer = 0;
+                }
+                return;
+            }
+
+            const baseInterval = Math.max(45, 100 - (level - 1) * 10);
+            if (spawnTimer > baseInterval) {
+                if(Math.random() < 0.6 + (level * 0.02)) {
+                    const count = Math.random() < 0.2 + (level * 0.03) ? 2 : 1;
+                    for(let i=0; i<count; i++) {
+                        setTimeout(() => { if(state === 'PLAYING') fruits.push(new Fruit()); }, i * 400);
+                    }
+                    spawnTimer = 0;
+                }
+            }
+        }
+
+        function update() {
+            spawnFruit();
+            emblemRotation += 0.003;
+            
+            if (frenzyTimer > 0) frenzyTimer--;
+            if (levelUpBannerTimer > 0) levelUpBannerTimer--;
+            
+            if (recentSlices.length > 0 && Date.now() - recentSlices[recentSlices.length - 1].time > 400) {
+                recentSlices = [];
+            }
+            
+            for (let i = fruits.length - 1; i >= 0; i--) {
+                fruits[i].update();
+                if (fruits[i].y > height + 200 || fruits[i].x < -200 || fruits[i].x > width + 200) {
+                    if (!fruits[i].sliced && fruits[i].type === 'fruit' && frenzyTimer === 0) {
+                        loseLife();
+                    }
+                    fruits.splice(i, 1);
+                }
+            }
+            
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                if (particles[i].life <= 0) particles.splice(i, 1);
+            }
+
+            for (let i = splats.length - 1; i >= 0; i--) {
+                splats[i].update();
+                if (splats[i].alpha <= 0) splats.splice(i, 1);
+            }
+
+            for (let i = floatingTexts.length - 1; i >= 0; i--) {
+                floatingTexts[i].update();
+                if (floatingTexts[i].alpha <= 0) floatingTexts.splice(i, 1);
+            }
+            
+            for (let i = swipeTrail.length - 1; i >= 0; i--) {
+                swipeTrail[i].life -= 0.05;
+                if(swipeTrail[i].life <= 0) swipeTrail.splice(i, 1);
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+            
+            if (mode === 'kite') {
+                const grad = ctx.createLinearGradient(0,0,0,height);
+                grad.addColorStop(0, frenzyTimer > 0 ? '#F39C12' : '#56CCF2');
+                grad.addColorStop(1, frenzyTimer > 0 ? '#D35400' : '#2F80ED');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0,0,width,height);
+                
+                // Draw background birds
+                ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+                ctx.lineWidth = 2;
+                bgBirds.forEach(b => {
+                    ctx.beginPath();
+                    ctx.moveTo(b.x, b.y);
+                    ctx.quadraticCurveTo(b.x + 10*b.scale, b.y - 10*b.scale, b.x + 20*b.scale, b.y);
+                    ctx.quadraticCurveTo(b.x + 30*b.scale, b.y - 10*b.scale, b.x + 40*b.scale, b.y);
+                    ctx.stroke();
+                    b.x += b.speed;
+                    if(b.x > width + 50) b.x = -50;
+                });
+                
+            } else {
+                const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
+                bgGrad.addColorStop(0, frenzyTimer > 0 ? '#4A2711' : '#2E1814');
+                bgGrad.addColorStop(1, frenzyTimer > 0 ? '#271105' : '#1A0E0C');
+                ctx.fillStyle = bgGrad;
+                ctx.fillRect(0, 0, width, height);
+
+                drawBackgroundPattern(width, height);
+            }
+
+            // Draw background splats
+            splats.forEach(s => s.draw());
+
+            if (mode === 'farasan') {
+                const padding = 20;
+                drawTraditionalBorder(padding, width, height);
+                drawCentralEmblem(width / 2, height * 0.52);
+            }
+            
+            fruits.forEach(f => f.draw());
+            particles.forEach(p => p.draw());
+            
+            if (swipeTrail.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(swipeTrail[0].x, swipeTrail[0].y);
+                for(let i=1; i<swipeTrail.length; i++) {
+                    ctx.lineTo(swipeTrail[i].x, swipeTrail[i].y);
+                }
+                ctx.strokeStyle = mode === 'kite' ? 'rgba(255,255,255,0.8)' : '#EA580C';
+                ctx.lineWidth = 6;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.stroke();
+            }
+
+            // Draw floating score/combo texts
+            floatingTexts.forEach(t => t.draw());
+
+            // Draw Frenzy Indicator
+            if (frenzyTimer > 0) {
+                ctx.save();
+                ctx.fillStyle = 'rgba(255, 215, 0, 0.1)';
+                ctx.fillRect(0, 0, width, height);
+                
+                ctx.fillStyle = '#FFD700';
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 4;
+                ctx.font = '900 32px "Plus Jakarta Sans", sans-serif';
+                ctx.textAlign = 'center';
+                const pulse = 1 + Math.sin(Date.now() / 80) * 0.05;
+                ctx.translate(width / 2, 100);
+                ctx.scale(pulse, pulse);
+                ctx.strokeText('✨ FRENZY! ✨', 0, 0);
+                ctx.fillText('✨ FRENZY! ✨', 0, 0);
+                ctx.restore();
+            }
+
+            // Draw Level Up Banner
+            if (levelUpBannerTimer > 0) {
+                ctx.save();
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fillRect(0, height / 2 - 60, width, 120);
+                
+                ctx.fillStyle = '#FF8E1F';
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 6;
+                ctx.font = '900 42px "Noto Serif Gujarati", serif';
+                ctx.textAlign = 'center';
+                
+                const bannerText = `લેવલ ${toGujaratiNum(level)}!`;
+                ctx.strokeText(bannerText, width / 2, height / 2 - 10);
+                ctx.fillText(bannerText, width / 2, height / 2 - 10);
+                
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = '700 18px "Plus Jakarta Sans", sans-serif';
+                const subText = mode === 'farasan' ? 'ફરસાણની સ્પીડ વધી ગઈ! 🚀' : 'પતંગની સ્પીડ વધી ગઈ! 🚀';
+                ctx.strokeText(subText, width / 2, height / 2 + 35);
+                ctx.fillText(subText, width / 2, height / 2 + 35);
+                
+                ctx.restore();
+            }
+        }
+
+        function loop() {
+            if (state === 'PLAYING') {
+                update();
+            }
+            draw();
+            reqId = requestAnimationFrame(loop);
+        }
+
+        function startGame() {
+            initAudio();
+            state = 'PLAYING';
+            score = 0;
+            lives = 3;
+            level = 1;
+            levelScoreTarget = 150;
+            frenzyTimer = 0;
+            levelUpBannerTimer = 0;
+            fruits = [];
+            particles = [];
+            splats = [];
+            floatingTexts = [];
+            recentSlices = [];
+            swipeTrail = [];
+            isSwiping = false;
+            ui.score.innerText = '૦';
+            const levelValEl = document.getElementById('level-val');
+            if (levelValEl) levelValEl.innerText = 'લેવલ: ૧';
+            updateLivesUI();
+            ui.start.classList.add('hidden');
+            ui.gameover.classList.add('hidden');
+        }
+
+        function gameOver() {
+            state = 'GAMEOVER';
+            ui.finalScore.innerText = toGujaratiNum(score);
+            ui.gameover.classList.remove('hidden');
+            
+            if (window.parent) {
+                window.parent.postMessage(JSON.stringify({
+                    event: 'GAME_OVER',
+                    data: { score: score, coins: 0, level: level }
+                }), '*');
+            }
+        }
+
+        document.getElementById('start-btn').addEventListener('click', startGame);
+        document.getElementById('restart-btn').addEventListener('click', startGame);
+
+        const menuLeaderboardBtn = document.getElementById('menu-leaderboard-btn');
+        if (menuLeaderboardBtn) {
+            menuLeaderboardBtn.addEventListener('click', () => {
+                if (window.parent) {
+                    window.parent.postMessage(JSON.stringify({
+                        event: 'SHOW_LEADERBOARD',
+                        data: {}
+                    }), '*');
+                }
+            });
+        }
+
+        // Retrieve username and update welcome message
+        try {
+            const userProfile = JSON.parse(localStorage.getItem('user_profile') || '{}');
+            const userName = userProfile.name || localStorage.getItem('google_name') || localStorage.getItem('user_full_name') || '';
+            if (userName) {
+                const welcomeEl = document.createElement('p');
+                welcomeEl.className = 'welcome-tag';
+                welcomeEl.innerHTML = `આવો, <span style="color: #FFD700; font-weight: 800;">${userName}</span>!`;
+                
+                const card = document.querySelector('.info-box');
+                if (card) {
+                    card.parentNode.insertBefore(welcomeEl, card);
+                }
+            }
+        } catch (e) {
+            console.error("Error reading username", e);
+        }
+
+        loop();
+    </script>
+</body>
+</html>

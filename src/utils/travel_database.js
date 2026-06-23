@@ -12,7 +12,7 @@ export const TRAVEL_DATABASE = [
     "lon": 70.4012,
     "icon": "🛕",
     "title": "સોમનાથ સાધક",
-    "color": "from-amber-100 to-amber-200 border-amber-300 text-amber-800",
+    "color": "from-yellow-100 to-yellow-200 border-yellow-300 text-yellow-900",
     "zone": "Mega",
     "filters": {
       "type": "religious",
@@ -192,7 +192,7 @@ export const TRAVEL_DATABASE = [
     "lon": 72.5801,
     "icon": "🏛️",
     "title": "અડાલજ પથિક",
-    "color": "from-amber-50 to-amber-100 border-amber-250 text-amber-900",
+    "color": "from-yellow-50 to-yellow-100 border-amber-250 text-yellow-900",
     "zone": "North",
     "filters": {
       "type": "historical",
@@ -282,7 +282,7 @@ export const TRAVEL_DATABASE = [
     "lon": 72.674,
     "icon": "🛕",
     "title": "અક્ષરધામ સેવક",
-    "color": "from-orange-50 to-orange-100 border-orange-250 text-orange-900",
+    "color": "from-teal-50 to-teal-100 border-orange-250 text-teal-950",
     "zone": "North",
     "filters": {
       "type": "religious",
@@ -431,7 +431,7 @@ export const TRAVEL_DATABASE = [
     "lon": 72.1008,
     "icon": "🧣",
     "title": "પટોળા રસિક",
-    "color": "from-rose-50 to-rose-150 border-rose-200 text-rose-900",
+    "color": "from-rose-50 to-rose-150 border-rose-200 text-emerald-900",
     "zone": "North",
     "filters": {
       "type": "historical",
@@ -491,7 +491,7 @@ export const TRAVEL_DATABASE = [
     "lon": 72.85,
     "icon": "🕉️",
     "title": "અંબાજી ભક્ત",
-    "color": "from-red-50 to-red-100 border-red-250 text-red-900",
+    "color": "from-red-50 to-red-100 border-red-250 text-emerald-950",
     "zone": "North",
     "filters": {
       "type": "religious",
@@ -611,7 +611,7 @@ export const TRAVEL_DATABASE = [
     "lon": 73.0039,
     "icon": "🏰",
     "title": "ઈડરિયા વિજેતા",
-    "color": "from-indigo-50 to-indigo-150 border-indigo-200 text-indigo-900",
+    "color": "from-teal-50 to-teal-150 border-teal-200 text-teal-900",
     "zone": "North",
     "filters": {
       "type": "adventure",
@@ -641,7 +641,7 @@ export const TRAVEL_DATABASE = [
     "lon": 73.4339,
     "icon": "🛕",
     "title": "શામળિયા ભક્ત",
-    "color": "from-amber-50 to-amber-150 border-amber-200 text-amber-900",
+    "color": "from-yellow-50 to-amber-150 border-yellow-200 text-yellow-900",
     "zone": "North",
     "filters": {
       "type": "religious",
@@ -791,7 +791,7 @@ export const TRAVEL_DATABASE = [
     "lon": 70.2163,
     "icon": "🏺",
     "title": "સિંધુ સંસ્કૃતિ પથિક",
-    "color": "from-amber-100 to-amber-200 border-amber-250 text-amber-900",
+    "color": "from-yellow-100 to-yellow-200 border-amber-250 text-yellow-900",
     "zone": "Saurashtra",
     "filters": {
       "type": "historical",
@@ -1001,7 +1001,7 @@ export const TRAVEL_DATABASE = [
     "lon": 70.7601,
     "icon": "🛕",
     "title": "જલારામ ભક્ત",
-    "color": "from-orange-50 to-orange-150 border-orange-200 text-orange-900",
+    "color": "from-teal-50 to-orange-150 border-teal-200 text-teal-950",
     "zone": "Saurashtra",
     "filters": {
       "type": "religious",
@@ -1031,7 +1031,7 @@ export const TRAVEL_DATABASE = [
     "lon": 70.7938,
     "icon": "🏰",
     "title": "નવલખા રક્ષક",
-    "color": "from-amber-50 to-amber-150 border-amber-200 text-amber-900",
+    "color": "from-yellow-50 to-amber-150 border-yellow-200 text-yellow-900",
     "zone": "Saurashtra",
     "filters": {
       "type": "historical",
@@ -1151,7 +1151,7 @@ export const TRAVEL_DATABASE = [
     "lon": 70.0664,
     "icon": "🐒",
     "title": "અખંડ રામ ભક્ત",
-    "color": "from-red-50 to-red-150 border-red-200 text-red-900",
+    "color": "from-red-50 to-red-150 border-red-200 text-emerald-950",
     "zone": "Saurashtra",
     "filters": {
       "type": "religious",
@@ -1181,7 +1181,7 @@ export const TRAVEL_DATABASE = [
     "lon": 71.854,
     "icon": "🛕",
     "title": "સિદ્ધગિરી પથિક",
-    "color": "from-indigo-50 to-indigo-100 border-indigo-250 text-indigo-900",
+    "color": "from-teal-50 to-teal-100 border-teal-250 text-teal-900",
     "zone": "Saurashtra",
     "filters": {
       "type": "religious",
@@ -1211,7 +1211,7 @@ export const TRAVEL_DATABASE = [
     "lon": 72.03,
     "icon": "🦌",
     "title": "કાળિયાર મિત્ર",
-    "color": "from-amber-50 to-amber-100 border-amber-200 text-amber-900",
+    "color": "from-yellow-50 to-yellow-100 border-yellow-200 text-yellow-900",
     "zone": "Saurashtra",
     "filters": {
       "type": "nature",
@@ -1241,7 +1241,7 @@ export const TRAVEL_DATABASE = [
     "lon": 72.2858,
     "icon": "🔱",
     "title": "નિષ્કલંક ભક્ત",
-    "color": "from-indigo-50 to-indigo-150 border-indigo-200 text-indigo-900",
+    "color": "from-teal-50 to-teal-150 border-teal-200 text-teal-900",
     "zone": "Saurashtra",
     "filters": {
       "type": "religious",
@@ -1301,7 +1301,7 @@ export const TRAVEL_DATABASE = [
     "lon": 71.189,
     "icon": "🚩",
     "title": "ચોટીલા ચઢાણ યાત્રી",
-    "color": "from-red-100 to-red-200 border-red-300 text-red-900",
+    "color": "from-red-100 to-red-200 border-red-300 text-emerald-950",
     "zone": "Saurashtra",
     "filters": {
       "type": "religious",
@@ -1421,7 +1421,7 @@ export const TRAVEL_DATABASE = [
     "lon": 70.8358,
     "icon": "🏛️",
     "title": "વાઘજી રક્ષક",
-    "color": "from-rose-50 to-rose-150 border-rose-250 text-rose-900",
+    "color": "from-rose-50 to-rose-150 border-rose-250 text-emerald-900",
     "zone": "Saurashtra",
     "filters": {
       "type": "historical",
@@ -1451,7 +1451,7 @@ export const TRAVEL_DATABASE = [
     "lon": 70.8336,
     "icon": "🌉",
     "title": "મચ્છુ સાહસિક",
-    "color": "from-orange-50 to-orange-150 border-orange-200 text-orange-900",
+    "color": "from-teal-50 to-orange-150 border-teal-200 text-teal-950",
     "zone": "Saurashtra",
     "filters": {
       "type": "historical",
@@ -1481,7 +1481,7 @@ export const TRAVEL_DATABASE = [
     "lon": 70.9917,
     "icon": "🛕",
     "title": "આપા ગીગા સેવક",
-    "color": "from-amber-50 to-amber-150 border-amber-200 text-amber-900",
+    "color": "from-yellow-50 to-amber-150 border-yellow-200 text-yellow-900",
     "zone": "Saurashtra",
     "filters": {
       "type": "religious",
@@ -1660,7 +1660,7 @@ export const TRAVEL_DATABASE = [
     "lon": 73.5186,
     "icon": "🚩",
     "title": "પાવાગઢ યાત્રી",
-    "color": "from-orange-50 to-orange-100 border-orange-355 text-orange-950",
+    "color": "from-teal-50 to-teal-100 border-orange-355 text-teal-950",
     "zone": "Central",
     "filters": {
       "type": "religious",
@@ -1840,7 +1840,7 @@ export const TRAVEL_DATABASE = [
     "lon": 73.1333,
     "icon": "♨️",
     "title": "ગંગાજળ સ્નાતક",
-    "color": "from-orange-50 to-orange-150 border-orange-200 text-orange-900",
+    "color": "from-teal-50 to-orange-150 border-teal-200 text-teal-950",
     "zone": "Central",
     "filters": {
       "type": "nature",
@@ -1870,7 +1870,7 @@ export const TRAVEL_DATABASE = [
     "lon": 73.3333,
     "icon": "🦖",
     "title": "જુરાસિક સાહસિક",
-    "color": "from-rose-50 to-rose-100 border-rose-250 text-rose-900",
+    "color": "from-rose-50 to-rose-100 border-rose-250 text-emerald-900",
     "zone": "Central",
     "filters": {
       "type": "picnic",
@@ -1930,7 +1930,7 @@ export const TRAVEL_DATABASE = [
     "lon": 73.5833,
     "icon": "🪑",
     "title": "સંખેડા કલાકાર",
-    "color": "from-amber-50 to-amber-150 border-amber-255 text-amber-900",
+    "color": "from-yellow-50 to-amber-150 border-amber-255 text-yellow-900",
     "zone": "Central",
     "filters": {
       "type": "historical",
@@ -1990,7 +1990,7 @@ export const TRAVEL_DATABASE = [
     "lon": 74.2238,
     "icon": "🛕",
     "title": "બાવકા કલા રસિક",
-    "color": "from-amber-100 to-amber-200 border-amber-300 text-amber-800",
+    "color": "from-yellow-100 to-yellow-200 border-yellow-300 text-yellow-900",
     "zone": "Central",
     "filters": {
       "type": "historical",
@@ -2110,7 +2110,7 @@ export const TRAVEL_DATABASE = [
     "lon": 73.1231,
     "icon": "🛕",
     "title": "નર્મદા ધામી",
-    "color": "from-amber-50 to-amber-150 border-amber-200 text-amber-900",
+    "color": "from-yellow-50 to-amber-150 border-yellow-200 text-yellow-900",
     "zone": "South",
     "filters": {
       "type": "religious",
@@ -2170,7 +2170,7 @@ export const TRAVEL_DATABASE = [
     "lon": 72.7161,
     "icon": "🌊",
     "title": "ડુમસ વિજેતા",
-    "color": "from-stone-800 to-stone-900 border-stone-950 text-amber-100",
+    "color": "from-stone-800 to-stone-900 border-stone-950 text-yellow-100",
     "zone": "South",
     "filters": {
       "type": "picnic",
@@ -2350,7 +2350,7 @@ export const TRAVEL_DATABASE = [
     "lon": 72.8686,
     "icon": "🔥",
     "title": "આતશ બહેરામ દર્શક",
-    "color": "from-orange-50 to-orange-150 border-orange-200 text-orange-900",
+    "color": "from-teal-50 to-orange-150 border-teal-200 text-teal-950",
     "zone": "South",
     "filters": {
       "type": "historical",
@@ -2530,7 +2530,7 @@ export const TRAVEL_DATABASE = [
     "lon": 73.7917,
     "icon": "🛕",
     "title": "રામભક્ત શબરી સેવક",
-    "color": "from-amber-50 to-amber-150 border-amber-200 text-amber-900",
+    "color": "from-yellow-50 to-amber-150 border-yellow-200 text-yellow-900",
     "zone": "South",
     "filters": {
       "type": "religious",

@@ -319,7 +319,7 @@ const VastuCalculator = () => {
 
         {!isSimulated && permissionState === 'denied' && (
           <div className="text-center space-y-2 mt-4 bg-red-50 p-4 rounded-3xl border border-red-100">
-            <p className="font-gujarati text-red-600 text-xs font-bold">
+            <p className="font-gujarati text-emerald-700 text-xs font-bold">
               ❌ કંપાસ સેન્સરનો ઉપયોગ કરવાની પરવાનગી અસ્વીકાર થઈ છે.
             </p>
             <button 

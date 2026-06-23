@@ -9,19 +9,19 @@ export default {
     extend: {
       "colors": {
         // Light Mode
-        "primary": "#994700",
-        "primary-container": "#f47b20",
-        "background": "#fef8f1",
+        "primary": "#0B3B36",
+        "primary-container": "#115E59",
+        "background": "#F4EFE6",
         "on-surface": "#1d1b17",
         "outline": "#8b7265",
         "outline-variant": "#dec1b1",
-        "surface-container-low": "#f9f3ec",
+        "surface-container-low": "#F2EFE8",
         "surface-container": "#f3ede6",
         
-        // Dark Mode - Royal Maroon & Golden
-        "dark-bg": "#1a0a00",
-        "dark-surface": "#2b1400",
-        "dark-accent": "#f47b20",
+        // Dark Mode - Royal Maroon & Golden -> Deep Forest Green
+        "dark-bg": "#031412",
+        "dark-surface": "#051816",
+        "dark-accent": "#C49F67",
         "dark-text": "#ffffff",
         "dark-text-dim": "#e7e2db",
         
@@ -69,6 +69,22 @@ export default {
         "body": ["Plus Jakarta Sans", "sans-serif"],
         "label": ["Plus Jakarta Sans", "sans-serif"],
         "gujarati": ["Noto Serif Gujarati", "serif"]
+      },
+      keyframes: {
+        "bounce-in": {
+          "0%": { opacity: "0", transform: "scale(0.8) translateY(10px)" },
+          "50%": { opacity: "1", transform: "scale(1.05) translateY(-5px)" },
+          "100%": { opacity: "1", transform: "scale(1) translateY(0)" }
+        },
+        "scale-up": {
+          "0%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.3)" },
+          "100%": { transform: "scale(1)" }
+        }
+      },
+      animation: {
+        "bounce-in": "bounce-in 0.3s cubic-bezier(0.68, -0.55, 0.26, 1.55) forwards",
+        "scale-up": "scale-up 0.3s ease-out forwards"
       }
     },
   },

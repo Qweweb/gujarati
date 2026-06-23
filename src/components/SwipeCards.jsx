@@ -10,7 +10,7 @@ const FACT_CARDS = [
     desc: "બાર જ્યોતિર્લિંગોમાં સોમનાથ પ્રથમ સ્થાને આવે છે. આ મંદિર ત્રિવેણી સંગમ (કપિલા, હિરણ અને સરસ્વતી નદી) પર આવેલું છે. તેનું પુનઃનિર્માણ સ્વતંત્રતા બાદ સરદાર વલ્લભભાઈ પટેલે કરાવ્યું હતું. 🛕",
     audioText: "સોમનાથ મંદિર બાર જ્યોતિર્લિંગોમાં પ્રથમ છે. સરદાર વલ્લભભાઈ પટેલે તેનું પુનઃનિર્માણ કરાવ્યું હતું.",
     icon: "🛕",
-    gradient: "from-amber-500 to-orange-600"
+    gradient: "from-yellow-600 to-teal-700"
   },
   {
     id: "f_nageshwar",
@@ -20,7 +20,7 @@ const FACT_CARDS = [
     desc: "દ્વારકા નજીક આવેલું પવિત્ર જ્યોતિર્લિંગ છે. પૌરાણિક કથા મુજબ દારૂકા વનમાં શિવજી ભક્તોની રક્ષા માટે પ્રગટ થયા હતા. અહીં બહાર ૨૫ ફૂટ ઊંચી શિવજીની ભવ્ય મૂર્તિ આકર્ષણનું કેન્દ્ર છે. 🔱",
     audioText: "નાગેશ્વર મંદિર દ્વારકા પાસે આવેલું પવિત્ર જ્યોતિર્લિંગ છે. શિવજીની ૨૫ ફૂટ ઊંચી પ્રતિમા આકર્ષક છે.",
     icon: "🔱",
-    gradient: "from-amber-600 to-red-650"
+    gradient: "from-yellow-700 to-emerald-800"
   },
   {
     id: "f_koteshwar",
@@ -30,7 +30,7 @@ const FACT_CARDS = [
     desc: "કચ્છના દરિયા કિનારે આવેલું સરહદી શિવ ધામ છે. લોકવાયકા મુજબ રાવણે મેળવેલું શિવજીનું આત્મલિંગ અહીં જમીન પર ભૂલથી મૂકી દીધું હતું અને તે અહીં જ સ્થાપિત થઈ ગયું. 🛕",
     audioText: "કોટેશ્વર મહાદેવ લખપત સરહદ નજીક સમુદ્ર કિનારે આવેલું પૌરાણિક શિવ મંદિર છે.",
     icon: "🛕",
-    gradient: "from-blue-600 to-indigo-750"
+    gradient: "from-blue-600 to-teal-750"
   },
   {
     id: "f_nishkalank",
@@ -50,7 +50,7 @@ const FACT_CARDS = [
     desc: "શ્રીકૃષ્ણની સુવર્ણ નગરી દ્વારકાનું આ મુખ્ય જગત મંદિર ૫ માળનું છે જે ૭૨ સ્તંભો પર ચણાયેલું છે. તેના શિખર પર લહેરાતી વિશાળ બાવન ગજની પંચરંગી ધ્વજા ભક્તિનું મોટું પ્રતીક છે. 🚩",
     audioText: "દ્વારકાધીશ જગત મંદિર પાંચ માળનું ભવ્ય સ્થાપત્ય છે, જેની બાવન ગજની ધ્વજા અજોડ છે.",
     icon: "🚩",
-    gradient: "from-blue-500 to-indigo-650"
+    gradient: "from-blue-500 to-teal-650"
   },
   {
     id: "f_dakor",
@@ -60,7 +60,7 @@ const FACT_CARDS = [
     desc: "અહીં ભગવાન વિષ્ણુ રણછોડરાય સ્વરૂપે પૂજાય છે. ભક્ત બોડાણાની સાચી ભક્તિ જોઈને ભગવાન સ્વયં દ્વારકાથી તેની સાથે ડાકોર આવ્યા હતા અને ત્રાજવે સોનાની વાલીથી તોલાયા હતા. 👑",
     audioText: "ડાકોર રણછોડરાયજી મંદિર ભક્ત બોડાણાની પ્રેમ ભક્તિ અને પવિત્રતાનો જીવંત ઇતિહાસ દર્શાવે છે.",
     icon: "👑",
-    gradient: "from-yellow-500 to-amber-600"
+    gradient: "from-yellow-500 to-yellow-700"
   },
   {
     id: "f_shamlaji",
@@ -70,7 +70,7 @@ const FACT_CARDS = [
     desc: "મેશ્વ નદીના કિનારે આવેલું પ્રાચીન ગદાધર મંદિર છે. અહીં ભગવાન વિષ્ણુ શ્યામ સ્વરૂપે (કાળિયા ઠાકોર) બિરાજે છે. મંદિરની દીવાલો પર હાથીઓ અને સુંદર નકશીકામ કરેલું છે. 🌸",
     audioText: "શામળાજી વિષ્ણુ મંદિર અગિયારમી સદીનું ઐતિહાસિક સ્થાપત્ય છે, જે મેશ્વો નદી કાંઠે આવેલું છે.",
     icon: "🌸",
-    gradient: "from-pink-500 to-rose-600"
+    gradient: "from-pink-500 to-emerald-600"
   },
   {
     id: "f_bhalka",
@@ -90,7 +90,7 @@ const FACT_CARDS = [
     desc: "ભારતની ૫૧ શક્તિપીઠોમાંની પ્રમુખ હૃદય શક્તિપીઠ છે. અહીં કોઈ મૂર્તિ નથી પણ અત્યંત ગુપ્ત અને પવિત્ર 'વિસાયંત્ર' પૂજાય છે. ગબ્બર પર્વત પર માંની અખંડ જ્યોત બળે છે. 🌺",
     audioText: "અંબાજી શક્તિપીઠ આરાસુર ડુંગરમાં આવેલું માં આસ્થા ધામ છે જ્યાં વિસાયંત્રની પૂજા થાય છે.",
     icon: "🌺",
-    gradient: "from-red-500 to-rose-700"
+    gradient: "from-emerald-600 to-emerald-700"
   },
   {
     id: "f_pavagadh",
@@ -100,7 +100,7 @@ const FACT_CARDS = [
     desc: "પાવાગઢ પર્વતની ટોચ પર બિરાજતી મહાકાળી માતાજીનું ધામ છે, જ્યાં સતીના જમણા પગનો અંગૂઠો પડ્યો હતો. યુનેસ્કો હેરિટેજ ચંપાનેર નજીક હોવાથી આ ઐતિહાસિક સ્થળ પણ છે. 🔱",
     audioText: "પાવાગઢ પર્વત પર માં મહાકાળી બિરાજે છે, જે યુનેસ્કો હેરિટેજ સાઇટ ચંપાનેર નજીક છે.",
     icon: "🔱",
-    gradient: "from-orange-650 to-red-700"
+    gradient: "from-teal-800 to-emerald-800"
   },
   {
     id: "f_bahucharaji",
@@ -110,7 +110,7 @@ const FACT_CARDS = [
     desc: "માં સતીના ડાબા હાથનો ભાગ અહીં પડ્યો હતો. માં બહુચર કૂકડા વાહન ધરાવે છે. આ પવિત્ર ધામમાં બાળકના બાબરી (મુંડન) સંસ્કાર કરાવવાની વર્ષો જૂની પરંપરા છે. 🐓",
     audioText: "બહુચરાજી શક્તિપીઠ મહેસાણામાં આવેલી છે જ્યાં બાળકોના મુંડન સંસ્કાર કરાવવાની પ્રથા છે.",
     icon: "🐓",
-    gradient: "from-rose-500 to-orange-550"
+    gradient: "from-emerald-500 to-orange-550"
   },
   {
     id: "f_chotila",
@@ -120,7 +120,7 @@ const FACT_CARDS = [
     desc: "ચોટીલાના ઊંચા ડુંગર પર બિરાજમાન માં ચામુંડાનું ભવ્ય મંદિર છે. ભક્તો આશરે ૬૫૦ થી વધુ પથ્થરના પગથિયાં ચડીને માતાજીના ગર્ભગૃહના દર્શને પહોંચે છે. ⛰️",
     audioText: "ચોટીલા પર્વતની ઉંચી ચોટી પર માં ચામુંડા બિરાજે છે, જ્યાં છસો પચાસ પગથિયાં ચડવા પડે છે.",
     icon: "⛰️",
-    gradient: "from-red-660 to-amber-700"
+    gradient: "from-red-660 to-yellow-800"
   },
   {
     id: "f_khodaldham",
@@ -140,7 +140,7 @@ const FACT_CARDS = [
     desc: "સોલંકી વંશના રાજા ભીમદેવ પહેલાએ ૧૦૨૬ માં આ સૂર્ય મંદિર બંધાવ્યું હતું. તેના સભામંડપમાં ૫૨ સ્તંભો છે અને સામે એક ભવ્ય કલાત્મક સૂર્યકુંડ (રામકુંડ) આવેલો છે. ☀️",
     audioText: "મોઢેરા સૂર્ય મંદિર સોલંકી કાળની ભવ્ય શિલ્પકલા છે, જ્યાં બાવન કોતરેલા થાંભલા છે.",
     icon: "☀️",
-    gradient: "from-yellow-500 to-amber-600"
+    gradient: "from-yellow-500 to-yellow-700"
   },
   {
     id: "f_akshardham_gnd",
@@ -150,7 +150,7 @@ const FACT_CARDS = [
     desc: "પિંક સેન્ડસ્ટોનમાંથી બનેલું આ સ્વામિનારાયણ મંદિર આધ્યાત્મિકતા અને આધુનિક ટેકનોલોજીનો સુમેળ છે. અહીં સદ્વિદ્યા પ્રદર્શન અને મલ્ટીમીડિયા ફાઉન્ટેન શો આકર્ષક છે. 🏛️",
     audioText: "ગાંધીનગર અક્ષરધામ પિંક સેન્ડસ્ટોનનું ભવ્ય સંકુલ છે જે ભારતીય સંસ્કૃતિ દર્શાવે છે.",
     icon: "🏛️",
-    gradient: "from-orange-500 to-red-650"
+    gradient: "from-teal-600 to-emerald-800"
   },
   {
     id: "f_palitana_jain",
@@ -160,7 +160,7 @@ const FACT_CARDS = [
     desc: "શત્રુંજય પર્વત પર ૮૬૩ થી વધુ આરસપહાણના પવિત્ર જૈન મંદિરો આવેલા છે. તે જૈન ધર્મના પ્રથમ તીર્થંકર આદિનાથનું પ્રમુખ દીક્ષા ધામ અને મોક્ષ કલ્યાણક સ્થાન છે. 🏺",
     audioText: "પાલિતાણા શત્રુંજય ડુંગર પર ૮૬૩ આરસના જૈન દેરાસર છે જે વિશ્વનું મોટું મંદિર શહેર છે.",
     icon: "🏺",
-    gradient: "from-purple-500 to-indigo-600"
+    gradient: "from-purple-500 to-teal-600"
   },
   {
     id: "f_girnar_jain",
@@ -200,7 +200,7 @@ const FACT_CARDS = [
     desc: "સંત શિરોમણી જલારામ બાપાના આ ધામમાં ગરીબો માટે ૧૫૦ વર્ષથી સદાવ્રત ચાલે છે. વર્ષ ૨૦૦૦ થી આ મંદિરમાં દાન સ્વીકારવાનું કાયદાકીય રીતે સંપૂર્ણ બંધ કરાયું છે! 📿",
     audioText: "વીરપુર જલારામ બાપા મંદિર સમગ્ર વિશ્વમાં એકમાત્ર એવું મંદિર છે જે દાન સ્વીકારતું નથી.",
     icon: "📿",
-    gradient: "from-amber-500 to-yellow-600"
+    gradient: "from-yellow-600 to-yellow-600"
   },
   {
     id: "f_satadhar_dham",
@@ -210,7 +210,7 @@ const FACT_CARDS = [
     desc: "સંત દેવીદાસ બાપુ અને ગીગા બાપાનું આ પવિત્ર સેવાધામ છે જ્યાં ૨૪ કલાક ભોજન પ્રસાદીની સેવા ચાલે છે અને ગૌસેવાની સાથે પીડિતોની મફત સેવા થાય છે. 🪔",
     audioText: "પરબ અને સતાધાર ગીર નજીક આવેલા ગરીબો અને ગાયોની સેવા કરતા પવિત્ર આશ્રમો છે.",
     icon: "🪔",
-    gradient: "from-orange-500 to-amber-600"
+    gradient: "from-teal-600 to-yellow-700"
   },
   {
     id: "f_sarangpur_hanuman",
@@ -220,7 +220,7 @@ const FACT_CARDS = [
     desc: "અહીં ગોપાળાનંદ સ્વામી પ્રતિષ્ઠિત હનુમાનજી મહારાજ લોકોના કષ્ટ અને બાધાઓ દૂર કરવા માટે પૂજાય છે. અહીં ૫૪ ફૂટ ઊંચી કાંસ્ય મૂર્તિ 'કિંગ ઓફ સાળંગપુર' આકર્ષક છે. 🐵",
     audioText: "સાળંગપુર કષ્ટભંજન હનુમાનજી મહારાજ કષ્ટ અને ભય હરે છે. અહીં ૫૪ ફૂટ ઊંચી કાંસ્ય મૂર્તિ છે.",
     icon: "🐵",
-    gradient: "from-yellow-600 to-orange-700"
+    gradient: "from-yellow-600 to-teal-800"
   },
   {
     id: "f_bhadkeshwar_sea",
@@ -240,7 +240,7 @@ const FACT_CARDS = [
     desc: "ગીર જંગલની વચ્ચે આવેલા કુંડનું પાણી આજુબાજુ સામાન્ય તાપમાન હોવા છતાં ૨૪ કલાક ઉકળતું રહે છે. તેમાં સ્નાન કરવાથી ચામડીના રોગો મટે છે તે એક કુદરતી રહસ્ય છે. ⛲",
     audioText: "તુલસીશ્યામના કુંડનું પાણી ૨૪ કલાક ગરમ અને ઉકળતું રહે છે જે ચામડીના રોગો મટાડે છે.",
     icon: "⛲",
-    gradient: "from-orange-500 to-red-600"
+    gradient: "from-teal-600 to-emerald-700"
   },
   {
     id: "f_m_kabirvad",
@@ -260,7 +260,7 @@ const FACT_CARDS = [
     desc: "આફ્રિકન મૂળના અને ગુજરાતના રતનપુરમાં સ્થાયી થયેલા સિદ્દી લોકોનું આ નૃત્ય છે. ઢોલના તાલે નાળિયેરને હવામાં ફેંકી માથાથી ફોડે છે! 🥁",
     audioText: "સિદ્દી લોકોનું ધમાલ નૃત્ય આફ્રિકન કળા અને ગુજરાતી સંસ્કૃતિનો અદભુત સંગમ છે.",
     icon: "🥁",
-    gradient: "from-stone-600 to-amber-800"
+    gradient: "from-stone-600 to-yellow-900"
   },
   {
     id: "f_m_stambheshwar",
@@ -270,7 +270,7 @@ const FACT_CARDS = [
     desc: "કાવી કંબોઈના દરિયા કિનારે આવેલું આ મંદિર દિવસમાં બે વાર હાઈ ટાઈડ (ભરતી) વખતે સંપૂર્ણપણે દરિયાના પાણીમાં ડૂબી જાય છે અને ઓટ આવતાં ફરી બહાર દેખાય છે! 🌊",
     audioText: "સ્તંભેશ્વર મહાદેવ ભરતી વખતે દરિયામાં અદ્રશ્ય થઈ જાય છે અને ઓટ વખતે દેખાય છે.",
     icon: "🌊",
-    gradient: "from-cyan-600 to-indigo-700"
+    gradient: "from-cyan-600 to-teal-700"
   },
   {
     id: "f_m_zanzari",
@@ -290,7 +290,7 @@ const FACT_CARDS = [
     desc: "આ વાવ પથ્થરો ગોઠવીને નથી બની, પણ આખો એક જ કાળો પહાડ કોતરીને અંદર ઉતારવામાં આવી છે. વર્ષો પહેલાં આ વાવમાં પાણી લાવવા બે કન્યાઓનું બલિદાન અપાયું હતું તેવી લોકવાયકા છે. 🕳️",
     audioText: "જૂનાગઢની અડી કડી વાવ આખો પર્વત કોતરીને બનેલી છે, જે સ્થાપત્યની દ્રષ્ટિએ અદભુત છે.",
     icon: "🕳️",
-    gradient: "from-orange-600 to-stone-800"
+    gradient: "from-teal-700 to-stone-800"
   },
   {
     id: "f_m_raiyoli_egg",
@@ -300,7 +300,7 @@ const FACT_CARDS = [
     desc: "બાલાસિનોર પાસે રાયોલીમાં કરોડો વર્ષ જૂના ડાયનાસોરના ઈંડા અને અશ્મિઓ મળ્યા છે. ભારતનું આ સૌથી મોટું ડાયનાસોર કબ્રસ્તાન મનાય છે જે વૈજ્ઞાનિકો માટે મોટું રહસ્ય છે. 🦕",
     audioText: "રાયોલીમાં ડાયનાસોરના અસલી ઈંડા અને અશ્મિઓ મળી આવ્યા છે જે ભારતનો મોટો ખજાનો છે.",
     icon: "🦕",
-    gradient: "from-rose-500 to-pink-650"
+    gradient: "from-emerald-500 to-pink-650"
   },
   {
     id: "f_m_haunted",
@@ -320,7 +320,7 @@ const FACT_CARDS = [
     desc: "તંદુરસ્ત વ્યક્તિમાં સવારે ભૂખ્યા પેટે (Fasting) બ્લડ સુગરનું સામાન્ય લેવલ ૭૦-૧૦૦ mg/dL હોવું જોઈએ. જો આ લેવલ ૧૨૬ થી વધારે આવે, તો તે ડાયાબિટીસની નિશાની હોઈ શકે છે. 🩸",
     audioText: "સામાન્ય વ્યક્તિમાં ભૂખ્યા પેટે બ્લડ સુગરનું લેવલ ૭૦ થી ૧૦૦ મિલિગ્રામ હોવું જોઈએ.",
     icon: "🩸",
-    gradient: "from-rose-500 to-red-650"
+    gradient: "from-emerald-500 to-emerald-800"
   },
   {
     id: "f_h_diabetes_post",
@@ -370,7 +370,7 @@ const FACT_CARDS = [
     desc: "એલ.ડી.એલ. (LDL) એ 'ખરાબ કોલેસ્ટ્રોલ' છે જે ધમનીઓમાં જમા થઈ બ્લોકેજ ઊભું કરે છે. શરીરમાં તેનું પ્રમાણ ૧૦૦ mg/dL થી ઓછું હોવું હિતાવહ છે. તળેલું ખાવાથી તે વધે છે. 🍟",
     audioText: "એલડીએલ ખરાબ કોલેસ્ટ્રોલ છે જે ધમનીમાં બ્લોકેજ કરે છે. તેને સો થી ઓછું રાખવું જોઈએ.",
     icon: "🍟",
-    gradient: "from-red-650 to-orange-600"
+    gradient: "from-emerald-800 to-teal-700"
   },
   {
     id: "f_h_vit_a",
@@ -380,7 +380,7 @@ const FACT_CARDS = [
     desc: "વિટામીન A આપણી આંખોની દ્રષ્ટિ સુધારે છે અને રોગપ્રતિકારક શક્તિ વધારે છે. ગાજર, પપૈયુ, કેરી, લીલા પાંદડાવાળા શાકભાજી અને દૂધ વિટામીન A નો સ્ત્રોત છે. 🥕",
     audioText: "વિટામીન એ આંખો માટે વરદાન છે. તે ગાજર અને પપૈયા જેવા પીળા ફળોમાંથી મળે છે.",
     icon: "🥕",
-    gradient: "from-orange-500 to-yellow-600"
+    gradient: "from-teal-600 to-yellow-600"
   },
   {
     id: "f_h_vit_b",
@@ -390,7 +390,7 @@ const FACT_CARDS = [
     desc: "વિટામીન B કોમ્પ્લેક્સ ચેતાતંત્ર (Nerves) ને મજબૂત રાખે છે અને શરીરમાં ઉર્જાનું સ્તર વધારે છે. આખા અનાજ, કઠોળ, ઈંડા, દૂધ અને લીલા શાકભાજી ખાવાથી તે પૂરતી માત્રામાં મળે છે. 🥛",
     audioText: "વિટામીન બી શરીરમાં નસોને તાકાત આપે છે અને અનાજ તથા દૂધમાંથી મળે છે.",
     icon: "🥛",
-    gradient: "from-blue-500 to-indigo-600"
+    gradient: "from-blue-500 to-teal-600"
   },
   {
     id: "f_h_vit_c",
@@ -410,7 +410,7 @@ const FACT_CARDS = [
     desc: "હાડકાં અને દાંતની મજબૂતી માટે વિટામીન D અત્યંત જરૂરી છે. સવારે વહેલા સૂર્યપ્રકાશ (Sunlight) માં ૧૫-૨૦ મિનિટ બેસવાથી આપણું શરીર કુદરતી રીતે વિટામીન D બનાવે છે. ☀️",
     audioText: "સૂર્યપ્રકાશ વિટામીન ડી નો શ્રેષ્ઠ મફત સ્ત્રોત છે, જે હાડકાંને લોખંડ જેવા મજબૂત કરે છે.",
     icon: "☀️",
-    gradient: "from-yellow-500 to-orange-600"
+    gradient: "from-yellow-500 to-teal-700"
   },
   {
     id: "f_h_vit_e",
@@ -420,7 +420,7 @@ const FACT_CARDS = [
     desc: "વાળ અને ત્વચાના સ્વાસ્થ્ય માટે વિટામીન E રામબાણ ઈલાજ છે. તે એન્ટી-ઓક્સિડન્ટ તરીકે કામ કરે છે. બદામ, અખરોટ, સૂર્યમુખીના બીજ અને પાલકમાં વિટામીન E હોય છે. 🥜",
     audioText: "વિટામીન ઈ બદામ અને તેલીબિયાંમાંથી મળે છે જે વાળ અને સ્કીનને સુંદર રાખે છે.",
     icon: "🥜",
-    gradient: "from-amber-600 to-yellow-750"
+    gradient: "from-yellow-700 to-yellow-750"
   },
   {
     id: "f_h_vit_k",
@@ -440,7 +440,7 @@ const FACT_CARDS = [
     desc: "શરીરમાં લાલ રક્તકણો (RBC) ના નિર્માણ માટે B12 જરૂરી છે. તેની ઉણપથી આખો દિવસ થાક અને નસોમાં ઝણઝણાટી થાય છે. ડેરી પ્રોડક્ટ્સ અને ફણગાવેલા કઠોળ તેનું સેવન કરવાથી ફાયદો થાય છે. 🥛",
     audioText: "બી બાર ની ઉણપથી શરીરમાં અશક્તિ અને થાક લાગે છે. દૂધ અને દહીં તેનું સારું માધ્યમ છે.",
     icon: "🥛",
-    gradient: "from-purple-500 to-indigo-650"
+    gradient: "from-purple-500 to-teal-650"
   },
   {
     id: "f_h_cough_ginger",
@@ -450,7 +450,7 @@ const FACT_CARDS = [
     desc: "હળવી શરદી અને ખાંસીમાં આદુનો રસ અને મધ ભેગા કરીને ચાટવાથી ગળાના દુખાવામાં તાત્કાલિક રાહત મળે છે. આદુમાં કુદરતી એન્ટી-બેક્ટેરિયલ ગુણો રહેલા છે. 🫚",
     audioText: "આદુ અને મધનું મિશ્રણ શરદી અને કફ માટે સદીઓ જૂનો રામબાણ આયુર્વેદિક ઇલાજ છે.",
     icon: "🫚",
-    gradient: "from-amber-600 to-orange-700"
+    gradient: "from-yellow-700 to-teal-800"
   },
   {
     id: "f_h_digest_ajwain",
@@ -460,7 +460,7 @@ const FACT_CARDS = [
     desc: "ભારે ભોજન પછી પેટમાં ગેસ કે અપચો થાય ત્યારે અજમો અને ચપટી સંચળ હૂંફાળા પાણી સાથે લેવાથી પેટનો દુખાવો અને એસિડિટી તરત જ મટી જાય છે. 🥣",
     audioText: "અજમો અને સંચળ હૂંફાળા પાણી સાથે લેવાથી ગેસ અને એસિડિટીમાં તુરંત રાહત મળે છે.",
     icon: "🥣",
-    gradient: "from-stone-550 to-orange-600"
+    gradient: "from-stone-550 to-teal-700"
   },
   {
     id: "f_h_dehyd_coconut",
@@ -480,7 +480,7 @@ const FACT_CARDS = [
     desc: "લોહીમાં હિમોગ્લોબિન ઓછું થવાને એનિમિયા કહે છે. પાલક, બીટરૂટ (બીટ), દાડમ અને સફરજન ખાવાથી શરીરમાં આયર્ન વધે છે અને નવું લોહી ઝડપથી બને છે. 🍎",
     audioText: "બીટ અને પાલક ખાવાથી એનિમિયા એટલે કે લોહીની ઉણપ દૂર થાય છે અને લોહી સાફ બને છે.",
     icon: "🍎",
-    gradient: "from-red-650 to-rose-700"
+    gradient: "from-emerald-800 to-emerald-700"
   },
   {
     id: "f_h_uric_water",
@@ -510,7 +510,7 @@ const FACT_CARDS = [
     desc: "તંદુરસ્ત મગજ અને હૃદય માટે રોજ ૭ થી ૮ કલાકની ઊંઘ અનિવાર્ય છે. અપૂરતી ઊંઘથી માનસિક તણાવ, બ્લડ પ્રેશર અને પાચનની સમસ્યાઓ ઊભી થાય છે. 😴",
     audioText: "રોજ સાત થી આઠ કલાકની પૂરતી ઊંઘ મગજને ફ્રેશ રાખે છે અને તણાવ ઘટાડે છે.",
     icon: "😴",
-    gradient: "from-indigo-900 to-slate-900"
+    gradient: "from-teal-900 to-slate-900"
   },
   {
     id: "f_h_yoga_pranayam",
@@ -540,7 +540,7 @@ const FACT_CARDS = [
     desc: "રોજ એક સફરજન ખાવાથી હૃદય સ્વસ્થ રહે છે કારણ કે સફરજનમાં પેક્ટીન નામનું દ્રાવ્ય ફાઈબર હોય છે જે કોલેસ્ટ્રોલનું શોષણ ઘટાડે છે અને હૃદયરોગથી રક્ષણ આપે છે. 🍎",
     audioText: "સફરજનમાં રહેલું ફાઇબર લોહીમાં કોલેસ્ટ્રોલ ઘટાડે છે અને હૃદયને તંદુરસ્ત રાખે છે.",
     icon: "🍎",
-    gradient: "from-red-500 to-rose-650"
+    gradient: "from-emerald-600 to-rose-650"
   },
   {
     id: "f_h_eyes_screen",
@@ -550,7 +550,7 @@ const FACT_CARDS = [
     desc: "કમ્પ્યુટર/મોબાઈલ સ્ક્રીન જોતી વખતે આંખો પર તાણ બચાવવા દર ૨૦ મિનિટે સ્ક્રીન પરથી નજર હટાવી ૨૦ ફૂટ દૂર રહેલી વસ્તુ પર ૨૦ સેકન્ડ માટે ધ્યાન કેન્દ્રિત કરો. 👁️",
     audioText: "આંખોના રક્ષણ માટે દર ૨૦ મિનિટે સ્ક્રીન પરથી ૨૦ સેકન્ડ માટે નજર હટાવવાનો નિયમ પાળો.",
     icon: "👁️",
-    gradient: "from-blue-500 to-indigo-600"
+    gradient: "from-blue-500 to-teal-600"
   },
   {
     id: "f_h_teeth_twice",
@@ -570,7 +570,7 @@ const FACT_CARDS = [
     desc: "કચ્છના લખપત તાલુકામાં આવેલું માં આશાપુરાનું મુખ્ય ધામ છે, જે જાડેજા રાજપૂતો અને લાખો શ્રદ્ધાળુઓની કુળદેવી છે. અહીં નવરાત્રિમાં દેશભરમાંથી પદયાત્રિકો આવે છે. 🪔",
     audioText: "માં આશાપુરાનું મુખ્ય ધામ કચ્છના માતાના મઢમાં આવેલું છે, જે જાડેજા શાસકોના કુળદેવી છે.",
     icon: "🪔",
-    gradient: "from-red-600 to-orange-700"
+    gradient: "from-emerald-700 to-teal-800"
   },
   {
     id: "f_k_umiya",
@@ -580,7 +580,7 @@ const FACT_CARDS = [
     desc: "કદવા પાટીદાર સમાજના કુળદેવી જગતજનની માં ઉમિયાનું ભવ્ય લક્ષચંડી મહાયજ્ઞ ધામ ઊંઝામાં આવેલું છે, જે સમગ્ર ઉત્તર ગુજરાતની શ્રદ્ધાનું પ્રમુખ કેન્દ્ર છે. 🌸",
     audioText: "ઉમિયા માતાજી કદવા પાટીદાર સમાજના કુળદેવી છે અને ઊંઝામાં તેમનું મુખ્ય ધામ છે.",
     icon: "🌸",
-    gradient: "from-orange-500 to-yellow-600"
+    gradient: "from-teal-600 to-yellow-600"
   },
   {
     id: "f_k_khodiyar_dam",
@@ -600,7 +600,7 @@ const FACT_CARDS = [
     desc: "સમુદ્ર કાંઠે કોયલા ડુંગર પર માં હરસિદ્ધિનું ઐતિહાસિક મંદિર છે. લોકવાયકા મુજબ ઉજ્જૈનના રાજા વિક્રમાદિત્ય માતાજીને પ્રસન્ન કરી પોતાના રાજ્યમાં લાવ્યા હતા. 🛕",
     audioText: "કોયલા ડુંગર પર માં હરસિદ્ધિ બિરાજે છે, જ્યાં રાજા વિક્રમાદિત્ય તપ કરવા આવતા હતા.",
     icon: "🛕",
-    gradient: "from-red-650 to-rose-750"
+    gradient: "from-emerald-800 to-rose-750"
   },
   {
     id: "f_k_chamunda_chotila",
@@ -610,7 +610,7 @@ const FACT_CARDS = [
     desc: "આદિશક્તિ ચામુંડા દેવી ચંડ અને મુંડ નામના રાક્ષસોનો વધ કરનારી શક્તિ છે. ચોટીલા પર્વતના શિખર પર ભક્તો પૂરા ભાવથી દર્શને જઈ ધન્યતા અનુભવે છે. ⛰️",
     audioText: "માં ચામુંડા ચંડ અને મુંડ નામના રાક્ષસોનો નાશ કરનારી પરમ સનાતન શક્તિ છે.",
     icon: "⛰️",
-    gradient: "from-red-650 to-amber-700"
+    gradient: "from-emerald-800 to-yellow-800"
   },
   {
     id: "f_k_mogal",
@@ -620,7 +620,7 @@ const FACT_CARDS = [
     desc: "ભાવનગરના ભગુડા ગામે આઈ શ્રી મોગલ માઁનું ભવ્ય સ્થાન આવેલું છે. માતાજી માત્ર ભક્તોના મનની સાચી આસ્થા જોઈ ધારેલા કામો અને મનોકામનાઓ તત્કાલ પૂર્ણ કરે છે. 📿",
     audioText: "આઈ શ્રી મોગલ માઁ નું ભવ્ય મંદિર ભાવનગરના ભગુડા ખાતે શ્રદ્ધાનું મોટું સ્થાન છે.",
     icon: "📿",
-    gradient: "from-orange-600 to-red-700"
+    gradient: "from-teal-700 to-emerald-800"
   },
   {
     id: "f_k_randal",
@@ -630,7 +630,7 @@ const FACT_CARDS = [
     desc: "સૂર્યપત્ની માં રાંદલ (સંજ્ઞા દેવી) નું દડવા હરજી ખાતે આવેલું અતિ પ્રસિદ્ધ અને જાગૃત સ્થાન છે. અહીં લોટો તેડાવવાની અને ઘોડા ખૂંદવવાની પરંપરા છે. 🐴",
     audioText: "સૂર્યપત્ની માં રાંદલનું દડવા ખાતે અતિ પવિત્ર ધામ છે, જ્યાં લોટો તેડાવવાની બાધા રખાય છે.",
     icon: "🐴",
-    gradient: "from-yellow-500 to-orange-600"
+    gradient: "from-yellow-500 to-teal-700"
   },
   {
     id: "f_k_geetamandir",
@@ -640,7 +640,7 @@ const FACT_CARDS = [
     desc: "સોમનાથ ત્રિવેણી સંગમ ઘાટ નજીક બનેલા ગીતા મંદિરમાં આરસપહાણના સ્તંભો પર શ્રીમદ ભગવદ ગીતાના તમામ ૧૮ અધ્યાયના ૭૦૦ શ્લોક કોતરેલા છે. 📖",
     audioText: "ગીતા મંદિરમાં આરસના પિલર પર શ્રીમદ ભગવદ ગીતાના સાતસો પવિત્ર શ્લોકો અંકિત છે.",
     icon: "📖",
-    gradient: "from-amber-500 to-yellow-600"
+    gradient: "from-yellow-600 to-yellow-600"
   },
   {
     id: "f_k_shardapeeth",
@@ -650,7 +650,7 @@ const FACT_CARDS = [
     desc: "આદિ શંકરાચાર્ય દ્વારા સ્થાપિત ભારતના ચાર મુખ્ય પીઠો પૈકીની આ પશ્ચિમ ધામની પીઠ છે. તે સંસ્કૃત સાહિત્ય, શાસ્ત્રોના પ્રચાર અને જ્ઞાનનું સદીઓ જૂનું કેન્દ્ર છે. 📚",
     audioText: "આદિ શંકરાચાર્ય સ્થાપિત શારદા પીઠ પશ્ચિમ ભારતની એકમાત્ર જ્ઞાન પીઠ છે જે દ્વારકામાં છે.",
     icon: "📚",
-    gradient: "from-indigo-600 to-blue-700"
+    gradient: "from-teal-600 to-blue-700"
   },
   {
     id: "f_k_meldi",
@@ -680,7 +680,7 @@ const FACT_CARDS = [
     desc: "બ્રહ્માજીના શક્તિ સમાન બ્રાહ્મણી માતાજીનું અતિ પવિત્ર ધામ છે જે સુરત નજીક તાપી નદીના કિનારે આવેલું છે, જે ભક્તોને પરમ વિદ્યા અને શાંતિ અર્પે છે. 🦢",
     audioText: "સુરતમાં તાપી નદી કાંઠે બ્રાહ્મણી માતાજીનું પવિત્ર હંસવાહિની ધામ આવેલું છે.",
     icon: "🦢",
-    gradient: "from-orange-500 to-red-600"
+    gradient: "from-teal-600 to-emerald-700"
   },
   {
     id: "f_k_gelta",
@@ -690,7 +690,7 @@ const FACT_CARDS = [
     desc: "ખારાઘોડાના રણ નજીક આવેલા ઝીંઝુવાડા કિલ્લા પાસે આઈ શ્રી ગેલ માતાજીનું પવિત્ર ધામ છે. લોકવાયકા મુજબ તેઓ ભક્તોની વ્હારે આવી રણના કષ્ટો હરે છે. 🪔",
     audioText: "ઝીંઝુવાડા કિલ્લા પાસે માં ગેલનું ઐતિહાસિક જાગૃત સ્થાન શ્રદ્ધાળુઓનું આસ્થા કેન્દ્ર છે.",
     icon: "🪔",
-    gradient: "from-amber-600 to-orange-700"
+    gradient: "from-yellow-700 to-teal-800"
   },
   {
     id: "f_k_randal_dadva",
@@ -700,7 +700,7 @@ const FACT_CARDS = [
     desc: "રાંદલ માતાજી એ સૂર્યદેવના તેજ અને સંજ્ઞા શક્તિનું પ્રતિક છે. દડવા ધામે શ્રદ્ધાળુઓ સંતાન પ્રાપ્તિ અને પરિવારના કલ્યાણ માટે માનતા માને છે. ☀️",
     audioText: "માં રાંદલ સૂર્યદેવના પત્ની છે અને દડવા ધામ તેમની સાચી આસ્થાનું પ્રતીક છે.",
     icon: "☀️",
-    gradient: "from-yellow-500 to-orange-650"
+    gradient: "from-yellow-500 to-teal-800"
   },
   {
     id: "f_k_khodiyar_matel",
@@ -720,7 +720,7 @@ const FACT_CARDS = [
     desc: "રસોઈ અને અન્નની અધિષ્ઠાત્રી દેવી માં અન્નપૂર્ણા છે. ગુજરાતી પરિવારોમાં ઘરની સમૃદ્ધિ અને અન્ન પૂરતું રહે તે માટે રસોડામાં માતાજીની પૂજા કરાય છે. 🌾",
     audioText: "માં અન્નપૂર્ણા ધાન્ય અને રસોઈના દેવી છે, જેમના સ્મરણથી અન્નનો કદી તૂટો થતો નથી.",
     icon: "🌾",
-    gradient: "from-amber-500 to-yellow-600"
+    gradient: "from-yellow-600 to-yellow-600"
   },
   {
     id: "f_d_ahmedabad",
@@ -730,7 +730,7 @@ const FACT_CARDS = [
     desc: "આ વાવ ૧૪૯૮ માં રાણી રૂડાબાઈએ તેમના પતિ વીરસિંહની યાદમાં બંધાવી હતી. ઇન્ડો-ઇસ્લામિક સ્થાપત્યની આ ૫ માળની વાવ ઉનાળામાં બહાર કરતા ૬ ડિગ્રી ઠંડી રહે છે! 🏛️",
     audioText: "અડાલજની પાંચ માળની વાવ ઇન્ડો ઇસ્લામિક સ્થાપત્ય છે જે રાણી રૂડાબાઈએ બંધાવી હતી.",
     icon: "🏛️",
-    gradient: "from-amber-500 to-stone-600"
+    gradient: "from-yellow-600 to-stone-600"
   },
   {
     id: "f_d_gandhinagar",
@@ -760,7 +760,7 @@ const FACT_CARDS = [
     desc: "પાટણના જગપ્રસિદ્ધ પટોળા ડબલ ઈકત વણાટની કળાથી બંને બાજુ સરખા ભાત સાથે બને છે. તેને બનાવવામાં ૬ મહિના લાગે છે અને તેનો કલર ક્યારેય આછો થતો નથી! 👗",
     audioText: "પાટણના પટોળા બંને બાજુ પહેરી શકાય તેવા મોંઘા રેશમી કાપડની જગપ્રસિદ્ધ કળા છે.",
     icon: "👗",
-    gradient: "from-purple-500 to-rose-600"
+    gradient: "from-purple-500 to-emerald-600"
   },
   {
     id: "f_d_banaskantha",
@@ -790,7 +790,7 @@ const FACT_CARDS = [
     desc: "અરવલ્લી પહાડો વચ્ચે આવેલું કાળિયા ઠાકોરનું મંદિર છે. કાર્તિકી પૂનમે અહીં મોટો મેળો ભરાય છે, જેમાં આદિવાસી સંસ્કૃતિના ભવ્ય દર્શન લોકગીતો સાથે થાય છે. 📿",
     audioText: "અરવલ્લીમાં આવેલું શામળાજી મંદિર કાર્તિકી પૂર્ણિમાના પારંપરિક મેળા માટે જાણીતું છે.",
     icon: "📿",
-    gradient: "from-pink-600 to-rose-700"
+    gradient: "from-pink-600 to-emerald-700"
   },
   {
     id: "f_d_kutch",
@@ -810,7 +810,7 @@ const FACT_CARDS = [
     desc: "ચંદ્રગુપ્ત મૌર્ય કાળનો આ ઐતિહાસિક કિલ્લો ગિરનારની તળેટીમાં આવેલો છે. અહીં અડી-કડી વાવ, નવઘણ કૂવો, બૌદ્ધ ગુફાઓ અને અનાજના તોતિંગ કોઠારો જોવાલાયક છે. 🏰",
     audioText: "જૂનાગઢનો ઉપરકોટ કિલ્લો મૌર્ય સામ્રાજ્યનો અઢી હજાર વર્ષ જૂનો ઐતિહાસિક ગઢ છે.",
     icon: "🏰",
-    gradient: "from-stone-700 to-amber-900"
+    gradient: "from-stone-700 to-yellow-900"
   },
   {
     id: "f_d_girsomnath",
@@ -860,7 +860,7 @@ const FACT_CARDS = [
     desc: "રાજકોટના જ્યુબિલી બાગમાં આવેલું આ મ્યુઝિયમ સૌરાષ્ટ્રના ઇતિહાસ, મૌર્ય કાળના સિક્કાઓ, હડપ્પન સંસ્કૃતિના વાસણો અને રજવાડી પોશાકોનો સંગ્રહ ધરાવે છે. 🏛️",
     audioText: "રાજકોટનું વોટસન મ્યુઝિયમ હડપ્પન કલ્ચર અને સૌરાષ્ટ્રના ઇતિહાસની ઝાંખી કરાવે છે.",
     icon: "🏛️",
-    gradient: "from-amber-600 to-stone-700"
+    gradient: "from-yellow-700 to-stone-700"
   },
   {
     id: "f_d_morbi",
@@ -880,7 +880,7 @@ const FACT_CARDS = [
     desc: "ત્રિનેત્રેશ્વર મહાદેવ મંદિરે યોજાતો આ મેળો તેની રંગબેરંગી ભરતકામ કરેલી છત્રીઓ, લોકગીતો અને આદિવાસી યુવક-યુવતીઓના લગ્ન-પસંદગીના રાસ (હુડો) માટે વિખ્યાત છે. ⛱️",
     audioText: "તરણેતરનો મેળો રંગબેરંગી એમ્બ્રોઇડરી છત્રીઓ અને હુડો રાસ માટે વિશ્વભરમાં ફેમસ છે.",
     icon: "⛱️",
-    gradient: "from-red-500 to-orange-600"
+    gradient: "from-emerald-600 to-teal-700"
   },
   {
     id: "f_d_amreli",
@@ -890,7 +890,7 @@ const FACT_CARDS = [
     desc: "ભારતનું આ પ્રથમ ખાનગી રેલવે-કનેક્ટેડ બંદર છે, જે પ્રાચીન કાળમાં સંત પીપાજીના નામ પરથી સ્થાપિત તીર્થક્ષેત્ર હતું અને આજે દેશનું મોટું કન્ટેનર પોર્ટ છે. 🚢",
     audioText: "પીપાવાવ સંત પીપા ભગતના નામ પરથી બનેલું ગુજરાતનું મોટું ખાનગી પોર્ટ છે.",
     icon: "🚢",
-    gradient: "from-blue-500 to-indigo-655"
+    gradient: "from-blue-500 to-teal-655"
   },
   {
     id: "f_d_bhavnagar",
@@ -910,7 +910,7 @@ const FACT_CARDS = [
     desc: "બોટાદના સાળંગપુર ગામે કષ્ટભંજન હનુમાનજીની બાજુમાં જ સ્વામિનારાયણ મંદિર આવેલું છે. અહીં શ્રદ્ધાળુઓ માટે ભવ્ય ભોજનાલયમાં મફત મહાપ્રસાદી વ્યવસ્થા ચાલુ રહે છે. 🛕",
     audioText: "સાળંગપુરમાં સ્વામિનારાયણ સંપ્રદાયનું મોટું મંદિર અને અતિ આધુનિક ધર્મશાળા આવેલ છે.",
     icon: "🛕",
-    gradient: "from-orange-500 to-amber-600"
+    gradient: "from-teal-600 to-yellow-700"
   },
   {
     id: "f_d_anand",
@@ -930,7 +930,7 @@ const FACT_CARDS = [
     desc: "મહી અને ગળતી નદીના સંગમ પર બનેલું ૧૨મી સદીનું ચાલુક્ય શૈલીનું શિવ મંદિર છે. તેનું શિખર મુગલ શાસકો દ્વારા તોડી નંખાયું હતું, પણ ગર્ભગૃહની શિલ્પકલા અદ્ભુત છે. 🛕",
     audioText: "ગળતેશ્વર ખેડામાં મહી નદી કિનારે આવેલું પ્રાચીન ચાલુક્ય શૈલીનું શિવ ધામ છે.",
     icon: "🛕",
-    gradient: "from-stone-500 to-amber-700"
+    gradient: "from-stone-500 to-yellow-800"
   },
   {
     id: "f_d_vadodara",
@@ -950,7 +950,7 @@ const FACT_CARDS = [
     desc: "ગુજરાતની આ પ્રથમ યુનેસ્કો વર્લ્ડ હેરિટેજ સાઇટ છે. અહીં કાલિકા માતાજીના પર્વત નીચે મહમદ બેગડા દ્વારા વસાવેલ શહેરના કિલ્લાઓ અને ભવ્ય મસ્જિદોના અવશેષો છે. 🏛️",
     audioText: "ચંપાનેર પાવાગઢની તળેટીમાં આવેલી ગુજરાતની પ્રથમ યુનેસ્કો હેરિટેજ સાઇટ છે.",
     icon: "🏛️",
-    gradient: "from-amber-600 to-stone-750"
+    gradient: "from-yellow-700 to-stone-750"
   },
   {
     id: "f_d_dahod",
@@ -960,7 +960,7 @@ const FACT_CARDS = [
     desc: "આ મંદિર પૂર્વીય ગુજરાતનું ખજુરાહો કહેવાય છે! ૧૦મી સદીના આ હેમાડપંતી શૈલીના મૈથુન મૂર્તિઓ ધરાવતા સ્થાપત્યને પુરાતત્વ વિભાગ દ્વારા સંરક્ષિત કરવામાં આવ્યું છે. 🛕",
     audioText: "બાવકા શિવ મંદિર દાહોદમાં આવેલું છે, જેને પૂર્વ ગુજરાતનું ખજુરાહો કહેવામાં આવે છે.",
     icon: "🛕",
-    gradient: "from-amber-700 to-yellow-850"
+    gradient: "from-yellow-800 to-yellow-850"
   },
   {
     id: "f_d_mahisagar",
@@ -980,7 +980,7 @@ const FACT_CARDS = [
     desc: "નર્મદા નદીમાં સાધુ બેટ પર બનેલી સરદાર વલ્લભભાઈ પટેલની ૧૮૨ મીટર ઊંચી પ્રતિમા વિશ્વની સૌથી ઊંચી પ્રતિમા છે! તે ભારતની એકતા અને અખંડિતતા દર્શાવે છે. 🗽",
     audioText: "સ્ટેચ્યુ ઓફ યુનિટી નર્મદામાં સરદાર પટેલની વિશ્વની સૌથી ઉંચી એકસો બ્યાસી મીટરની પ્રતિમા છે.",
     icon: "🗽",
-    gradient: "from-rose-500 to-red-650"
+    gradient: "from-emerald-500 to-emerald-800"
   },
   {
     id: "f_d_bharuch",
@@ -990,7 +990,7 @@ const FACT_CARDS = [
     desc: "નર્મદા નદી પર રેલવે વહન માટે અંગ્રેજો દ્વારા ૧૮૮૧ માં લોખંડથી બનેલો આ બ્રિજ છે. સોનાની જેમ મજબૂત હોવાને કારણે તેને સ્થાનિકો ગોલ્ડન બ્રિજ કહે છે. 🌉",
     audioText: "નર્મદા નદી પર બનેલો ભરૂચનો ગોલ્ડન બ્રિજ લોખંડનું અતિ મજબૂત બ્રિટિશ સ્થાપત્ય છે.",
     icon: "🌉",
-    gradient: "from-stone-500 to-orange-700"
+    gradient: "from-stone-500 to-teal-800"
   },
   {
     id: "f_d_surat",
@@ -1000,7 +1000,7 @@ const FACT_CARDS = [
     desc: "૧૭મી સદીમાં સુરતમાં વેપાર કરવા આવેલા ડચ લોકોની આ કબર છે. તેમના સ્થાપત્ય ભવ્ય મકબરા જેવા કલાત્મક આકારમાં બનેલા છે જે યુરોપિયન શૈલી પ્રદર્શિત કરે છે. 🪦",
     audioText: "સુરતની ડચ કબર યુરોપિયન અને મુઘલ મિશ્ર શૈલીના કલાત્મક સ્થાપત્ય ધરાવે છે.",
     icon: "🪦",
-    gradient: "from-indigo-900 to-slate-800"
+    gradient: "from-teal-900 to-slate-800"
   },
   {
     id: "f_d_tapi",
@@ -1050,7 +1050,7 @@ const FACT_CARDS = [
     desc: "સ્થાનિક રાઠવા આદિવાસીઓ દ્વારા ઘરની દીવાલો પર ઘોડા દોરીને કરાતી આ ધાર્મિક ચિત્રકળા છે. માં આ ચિત્રો દોરાવવાની બાધા આખડી રાખવાની પરંપરા છે. 🎨",
     audioText: "છોટાઉદેપુરની પીઠોરા ચિત્રકળા રાઠવા જ્ઞાતિની પ્રખ્યાત દીવાલ ચિત્રકામની પવિત્ર કળા છે.",
     icon: "🎨",
-    gradient: "from-amber-500 to-red-650"
+    gradient: "from-yellow-600 to-emerald-800"
   }
 ];
 
@@ -1123,7 +1123,7 @@ export default function SwipeCards() {
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     const voices = window.speechSynthesis.getVoices();
-    const guVoice = voices.find(v => v.lang.includes('gu') || v.lang.includes('hi'));
+    const guVoice = voices.find(v => v.lang.toLowerCase().includes('gu') || v.lang.toLowerCase().includes('hi'));
     if (guVoice) {
       utterance.voice = guVoice;
     }
@@ -1285,7 +1285,7 @@ export default function SwipeCards() {
               )}
               {dragOffset.x < -30 && (
                 <div 
-                  className="absolute top-6 right-6 border-4 border-rose-400 bg-rose-500/80 text-rose-100 rounded-2xl px-4 py-2 font-gujarati font-black text-lg rotate-[12deg] z-30 uppercase tracking-widest shadow-lg"
+                  className="absolute top-6 right-6 border-4 border-rose-400 bg-emerald-500/80 text-rose-100 rounded-2xl px-4 py-2 font-gujarati font-black text-lg rotate-[12deg] z-30 uppercase tracking-widest shadow-lg"
                   style={{ opacity: Math.min(1, -dragOffset.x / 100) }}
                 >
                   આગળ વધો ❌
@@ -1308,7 +1308,7 @@ export default function SwipeCards() {
                         const templeId = getTempleIdFromCardId(currentCard.id);
                         navigate(`/devotional?section=temples&templeId=${templeId}`);
                       }}
-                      className="bg-amber-400 hover:bg-amber-300 text-amber-950 px-3.5 py-1 rounded-full text-[10px] font-gujarati font-black flex items-center gap-1 shadow-md hover:scale-105 active:scale-95 transition-all border border-amber-300/40"
+                      className="bg-yellow-400 hover:bg-yellow-300 text-yellow-950 px-3.5 py-1 rounded-full text-[10px] font-gujarati font-black flex items-center gap-1 shadow-md hover:scale-105 active:scale-95 transition-all border border-yellow-300/40"
                     >
                       <span>મંદિર દર્શન</span>
                       <span className="material-symbols-outlined text-[10px]">open_in_new</span>
@@ -1343,7 +1343,7 @@ export default function SwipeCards() {
                   isPlayingAudio ? (
                     <button
                       onClick={(e) => { e.stopPropagation(); stopAudio(); }}
-                      className="h-16 w-16 rounded-full bg-red-500 hover:bg-red-400 text-white flex items-center justify-center shadow-lg active:scale-90 transition-transform border-2 border-white/20"
+                      className="h-16 w-16 rounded-full bg-emerald-600 hover:bg-red-400 text-white flex items-center justify-center shadow-lg active:scale-90 transition-transform border-2 border-white/20"
                       title="ઓડિયો અટકાવો"
                     >
                       <span className="material-symbols-outlined text-3xl">volume_off</span>
@@ -1361,7 +1361,7 @@ export default function SwipeCards() {
 
                 <button
                   onClick={(e) => { e.stopPropagation(); handleLike(currentCard); }}
-                  className="h-14 w-14 rounded-full bg-white text-rose-500 hover:bg-rose-50 flex items-center justify-center active:scale-90 transition-transform shadow-lg"
+                  className="h-14 w-14 rounded-full bg-white text-emerald-500 hover:bg-rose-50 flex items-center justify-center active:scale-90 transition-transform shadow-lg"
                   title="વિશલિસ્ટ કરો"
                 >
                   <span className="material-symbols-outlined text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
@@ -1372,7 +1372,7 @@ export default function SwipeCards() {
           </div>
         ) : (
           <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-850 p-12 rounded-[2.5rem] text-center max-w-sm w-full flex flex-col items-center justify-center gap-6 shadow-sm">
-            <span className="material-symbols-outlined text-6xl text-amber-500 animate-pulse">style</span>
+            <span className="material-symbols-outlined text-6xl text-yellow-600 animate-pulse">style</span>
             <div>
               <h4 className="font-gujarati font-black text-xl text-on-surface">બધા કાર્ડ્સ પૂરા થઈ ગયા! 🎉</h4>
               <p className="font-gujarati text-xs text-stone-400 mt-2 leading-relaxed">
@@ -1381,7 +1381,7 @@ export default function SwipeCards() {
             </div>
             <button
               onClick={handleResetDeck}
-              className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white py-3.5 rounded-2xl font-gujarati font-black text-sm active:scale-95 transition-transform"
+              className="w-full bg-gradient-to-r from-yellow-600 to-teal-600 hover:from-yellow-400 hover:to-teal-400 text-white py-3.5 rounded-2xl font-gujarati font-black text-sm active:scale-95 transition-transform"
             >
               શરૂઆતથી ફરી જુઓ ↺
             </button>
@@ -1392,7 +1392,7 @@ export default function SwipeCards() {
       {/* Wishlist Section */}
       <section className="space-y-4">
         <div className="flex items-center gap-2 px-2">
-          <span className="material-symbols-outlined text-rose-500" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
+          <span className="material-symbols-outlined text-emerald-500" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
           <h4 className="font-gujarati font-black text-2xl text-on-surface">મારી ટ્રાવેલ ડાયરી (Travel Wishlist)</h4>
         </div>
 
@@ -1412,21 +1412,21 @@ export default function SwipeCards() {
                       navigate(`/devotional?section=temples&templeId=${templeId}`);
                     }
                   }}
-                  className={`bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-850 p-5 rounded-[2rem] shadow-sm flex items-center justify-between gap-4 group transition-all ${templeId ? 'cursor-pointer hover:border-amber-500/40 hover:bg-amber-50/10 dark:hover:bg-amber-950/5 hover:scale-[1.01]' : 'hover:border-stone-300 dark:hover:border-stone-700'}`}
+                  className={`bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-850 p-5 rounded-[2rem] shadow-sm flex items-center justify-between gap-4 group transition-all ${templeId ? 'cursor-pointer hover:border-yellow-600/40 hover:bg-yellow-50/10 dark:hover:bg-yellow-950/5 hover:scale-[1.01]' : 'hover:border-stone-300 dark:hover:border-stone-700'}`}
                 >
-                  <div className={`h-12 w-12 rounded-xl flex items-center justify-center shrink-0 text-2xl transition-colors ${templeId ? 'bg-amber-50 dark:bg-amber-950/20 text-amber-600' : 'bg-rose-50 dark:bg-stone-850'}`}>
+                  <div className={`h-12 w-12 rounded-xl flex items-center justify-center shrink-0 text-2xl transition-colors ${templeId ? 'bg-yellow-50 dark:bg-yellow-950/20 text-yellow-700' : 'bg-rose-50 dark:bg-stone-850'}`}>
                     {item.icon}
                   </div>
                   <div className="flex-1 min-w-0">
                     <h5 className="font-gujarati font-black text-base text-stone-850 dark:text-stone-100 truncate flex items-center gap-1.5">
                       <span>{item.name_gu}</span>
-                      {templeId && <span className="material-symbols-outlined text-[10px] text-amber-500">open_in_new</span>}
+                      {templeId && <span className="material-symbols-outlined text-[10px] text-yellow-600">open_in_new</span>}
                     </h5>
                     <p className="font-gujarati text-[10px] text-stone-450 dark:text-stone-400 truncate">{item.location}</p>
                   </div>
                   <button
                     onClick={(e) => { e.stopPropagation(); removeFromWishlist(item.id); }}
-                    className="h-9 w-9 bg-rose-50 hover:bg-rose-100 dark:bg-stone-800 text-rose-600 rounded-lg flex items-center justify-center active:scale-95 transition-all shrink-0 z-10"
+                    className="h-9 w-9 bg-rose-50 hover:bg-rose-100 dark:bg-stone-800 text-emerald-600 rounded-lg flex items-center justify-center active:scale-95 transition-all shrink-0 z-10"
                     title="દૂર કરો"
                   >
                     <span className="material-symbols-outlined text-lg">delete</span>

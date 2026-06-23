@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { downloadFile } from '../utils/downloadHelper';
 
 // ============================================================
 // PREMIUM HELPLINE SERVICE PROVIDERS DATABASE
@@ -125,9 +127,9 @@ const DEFAULT_SOCIETY_DATA = {
     { id: 2, flatId: "B-101", category: "Electrical", desc: "Lobby light fault", status: "Resolved", reportedDate: "15-05-2026" },
   ],
   sinkingFunds: [
-    { id: 1, name: "ટ. ર.", target: 200000, collected: 45000, color: "from-blue-400 to-indigo-500" },
+    { id: 1, name: "ટ. ર.", target: 200000, collected: 45000, color: "from-blue-400 to-teal-500" },
     { id: 2, name: "P. R.", target: 80000, collected: 62000, color: "from-emerald-400 to-teal-500" },
-    { id: 3, name: "ઇ. .", target: 50000, collected: 18000, color: "from-amber-400 to-orange-500" },
+    { id: 3, name: "ઇ. .", target: 50000, collected: 18000, color: "from-yellow-400 to-teal-600" },
   ],
   polls: [
     { id: 1, question: "Parking Time?", options: ["7 AM", "6 AM", "8 AM"], votes: [4, 7, 1], deadline: "30-05-2026", isActive: true },
@@ -166,6 +168,7 @@ const generateUniqueId = (name, year, month) => {
 // MAIN COMPONENT
 // ============================================================
 export default function MariSociety() {
+  const navigate = useNavigate();
   const canvasRef = useRef(null);
 
   // Load persisted data from localStorage
@@ -373,7 +376,7 @@ export default function MariSociety() {
     canvas.width = 600; canvas.height = 400;
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, 600, 400);
-    ctx.fillStyle = '#d97706'; ctx.fillRect(0, 0, 600, 80);
+    ctx.fillStyle = '#1E293B'; ctx.fillRect(0, 0, 600, 80);
     ctx.fillStyle = '#fff'; ctx.font = 'bold 28px sans-serif';
     ctx.fillText('SUNRISE APT. RECEIPT', 20, 50);
     ctx.fillStyle = '#000'; ctx.font = '18px sans-serif';
@@ -383,26 +386,20 @@ export default function MariSociety() {
     ctx.fillText(`Date: ${new Date().toLocaleDateString()}`, 20, 225);
     ctx.strokeStyle = '#e5e7eb'; ctx.lineWidth = 1;
     ctx.strokeRect(10, 95, 580, 285);
-    const link = document.createElement('a');
-    link.download = `receipt_${flatId}.png`;
-    link.href = canvas.toDataURL();
-    link.click();
+    downloadFile(canvas.toDataURL(), `receipt_${flatId}.png`);
   };
 
   const downloadUpiQrCard = () => {
     const canvas = document.createElement('canvas');
     canvas.width = 500; canvas.height = 300;
     const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#fef8f1'; ctx.fillRect(0, 0, 500, 300);
-    ctx.fillStyle = '#d97706'; ctx.font = 'bold 20px sans-serif';
+    ctx.fillStyle = '#F8FAFC'; ctx.fillRect(0, 0, 500, 300);
+    ctx.fillStyle = '#1E293B'; ctx.font = 'bold 20px sans-serif';
     ctx.fillText('UPI QR – ' + society.societyInfo.upiName, 20, 40);
     ctx.fillStyle = '#333'; ctx.font = '16px sans-serif';
     ctx.fillText('UPI ID: ' + society.societyInfo.upiId, 20, 80);
     ctx.fillText('Maintenance: Rs. ' + society.societyInfo.maintenanceAmount, 20, 115);
-    const link = document.createElement('a');
-    link.download = 'society_upi_qr.png';
-    link.href = canvas.toDataURL();
-    link.click();
+    downloadFile(canvas.toDataURL(), 'society_upi_qr.png');
   };
 
   // ---- Emergency Alert ----
@@ -487,10 +484,15 @@ export default function MariSociety() {
   // ============================================================
   if (showOnboarding) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#fef8f1] via-white to-amber-50/30 dark:from-[#0d0805] dark:via-stone-950 dark:to-stone-900 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-gradient-to-br from-[#F8FAFC] via-white to-yellow-50/30 dark:from-[#0d0805] dark:via-stone-950 dark:to-stone-900 flex items-center justify-center p-6">
         <div className="max-w-sm w-full space-y-8">
-          <div className="text-center space-y-2">
-            <div className="h-20 w-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl flex items-center justify-center mx-auto shadow-lg shadow-amber-500/25">
+          <div className="absolute top-6 left-6 z-50">
+          <button onClick={() => navigate('/community')} className="h-9 px-3 bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 rounded-lg flex items-center gap-1 font-gujarati text-[10px] font-bold text-stone-600 dark:text-stone-300 transition shadow-sm">
+            <span className="material-symbols-outlined text-xs">arrow_back</span> પાછા જાઓ
+          </button>
+        </div>
+        <div className="text-center space-y-2">
+            <div className="h-20 w-20 bg-gradient-to-br from-yellow-400 to-teal-600 rounded-3xl flex items-center justify-center mx-auto shadow-lg shadow-yellow-600/25">
               <span className="text-4xl">🏠</span>
             </div>
             <h1 className="font-gujarati font-black text-2xl text-stone-850 dark:text-stone-100">મારી સોસાયટી</h1>
@@ -505,7 +507,7 @@ export default function MariSociety() {
               <label className="font-gujarati font-bold text-xs text-stone-555">મોબાઈલ નંબર *</label>
               <input type="tel" value={onboardPhone} onChange={e => setOnboardPhone(e.target.value)} placeholder="9825XXXXXX" required pattern="[6-9][0-9]{9}" className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-headline text-sm focus:outline-none focus:border-primary text-on-surface" />
             </div>
-            <button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white py-4 rounded-2xl font-gujarati font-black text-sm shadow-lg active:scale-95 transition-transform cursor-pointer">
+            <button type="submit" className="w-full bg-gradient-to-r from-yellow-600 to-teal-600 hover:from-yellow-400 hover:to-teal-400 text-white py-4 rounded-2xl font-gujarati font-black text-sm shadow-lg active:scale-95 transition-transform cursor-pointer">
               શરૂ કરો ➔
             </button>
           </form>
@@ -522,7 +524,7 @@ export default function MariSociety() {
     const societies = selectedCity ? GUJARAT_CITIES_SOCIETIES[selectedCity] || [] : [];
     const filteredSocieties = societies.filter(s => s.toLowerCase().includes(societySearch.toLowerCase()));
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#fef8f1] via-white to-amber-50/30 dark:from-[#0d0805] dark:via-stone-950 dark:to-stone-900 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-gradient-to-br from-[#F8FAFC] via-white to-yellow-50/30 dark:from-[#0d0805] dark:via-stone-950 dark:to-stone-900 flex items-center justify-center p-6">
         <div className="max-w-sm w-full space-y-6">
           <div className="flex items-center gap-3">
             <button onClick={() => { setShowJoinFlow(false); setJoinStep(1); setSelectedCity(""); setSelectedSociety(""); }} className="h-10 w-10 rounded-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 flex items-center justify-center cursor-pointer">
@@ -538,7 +540,7 @@ export default function MariSociety() {
                 <input value={citySearch} onChange={e => setCitySearch(e.target.value)} placeholder="શહેર શોધો..." className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-sm focus:outline-none focus:border-primary text-on-surface" />
                 <div className="space-y-2 max-h-60 overflow-y-auto">
                   {filteredCities.map(city => (
-                    <button key={city} onClick={() => { setSelectedCity(city); setJoinStep(2); setCitySearch(""); }} className="w-full text-left px-4 py-3 bg-stone-50 dark:bg-stone-950 hover:bg-amber-50 dark:hover:bg-amber-950/20 border border-stone-200 dark:border-stone-800 rounded-2xl font-gujarati text-sm transition-all cursor-pointer text-on-surface">
+                    <button key={city} onClick={() => { setSelectedCity(city); setJoinStep(2); setCitySearch(""); }} className="w-full text-left px-4 py-3 bg-stone-50 dark:bg-stone-950 hover:bg-yellow-50 dark:hover:bg-yellow-950/20 border border-stone-200 dark:border-stone-800 rounded-2xl font-gujarati text-sm transition-all cursor-pointer text-on-surface">
                       🏙️ {city}
                     </button>
                   ))}
@@ -551,7 +553,7 @@ export default function MariSociety() {
                 <input value={societySearch} onChange={e => setSocietySearch(e.target.value)} placeholder="સોસાયટી શોધો..." className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-sm focus:outline-none focus:border-primary text-on-surface" />
                 <div className="space-y-2 max-h-60 overflow-y-auto">
                   {filteredSocieties.map(soc => (
-                    <button key={soc} onClick={() => { setSelectedSociety(soc); setJoinStep(3); setSocietySearch(""); }} className="w-full text-left px-4 py-3 bg-stone-50 dark:bg-stone-950 hover:bg-amber-50 dark:hover:bg-amber-950/20 border border-stone-200 dark:border-stone-800 rounded-2xl font-gujarati text-sm transition-all cursor-pointer text-on-surface">
+                    <button key={soc} onClick={() => { setSelectedSociety(soc); setJoinStep(3); setSocietySearch(""); }} className="w-full text-left px-4 py-3 bg-stone-50 dark:bg-stone-950 hover:bg-yellow-50 dark:hover:bg-yellow-950/20 border border-stone-200 dark:border-stone-800 rounded-2xl font-gujarati text-sm transition-all cursor-pointer text-on-surface">
                       🏢 {soc}
                     </button>
                   ))}
@@ -574,7 +576,7 @@ export default function MariSociety() {
                     setJoinStep(1);
                     triggerToast("✅ વિનંતી મોકલાઈ!");
                   }}
-                  className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-2xl font-gujarati font-black text-sm shadow-md active:scale-95 transition-transform cursor-pointer"
+                  className="w-full bg-gradient-to-r from-yellow-600 to-teal-600 text-white py-3 rounded-2xl font-gujarati font-black text-sm shadow-md active:scale-95 transition-transform cursor-pointer"
                 >
                   વિનંતી મોકલો ➔
                 </button>
@@ -591,29 +593,34 @@ export default function MariSociety() {
   // ============================================================
   return (
     <div className="space-y-6 pb-8">
+      <div className="mb-2">
+        <button onClick={() => navigate('/community')} className="h-9 px-3 bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 rounded-lg flex items-center gap-1 font-gujarati text-[10px] font-bold text-stone-600 dark:text-stone-300 transition shadow-sm w-fit">
+          <span className="material-symbols-outlined text-xs">arrow_back</span> પાછા જાઓ
+        </button>
+      </div>
       <canvas ref={canvasRef} className="hidden" />
 
       {/* Header */}
-      <div className="bg-gradient-to-br from-[#1c0a00] to-[#3b1a00] text-white rounded-[2.5rem] p-6 shadow-xl relative overflow-hidden border border-amber-500/20">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-500/15 via-transparent to-transparent pointer-events-none"></div>
+      <div className="bg-gradient-to-br from-[#1c0a00] to-[#3b1a00] text-white rounded-[2.5rem] p-6 shadow-xl relative overflow-hidden border border-yellow-600/20">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-yellow-600/15 via-transparent to-transparent pointer-events-none"></div>
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <span className="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-3 py-0.5 rounded-full text-[10px] font-black uppercase inline-block">
+            <span className="bg-yellow-600/20 text-yellow-300 border border-yellow-600/30 px-3 py-0.5 rounded-full text-[10px] font-black uppercase inline-block">
               {isAdmin ? "🛡️ Admin View" : "👤 Member View"}
             </span>
             <h2 className="font-gujarati font-black text-2xl text-white">{society.societyInfo.name}</h2>
-            <p className="font-gujarati text-xs text-amber-100/70">{society.societyInfo.address} · {society.societyInfo.city}</p>
+            <p className="font-gujarati text-xs text-yellow-100/70">{society.societyInfo.address} · {society.societyInfo.city}</p>
           </div>
           <div className="flex items-center gap-2">
             {!userProfile?.flatId && (
-              <button onClick={() => setShowJoinFlow(true)} className="bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-amber-200 px-3 py-1.5 rounded-xl font-gujarati font-bold text-xs transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer">
+              <button onClick={() => setShowJoinFlow(true)} className="bg-yellow-600/20 hover:bg-yellow-600/30 border border-yellow-600/30 text-yellow-200 px-3 py-1.5 rounded-xl font-gujarati font-bold text-xs transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer">
                 <span className="material-symbols-outlined text-sm">group_add</span>
                 સોસાયટી જોઈન કરો?
               </button>
             )}
             <button
               onClick={() => setIsAdmin(!isAdmin)}
-              className={`px-4 py-2 rounded-xl font-gujarati font-black text-xs transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer ${isAdmin ? 'bg-amber-500 text-white shadow-md' : 'bg-white/10 text-white/70 hover:bg-white/20'}`}
+              className={`px-4 py-2 rounded-xl font-gujarati font-black text-xs transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer ${isAdmin ? 'bg-yellow-600 text-white shadow-md' : 'bg-white/10 text-white/70 hover:bg-white/20'}`}
             >
               <span className="material-symbols-outlined text-sm">{isAdmin ? 'admin_panel_settings' : 'person'}</span>
               {isAdmin ? "Admin" : "Member"}
@@ -623,10 +630,10 @@ export default function MariSociety() {
         {userProfile && (
           <div className="relative z-10 mt-4 bg-white/8 border border-white/10 rounded-2xl px-4 py-2 flex items-center justify-between">
             <div>
-              <p className="font-gujarati text-[10px] text-amber-300/70">logged in as</p>
+              <p className="font-gujarati text-[10px] text-yellow-300/70">logged in as</p>
               <p className="font-gujarati font-bold text-xs text-white">{userProfile.name}</p>
             </div>
-            <p className="font-headline text-[10px] text-amber-300/80 tracking-wider">{userProfile.uniqueId}</p>
+            <p className="font-headline text-[10px] text-yellow-300/80 tracking-wider">{userProfile.uniqueId}</p>
           </div>
         )}
       </div>
@@ -653,7 +660,7 @@ export default function MariSociety() {
             onClick={() => setSubTab(t.id)}
             className={`flex-shrink-0 px-4 py-2.5 rounded-full font-gujarati font-bold text-xs border transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer ${
               subTab === t.id
-                ? 'bg-amber-600 text-white border-amber-600 shadow-sm'
+                ? 'bg-yellow-700 text-white border-yellow-700 shadow-sm'
                 : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-850 text-stone-600 dark:text-stone-400'
             }`}
           >
@@ -676,15 +683,15 @@ export default function MariSociety() {
                 <h3 className="font-headline font-black text-3xl text-emerald-650 mt-1">₹ {totalAmountCollected.toLocaleString('en-IN')}</h3>
               </div>
             </div>
-            <div className="bg-rose-500/10 border border-rose-500/25 p-6 rounded-[2rem] shadow-sm flex flex-col justify-between gap-4">
-              <span className="material-symbols-outlined text-rose-600 text-4xl">hourglass_empty</span>
+            <div className="bg-emerald-500/10 border border-emerald-500/25 p-6 rounded-[2rem] shadow-sm flex flex-col justify-between gap-4">
+              <span className="material-symbols-outlined text-emerald-600 text-4xl">hourglass_empty</span>
               <div>
                 <p className="font-gujarati text-[10px] text-stone-400 uppercase font-black tracking-widest">કુલ બાકી</p>
-                <h3 className="font-headline font-black text-3xl text-rose-650 mt-1">₹ {totalArrears.toLocaleString('en-IN')}</h3>
+                <h3 className="font-headline font-black text-3xl text-[#E11D48] mt-1">₹ {totalArrears.toLocaleString('en-IN')}</h3>
               </div>
             </div>
-            <div className="bg-amber-500/10 border border-amber-500/25 p-6 rounded-[2rem] shadow-sm flex flex-col justify-between gap-4">
-              <span className="material-symbols-outlined text-amber-600 text-4xl">apartment</span>
+            <div className="bg-yellow-600/10 border border-yellow-600/25 p-6 rounded-[2rem] shadow-sm flex flex-col justify-between gap-4">
+              <span className="material-symbols-outlined text-yellow-700 text-4xl">apartment</span>
               <div>
                 <p className="font-gujarati text-[10px] text-stone-400 uppercase font-black tracking-widest">ભરેલા ફ્લેટ્સ / કુલ</p>
                 <h3 className="font-headline font-black text-3xl text-amber-650 mt-1">{paidCount} / {society.flats.length}</h3>
@@ -697,7 +704,7 @@ export default function MariSociety() {
             <h3 className="font-gujarati font-black text-base text-stone-850 dark:text-stone-100">🚨 ઇમરજન્સી એલર્ટ</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {(society.societyInfo.emergencyNumbers || []).map(e => (
-                <button key={e.label} onClick={() => triggerEmergencyAlert(`🚨 Emergency: ${e.label} – ${e.number}! Please respond immediately.`)} className="bg-rose-50 dark:bg-rose-950/20 border border-rose-200/50 text-rose-700 rounded-2xl p-3 text-center space-y-1 hover:bg-rose-100 dark:hover:bg-rose-950/40 transition-all active:scale-95 cursor-pointer">
+                <button key={e.label} onClick={() => triggerEmergencyAlert(`🚨 Emergency: ${e.label} – ${e.number}! Please respond immediately.`)} className="bg-rose-50 dark:bg-rose-950/20 border border-rose-200/50 text-emerald-700 rounded-2xl p-3 text-center space-y-1 hover:bg-rose-100 dark:hover:bg-rose-950/40 transition-all active:scale-95 cursor-pointer">
                   <span className="material-symbols-outlined text-xl">{e.icon}</span>
                   <p className="font-gujarati text-[10px] font-black">{e.label}</p>
                   <p className="font-headline font-black text-sm">{e.number}</p>
@@ -729,22 +736,22 @@ export default function MariSociety() {
 
           {/* Bank & UPI */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-[#2b1400] text-amber-100 rounded-[2.5rem] p-6 shadow-xl relative overflow-hidden border border-amber-500/20 flex flex-col justify-between min-h-[220px]">
+            <div className="bg-[#2b1400] text-yellow-100 rounded-[2.5rem] p-6 shadow-xl relative overflow-hidden border border-yellow-600/20 flex flex-col justify-between min-h-[220px]">
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-stone-800/10 via-[#2b1400]/50 to-stone-950 pointer-events-none"></div>
               <div className="relative z-10 space-y-4 flex-1 flex flex-col justify-between">
                 <div>
-                  <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3 py-0.5 rounded-full text-[10px] font-black uppercase inline-block">Bank A/C</span>
+                  <span className="bg-yellow-600/20 text-yellow-300 border border-yellow-600/40 px-3 py-0.5 rounded-full text-[10px] font-black uppercase inline-block">Bank A/C</span>
                   <h4 className="font-gujarati font-black text-xl text-white mt-1">{society.societyInfo.bankName}</h4>
                   <p className="font-headline text-xs opacity-75">A/C: {society.societyInfo.accountNumber} · IFSC: {society.societyInfo.ifscCode}</p>
                 </div>
-                <div className="bg-amber-500/10 border border-amber-500/25 px-5 py-3 rounded-2xl">
-                  <p className="font-gujarati text-[9px] text-amber-300">માસિક મેઈન્ટેનન્સ</p>
+                <div className="bg-yellow-600/10 border border-yellow-600/25 px-5 py-3 rounded-2xl">
+                  <p className="font-gujarati text-[9px] text-yellow-300">માસિક મેઈન્ટેનન્સ</p>
                   <h4 className="font-headline font-black text-2xl text-white mt-0.5">₹ {society.societyInfo.maintenanceAmount}</h4>
-                  <p className="font-gujarati text-[9px] text-amber-300/70">{society.societyInfo.dueDate} તારીખ સુધીમાં</p>
+                  <p className="font-gujarati text-[9px] text-yellow-300/70">{society.societyInfo.dueDate} તારીખ સુધીમાં</p>
                 </div>
               </div>
               {isAdmin && (
-                <button onClick={() => { setUpiIdInput(society.societyInfo.upiId); setUpiNameInput(society.societyInfo.upiName); setShowEditUpiModal(true); }} className="relative z-10 mt-4 bg-amber-600 hover:bg-amber-500 text-white px-4 py-2 rounded-xl font-gujarati font-bold text-[11px] active:scale-95 transition-all shadow-md self-start cursor-pointer">
+                <button onClick={() => { setUpiIdInput(society.societyInfo.upiId); setUpiNameInput(society.societyInfo.upiName); setShowEditUpiModal(true); }} className="relative z-10 mt-4 bg-yellow-700 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl font-gujarati font-bold text-[11px] active:scale-95 transition-all shadow-md self-start cursor-pointer">
                   ⚙️ UPI સેટ કરો
                 </button>
               )}
@@ -757,7 +764,7 @@ export default function MariSociety() {
                 </div>
                 <span className="material-symbols-outlined text-primary text-2xl">qr_code_2</span>
               </div>
-              <div className="bg-[#fef8f1] dark:bg-stone-950 p-4 rounded-2xl border border-primary/5 flex items-center gap-4">
+              <div className="bg-[#F8FAFC] dark:bg-stone-950 p-4 rounded-2xl border border-primary/5 flex items-center gap-4">
                 <div className="h-14 w-14 bg-white rounded-lg p-1 border border-stone-200 shrink-0 flex items-center justify-center relative overflow-hidden">
                   <div className="grid grid-cols-2 gap-0.5 w-full h-full opacity-80">
                     <div className="border-2 border-black rounded-xs"></div>
@@ -765,7 +772,7 @@ export default function MariSociety() {
                     <div className="border-2 border-black rounded-xs"></div>
                     <div className="bg-black rounded-xs"></div>
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/20 to-transparent pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-gradient-to-tr from-yellow-600/20 to-transparent pointer-events-none"></div>
                 </div>
                 <div className="space-y-0.5 overflow-hidden">
                   <h5 className="font-gujarati font-bold text-xs text-stone-705 dark:text-stone-300 truncate">{society.societyInfo.upiName}</h5>
@@ -794,7 +801,7 @@ export default function MariSociety() {
             if (!myFlat) return null;
             const pendingPay = (society.pendingPayments || []).find(p => p.flatId === myFlat.id && p.status === "Pending");
             return (
-              <div className="bg-[#fef8f1] dark:bg-stone-905 border border-primary/20 p-6 rounded-[2.5rem] shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="bg-[#F8FAFC] dark:bg-stone-905 border border-primary/20 p-6 rounded-[2.5rem] shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="space-y-1">
                   <span className="bg-primary/10 text-primary px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase">તમારો ફ્લેટ</span>
                   <h4 className="font-gujarati font-black text-lg text-stone-850 dark:text-stone-100">
@@ -802,14 +809,14 @@ export default function MariSociety() {
                   </h4>
                   <p className="font-gujarati text-xs text-stone-550">
                     બાકી: ₹{myFlat.arrears.toLocaleString('en-IN')} ·{' '}
-                    <span className={`font-black ${myFlat.status === 'Paid' ? 'text-emerald-600' : myFlat.status === 'Advance' ? 'text-blue-600' : myFlat.status === 'Partial' ? 'text-amber-600' : 'text-rose-600'}`}>
+                    <span className={`font-black ${myFlat.status === 'Paid' ? 'text-emerald-600' : myFlat.status === 'Advance' ? 'text-blue-600' : myFlat.status === 'Partial' ? 'text-yellow-700' : 'text-emerald-600'}`}>
                       {myFlat.status === 'Paid' ? 'ભરેલ ✓' : myFlat.status === 'Advance' ? 'Advance' : myFlat.status === 'Partial' ? 'Partial' : 'બાકી ❌'}
                     </span>
                   </p>
                 </div>
                 <div className="flex gap-2">
                   {pendingPay ? (
-                    <div className="bg-amber-500/10 text-amber-700 px-4 py-3 rounded-2xl border border-amber-350 text-xs font-black font-gujarati flex items-center gap-1.5 animate-pulse">
+                    <div className="bg-yellow-600/10 text-yellow-800 px-4 py-3 rounded-2xl border border-amber-350 text-xs font-black font-gujarati flex items-center gap-1.5 animate-pulse">
                       <span className="material-symbols-outlined text-sm">hourglass_empty</span>
                       ચ. ⏳ UTR: {pendingPay.utrId}
                     </div>
@@ -817,7 +824,7 @@ export default function MariSociety() {
                     (myFlat.status === 'Unpaid' || myFlat.status === 'Partial') && (
                       <button
                         onClick={() => { setReportFlatId(myFlat.id); setReportAmount(String(myFlat.arrears || 2500)); setReportUtr(""); setShowReportPaymentModal(true); }}
-                        className="bg-primary hover:bg-amber-600 text-white px-5 py-3 rounded-2xl font-gujarati font-black text-xs transition-all shadow-md active:scale-95 flex items-center gap-1.5 cursor-pointer"
+                        className="bg-primary hover:bg-yellow-700 text-white px-5 py-3 rounded-2xl font-gujarati font-black text-xs transition-all shadow-md active:scale-95 flex items-center gap-1.5 cursor-pointer"
                       >
                         <span className="material-symbols-outlined text-sm">upload_file</span>
                         પેમેન્ટ રિપોર્ટ મોકલો 📄
@@ -863,12 +870,12 @@ export default function MariSociety() {
                       <td className="p-4 pl-6 font-bold">{flat.id}</td>
                       <td className="p-4">{flat.ownerName}</td>
                       <td className="p-4 text-stone-400">{flat.tenantName ? `👤 ${flat.tenantName}` : "Owner"}</td>
-                      <td className="p-4 text-right font-headline font-bold text-rose-600">₹ {flat.arrears.toLocaleString('en-IN')}</td>
+                      <td className="p-4 text-right font-headline font-bold text-emerald-600">₹ {flat.arrears.toLocaleString('en-IN')}</td>
                       <td className="p-4 text-center">
                         <span className={`px-2.5 py-1 rounded-full text-[10px] font-black border uppercase tracking-wider inline-block ${
                           flat.status === 'Paid' ? 'bg-emerald-50 border-emerald-300 text-emerald-755' :
                           flat.status === 'Advance' ? 'bg-blue-50 border-blue-300 text-blue-755' :
-                          flat.status === 'Partial' ? 'bg-amber-50 border-amber-300 text-amber-755' :
+                          flat.status === 'Partial' ? 'bg-yellow-50 border-yellow-300 text-amber-755' :
                           'bg-rose-50 border-rose-300 text-rose-755'
                         }`}>
                           {flat.status === 'Paid' ? 'ભરેલ ✓' : flat.status === 'Advance' ? 'Advance' : flat.status === 'Partial' ? 'Partial' : 'બાકી ❌'}
@@ -885,7 +892,7 @@ export default function MariSociety() {
                             if (pendingPay) {
                               return (
                                 <div className="flex items-center gap-2">
-                                  <span className="bg-amber-50 dark:bg-amber-950/20 border border-amber-300 text-amber-700 px-2 py-1 rounded-lg text-[10px] font-black uppercase">⏳ Pending</span>
+                                  <span className="bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-300 text-yellow-800 px-2 py-1 rounded-lg text-[10px] font-black uppercase">⏳ Pending</span>
                                   <button onClick={() => { setSelectedPaymentDetail(pendingPay); setShowReceiptViewModal(true); }} className="bg-stone-100 hover:bg-stone-200 dark:bg-stone-850 text-stone-600 dark:text-stone-300 px-2.5 py-1 rounded-lg text-xs font-bold transition-all active:scale-95 flex items-center gap-0.5 cursor-pointer" title="View Slip">
                                     <span className="material-symbols-outlined text-xs">visibility</span>પહોંચ
                                   </button>
@@ -900,11 +907,11 @@ export default function MariSociety() {
                                   </button>
                                 )}
                                 {isAdmin ? (
-                                  <button onClick={() => { setSelectedPayFlat(flat); setPayAmount(society.societyInfo.maintenanceAmount + flat.arrears); setShowPayModal(true); }} className="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1 active:scale-95 cursor-pointer">
+                                  <button onClick={() => { setSelectedPayFlat(flat); setPayAmount(society.societyInfo.maintenanceAmount + flat.arrears); setShowPayModal(true); }} className="bg-yellow-700 hover:bg-yellow-800 text-white px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1 active:scale-95 cursor-pointer">
                                     <span className="material-symbols-outlined text-xs">check_circle</span>ચૂકવો
                                   </button>
                                 ) : (
-                                  <button onClick={() => { setReportFlatId(flat.id); setReportAmount(String(flat.arrears || 2500)); setReportUtr(""); setShowReportPaymentModal(true); }} className="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1 active:scale-95 shadow-sm cursor-pointer">
+                                  <button onClick={() => { setReportFlatId(flat.id); setReportAmount(String(flat.arrears || 2500)); setReportUtr(""); setShowReportPaymentModal(true); }} className="bg-yellow-700 hover:bg-yellow-800 text-white px-3 py-1.5 rounded-xl text-xs font-black transition-all flex items-center gap-1 active:scale-95 shadow-sm cursor-pointer">
                                     <span className="material-symbols-outlined text-xs">upload_file</span>રિપોર્ટ
                                   </button>
                                 )}
@@ -933,7 +940,7 @@ export default function MariSociety() {
               <p className="font-gujarati text-xs text-stone-400 mt-1">સોસાયટીના ખર્ચની વિગતો અને ટ્રેકિંગ.</p>
             </div>
             {isAdmin && (
-              <button onClick={() => setShowAddExpense(true)} className="bg-primary hover:bg-amber-600 text-white px-5 py-3 rounded-2xl font-gujarati font-black text-xs transition-all shadow-md active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer">
+              <button onClick={() => setShowAddExpense(true)} className="bg-primary hover:bg-yellow-700 text-white px-5 py-3 rounded-2xl font-gujarati font-black text-xs transition-all shadow-md active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer">
                 <span className="material-symbols-outlined text-sm">add</span>ખર્ચ ઉમેરો
               </button>
             )}
@@ -947,7 +954,7 @@ export default function MariSociety() {
                   <p className="font-gujarati text-[10px] text-stone-400">{exp.paidTo} · {exp.date} · {exp.payMode}</p>
                 </div>
                 <div className="text-right shrink-0">
-                  <h3 className="font-headline font-black text-xl text-rose-650">₹{exp.amount.toLocaleString('en-IN')}</h3>
+                  <h3 className="font-headline font-black text-xl text-[#E11D48]">₹{exp.amount.toLocaleString('en-IN')}</h3>
                 </div>
               </div>
             ))}
@@ -971,7 +978,7 @@ export default function MariSociety() {
                   </select>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => { if (!newExpDesc || !newExpAmount) return; const ne = { id: Date.now(), desc: newExpDesc, category: newExpCategory, amount: parseFloat(newExpAmount), date: new Date().toLocaleDateString(), paidTo: newExpPaidTo, payMode: newExpPayMode }; setSociety(prev => ({ ...prev, expenses: [ne, ...prev.expenses] })); setShowAddExpense(false); setNewExpDesc(""); setNewExpAmount(""); setNewExpPaidTo(""); triggerToast("✅ "); }} className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-2xl font-gujarati font-black text-sm shadow-md active:scale-95 transition-transform cursor-pointer">Save</button>
+                  <button onClick={() => { if (!newExpDesc || !newExpAmount) return; const ne = { id: Date.now(), desc: newExpDesc, category: newExpCategory, amount: parseFloat(newExpAmount), date: new Date().toLocaleDateString(), paidTo: newExpPaidTo, payMode: newExpPayMode }; setSociety(prev => ({ ...prev, expenses: [ne, ...prev.expenses] })); setShowAddExpense(false); setNewExpDesc(""); setNewExpAmount(""); setNewExpPaidTo(""); triggerToast("✅ "); }} className="flex-1 bg-gradient-to-r from-yellow-600 to-teal-600 text-white py-3 rounded-2xl font-gujarati font-black text-sm shadow-md active:scale-95 transition-transform cursor-pointer">Save</button>
                   <button onClick={() => setShowAddExpense(false)} className="bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300 px-5 py-3 rounded-2xl font-gujarati font-bold text-sm active:scale-95 transition-transform cursor-pointer">Cancel</button>
                 </div>
               </div>
@@ -991,16 +998,16 @@ export default function MariSociety() {
               <p className="font-gujarati text-xs text-stone-400 mt-1">સોસાયટીની અગત્યની જાહેરાતો અને નોટિસ બોર્ડ.</p>
             </div>
             {isAdmin && (
-              <button onClick={() => setShowAddAnn(true)} className="bg-primary hover:bg-amber-600 text-white px-5 py-3 rounded-2xl font-gujarati font-black text-xs transition-all shadow-md active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer">
+              <button onClick={() => setShowAddAnn(true)} className="bg-primary hover:bg-yellow-700 text-white px-5 py-3 rounded-2xl font-gujarati font-black text-xs transition-all shadow-md active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer">
                 <span className="material-symbols-outlined text-sm">add</span>નવી જાહેરાત
               </button>
             )}
           </div>
           <div className="space-y-4">
             {society.announcements.map(ann => (
-              <div key={ann.id} className={`bg-white dark:bg-stone-900 border rounded-[2.5rem] p-6 shadow-sm space-y-3 ${ann.priority === 'high' ? 'border-rose-200 dark:border-rose-900/50' : ann.priority === 'medium' ? 'border-amber-200 dark:border-amber-900/50' : 'border-stone-200 dark:border-stone-800'}`}>
+              <div key={ann.id} className={`bg-white dark:bg-stone-900 border rounded-[2.5rem] p-6 shadow-sm space-y-3 ${ann.priority === 'high' ? 'border-[#E11D48]/30' : ann.priority === 'medium' ? 'border-yellow-200 dark:border-yellow-900/50' : 'border-stone-200 dark:border-stone-800'}`}>
                 <div className="flex items-center justify-between">
-                  <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase ${ann.priority === 'high' ? 'bg-rose-50 text-rose-700 border border-rose-200' : ann.priority === 'medium' ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-stone-50 text-stone-500 border border-stone-200'}`}>
+                  <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase ${ann.priority === 'high' ? 'bg-[#E11D48]/10 text-[#E11D48] border border-[#E11D48]/30' : ann.priority === 'medium' ? 'bg-yellow-50 text-yellow-800 border border-yellow-200' : 'bg-stone-50 text-stone-500 border border-stone-200'}`}>
                     {ann.priority === 'high' ? '🔴 High' : ann.priority === 'medium' ? '🟡 Medium' : '🟢 Low'}
                   </span>
                   <span className="font-gujarati text-[10px] text-stone-400">{ann.date}</span>
@@ -1028,7 +1035,7 @@ export default function MariSociety() {
                   </select>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => { if (!newAnnTitle) return; const na = { id: Date.now(), title: newAnnTitle, body: newAnnBody, priority: newAnnPriority, date: new Date().toLocaleDateString(), author: "Admin" }; setSociety(prev => ({ ...prev, announcements: [na, ...prev.announcements] })); setShowAddAnn(false); setNewAnnTitle(""); setNewAnnBody(""); triggerToast("✅"); }} className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-2xl font-gujarati font-black text-sm shadow-md active:scale-95 transition-transform cursor-pointer">Post</button>
+                  <button onClick={() => { if (!newAnnTitle) return; const na = { id: Date.now(), title: newAnnTitle, body: newAnnBody, priority: newAnnPriority, date: new Date().toLocaleDateString(), author: "Admin" }; setSociety(prev => ({ ...prev, announcements: [na, ...prev.announcements] })); setShowAddAnn(false); setNewAnnTitle(""); setNewAnnBody(""); triggerToast("✅"); }} className="flex-1 bg-gradient-to-r from-yellow-600 to-teal-600 text-white py-3 rounded-2xl font-gujarati font-black text-sm shadow-md active:scale-95 transition-transform cursor-pointer">Post</button>
                   <button onClick={() => setShowAddAnn(false)} className="bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300 px-5 py-3 rounded-2xl font-gujarati font-bold text-sm active:scale-95 transition-transform cursor-pointer">Cancel</button>
                 </div>
               </div>
@@ -1047,7 +1054,7 @@ export default function MariSociety() {
               <h3 className="font-gujarati font-black text-xl text-stone-800 dark:text-stone-100">⚠️ ફરિયાદો</h3>
               <p className="font-gujarati text-xs text-stone-400 mt-1">સભ્યોની ફરિયાદો અને નિરાકરણ સ્થિતિ.</p>
             </div>
-            <button onClick={() => setShowAddComplaint(true)} className="bg-primary hover:bg-amber-600 text-white px-5 py-3 rounded-2xl font-gujarati font-black text-xs transition-all shadow-md active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer">
+            <button onClick={() => setShowAddComplaint(true)} className="bg-primary hover:bg-yellow-700 text-white px-5 py-3 rounded-2xl font-gujarati font-black text-xs transition-all shadow-md active:scale-95 flex items-center gap-1.5 shrink-0 cursor-pointer">
               <span className="material-symbols-outlined text-sm">add</span>નવી ફરિયાદ
             </button>
           </div>
@@ -1063,7 +1070,7 @@ export default function MariSociety() {
                   <p className="font-gujarati text-[10px] text-stone-400">{comp.reportedDate}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-black border uppercase ${comp.status === 'Resolved' ? 'bg-emerald-50 border-emerald-300 text-emerald-700' : 'bg-rose-50 border-rose-300 text-rose-700'}`}>
+                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-black border uppercase ${comp.status === 'Resolved' ? 'bg-emerald-50 border-emerald-300 text-emerald-700' : 'bg-[#E11D48]/10 border-[#E11D48]/30 text-[#E11D48]'}`}>
                     {comp.status}
                   </span>
                   {isAdmin && comp.status !== 'Resolved' && (
@@ -1090,7 +1097,7 @@ export default function MariSociety() {
                   <textarea value={newCompDesc} onChange={e => setNewCompDesc(e.target.value)} placeholder="Description..." rows={3} className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-sm focus:outline-none focus:border-primary text-on-surface resize-none" />
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => { if (!newCompDesc) return; const nc = { id: Date.now(), flatId: newCompFlat, category: newCompCat, desc: newCompDesc, status: "Open", reportedDate: new Date().toLocaleDateString() }; setSociety(prev => ({ ...prev, complaints: [nc, ...prev.complaints] })); setShowAddComplaint(false); setNewCompDesc(""); triggerToast("✅"); }} className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-2xl font-gujarati font-black text-sm shadow-md active:scale-95 transition-transform cursor-pointer">Submit</button>
+                  <button onClick={() => { if (!newCompDesc) return; const nc = { id: Date.now(), flatId: newCompFlat, category: newCompCat, desc: newCompDesc, status: "Open", reportedDate: new Date().toLocaleDateString() }; setSociety(prev => ({ ...prev, complaints: [nc, ...prev.complaints] })); setShowAddComplaint(false); setNewCompDesc(""); triggerToast("✅"); }} className="flex-1 bg-gradient-to-r from-yellow-600 to-teal-600 text-white py-3 rounded-2xl font-gujarati font-black text-sm shadow-md active:scale-95 transition-transform cursor-pointer">Submit</button>
                   <button onClick={() => setShowAddComplaint(false)} className="bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300 px-5 py-3 rounded-2xl font-gujarati font-bold text-sm active:scale-95 transition-transform cursor-pointer">Cancel</button>
                 </div>
               </div>
@@ -1106,16 +1113,16 @@ export default function MariSociety() {
         <div className="space-y-4 animate-fade-in">
           <div className="bg-white dark:bg-stone-900 p-6 rounded-[2.5rem] border border-stone-200 dark:border-stone-800 shadow-sm flex items-center justify-between gap-4">
             <h3 className="font-gujarati font-black text-xl text-stone-800 dark:text-stone-100">🗳️ લોકમત / પોલ્સ</h3>
-            {isAdmin && <button onClick={() => setShowAddPoll(true)} className="bg-primary hover:bg-amber-600 text-white px-5 py-3 rounded-2xl font-gujarati font-black text-xs transition-all shadow-md active:scale-95 flex items-center gap-1.5 cursor-pointer"><span className="material-symbols-outlined text-sm">add</span>નવો પોલ</button>}
+            {isAdmin && <button onClick={() => setShowAddPoll(true)} className="bg-primary hover:bg-yellow-700 text-white px-5 py-3 rounded-2xl font-gujarati font-black text-xs transition-all shadow-md active:scale-95 flex items-center gap-1.5 cursor-pointer"><span className="material-symbols-outlined text-sm">add</span>નવો પોલ</button>}
           </div>
           <div className="space-y-4">
             {society.polls.map(poll => {
               const totalVotes = poll.votes.reduce((a, b) => a + b, 0);
               const hasVoted = votedPolls[poll.id] !== undefined;
               return (
-                <div key={poll.id} className={`bg-white dark:bg-stone-900 border rounded-[2.5rem] p-6 shadow-sm space-y-4 ${poll.isActive ? 'border-amber-200 dark:border-amber-900/50' : 'border-stone-200 dark:border-stone-800'}`}>
+                <div key={poll.id} className={`bg-white dark:bg-stone-900 border rounded-[2.5rem] p-6 shadow-sm space-y-4 ${poll.isActive ? 'border-yellow-200 dark:border-yellow-900/50' : 'border-stone-200 dark:border-stone-800'}`}>
                   <div className="flex items-center justify-between">
-                    <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase ${poll.isActive ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-stone-50 text-stone-400 border border-stone-200'}`}>{poll.isActive ? '🔴 Live' : '✅ Closed'}</span>
+                    <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase ${poll.isActive ? 'bg-yellow-50 text-yellow-800 border border-yellow-200' : 'bg-stone-50 text-stone-400 border border-stone-200'}`}>{poll.isActive ? '🔴 Live' : '✅ Closed'}</span>
                     <span className="font-gujarati text-[10px] text-stone-400">Deadline: {poll.deadline}</span>
                   </div>
                   <h4 className="font-gujarati font-black text-base text-stone-850 dark:text-stone-100">{poll.question}</h4>
@@ -1123,7 +1130,7 @@ export default function MariSociety() {
                     {poll.options.map((opt, oi) => {
                       const pct = totalVotes > 0 ? Math.round((poll.votes[oi] / totalVotes) * 100) : 0;
                       return (
-                        <button key={oi} onClick={() => { if (!poll.isActive || hasVoted) return; setSociety(prev => ({ ...prev, polls: prev.polls.map(p => p.id === poll.id ? { ...p, votes: p.votes.map((v, i) => i === oi ? v + 1 : v) } : p) })); setVotedPolls(prev => ({ ...prev, [poll.id]: oi })); triggerToast("🗳️ Vote recorded!"); }} className={`w-full text-left p-3 rounded-2xl border transition-all relative overflow-hidden ${poll.isActive && !hasVoted ? 'hover:bg-amber-50 dark:hover:bg-amber-950/20 border-stone-200 dark:border-stone-800 cursor-pointer' : 'border-stone-100 dark:border-stone-850 cursor-default'}`}>
+                        <button key={oi} onClick={() => { if (!poll.isActive || hasVoted) return; setSociety(prev => ({ ...prev, polls: prev.polls.map(p => p.id === poll.id ? { ...p, votes: p.votes.map((v, i) => i === oi ? v + 1 : v) } : p) })); setVotedPolls(prev => ({ ...prev, [poll.id]: oi })); triggerToast("🗳️ Vote recorded!"); }} className={`w-full text-left p-3 rounded-2xl border transition-all relative overflow-hidden ${poll.isActive && !hasVoted ? 'hover:bg-yellow-50 dark:hover:bg-yellow-950/20 border-stone-200 dark:border-stone-800 cursor-pointer' : 'border-stone-100 dark:border-stone-850 cursor-default'}`}>
                           <div className="absolute inset-0 bg-primary/8 transition-all" style={{ width: `${pct}%` }} />
                           <div className="relative z-10 flex items-center justify-between">
                             <span className="font-gujarati font-bold text-sm text-stone-800 dark:text-stone-200">{opt}</span>
@@ -1151,7 +1158,7 @@ export default function MariSociety() {
                   <input type="number" value={newPollDays} onChange={e => setNewPollDays(e.target.value)} min={1} max={30} placeholder="દિવસો" className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-headline text-sm focus:outline-none focus:border-primary text-on-surface" />
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => { if (!newPollQ) return; const opts = newPollOptions.split('\n').map(o => o.trim()).filter(Boolean); if (opts.length < 2) return; const deadline = new Date(); deadline.setDate(deadline.getDate() + parseInt(newPollDays)); const np = { id: Date.now(), question: newPollQ, options: opts, votes: opts.map(() => 0), deadline: deadline.toLocaleDateString(), isActive: true }; setSociety(prev => ({ ...prev, polls: [np, ...prev.polls] })); setShowAddPoll(false); setNewPollQ(""); setNewPollOptions("Yes\nNo"); triggerToast("✅"); }} className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-2xl font-gujarati font-black text-sm shadow-md active:scale-95 transition-transform cursor-pointer">બનાવો</button>
+                  <button onClick={() => { if (!newPollQ) return; const opts = newPollOptions.split('\n').map(o => o.trim()).filter(Boolean); if (opts.length < 2) return; const deadline = new Date(); deadline.setDate(deadline.getDate() + parseInt(newPollDays)); const np = { id: Date.now(), question: newPollQ, options: opts, votes: opts.map(() => 0), deadline: deadline.toLocaleDateString(), isActive: true }; setSociety(prev => ({ ...prev, polls: [np, ...prev.polls] })); setShowAddPoll(false); setNewPollQ(""); setNewPollOptions("Yes\nNo"); triggerToast("✅"); }} className="flex-1 bg-gradient-to-r from-yellow-600 to-teal-600 text-white py-3 rounded-2xl font-gujarati font-black text-sm shadow-md active:scale-95 transition-transform cursor-pointer">બનાવો</button>
                   <button onClick={() => setShowAddPoll(false)} className="bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300 px-5 py-3 rounded-2xl font-gujarati font-bold text-sm active:scale-95 transition-transform cursor-pointer">રદ કરો</button>
                 </div>
               </div>
@@ -1182,7 +1189,7 @@ export default function MariSociety() {
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-[#fef8f1] dark:bg-stone-950/40 p-5 rounded-3xl border border-primary/5">
+                <div className="bg-[#F8FAFC] dark:bg-stone-950/40 p-5 rounded-3xl border border-primary/5">
                   <h5 className="font-gujarati font-black text-sm text-primary mb-2">એજન્ડા</h5>
                   <p className="font-gujarati text-xs text-stone-605 dark:text-stone-300 leading-relaxed whitespace-pre-line">{meeting.agenda}</p>
                 </div>
@@ -1209,7 +1216,7 @@ export default function MariSociety() {
             {society.flats.map(flat => (
               <div key={flat.id} className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-6 rounded-[2.5rem] shadow-sm space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="h-10 w-10 bg-amber-500/10 text-primary dark:text-dark-accent rounded-xl flex items-center justify-center font-headline font-black text-base">{flat.id}</span>
+                  <span className="h-10 w-10 bg-yellow-600/10 text-primary dark:text-dark-accent rounded-xl flex items-center justify-center font-headline font-black text-base">{flat.id}</span>
                   <span className="bg-stone-100 dark:bg-stone-950 px-2 py-0.5 rounded-full text-[9px] font-black text-stone-455 border border-black/5 uppercase">{flat.tenantName ? "ભાડૂત" : "માલિક"}</span>
                 </div>
                 <div className="space-y-1">
@@ -1238,22 +1245,22 @@ export default function MariSociety() {
       {subTab === "helpline" && (
         <div className="space-y-6 animate-fade-in">
           {/* Header */}
-          <div className="bg-gradient-to-br from-[#1c0a00] to-[#3b1a00] text-white rounded-[2.5rem] p-6 shadow-xl relative overflow-hidden border border-amber-500/20">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-amber-500/15 via-transparent to-transparent pointer-events-none"></div>
+          <div className="bg-gradient-to-br from-[#1c0a00] to-[#3b1a00] text-white rounded-[2.5rem] p-6 shadow-xl relative overflow-hidden border border-yellow-600/20">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-yellow-600/15 via-transparent to-transparent pointer-events-none"></div>
             <div className="relative z-10 space-y-2">
-              <span className="bg-amber-500/20 text-amber-300 border border-amber-500/30 px-3 py-0.5 rounded-full text-[10px] font-black uppercase inline-block">✅ વેરિફાઇડ પ્રીમિયમ પાર્ટનર્સ</span>
+              <span className="bg-yellow-600/20 text-yellow-300 border border-yellow-600/30 px-3 py-0.5 rounded-full text-[10px] font-black uppercase inline-block">✅ વેરિફાઇડ પ્રીમિયમ પાર્ટનર્સ</span>
               <h3 className="font-gujarati font-black text-xl text-white">🛠️ સોસાયટી હેલ્પલાઇન</h3>
-              <p className="font-gujarati text-xs text-amber-100/70 leading-relaxed">
+              <p className="font-gujarati text-xs text-yellow-100/70 leading-relaxed">
                 નીચેના સેવા આપનારાઓ ₹૫૦/૧૦૦ પ્રીમિયમ સબ્સ્ક્રિપ્શન સાથે વેરિફાઇડ છે. ફોન કરો અને ઉત્તમ સેવા મેળવો!
               </p>
             </div>
           </div>
 
           {/* Monetization Banner */}
-          <div className="bg-amber-500/8 border border-amber-400/30 rounded-3xl p-4 flex items-start gap-3">
-            <span className="material-symbols-outlined text-amber-500 text-2xl shrink-0 mt-0.5">workspace_premium</span>
+          <div className="bg-yellow-600/8 border border-yellow-400/30 rounded-3xl p-4 flex items-start gap-3">
+            <span className="material-symbols-outlined text-yellow-600 text-2xl shrink-0 mt-0.5">workspace_premium</span>
             <p className="font-gujarati text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
-              <strong className="text-amber-600">પ્રીમિયમ લિસ્ટિંગ:</strong>{" "}
+              <strong className="text-yellow-700">પ્રીમિયમ લિસ્ટિંગ:</strong>{" "}
               આ લિસ્ટિંગ ₹૫૦/૧૦૦ પ્રતિ મહિને સબ્સ્ક્રિપ્શન મોડલ પર ચાલે છે. તમારા વ્યવસાયને અહિયાં લિસ્ટ કરવા માટે <strong>એડમિનનો સંપર્ક કરો.</strong>
             </p>
           </div>
@@ -1265,18 +1272,18 @@ export default function MariSociety() {
                 <span className="text-3xl">{cat.icon}</span>
                 <div>
                   <h4 className="font-gujarati font-black text-base text-stone-850 dark:text-stone-100">{cat.category}</h4>
-                  <span className="bg-amber-500/10 text-amber-700 border border-amber-300/50 px-2 py-0.5 rounded-full text-[9px] font-black uppercase">Premium · {cat.providers.length} providers</span>
+                  <span className="bg-yellow-600/10 text-yellow-800 border border-yellow-300/50 px-2 py-0.5 rounded-full text-[9px] font-black uppercase">Premium · {cat.providers.length} providers</span>
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {cat.providers.map((prov, provIdx) => (
-                  <div key={provIdx} className="bg-[#fef8f1] dark:bg-stone-950 border border-primary/10 rounded-3xl p-4 space-y-3 flex flex-col justify-between">
+                  <div key={provIdx} className="bg-[#F8FAFC] dark:bg-stone-950 border border-primary/10 rounded-3xl p-4 space-y-3 flex flex-col justify-between">
                     <div className="space-y-1">
                       <div className="flex items-start justify-between gap-1">
                         <h5 className="font-gujarati font-black text-sm text-stone-850 dark:text-stone-100 leading-tight">{prov.name}</h5>
-                        <div className="flex items-center gap-0.5 bg-amber-500/10 px-2 py-0.5 rounded-full shrink-0">
-                          <span className="text-amber-500 text-xs">★</span>
-                          <span className="font-headline font-black text-[10px] text-amber-700">{prov.rating}</span>
+                        <div className="flex items-center gap-0.5 bg-yellow-600/10 px-2 py-0.5 rounded-full shrink-0">
+                          <span className="text-yellow-600 text-xs">★</span>
+                          <span className="font-headline font-black text-[10px] text-yellow-800">{prov.rating}</span>
                         </div>
                       </div>
                       <p className="font-gujarati text-[10px] text-stone-450">{prov.experience}</p>
@@ -1311,14 +1318,14 @@ export default function MariSociety() {
           <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setRequestsSubTab("joins")}
-              className={`px-5 py-2.5 rounded-full font-gujarati font-bold text-xs border transition-all flex items-center gap-1.5 cursor-pointer ${requestsSubTab === "joins" ? "bg-amber-600 text-white border-amber-600 shadow-sm" : "bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-400"}`}
+              className={`px-5 py-2.5 rounded-full font-gujarati font-bold text-xs border transition-all flex items-center gap-1.5 cursor-pointer ${requestsSubTab === "joins" ? "bg-yellow-700 text-white border-yellow-700 shadow-sm" : "bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-400"}`}
             >
               <span className="material-symbols-outlined text-sm">group_add</span>
               જોઈન વિનંતીઓ ({(society.pendingRequests || []).length})
             </button>
             <button
               onClick={() => setRequestsSubTab("payments")}
-              className={`px-5 py-2.5 rounded-full font-gujarati font-bold text-xs border transition-all flex items-center gap-1.5 cursor-pointer ${requestsSubTab === "payments" ? "bg-amber-600 text-white border-amber-600 shadow-sm" : "bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-400"}`}
+              className={`px-5 py-2.5 rounded-full font-gujarati font-bold text-xs border transition-all flex items-center gap-1.5 cursor-pointer ${requestsSubTab === "payments" ? "bg-yellow-700 text-white border-yellow-700 shadow-sm" : "bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-400"}`}
             >
               <span className="material-symbols-outlined text-sm">receipt_long</span>
               પેમેન્ટ મંજૂરીઓ ({(society.pendingPayments || []).filter(p => p.status === "Pending").length})
@@ -1352,7 +1359,7 @@ export default function MariSociety() {
                               <button onClick={() => handleApproveRequest(req.id)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-black transition-all active:scale-95 flex items-center gap-1 cursor-pointer">
                                 <span className="material-symbols-outlined text-xs">done</span>મંજૂર કરો
                               </button>
-                              <button onClick={() => handleRejectRequest(req.id)} className="bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-rose-600 px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center gap-1 cursor-pointer">
+                              <button onClick={() => handleRejectRequest(req.id)} className="bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-emerald-600 px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center gap-1 cursor-pointer">
                                 <span className="material-symbols-outlined text-xs">close</span>અસ્વીકાર
                               </button>
                             </div>
@@ -1379,7 +1386,7 @@ export default function MariSociety() {
                   <div key={pay.id} className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-[2.5rem] p-6 shadow-sm space-y-4">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="space-y-1">
-                        <span className="bg-amber-500/10 text-amber-700 border border-amber-300/50 px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase inline-block">⏳ ચકાસણી પેન્ડિંગ</span>
+                        <span className="bg-yellow-600/10 text-yellow-800 border border-yellow-300/50 px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase inline-block">⏳ ચકાસણી પેન્ડિંગ</span>
                         <h4 className="font-gujarati font-black text-base text-stone-850 dark:text-stone-100">ફ્લેટ {pay.flatId} — {pay.flatOwner}</h4>
                         <p className="font-gujarati text-xs text-stone-450">
                           UTR: <span className="font-bold font-headline text-stone-700 dark:text-stone-300">{pay.utrId}</span> · મહિનો: <span className="font-bold">{pay.month}</span>
@@ -1397,7 +1404,7 @@ export default function MariSociety() {
                       <button onClick={() => handleApprovePayment(pay.id)} className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-gujarati font-black text-xs transition-all active:scale-95 flex items-center gap-1.5 shadow-sm cursor-pointer">
                         <span className="material-symbols-outlined text-sm">check_circle</span>મંજૂર કરો ✓
                       </button>
-                      <button onClick={() => handleRejectPayment(pay.id)} className="bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/20 text-rose-600 border border-rose-200/50 px-4 py-2 rounded-xl font-gujarati font-bold text-xs transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer">
+                      <button onClick={() => handleRejectPayment(pay.id)} className="bg-[#E11D48]/10 hover:bg-[#E11D48]/20 text-[#E11D48] border border-[#E11D48]/50 px-4 py-2 rounded-xl font-gujarati font-bold text-xs transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer">
                         <span className="material-symbols-outlined text-sm">cancel</span>અસ્વીકાર
                       </button>
                     </div>
@@ -1428,7 +1435,7 @@ export default function MariSociety() {
               <h3 className="font-gujarati font-black text-lg text-stone-850 dark:text-stone-100">🏗️ ફ્લેટ સેટઅપ</h3>
               <p className="font-gujarati text-xs text-stone-450 mt-1">સોસાયટી ફ્લેટ માળખું બનાવવા માટેનું જનરેટર.</p>
             </div>
-            <form onSubmit={handleGenerateFlatStructure} className="space-y-4 bg-[#fef8f1] dark:bg-stone-950 p-6 rounded-3xl border border-primary/10">
+            <form onSubmit={handleGenerateFlatStructure} className="space-y-4 bg-[#F8FAFC] dark:bg-stone-950 p-6 rounded-3xl border border-primary/10">
               <div className="space-y-1">
                 <label className="font-gujarati font-bold text-xs text-stone-555">બ્લોક્સ (કોમાથી અલગ કરો, જેમ કે A, B, C) *</label>
                 <input type="text" value={setupBlocks} onChange={e => setSetupBlocks(e.target.value)} placeholder="A, B, C, D" className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-sm focus:outline-none focus:border-primary text-on-surface" required />
@@ -1443,10 +1450,10 @@ export default function MariSociety() {
                   <input type="number" value={setupFlatsPerFloor} onChange={e => setSetupFlatsPerFloor(e.target.value)} min="1" max="10" className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-gujarati text-sm focus:outline-none focus:border-primary text-on-surface" required />
                 </div>
               </div>
-              <div className="bg-rose-500/5 text-rose-700 dark:text-rose-450 p-3 rounded-2xl border border-rose-500/10 text-[11px] font-gujarati leading-relaxed">
+              <div className="bg-emerald-500/5 text-emerald-700 dark:text-rose-450 p-3 rounded-2xl border border-emerald-500/10 text-[11px] font-gujarati leading-relaxed">
                 ⚠️ ચેતવણી: આ કરવાથી સોસાયટીનો હાલનો બધો સભ્ય ડેટા ડિલીટ થઈ જશે. ફક્ત પ્રારંભિક સેટઅપ વખતે જ ઉપયોગ કરો.
               </div>
-              <button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white py-3 rounded-2xl font-gujarati font-black text-xs shadow-md active:scale-95 transition-transform cursor-pointer">
+              <button type="submit" className="w-full bg-gradient-to-r from-yellow-600 to-teal-600 hover:from-yellow-400 hover:to-teal-400 text-white py-3 rounded-2xl font-gujarati font-black text-xs shadow-md active:scale-95 transition-transform cursor-pointer">
                 ફ્લેટ માળખું બનાવો 🏗️
               </button>
             </form>
@@ -1458,7 +1465,7 @@ export default function MariSociety() {
               <h3 className="font-gujarati font-black text-lg text-stone-850 dark:text-stone-100">📩 સભ્યને આમંત્રિત કરો</h3>
               <p className="font-gujarati text-xs text-stone-450 mt-1">ફોન નંબર અથવા યુનિક આઈડી દ્વારા સભ્ય ઉમેરો.</p>
             </div>
-            <div className="space-y-4 bg-[#fef8f1] dark:bg-stone-950 p-6 rounded-3xl border border-primary/10">
+            <div className="space-y-4 bg-[#F8FAFC] dark:bg-stone-950 p-6 rounded-3xl border border-primary/10">
               <div className="space-y-1">
                 <label className="font-gujarati font-bold text-xs text-stone-555">ફોન નંબર / યુનિક આઈડી</label>
                 <input type="text" value={invitePhone} onChange={e => setInvitePhone(e.target.value)} placeholder="9825XXXXXX or GJ-APP-XX-YYYYMXXXX" className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-4 py-3 font-headline text-sm focus:outline-none focus:border-primary text-on-surface" />
@@ -1476,7 +1483,7 @@ export default function MariSociety() {
                   triggerToast(`✅ આમંત્રણ મોકલાઈ ગયું!`);
                   setInvitePhone(""); setInviteFlatId("");
                 }}
-                className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-2xl font-gujarati font-black text-xs shadow-md active:scale-95 transition-transform cursor-pointer"
+                className="w-full bg-gradient-to-r from-yellow-600 to-teal-600 text-white py-3 rounded-2xl font-gujarati font-black text-xs shadow-md active:scale-95 transition-transform cursor-pointer"
               >
                 આમંત્રણ મોકલો 📩
               </button>
@@ -1504,7 +1511,7 @@ export default function MariSociety() {
                 {["Cash","UPI","NEFT","Cheque"].map(m => <option key={m}>{m}</option>)}
               </select>
               <div className="flex gap-3">
-                <button type="submit" className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-2xl font-gujarati font-black text-sm shadow-md active:scale-95 transition-transform cursor-pointer">રેકોર્ડ કરો ✓</button>
+                <button type="submit" className="flex-1 bg-gradient-to-r from-yellow-600 to-teal-600 text-white py-3 rounded-2xl font-gujarati font-black text-sm shadow-md active:scale-95 transition-transform cursor-pointer">રેકોર્ડ કરો ✓</button>
                 <button type="button" onClick={() => setShowPayModal(false)} className="bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300 px-5 py-3 rounded-2xl font-gujarati font-bold text-sm active:scale-95 transition-transform cursor-pointer">રદ કરો</button>
               </div>
             </form>
@@ -1531,7 +1538,7 @@ export default function MariSociety() {
               </div>
             </div>
             <div className="flex gap-3">
-              <button onClick={() => { setSociety(prev => ({ ...prev, societyInfo: { ...prev.societyInfo, upiId: upiIdInput, upiName: upiNameInput } })); setShowEditUpiModal(false); triggerToast("✅ UPI updated!"); }} className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 rounded-2xl font-gujarati font-black text-sm shadow-md active:scale-95 transition-transform cursor-pointer">સાચવો</button>
+              <button onClick={() => { setSociety(prev => ({ ...prev, societyInfo: { ...prev.societyInfo, upiId: upiIdInput, upiName: upiNameInput } })); setShowEditUpiModal(false); triggerToast("✅ UPI updated!"); }} className="flex-1 bg-gradient-to-r from-yellow-600 to-teal-600 text-white py-3 rounded-2xl font-gujarati font-black text-sm shadow-md active:scale-95 transition-transform cursor-pointer">સાચવો</button>
               <button onClick={() => setShowEditUpiModal(false)} className="bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300 px-5 py-3 rounded-2xl font-gujarati font-bold text-sm active:scale-95 transition-transform cursor-pointer">રદ કરો</button>
             </div>
           </div>
@@ -1569,7 +1576,7 @@ export default function MariSociety() {
               {/* Simulated Screenshot */}
               <div className="space-y-1.5">
                 <label className="font-gujarati font-bold text-xs text-stone-555">પેમેન્ટ સ્ક્રીનશોટ</label>
-                <div className="bg-[#fef8f1] dark:bg-stone-950 border-2 border-dashed border-primary/30 rounded-2xl p-4 space-y-3">
+                <div className="bg-[#F8FAFC] dark:bg-stone-950 border-2 border-dashed border-primary/30 rounded-2xl p-4 space-y-3">
                   <div className="flex items-center gap-3">
                     <div className="h-12 w-12 bg-emerald-500/10 rounded-xl flex items-center justify-center shrink-0">
                       <span className="material-symbols-outlined text-emerald-600 text-2xl">receipt</span>
@@ -1600,7 +1607,7 @@ export default function MariSociety() {
                   setReportUtr("");
                   triggerToast("✅ વિગત મોકલાઈ ગઈ! એડમિન વેરીફાય કરશે.");
                 }}
-                className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white py-3 rounded-2xl font-gujarati font-black text-sm shadow-md active:scale-95 transition-transform cursor-pointer flex items-center justify-center gap-1.5"
+                className="flex-1 bg-gradient-to-r from-yellow-600 to-teal-600 hover:from-yellow-400 hover:to-teal-400 text-white py-3 rounded-2xl font-gujarati font-black text-sm shadow-md active:scale-95 transition-transform cursor-pointer flex items-center justify-center gap-1.5"
               >
                 <span className="material-symbols-outlined text-sm">send</span>એડમિનને મોકલો
               </button>
@@ -1656,7 +1663,7 @@ export default function MariSociety() {
               <button onClick={() => { handleApprovePayment(selectedPaymentDetail.id); setShowReceiptViewModal(false); setSelectedPaymentDetail(null); }} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-gujarati font-black text-sm shadow-md active:scale-95 transition-transform flex items-center justify-center gap-1.5 cursor-pointer">
                 <span className="material-symbols-outlined text-sm">check_circle</span>મંજૂર કરો
               </button>
-              <button onClick={() => { handleRejectPayment(selectedPaymentDetail.id); setShowReceiptViewModal(false); setSelectedPaymentDetail(null); }} className="bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/20 text-rose-600 border border-rose-200/50 px-5 py-3 rounded-2xl font-gujarati font-bold text-sm active:scale-95 transition-transform cursor-pointer">
+              <button onClick={() => { handleRejectPayment(selectedPaymentDetail.id); setShowReceiptViewModal(false); setSelectedPaymentDetail(null); }} className="bg-[#E11D48]/10 hover:bg-[#E11D48]/20 text-[#E11D48] border border-[#E11D48]/50 px-5 py-3 rounded-2xl font-gujarati font-bold text-sm active:scale-95 transition-transform cursor-pointer">
                 અસ્વીકાર
               </button>
             </div>
@@ -1672,11 +1679,11 @@ export default function MariSociety() {
               <div className="relative h-24 w-24 mx-auto">
                 {!isCallConnected && (
                   <>
-                    <div className="absolute inset-0 rounded-full border-2 border-amber-500/30 animate-ping"></div>
-                    <div className="absolute inset-2 rounded-full border-2 border-amber-500/20 animate-ping" style={{animationDelay:'0.4s'}}></div>
+                    <div className="absolute inset-0 rounded-full border-2 border-yellow-600/30 animate-ping"></div>
+                    <div className="absolute inset-2 rounded-full border-2 border-yellow-600/20 animate-ping" style={{animationDelay:'0.4s'}}></div>
                   </>
                 )}
-                <div className="absolute inset-0 h-24 w-24 bg-gradient-to-br from-amber-500/30 to-orange-500/20 border-2 border-amber-500/40 rounded-full flex items-center justify-center">
+                <div className="absolute inset-0 h-24 w-24 bg-gradient-to-br from-yellow-600/30 to-teal-600/20 border-2 border-yellow-600/40 rounded-full flex items-center justify-center">
                   <span className="text-4xl">👷</span>
                 </div>
               </div>
@@ -1703,8 +1710,8 @@ export default function MariSociety() {
               ) : (
                 <>
                   <div className="flex items-center justify-center gap-2">
-                    <div className="h-2 w-2 bg-amber-400 rounded-full animate-pulse"></div>
-                    <span className="font-gujarati text-sm text-amber-400">કોલ થઈ રહ્યો છે...</span>
+                    <div className="h-2 w-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                    <span className="font-gujarati text-sm text-yellow-400">કોલ થઈ રહ્યો છે...</span>
                   </div>
                   <p className="font-gujarati text-xs text-white/40">કનેક્ટ થઈ રહ્યું છે...</p>
                 </>
@@ -1721,7 +1728,7 @@ export default function MariSociety() {
               <div className="flex flex-col items-center gap-1">
                 <button
                   onClick={() => { setActiveCallProvider(null); setIsCallConnected(false); setCallDuration(0); }}
-                  className="h-16 w-16 bg-rose-600 hover:bg-rose-700 rounded-full flex items-center justify-center shadow-lg shadow-rose-600/30 active:scale-95 transition-all cursor-pointer"
+                  className="h-16 w-16 bg-emerald-600 hover:bg-emerald-700 rounded-full flex items-center justify-center shadow-lg shadow-emerald-600/30 active:scale-95 transition-all cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-white text-2xl">call_end</span>
                 </button>
@@ -1741,17 +1748,17 @@ export default function MariSociety() {
       {/* MODAL 6: Emergency Confirm */}
       {showEmergencyConfirm && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-6">
-          <div className="bg-white dark:bg-dark-surface rounded-[2.5rem] border border-red-500/20 p-8 max-w-sm w-full shadow-2xl space-y-6 animate-fade-in text-on-surface text-center">
-            <div className="h-16 w-16 bg-red-500/10 text-rose-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
+          <div className="bg-white dark:bg-dark-surface rounded-[2.5rem] border border-emerald-600/20 p-8 max-w-sm w-full shadow-2xl space-y-6 animate-fade-in text-on-surface text-center">
+            <div className="h-16 w-16 bg-emerald-600/10 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
               <span className="material-symbols-outlined text-4xl font-bold">warning</span>
             </div>
             <div className="space-y-2">
               <h3 className="font-gujarati font-black text-xl text-stone-850 dark:text-stone-100">🚨 ઇમરજન્સી એલર્ટ</h3>
               <p className="font-gujarati text-xs text-stone-500 leading-relaxed">સોસાયટીના તમામ સભ્યોને ઇમરજન્સી મેસેજ મોકલવો છે?</p>
-              <div className="bg-rose-50 dark:bg-rose-950/20 p-3 rounded-2xl border border-red-200/30 text-rose-700 dark:text-rose-450 font-gujarati text-xs font-black">"{pendingEmergencyAlert}"</div>
+              <div className="bg-[#E11D48]/10 p-3 rounded-2xl border border-[#E11D48]/30 text-[#E11D48] font-gujarati text-xs font-black">"{pendingEmergencyAlert}"</div>
             </div>
             <div className="flex gap-2">
-              <button onClick={startCountdown} className="flex-1 bg-gradient-to-r from-red-500 to-rose-650 hover:from-red-400 hover:to-rose-550 text-white py-3 rounded-2xl font-gujarati font-black text-xs shadow-md active:scale-95 transition-transform cursor-pointer">મોકલો ➔</button>
+              <button onClick={startCountdown} className="flex-1 bg-gradient-to-r from-[#E11D48] to-[#E11D48]/80 hover:from-[#E11D48]/90 hover:to-[#E11D48]/70 text-white py-3 rounded-2xl font-gujarati font-black text-xs shadow-md active:scale-95 transition-transform cursor-pointer">મોકલો ➔</button>
               <button onClick={cancelEmergencyConfirm} className="bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 text-stone-605 dark:text-stone-300 px-4 py-3 rounded-2xl font-gujarati font-bold text-xs active:scale-95 transition-transform cursor-pointer">રદ કરો</button>
             </div>
           </div>
@@ -1761,16 +1768,16 @@ export default function MariSociety() {
       {/* MODAL 7: Emergency Countdown */}
       {countdownActive && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-6">
-          <div className="bg-white dark:bg-dark-surface rounded-[2.5rem] border border-red-500/30 p-8 max-w-sm w-full shadow-2xl space-y-6 animate-fade-in text-on-surface text-center">
+          <div className="bg-white dark:bg-dark-surface rounded-[2.5rem] border border-emerald-600/30 p-8 max-w-sm w-full shadow-2xl space-y-6 animate-fade-in text-on-surface text-center">
             <div className="relative h-24 w-24 mx-auto flex items-center justify-center">
               <div className="absolute inset-0 rounded-full border-4 border-rose-100 dark:border-rose-950"></div>
-              <div className="absolute inset-0 rounded-full border-4 border-red-600 animate-spin border-t-transparent"></div>
-              <span className="font-headline font-black text-4xl text-red-650 animate-pulse">{countdownSeconds}</span>
+              <div className="absolute inset-0 rounded-full border-4 border-emerald-700 animate-spin border-t-transparent"></div>
+              <span className="font-headline font-black text-4xl text-emerald-800 animate-pulse">{countdownSeconds}</span>
             </div>
             <div className="space-y-2">
-              <h3 className="font-gujarati font-black text-lg text-rose-800 dark:text-rose-455">🚨 એલર્ટ મોકલાઈ રહ્યું છે...</h3>
+              <h3 className="font-gujarati font-black text-lg text-[#E11D48]">🚨 એલર્ટ મોકલાઈ રહ્યું છે...</h3>
               <p className="font-gujarati text-xs text-stone-500">રદ કરવા માટે સમય મર્યાદામાં નીચે ક્લિક કરો.</p>
-              <div className="bg-rose-50 dark:bg-rose-950/20 p-3 rounded-2xl border border-red-200/30 text-rose-700 dark:text-rose-400 font-gujarati text-xs font-bold">"{pendingEmergencyAlert}"</div>
+              <div className="bg-[#E11D48]/10 p-3 rounded-2xl border border-[#E11D48]/30 text-[#E11D48] font-gujarati text-xs font-bold">"{pendingEmergencyAlert}"</div>
             </div>
             <button onClick={cancelCountdown} className="w-full bg-stone-900 hover:bg-stone-850 dark:bg-white dark:hover:bg-stone-100 text-white dark:text-stone-900 py-3.5 rounded-2xl font-gujarati font-black text-xs shadow-md active:scale-95 transition-transform flex items-center justify-center gap-1.5 cursor-pointer">
               <span className="material-symbols-outlined text-sm font-bold">cancel</span>

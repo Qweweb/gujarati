@@ -1,0 +1,107 @@
+@keyframes aurora-1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(10vw, -10vh) scale(1.1);
+  }
+  50% {
+    transform: translate(-5vw, 15vh) scale(0.9);
+  }
+  75% {
+    transform: translate(-15vw, -5vh) scale(1.05);
+  }
+}
+
+@keyframes aurora-2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(-10vw, 15vh) scale(1.15);
+  }
+  66% {
+    transform: translate(15vw, -10vh) scale(0.85);
+  }
+}
+
+@keyframes aurora-3 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(15vw, 5vh) scale(0.9);
+  }
+  50% {
+    transform: translate(-10vw, 10vh) scale(1.1);
+  }
+  75% {
+    transform: translate(-5vw, -15vh) scale(0.95);
+  }
+}
+
+.aurora-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background-color: transparent;
+  pointer-events: none;
+  z-index: -1; /* Behind content */
+}
+
+/* Base styling for all blobs */
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.7;
+  mix-blend-mode: screen;
+}
+
+/* Adjust blend mode for light themes if necessary */
+.dark .aurora-blob {
+  mix-blend-mode: plus-lighter;
+  opacity: 0.6;
+}
+
+/* 
+  Colors: 
+  Gemini mix: Deep Purple (#6366f1), Soft Pink (#ec4899), Neon Blue (#3b82f6)
+  Brand mix: Teal (#0D9488)
+*/
+
+.aurora-blob-1 {
+  top: -10%;
+  left: -10%;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, #0D9488 0%, transparent 70%); /* Brand Teal */
+  animation: aurora-1 14s ease-in-out infinite alternate;
+}
+
+.aurora-blob-2 {
+  top: 40%;
+  right: -20%;
+  width: 70vw;
+  height: 70vw;
+  background: radial-gradient(circle, #8B5CF6 0%, transparent 70%); /* Deep Purple */
+  animation: aurora-2 18s ease-in-out infinite alternate;
+}
+
+.aurora-blob-3 {
+  bottom: -20%;
+  left: 20%;
+  width: 80vw;
+  height: 80vw;
+  background: radial-gradient(circle, #EC4899 0%, transparent 70%); /* Soft Pink */
+  animation: aurora-3 22s ease-in-out infinite alternate;
+}
+
+.aurora-blob-4 {
+  top: 20%;
+  left: 30%;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(circle, #3B82F6 0%, transparent 70%); /* Neon Blue */
+  animation: aurora-1 16s ease-in-out infinite alternate-reverse;
+}

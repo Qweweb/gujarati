@@ -1,6 +1,7 @@
+import { uploadToCloudinary } from '../utils/cloudinaryHelper';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toPng } from 'html-to-image';
+import { downloadAsPDF } from '../utils/downloadHelper';
 
 // ─── SHOCK MESSAGES PRESETS ───────────────────────────────
 const SHOK_MESSAGES = [
@@ -94,16 +95,16 @@ const CARD_TEMPLATES = [
   {
     id: "saffron_heritage",
     name: "૧. કેસરી હેરીટેજ",
-    accentColor: "#b45309",
-    bgClass: "bg-gradient-to-br from-orange-50 via-[#fdfaf2] to-amber-50",
-    borderStyle: "border-[12px] border-double border-amber-600",
-    textColor: "text-amber-950",
+    accentColor: "#2D3748",
+    bgClass: "bg-gradient-to-br from-teal-50 via-[#fdfaf2] to-yellow-50",
+    borderStyle: "border-[12px] border-double border-yellow-700",
+    textColor: "text-yellow-950",
     ornaments: (
       <>
-        <div className="absolute top-4 left-4 text-amber-600/40 text-4xl select-none">🏵️</div>
-        <div className="absolute top-4 right-4 text-amber-600/40 text-4xl select-none">🏵️</div>
-        <div className="absolute bottom-4 left-4 text-amber-600/40 text-4xl select-none">🏵️</div>
-        <div className="absolute bottom-4 right-4 text-amber-600/40 text-4xl select-none">🏵️</div>
+        <div className="absolute top-4 left-4 text-yellow-700/40 text-4xl select-none">🏵️</div>
+        <div className="absolute top-4 right-4 text-yellow-700/40 text-4xl select-none">🏵️</div>
+        <div className="absolute bottom-4 left-4 text-yellow-700/40 text-4xl select-none">🏵️</div>
+        <div className="absolute bottom-4 right-4 text-yellow-700/40 text-4xl select-none">🏵️</div>
       </>
     )
   },
@@ -127,15 +128,15 @@ const CARD_TEMPLATES = [
     id: "royal_purple",
     name: "૩. શાહી જાંબલી",
     accentColor: "#4338ca",
-    bgClass: "bg-gradient-to-br from-purple-50 via-indigo-50/20 to-purple-100/40",
-    borderStyle: "border-[12px] border-double border-indigo-700/40",
-    textColor: "text-indigo-950",
+    bgClass: "bg-gradient-to-br from-purple-50 via-teal-50/20 to-purple-100/40",
+    borderStyle: "border-[12px] border-double border-teal-700/40",
+    textColor: "text-teal-950",
     ornaments: (
       <>
-        <div className="absolute top-4 left-4 text-indigo-700/35 text-3xl select-none">🪻</div>
-        <div className="absolute top-4 right-4 text-indigo-700/35 text-3xl select-none">🪻</div>
-        <div className="absolute bottom-4 left-4 text-indigo-700/35 text-3xl select-none">🪻</div>
-        <div className="absolute bottom-4 right-4 text-indigo-700/35 text-3xl select-none">🪻</div>
+        <div className="absolute top-4 left-4 text-teal-700/35 text-3xl select-none">🪻</div>
+        <div className="absolute top-4 right-4 text-teal-700/35 text-3xl select-none">🪻</div>
+        <div className="absolute bottom-4 left-4 text-teal-700/35 text-3xl select-none">🪻</div>
+        <div className="absolute bottom-4 right-4 text-teal-700/35 text-3xl select-none">🪻</div>
       </>
     )
   },
@@ -159,7 +160,7 @@ const CARD_TEMPLATES = [
     id: "sky_blue",
     name: "૫. આકાશી વાદળી",
     accentColor: "#1d4ed8",
-    bgClass: "bg-gradient-to-br from-sky-50 via-blue-50/20 to-indigo-50/40",
+    bgClass: "bg-gradient-to-br from-sky-50 via-blue-50/20 to-teal-50/40",
     borderStyle: "border-[12px] border-double border-blue-600/30",
     textColor: "text-blue-950",
     ornaments: (
@@ -176,14 +177,14 @@ const CARD_TEMPLATES = [
     name: "૬. વિન્ટેજ આઇવરી",
     accentColor: "#7c2d12",
     bgClass: "bg-[#fcf7ed]",
-    borderStyle: "border-[10px] border-double border-amber-800/60",
-    textColor: "text-amber-950",
+    borderStyle: "border-[10px] border-double border-yellow-900/60",
+    textColor: "text-yellow-950",
     ornaments: (
       <>
-        <div className="absolute top-3 left-3 text-amber-800/40 text-3xl select-none">⚜️</div>
-        <div className="absolute top-3 right-3 text-amber-800/40 text-3xl select-none">⚜️</div>
-        <div className="absolute bottom-3 left-3 text-amber-800/40 text-3xl select-none">⚜️</div>
-        <div className="absolute bottom-3 right-3 text-amber-800/40 text-3xl select-none">⚜️</div>
+        <div className="absolute top-3 left-3 text-yellow-900/40 text-3xl select-none">⚜️</div>
+        <div className="absolute top-3 right-3 text-yellow-900/40 text-3xl select-none">⚜️</div>
+        <div className="absolute bottom-3 left-3 text-yellow-900/40 text-3xl select-none">⚜️</div>
+        <div className="absolute bottom-3 right-3 text-yellow-900/40 text-3xl select-none">⚜️</div>
       </>
     )
   },
@@ -207,15 +208,15 @@ const CARD_TEMPLATES = [
     id: "divine_glow",
     name: "૮. દિવ્ય પ્રભા",
     accentColor: "#9a3412",
-    bgClass: "bg-gradient-to-br from-yellow-50/70 via-orange-50/20 to-yellow-100/40",
-    borderStyle: "border-[12px] border-double border-orange-700/30",
-    textColor: "text-orange-950",
+    bgClass: "bg-gradient-to-br from-yellow-50/70 via-teal-50/20 to-yellow-100/40",
+    borderStyle: "border-[12px] border-double border-teal-800/30",
+    textColor: "text-teal-950",
     ornaments: (
       <>
-        <div className="absolute top-4 left-4 text-orange-600/30 text-3xl select-none">🕯️</div>
-        <div className="absolute top-4 right-4 text-orange-600/30 text-3xl select-none">🕯️</div>
-        <div className="absolute bottom-4 left-4 text-orange-600/30 text-3xl select-none">🪔</div>
-        <div className="absolute bottom-4 right-4 text-orange-600/30 text-3xl select-none">🪔</div>
+        <div className="absolute top-4 left-4 text-teal-700/30 text-3xl select-none">🕯️</div>
+        <div className="absolute top-4 right-4 text-teal-700/30 text-3xl select-none">🕯️</div>
+        <div className="absolute bottom-4 left-4 text-teal-700/30 text-3xl select-none">🪔</div>
+        <div className="absolute bottom-4 right-4 text-teal-700/30 text-3xl select-none">🪔</div>
       </>
     )
   },
@@ -303,17 +304,8 @@ export default function ShradhanjaliMaker() {
     try {
       // Small timeout to allow styles/images to settle
       await new Promise(resolve => setTimeout(resolve, 300));
-      
-      const dataUri = await toPng(printableRef.current, {
-        pixelRatio: 2.5,
-        cacheBust: true,
-        style: { background: '#ffffff' }
-      });
-
-      const link = document.createElement("a");
-      link.download = `shradhanjali_${name.trim().replace(/\s+/g, '_') || 'card'}.png`;
-      link.href = dataUri;
-      link.click();
+      const filename = `shradhanjali_${name.trim().replace(/\s+/g, '_') || 'card'}.pdf`;
+      await downloadAsPDF(printableRef.current, filename);
     } catch (e) {
       console.error("Error generating canvas:", e);
       alert("કાર્ડ ઇમેજ બનાવવામાં ભૂલ આવી, મહેરબાની કરીને ફરી પ્રયાસ કરો.");
@@ -376,11 +368,11 @@ _(ગુજરાતી શ્રદ્ધાંજલિ કાર્ડ મે
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 print:hidden bg-white/70 dark:bg-stone-900/70 backdrop-blur-xl p-5 sm:p-6 rounded-3xl border border-primary/10 shadow-lg mt-4">
         <div className="flex items-center gap-4">
-          <button onClick={() => navigate('/tools')} className="h-12 w-12 bg-white dark:bg-stone-800 rounded-2xl shadow-sm flex items-center justify-center text-primary dark:text-amber-500 border border-primary/10 hover:bg-primary/5 transition-all active:scale-95">
+          <button onClick={() => navigate('/tools')} className="h-12 w-12 bg-white dark:bg-stone-800 rounded-2xl shadow-sm flex items-center justify-center text-primary dark:text-yellow-600 border border-primary/10 hover:bg-primary/5 transition-all active:scale-95">
             <span className="material-symbols-outlined text-xl">arrow_back</span>
           </button>
           <div>
-            <h2 className="font-gujarati font-black text-2xl sm:text-3xl bg-gradient-to-r from-primary to-amber-600 bg-clip-text text-transparent">શ્રદ્ધાંજલિ કાર્ડ મેકર</h2>
+            <h2 className="font-gujarati font-black text-2xl sm:text-3xl bg-gradient-to-r from-primary to-yellow-700 bg-clip-text text-transparent">શ્રદ્ધાંજલિ કાર્ડ મેકર</h2>
             <p className="font-gujarati text-xs sm:text-sm text-stone-500 dark:text-stone-400 mt-1">શાંતિ અને આદર સાથે બેસણું કે શોક સભા પત્રિકા બનાવો</p>
           </div>
         </div>
@@ -463,7 +455,7 @@ _(ગુજરાતી શ્રદ્ધાંજલિ કાર્ડ મે
               {photoUrl && (
                 <button
                   onClick={() => setPhotoUrl(null)}
-                  className="bg-rose-50 text-rose-600 border border-rose-200 px-4 py-2.5 rounded-xl font-gujarati text-xs font-bold active:scale-95 transition-all"
+                  className="bg-rose-50 text-emerald-600 border border-rose-200 px-4 py-2.5 rounded-xl font-gujarati text-xs font-bold active:scale-95 transition-all"
                 >
                   ફોટો હટાવો
                 </button>
@@ -546,7 +538,7 @@ _(ગુજરાતી શ્રદ્ધાંજલિ કાર્ડ મે
                       key={hdr}
                       onClick={() => setHeaderText(hdr)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-gujarati font-bold border transition-colors
-                        ${headerText === hdr ? 'bg-amber-600 border-amber-600 text-white' : 'bg-stone-50 border-stone-200 text-stone-600 hover:bg-stone-100'}`}
+                        ${headerText === hdr ? 'bg-yellow-700 border-yellow-700 text-white' : 'bg-stone-50 border-stone-200 text-stone-600 hover:bg-stone-100'}`}
                     >
                       {hdr}
                     </button>
@@ -577,14 +569,14 @@ _(ગુજરાતી શ્રદ્ધાંજલિ કાર્ડ મે
               <FormInput label="સ્થળ / સરનામું (Besnu Venue)" value={besnuVenue} onChange={setBesnuVenue} placeholder="દા.ત. સંતોષીબાગ ની વાડી..." />
 
               {/* Maps Link Integration */}
-              <div className="bg-amber-500/5 p-3 rounded-2xl border border-amber-500/10 space-y-1">
+              <div className="bg-yellow-600/5 p-3 rounded-2xl border border-yellow-600/10 space-y-1">
                 <FormInput 
                   label="ગૂગલ મેપ્સ લિંક (Google Maps Link)" 
                   value={mapsLink} 
                   onChange={setMapsLink} 
                   placeholder="મેપ્સ લિંક પેસ્ટ કરો (QR Code જનરેટ થશે)..." 
                 />
-                <p className="font-gujarati text-[10px] text-amber-700/80 leading-snug">
+                <p className="font-gujarati text-[10px] text-yellow-800/80 leading-snug">
                   💡 જો તમે ગૂગલ મેપ્સની લિંક નાખશો, તો કાર્ડ પર ઓટોમેટિક **QR કોડ** પ્રિન્ટ થઈ જશે જેથી લોકો સ્કેન કરીને સીધા લોકેશન પર પહોંચી શકે.
                 </p>
               </div>
@@ -597,7 +589,7 @@ _(ગુજરાતી શ્રદ્ધાંજલિ કાર્ડ મે
                     <button
                       key={msg.id}
                       onClick={() => selectPresetMessage(msg)}
-                      className="w-full text-left p-2.5 text-xs font-gujarati text-stone-700 hover:bg-amber-50 transition-colors block leading-relaxed"
+                      className="w-full text-left p-2.5 text-xs font-gujarati text-stone-700 hover:bg-yellow-50 transition-colors block leading-relaxed"
                     >
                       {msg.title}
                     </button>
@@ -643,7 +635,7 @@ _(ગુજરાતી શ્રદ્ધાંજલિ કાર્ડ મે
             <button
               onClick={handleCopyWhatsAppText}
               type="button"
-              className="w-full bg-white dark:bg-[#251508] hover:bg-amber-500/5 border-2 border-primary/20 text-primary py-4 rounded-[2rem] font-gujarati font-black text-lg active:scale-95 transition-all flex items-center justify-center gap-2.5 shadow-sm"
+              className="w-full bg-white dark:bg-[#251508] hover:bg-yellow-600/5 border-2 border-primary/20 text-primary py-4 rounded-[2rem] font-gujarati font-black text-lg active:scale-95 transition-all flex items-center justify-center gap-2.5 shadow-sm"
             >
               <span className="material-symbols-outlined text-2xl">content_copy</span>
               વોટ્સએપ આમંત્રણ લખાણ કોપી કરો
@@ -666,16 +658,16 @@ _(ગુજરાતી શ્રદ્ધાંજલિ કાર્ડ મે
                   {[
                     { label: "Default", val: null, color: "bg-stone-300" },
                     { label: "Dark Gray", val: "#292524", color: "bg-stone-800" },
-                    { label: "Deep Saffron", val: "#7c2d12", color: "bg-amber-900" },
+                    { label: "Deep Saffron", val: "#7c2d12", color: "bg-yellow-900" },
                     { label: "Navy Blue", val: "#1e3a8a", color: "bg-blue-900" },
-                    { label: "Maroon", val: "#7f1d1d", color: "bg-red-900" },
+                    { label: "Maroon", val: "#7f1d1d", color: "bg-emerald-950" },
                     { label: "Pine Green", val: "#064e3b", color: "bg-emerald-900" }
                   ].map((c) => (
                     <button
                       key={c.label}
                       onClick={() => setTextColorOverride(c.val)}
                       title={c.label}
-                      className={`h-7 w-7 rounded-full border-2 transition-all flex items-center justify-center ${textColorOverride === c.val ? 'border-amber-500 scale-110 shadow-sm' : 'border-transparent'}`}
+                      className={`h-7 w-7 rounded-full border-2 transition-all flex items-center justify-center ${textColorOverride === c.val ? 'border-yellow-600 scale-110 shadow-sm' : 'border-transparent'}`}
                     >
                       <span className={`h-full w-full rounded-full ${c.color}`} />
                     </button>
@@ -724,7 +716,7 @@ _(ગુજરાતી શ્રદ્ધાંજલિ કાર્ડ મે
 
               {/* Top Title Section */}
               <div className="text-center space-y-1 z-10 pt-2 flex-shrink-0">
-                <p className="text-amber-600 dark:text-amber-500 font-gujarati font-bold text-xs tracking-widest uppercase">🕉️ ૐ શાંતિ 🕉️</p>
+                <p className="text-yellow-700 dark:text-yellow-600 font-gujarati font-bold text-xs tracking-widest uppercase">🕉️ ૐ શાંતિ 🕉️</p>
                 <h1
                   className="font-gujarati font-black tracking-wide uppercase mt-0.5"
                   style={{
@@ -746,7 +738,7 @@ _(ગુજરાતી શ્રદ્ધાંજલિ કાર્ડ મે
                   
                   {/* Photo Container */}
                   <div className={`h-32 w-28 rounded-2xl overflow-hidden shadow-md bg-stone-100 flex-shrink-0 flex items-center justify-center relative select-none
-                    ${showGarland && garlandStyle === 'gold_border' ? 'border-[4px] border-amber-400 ring-2 ring-amber-600/30' : 'border-[3px] border-white'}`}
+                    ${showGarland && garlandStyle === 'gold_border' ? 'border-[4px] border-yellow-400 ring-2 ring-yellow-700/30' : 'border-[3px] border-white'}`}
                   >
                     {photoUrl ? (
                       <img
@@ -813,7 +805,7 @@ _(ગુજરાતી શ્રદ્ધાંજલિ કાર્ડ મે
                 {/* Besnu Timing & Venue Details */}
                 <div className="w-full px-4 bg-white/40 dark:bg-stone-900/10 p-3 rounded-2xl border border-white/50 dark:border-white/5 space-y-1.5 shadow-xs">
                   <div className="flex items-center gap-4 text-xs font-gujarati font-bold justify-center">
-                    <span className="bg-amber-600/10 text-amber-800 dark:text-amber-400 px-2 py-0.5 rounded-md font-black">બેસણું સમય</span>
+                    <span className="bg-yellow-700/10 text-yellow-900 dark:text-yellow-400 px-2 py-0.5 rounded-md font-black">બેસણું સમય</span>
                     <span className="opacity-90">{besnuDate}</span>
                   </div>
                   <p className="font-gujarati text-xs text-center opacity-90">{besnuTime}</p>

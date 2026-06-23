@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ScratchCardModal, MOCK_COUPONS } from './ScratchRewards';
+import { ScratchCardModal, fetchMatchingCoupon } from './ScratchRewards';
 import { TRAVEL_DATABASE } from '../utils/travel_database';
 
 // 5 Theme Collections for Master Badges (including the new Hidden Gem Hunter)
@@ -11,7 +11,7 @@ const THEME_COLLECTIONS = [
     desc: "અંબાજી, પાવાગઢ અને બહુચરાજીના પવિત્ર દર્શન કરી ભક્તિ બેજ મેળવો.",
     required: ["s_ambaji", "s_pavagadh", "s_bahucharaji"],
     icon: "🔱",
-    color: "from-red-500 to-pink-650"
+    color: "from-emerald-600 to-pink-650"
   },
   {
     id: "t_gandhi",
@@ -47,7 +47,7 @@ const THEME_COLLECTIONS = [
     desc: "કાળો ડુંગર, રાયોલી ડાયનાસોર પાર્ક અને ગિરા ધોધના પ્રખ્યાત ઓફબીટ રત્નો મેળવો.",
     required: ["s_kalo_dungar", "s_raiyoli", "s_gira_waterfall"],
     icon: "🔍",
-    color: "from-purple-500 to-indigo-650"
+    color: "from-purple-500 to-teal-650"
   }
 ];
 
@@ -239,8 +239,11 @@ export default function TravelPassport() {
             setStamps(updated);
             checkAndUnlockBadges(updated);
             
-            const randomCoupon = MOCK_COUPONS[Math.floor(Math.random() * MOCK_COUPONS.length)];
-            setActiveCoupon(randomCoupon);
+            const userLoc = JSON.parse(localStorage.getItem('user_location') || 'null');
+            const profile = JSON.parse(localStorage.getItem('user_profile') || '{}');
+            fetchMatchingCoupon(userLoc, profile).then(coupon => {
+              setActiveCoupon(coupon);
+            });
             window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: `🎖️ સફળ ચેક-ઇન! ${landmark.name_gu} સ્ટેમ્પ અનલોક થયો! (+૫૦ સિક્કા)` } }));
           } else {
             alert("આ સ્ટેમ્પ પહેલેથી જ અનલોક થયેલો છે.");
@@ -266,8 +269,11 @@ export default function TravelPassport() {
       setStamps(updated);
       checkAndUnlockBadges(updated);
       
-      const randomCoupon = MOCK_COUPONS[Math.floor(Math.random() * MOCK_COUPONS.length)];
-      setActiveCoupon(randomCoupon);
+      const userLoc = JSON.parse(localStorage.getItem('user_location') || 'null');
+      const profile = JSON.parse(localStorage.getItem('user_profile') || '{}');
+      fetchMatchingCoupon(userLoc, profile).then(coupon => {
+        setActiveCoupon(coupon);
+      });
       window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: `🎖️ સિમ્યુલેટેડ ચેક-ઇન સફળ! ${landmark.name_gu} સ્ટેમ્પ અનલોક થયો! (+૫૦ સિક્કા)` } }));
     } else {
       alert("આ સ્ટેમ્પ પહેલેથી જ અનલોક થયેલો છે.");
@@ -431,42 +437,42 @@ export default function TravelPassport() {
             if (navigator.vibrate) navigator.vibrate([100]);
             setIsCoverOpen(true);
           }}
-          className="w-full max-w-sm aspect-[3/4] bg-[#5c2400] dark:bg-stone-900 rounded-[2.5rem] shadow-2xl border-8 border-amber-600/40 p-8 flex flex-col items-center justify-between text-center cursor-pointer transition-all duration-500 hover:scale-[1.03] active:scale-95 hover:shadow-amber-500/10 hover:shadow-2xl relative overflow-hidden group"
+          className="w-full max-w-sm aspect-[3/4] bg-[#5c2400] dark:bg-stone-900 rounded-[2.5rem] shadow-2xl border-8 border-yellow-700/40 p-8 flex flex-col items-center justify-between text-center cursor-pointer transition-all duration-500 hover:scale-[1.03] active:scale-95 hover:shadow-yellow-600/10 hover:shadow-2xl relative overflow-hidden group"
         >
           {/* Subtle gold lines / patterns */}
-          <div className="absolute inset-4 border border-amber-500/25 rounded-[1.8rem] pointer-events-none"></div>
-          <div className="absolute inset-5 border-2 border-double border-amber-500/20 rounded-[1.5rem] pointer-events-none"></div>
+          <div className="absolute inset-4 border border-yellow-600/25 rounded-[1.8rem] pointer-events-none"></div>
+          <div className="absolute inset-5 border-2 border-double border-yellow-600/20 rounded-[1.5rem] pointer-events-none"></div>
           
           <div className="space-y-2 mt-4 z-10">
-            <span className="text-amber-400 font-bold uppercase tracking-widest text-[10px] bg-amber-550/10 px-3 py-1 rounded-full border border-amber-500/20">
+            <span className="text-yellow-400 font-bold uppercase tracking-widest text-[10px] bg-amber-550/10 px-3 py-1 rounded-full border border-yellow-600/20">
               ગુજરાત પ્રવાસન વિભાગ 🛡️
             </span>
-            <h1 className="font-gujarati font-black text-3xl text-amber-100 tracking-wide mt-3 drop-shadow-md">
+            <h1 className="font-gujarati font-black text-3xl text-yellow-100 tracking-wide mt-3 drop-shadow-md">
               ગુજરાત પ્રવાસ પાસપોર્ટ
             </h1>
-            <p className="font-gujarati text-amber-200/50 text-[10px] tracking-widest uppercase font-bold">
+            <p className="font-gujarati text-yellow-200/50 text-[10px] tracking-widest uppercase font-bold">
               Gujarat Travel Passport
             </p>
           </div>
 
           <div className="my-8 z-10 relative">
-            <div className="h-32 w-32 rounded-full border-4 border-double border-amber-500/35 flex items-center justify-center bg-amber-500/5 group-hover:scale-105 transition-transform duration-500">
-              <span className="material-symbols-outlined text-6xl text-amber-300 filter drop-shadow-[0_2px_5px_rgba(245,158,11,0.3)] animate-pulse">temple_hindu</span>
+            <div className="h-32 w-32 rounded-full border-4 border-double border-yellow-600/35 flex items-center justify-center bg-yellow-600/5 group-hover:scale-105 transition-transform duration-500">
+              <span className="material-symbols-outlined text-6xl text-yellow-300 filter drop-shadow-[0_2px_5px_rgba(245,158,11,0.3)] animate-pulse">temple_hindu</span>
             </div>
-            <div className="absolute -right-4 -bottom-2 h-12 w-12 rounded-full bg-red-600/80 border-2 border-dashed border-red-400 text-white text-[9px] font-gujarati font-bold flex items-center justify-center rotate-12 uppercase select-none shadow-md">
+            <div className="absolute -right-4 -bottom-2 h-12 w-12 rounded-full bg-emerald-700/80 border-2 border-dashed border-red-400 text-white text-[9px] font-gujarati font-bold flex items-center justify-center rotate-12 uppercase select-none shadow-md">
               કલ્ચરલ 🚩
             </div>
           </div>
 
           <div className="space-y-4 mb-4 z-10 w-full">
-            <div className="h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent w-full"></div>
+            <div className="h-px bg-gradient-to-r from-transparent via-yellow-600/30 to-transparent w-full"></div>
             <button
-              className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-450 hover:to-amber-550 text-stone-950 font-gujarati font-black text-xs px-8 py-3.5 rounded-2xl shadow-lg transition-all w-full flex items-center justify-center gap-2 transform active:scale-95 group-hover:animate-bounce-slow"
+              className="bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-amber-450 hover:to-amber-550 text-stone-950 font-gujarati font-black text-xs px-8 py-3.5 rounded-2xl shadow-lg transition-all w-full flex items-center justify-center gap-2 transform active:scale-95 group-hover:animate-bounce-slow"
             >
               <span className="material-symbols-outlined text-sm">menu_book</span>
               પાસપોર્ટ બુક ખોલો ➔
             </button>
-            <p className="font-gujarati text-[10px] text-amber-200/40">
+            <p className="font-gujarati text-[10px] text-yellow-200/40">
               *ક્લિક કરો અથવા બુક ઓપન કરો
             </p>
           </div>
@@ -485,7 +491,7 @@ export default function TravelPassport() {
         </div>
         <button
           onClick={() => setSuggestModalOpen(true)}
-          className="bg-gradient-to-r from-amber-500 to-primary text-white px-5 py-3 rounded-2xl font-gujarati font-black text-xs shadow-md hover:shadow-lg transition-all transform hover:scale-[1.02] flex items-center justify-center gap-1 shrink-0 self-start sm:self-center"
+          className="bg-gradient-to-r from-yellow-600 to-primary text-white px-5 py-3 rounded-2xl font-gujarati font-black text-xs shadow-md hover:shadow-lg transition-all transform hover:scale-[1.02] flex items-center justify-center gap-1 shrink-0 self-start sm:self-center"
         >
           <span className="material-symbols-outlined text-sm">add_location_alt</span>
           નવી છુપી જગ્યા સજેસ્ટ કરો ✍️
@@ -493,26 +499,26 @@ export default function TravelPassport() {
       </div>
 
       {/* Book Cover Stat Box */}
-      <section className="bg-[#2b1400] dark:bg-stone-950 text-amber-100 rounded-[2.5rem] p-8 shadow-xl border-4 border-amber-600/30 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+      <section className="bg-[#2b1400] dark:bg-stone-950 text-yellow-100 rounded-[2.5rem] p-8 shadow-xl border-4 border-yellow-700/30 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-stone-700/20 via-[#2b1400]/50 to-stone-950/95 pointer-events-none"></div>
         <div className="space-y-2 relative z-10 text-center md:text-left">
-          <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest inline-block mb-1">
+          <span className="bg-yellow-600/20 text-yellow-300 border border-yellow-600/40 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest inline-block mb-1">
             ગુજરાત પ્રવાસન ડાયરી 🛡️
           </span>
           <h3 className="font-gujarati font-black text-3xl">ગુજરાત પ્રવાસ પાસપોર્ટ બુક (૧૦૦% ઓફલાઇન)</h3>
-          <p className="font-gujarati text-xs text-amber-200/70 max-w-xl leading-relaxed">
+          <p className="font-gujarati text-xs text-yellow-200/70 max-w-xl leading-relaxed">
             તમારો ગુજરાત જીપીએસ પાસપોર્ટ. નજીક જઈ વેરિફાય કરો અથવા ટેસ્ટ કરવા સિમ્યુલેટ કરો. દરેક વિશિષ્ટ જગ્યા પર ક્લિક કરતાં તેના **છુપા રત્નો**, **રૂટ પ્લાન**, **સ્થાનિક ખાણી-પીણી** અને **સ્થાનિક કારીગરો** ની વિગતો ખુલશે!
           </p>
         </div>
         <div className="flex flex-col gap-3 shrink-0 w-full md:w-auto relative z-10">
-          <div className="text-center bg-amber-500/10 border border-amber-500/25 px-6 py-4 rounded-3xl flex gap-6 items-center justify-center w-full">
+          <div className="text-center bg-yellow-600/10 border border-yellow-600/25 px-6 py-4 rounded-3xl flex gap-6 items-center justify-center w-full">
             <div>
-              <p className="font-gujarati text-[9px] text-amber-300 uppercase tracking-widest font-bold">અનલોક સ્ટેમ્પ્સ</p>
+              <p className="font-gujarati text-[9px] text-yellow-300 uppercase tracking-widest font-bold">અનલોક સ્ટેમ્પ્સ</p>
               <h4 className="font-headline font-black text-3xl mt-1 text-white">{totalStampsCount} / {TRAVEL_DATABASE.length}</h4>
             </div>
-            <div className="w-px h-10 bg-amber-500/20" />
+            <div className="w-px h-10 bg-yellow-600/20" />
             <div>
-              <p className="font-gujarati text-[9px] text-amber-300 uppercase tracking-widest font-bold">થીમ બેજીસ</p>
+              <p className="font-gujarati text-[9px] text-yellow-300 uppercase tracking-widest font-bold">થીમ બેજીસ</p>
               <h4 className="font-headline font-black text-3xl mt-1 text-white">{unlockedBadges.length} / {THEME_COLLECTIONS.length}</h4>
             </div>
           </div>
@@ -527,7 +533,7 @@ export default function TravelPassport() {
               } catch (e) {}
               setShowShareModal(true);
             }}
-            className="w-full bg-amber-500 hover:bg-amber-600 text-stone-900 py-2.5 rounded-2xl font-gujarati font-black text-xs transition-all transform hover:scale-[1.02] flex items-center justify-center gap-1 shadow-md"
+            className="w-full bg-yellow-600 hover:bg-yellow-700 text-stone-900 py-2.5 rounded-2xl font-gujarati font-black text-xs transition-all transform hover:scale-[1.02] flex items-center justify-center gap-1 shadow-md"
           >
             <span className="material-symbols-outlined text-sm">share</span>
             પાસપોર્ટ શેર કરો (Share Card)
@@ -551,7 +557,7 @@ export default function TravelPassport() {
             onClick={() => setActiveZone(tab.key)}
             className={`flex-shrink-0 px-5 py-2.5 rounded-full font-gujarati font-bold text-xs border-2 transition-all ${
               activeZone === tab.key 
-                ? 'bg-amber-500 text-white border-amber-500 shadow-md' 
+                ? 'bg-yellow-600 text-white border-yellow-600 shadow-md' 
                 : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-stone-550 dark:text-stone-400'
             }`}
           >
@@ -574,7 +580,7 @@ export default function TravelPassport() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="નામ, જિલ્લો કે વિશેષતા..."
-                  className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl py-3 pl-10 pr-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-amber-500"
+                  className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl py-3 pl-10 pr-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-yellow-600"
                 />
                 <span className="material-symbols-outlined absolute left-3 top-3.5 text-stone-400 text-base">search</span>
               </div>
@@ -586,7 +592,7 @@ export default function TravelPassport() {
               <select
                 value={selectedDistrict}
                 onChange={(e) => setSelectedDistrict(e.target.value)}
-                className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl py-3 px-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-amber-500"
+                className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl py-3 px-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-yellow-600"
               >
                 <option value="All">બધા ૩૩ જિલ્લા (All Districts)</option>
                 {GUJARAT_DISTRICTS.map((dist) => (
@@ -602,7 +608,7 @@ export default function TravelPassport() {
                 <select
                   value={radiusFilter}
                   onChange={(e) => handleRadiusChange(e.target.value)}
-                  className="flex-1 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl py-3 px-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-amber-500"
+                  className="flex-1 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-2xl py-3 px-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-yellow-600"
                 >
                   <option value="All">સર્વત્ર (All)</option>
                   <option value="50">મારાથી ૫૦ કિમી નજીક</option>
@@ -623,7 +629,7 @@ export default function TravelPassport() {
                       }
                     }
                   }}
-                  className="bg-amber-500/10 border border-amber-500/20 text-primary dark:text-dark-accent rounded-2xl py-3 px-2 text-[10px] font-gujarati focus:outline-none"
+                  className="bg-yellow-600/10 border border-yellow-600/20 text-primary dark:text-dark-accent rounded-2xl py-3 px-2 text-[10px] font-gujarati focus:outline-none"
                   title="ટેસ્ટ માટે જીપીએસ લોકેશન સિમ્યુલેટ કરો"
                 >
                   <option value="real">Real GPS 📍</option>
@@ -658,7 +664,7 @@ export default function TravelPassport() {
                     onClick={() => setCategoryFilter(tag.key)}
                     className={`px-3 py-1.5 rounded-xl font-gujarati text-[10px] font-black transition-all ${
                       categoryFilter === tag.key
-                        ? 'bg-amber-600 text-white shadow-sm'
+                        ? 'bg-yellow-700 text-white shadow-sm'
                         : 'bg-stone-50 hover:bg-stone-100 dark:bg-stone-950 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400'
                     }`}
                   >
@@ -683,7 +689,7 @@ export default function TravelPassport() {
                     onClick={() => setSeasonFilter(tag.key)}
                     className={`px-3 py-1.5 rounded-xl font-gujarati text-[10px] font-black transition-all ${
                       seasonFilter === tag.key
-                        ? 'bg-amber-600 text-white shadow-sm'
+                        ? 'bg-yellow-700 text-white shadow-sm'
                         : 'bg-stone-50 hover:bg-stone-100 dark:bg-stone-950 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400'
                     }`}
                   >
@@ -709,7 +715,7 @@ export default function TravelPassport() {
                     onClick={() => setAccessibilityFilter(tag.key)}
                     className={`px-3 py-1.5 rounded-xl font-gujarati text-[10px] font-black transition-all ${
                       accessibilityFilter === tag.key
-                        ? 'bg-amber-600 text-white shadow-sm'
+                        ? 'bg-yellow-700 text-white shadow-sm'
                         : 'bg-stone-50 hover:bg-stone-100 dark:bg-stone-950 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-400'
                     }`}
                   >
@@ -774,7 +780,7 @@ export default function TravelPassport() {
                           <button
                             onClick={() => handleVerifyCheckIn(landmark)}
                             disabled={loading}
-                            className="w-full bg-[#fef8f1] hover:bg-orange-50 dark:bg-stone-950 dark:hover:bg-stone-800 text-primary dark:text-dark-accent border border-primary/20 hover:border-primary/50 py-2.5 rounded-2xl font-gujarati font-black text-xs transition-colors flex items-center justify-center gap-1 active:scale-95 shadow-sm"
+                            className="w-full bg-[#F8FAFC] hover:bg-teal-50 dark:bg-stone-950 dark:hover:bg-stone-800 text-primary dark:text-dark-accent border border-primary/20 hover:border-primary/50 py-2.5 rounded-2xl font-gujarati font-black text-xs transition-colors flex items-center justify-center gap-1 active:scale-95 shadow-sm"
                           >
                             <span className="material-symbols-outlined text-sm">my_location</span>
                             GPS વેરિફાય કરો 📍
@@ -861,7 +867,7 @@ export default function TravelPassport() {
                     </div>
                     <div className="w-full bg-stone-100 dark:bg-stone-950 h-2 rounded-full overflow-hidden border border-black/5">
                       <div 
-                        className={`h-full transition-all duration-500 bg-gradient-to-r from-purple-500 to-indigo-500`}
+                        className={`h-full transition-all duration-500 bg-gradient-to-r from-purple-500 to-teal-500`}
                         style={{ width: `${(collectedCount / theme.required.length) * 100}%` }}
                       />
                     </div>
@@ -879,8 +885,8 @@ export default function TravelPassport() {
           <h3 className="font-gujarati font-black text-xl text-stone-800 dark:text-white">તમે સજેસ્ટ કરેલી નવી છુપી જગ્યાઓ 🌟</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 animate-fade-in">
             {suggestedPlaces.map((place) => (
-              <div key={place.id} className="bg-white dark:bg-stone-900 border border-amber-500/20 p-6 rounded-[2.5rem] shadow-sm flex flex-col justify-between gap-4">
-                <span className="bg-amber-500/10 text-primary dark:text-dark-accent border border-amber-500/20 px-3 py-1 rounded-full text-[9px] font-gujarati font-black uppercase tracking-widest inline-block self-start">
+              <div key={place.id} className="bg-white dark:bg-stone-900 border border-yellow-600/20 p-6 rounded-[2.5rem] shadow-sm flex flex-col justify-between gap-4">
+                <span className="bg-yellow-600/10 text-primary dark:text-dark-accent border border-yellow-600/20 px-3 py-1 rounded-full text-[9px] font-gujarati font-black uppercase tracking-widest inline-block self-start">
                   {place.category.toUpperCase()} • {place.district_gu}
                 </span>
                 <div>
@@ -888,7 +894,7 @@ export default function TravelPassport() {
                   <p className="font-gujarati text-[10px] text-stone-400 font-bold mb-2">{place.name_en}</p>
                   <p className="font-gujarati text-xs text-stone-550 dark:text-stone-400 leading-relaxed line-clamp-3">{place.description}</p>
                 </div>
-                <div className="bg-amber-500/5 text-amber-600 dark:bg-amber-950/20 dark:text-amber-400 border border-amber-500/10 py-2 rounded-2xl font-gujarati font-black text-[10px] text-center select-none">
+                <div className="bg-yellow-600/5 text-yellow-700 dark:bg-yellow-950/20 dark:text-yellow-400 border border-yellow-600/10 py-2 rounded-2xl font-gujarati font-black text-[10px] text-center select-none">
                   🎉 સબમિટ કર્યું: {place.dateAdded}
                 </div>
               </div>
@@ -903,7 +909,7 @@ export default function TravelPassport() {
           <div className="bg-white dark:bg-stone-900 border border-stone-250 dark:border-stone-800 rounded-[3rem] shadow-2xl w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col animate-scale-in">
             
             {/* Modal Header */}
-            <div className="bg-gradient-to-r from-amber-500 to-primary text-white p-6 relative">
+            <div className="bg-gradient-to-r from-yellow-600 to-primary text-white p-6 relative">
               <button 
                 onClick={() => setSelectedLandmark(null)}
                 className="absolute top-4 right-4 text-white/80 hover:text-white bg-black/10 hover:bg-black/20 h-8 w-8 rounded-full flex items-center justify-center"
@@ -934,7 +940,7 @@ export default function TravelPassport() {
                   onClick={() => setActiveDetailTab(tab.key)}
                   className={`px-5 py-3.5 font-gujarati font-bold text-xs border-b-2 transition-all shrink-0 ${
                     activeDetailTab === tab.key
-                      ? 'border-amber-500 text-amber-600 dark:text-dark-accent bg-white dark:bg-stone-900 font-black'
+                      ? 'border-yellow-600 text-yellow-700 dark:text-dark-accent bg-white dark:bg-stone-900 font-black'
                       : 'border-transparent text-stone-550 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800'
                   }`}
                 >
@@ -970,12 +976,12 @@ export default function TravelPassport() {
                 <div className="space-y-4 animate-fade-in">
                   <h4 className="font-gujarati font-black text-lg text-primary dark:text-dark-accent">૧-દિવસ સ્માર્ટ રૂટ પ્લાનર (Route Planner)</h4>
                   <p className="font-gujarati text-xs text-stone-550 dark:text-stone-400">મુસાફરીનો સમય અને ઇંધણ બચાવવા માટે ક્રમબદ્ધ પ્રવાસ માર્ગ નકશો:</p>
-                  <div className="space-y-4 relative pl-6 before:content-[''] before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-amber-500/30">
+                  <div className="space-y-4 relative pl-6 before:content-[''] before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-yellow-600/30">
                     {selectedLandmark.route_planner?.map((route, idx) => {
                       const points = route.split(' ➔ ');
                       return points.map((p, pIdx) => (
                         <div key={pIdx} className="relative space-y-1">
-                          <span className="absolute -left-6 top-1 h-3.5 w-3.5 rounded-full bg-amber-500 border-2 border-white dark:border-stone-900 shadow-sm" />
+                          <span className="absolute -left-6 top-1 h-3.5 w-3.5 rounded-full bg-yellow-600 border-2 border-white dark:border-stone-900 shadow-sm" />
                           <h5 className="font-gujarati text-sm font-black text-stone-800 dark:text-stone-100">{p}</h5>
                           <p className="font-gujarati text-[10px] text-stone-450 font-bold">
                             {pIdx === 0 ? "🏁 પ્રસ્થાન બિંદુ" : pIdx === points.length - 1 ? "🔚 સમાપન લક્ષ્ય" : `📍 સ્ટોપ ક્રમ ${pIdx}`}
@@ -994,7 +1000,7 @@ export default function TravelPassport() {
                   <p className="font-gujarati text-xs text-stone-550 dark:text-stone-400">અહીં મુલાકાત લો ત્યારે ખાવા જેવી પ્રખ્યાત ચીજો અને પરંપરાગત શોપિંગ લિસ્ટ:</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {selectedLandmark.local_taste?.map((taste, idx) => (
-                      <div key={idx} className="bg-[#fef8f1] dark:bg-stone-950 border border-primary/10 p-4 rounded-2xl flex gap-3 items-center">
+                      <div key={idx} className="bg-[#F8FAFC] dark:bg-stone-950 border border-primary/10 p-4 rounded-2xl flex gap-3 items-center">
                         <span className="text-2xl">{idx === 0 ? "🍲" : "🛍️"}</span>
                         <div>
                           <p className="font-gujarati text-xs font-bold text-stone-450">{idx === 0 ? "આઈકોનિક સ્વાદ" : "સ્થાનિક ખરીદી"}</p>
@@ -1020,7 +1026,7 @@ export default function TravelPassport() {
                     </div>
                     <button
                       onClick={() => handleContactArtisan(selectedLandmark)}
-                      className="bg-primary hover:bg-amber-600 text-white px-4 py-2.5 rounded-xl font-gujarati text-xs font-black transition-colors flex items-center gap-1 active:scale-95 shadow-sm"
+                      className="bg-primary hover:bg-yellow-700 text-white px-4 py-2.5 rounded-xl font-gujarati text-xs font-black transition-colors flex items-center gap-1 active:scale-95 shadow-sm"
                     >
                       <span className="material-symbols-outlined text-sm">phone</span>
                       કારીગર સેન્ટર કનેક્ટ કરો
@@ -1045,7 +1051,7 @@ export default function TravelPassport() {
                           onChange={(e) => setDiaryNote(e.target.value)}
                           placeholder="અહીં લખો (દા.ત. અહીંનો સૂર્યાસ્ત અદભુત હતો અને અમે જામનગરી કચોરી ખાધી...)"
                           rows={3}
-                          className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-amber-500"
+                          className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-yellow-600"
                         />
                       </div>
 
@@ -1058,7 +1064,7 @@ export default function TravelPassport() {
                               <button
                                 key={sticker}
                                 onClick={() => setDiarySticker(sticker)}
-                                className={`text-xl p-1 rounded-lg transition-transform ${diarySticker === sticker ? 'bg-amber-100 dark:bg-stone-800 scale-125 border border-amber-400' : 'hover:scale-110'}`}
+                                className={`text-xl p-1 rounded-lg transition-transform ${diarySticker === sticker ? 'bg-yellow-100 dark:bg-stone-800 scale-125 border border-yellow-400' : 'hover:scale-110'}`}
                               >
                                 {sticker}
                               </button>
@@ -1075,7 +1081,7 @@ export default function TravelPassport() {
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-amber-500/5 text-amber-700 dark:bg-amber-950/20 dark:text-amber-400 border border-amber-500/20 p-5 rounded-2xl text-center font-gujarati text-xs leading-relaxed">
+                    <div className="bg-yellow-600/5 text-yellow-800 dark:bg-yellow-950/20 dark:text-yellow-400 border border-yellow-600/20 p-5 rounded-2xl text-center font-gujarati text-xs leading-relaxed">
                       🔒 તમે આ સ્ટેમ્પ અનલોક કર્યા પછી જ આ સ્પોટ વિશે પ્રવાસ ડાયરી અને ફોટો યાદો નોંધી શકશો!
                     </div>
                   )}
@@ -1088,7 +1094,7 @@ export default function TravelPassport() {
                         {/* Polaroid image frame simulator */}
                         <div className="bg-stone-150 h-48 w-full rounded relative flex items-center justify-center overflow-hidden border border-black/5">
                           {/* Radial colors inside frame */}
-                          <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/10 to-indigo-500/15" />
+                          <div className="absolute inset-0 bg-gradient-to-tr from-yellow-600/10 to-teal-500/15" />
                           <span className="text-6xl drop-shadow-md z-10">{diary[selectedLandmark.id].sticker}</span>
                           <span className="absolute top-2 right-2 text-stone-400 text-[10px] font-bold">otlo_cam_v1</span>
                           <div className="absolute bottom-2 left-2 bg-white/70 px-2 py-0.5 rounded text-[8px] text-stone-700 font-gujarati">
@@ -1151,7 +1157,7 @@ export default function TravelPassport() {
                     value={suggestNameGu}
                     onChange={(e) => setSuggestNameGu(e.target.value)}
                     placeholder="દા.ત. બાવકા શિવ મંદિર"
-                    className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl py-3 px-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-amber-500"
+                    className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl py-3 px-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-yellow-600"
                   />
                 </div>
                 <div className="space-y-1">
@@ -1162,7 +1168,7 @@ export default function TravelPassport() {
                     value={suggestNameEn}
                     onChange={(e) => setSuggestNameEn(e.target.value)}
                     placeholder="e.g. Bawka Temple"
-                    className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl py-3 px-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-amber-500"
+                    className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl py-3 px-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-yellow-600"
                   />
                 </div>
               </div>
@@ -1174,7 +1180,7 @@ export default function TravelPassport() {
                   <select
                     value={suggestDistrict}
                     onChange={(e) => setSuggestDistrict(e.target.value)}
-                    className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl py-3 px-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-amber-500"
+                    className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl py-3 px-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-yellow-600"
                   >
                     {GUJARAT_DISTRICTS.map((d) => (
                       <option key={d.key} value={d.key}>{d.name_gu} ({d.name_en})</option>
@@ -1188,7 +1194,7 @@ export default function TravelPassport() {
                     value={suggestTaluka}
                     onChange={(e) => setSuggestTaluka(e.target.value)}
                     placeholder="દા.ત. દાહોદ"
-                    className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl py-3 px-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-amber-500"
+                    className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl py-3 px-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-yellow-600"
                   />
                 </div>
               </div>
@@ -1199,7 +1205,7 @@ export default function TravelPassport() {
                 <select
                   value={suggestCategory}
                   onChange={(e) => setSuggestCategory(e.target.value)}
-                  className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl py-3 px-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-amber-500"
+                  className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl py-3 px-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-yellow-600"
                 >
                   <option value="nature">🌳 પ્રકૃતિ / વનરાજી</option>
                   <option value="religious">🛕 ધાર્મિક / મંદિર</option>
@@ -1218,7 +1224,7 @@ export default function TravelPassport() {
                   onChange={(e) => setSuggestDesc(e.target.value)}
                   placeholder="અહીં રસ્તા અને વિશેષતા લખો..."
                   rows={4}
-                  className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl p-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-amber-500"
+                  className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl p-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-yellow-600"
                 />
               </div>
 
@@ -1226,7 +1232,7 @@ export default function TravelPassport() {
 
             <button
               type="submit"
-              className="w-full bg-primary hover:bg-amber-600 text-white py-3.5 rounded-2xl font-gujarati font-black text-sm transition-colors shadow-md"
+              className="w-full bg-primary hover:bg-yellow-700 text-white py-3.5 rounded-2xl font-gujarati font-black text-sm transition-colors shadow-md"
             >
               સબમિટ કરો 🚀
             </button>
@@ -1265,14 +1271,14 @@ export default function TravelPassport() {
                 type="text"
                 value={shareName}
                 onChange={(e) => setShareName(e.target.value)}
-                className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl py-2.5 px-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-amber-500"
+                className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl py-2.5 px-4 text-xs font-gujarati text-stone-800 dark:text-white focus:outline-none focus:border-yellow-600"
               />
             </div>
 
             {/* Certificate Preview Card */}
-            <div className="bg-[#fdfbf7] dark:bg-stone-950 border-4 border-amber-600/30 p-6 rounded-3xl text-center space-y-4 shadow-sm relative overflow-hidden select-none border-double">
+            <div className="bg-[#fdfbf7] dark:bg-stone-950 border-4 border-yellow-700/30 p-6 rounded-3xl text-center space-y-4 shadow-sm relative overflow-hidden select-none border-double">
               <div className="absolute top-2 right-2 text-4xl opacity-10">🏛️</div>
-              <span className="bg-amber-500/10 text-primary dark:text-dark-accent border border-amber-500/20 px-3 py-1 rounded-full text-[9px] font-gujarati font-black uppercase tracking-widest inline-block">
+              <span className="bg-yellow-600/10 text-primary dark:text-dark-accent border border-yellow-600/20 px-3 py-1 rounded-full text-[9px] font-gujarati font-black uppercase tracking-widest inline-block">
                 ગુજરાત પ્રવાસ સન્માન પત્ર 📜
               </span>
               
@@ -1313,9 +1319,9 @@ export default function TravelPassport() {
                       });
                       const latest5 = sortedCollected.slice(0, 5);
                       return latest5.map(l => (
-                        <div key={l.id} className="flex flex-col items-center justify-center w-20 h-20 rounded-full border-2 border-dashed border-amber-600/60 bg-amber-500/5 dark:bg-amber-500/10 p-1.5 relative rotate-[-2deg] hover:rotate-0 transition-transform">
+                        <div key={l.id} className="flex flex-col items-center justify-center w-20 h-20 rounded-full border-2 border-dashed border-yellow-700/60 bg-yellow-600/5 dark:bg-yellow-600/10 p-1.5 relative rotate-[-2deg] hover:rotate-0 transition-transform">
                           <span className="text-2xl leading-none">{l.icon}</span>
-                          <span className="font-gujarati text-[8px] font-black text-center leading-tight px-0.5 text-amber-900 dark:text-amber-200 truncate w-full mt-0.5">
+                          <span className="font-gujarati text-[8px] font-black text-center leading-tight px-0.5 text-yellow-900 dark:text-yellow-200 truncate w-full mt-0.5">
                             {l.name_gu}
                           </span>
                           <span className="text-[7px] text-stone-400 dark:text-stone-500 leading-none mt-0.5">
@@ -1325,14 +1331,14 @@ export default function TravelPassport() {
                       ));
                     })()}
                     {totalStampsCount > 5 && (
-                      <span className="text-[10px] font-bold bg-amber-500/10 text-primary dark:text-dark-accent border border-amber-500/20 px-2.5 py-1 rounded-full flex items-center justify-center font-gujarati">
+                      <span className="text-[10px] font-bold bg-yellow-600/10 text-primary dark:text-dark-accent border border-yellow-600/20 px-2.5 py-1 rounded-full flex items-center justify-center font-gujarati">
                         +{totalStampsCount - 5} વધુ
                       </span>
                     )}
                   </div>
                 </div>
               ) : (
-                <p className="font-gujarati text-[10px] text-rose-500 font-bold">હજુ કોઈ સ્ટેમ્પ અનલોક કરેલ નથી. યાત્રા શરૂ કરો!</p>
+                <p className="font-gujarati text-[10px] text-emerald-500 font-bold">હજુ કોઈ સ્ટેમ્પ અનલોક કરેલ નથી. યાત્રા શરૂ કરો!</p>
               )}
             </div>
 

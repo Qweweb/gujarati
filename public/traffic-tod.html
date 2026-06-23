@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>CNG Rickshaw Runner</title>
+    <!-- Fonts: Noto Serif Gujarati + Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Gujarati:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        /* CSS reset and mobile optimization */
+        body { margin: 0; padding: 0; overflow: hidden; background-color: #222; font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; touch-action: none; user-select: none; -webkit-user-select: none; }
+        
+        canvas { display: block; width: 100vw; height: 100dvh; }
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100vw; height: 100dvh; pointer-events: none; overflow: hidden; }
+        
+        .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.85); color: white; pointer-events: auto; }
+        .hidden { display: none !important; }
+        
+        /* 3D Chunky Casual Game Start Screen CSS */
+        #start-screen {
+            background: radial-gradient(circle at 50% 35%, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.99) 75%);
+            font-family: "Plus Jakarta Sans", sans-serif;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-card {
+            background: #1E1B4B; /* Deep Indigo card background */
+            border: 4px solid #0C0F19;
+            border-radius: 28px;
+            padding: 40px 24px 24px 24px;
+            box-shadow: 0 12px 0 #0C0F19, 0 20px 25px rgba(0, 0, 0, 0.5);
+            max-width: 350px;
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            margin-top: 30px; /* Leave space for top offset badge */
+        }
+
+        .badge-offset {
+            width: 80px;
+            height: 80px;
+            background: #10B981; /* CNG Green badge */
+            border: 4px solid #0C0F19;
+            border-radius: 50%;
+            position: absolute;
+            top: -45px;
+            left: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 0 #0C0F19, 0 0 15px rgba(16, 185, 129, 0.4);
+            animation: pulseScale 2.5s ease-in-out infinite;
+        }
+        .badge-offset span {
+            font-size: 44px;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+        }
+
+        @keyframes pulseScale {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.06); }
+        }
+
+        .ribbon-title {
+            background: #E11D48; /* Red/Rose Ribbon background */
+            border: 4px solid #0C0F19;
+            border-radius: 16px;
+            padding: 8px 20px;
+            box-shadow: 0 6px 0 #0C0F19;
+            text-align: center;
+            transform: rotate(-1.5deg);
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .ribbon-text-main {
+            color: #FFFFFF;
+            font-size: 20px !important;
+            font-weight: 850;
+            margin: 0;
+            letter-spacing: 1px;
+            line-height: 1;
+            text-shadow: 2px 2px 0 #0C0F19;
+            text-transform: uppercase;
+        }
+        .ribbon-text-sub {
+            color: #FFD700;
+            font-size: 17px !important;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: 1px;
+            line-height: 1.1;
+            text-shadow: 2px 2px 0 #0C0F19;
+            text-transform: uppercase;
+        }
+
+        .game-gu-title {
+            font-family: "Noto Serif Gujarati", serif;
+            font-size: 15px !important;
+            font-weight: 950;
+            color: #94A3B8;
+            margin: 8px 0 12px 0;
+            text-shadow: none;
+        }
+
+        .info-box {
+            background: #312E81; /* Darker indigo inner container */
+            border: 4px solid #0C0F19;
+            border-radius: 20px;
+            padding: 16px 20px;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: inset 0 6px 0 rgba(0,0,0,0.25);
+            margin-bottom: 20px;
+        }
+        .info-box p {
+            margin: 8px 0;
+            font-size: 12.5px;
+            line-height: 1.5;
+            color: #F8FAFC;
+            font-weight: 600;
+            text-align: left;
+        }
+        .info-box p b {
+            color: #F87171; /* Accent coloring */
+        }
+        .info-hr {
+            border: 0;
+            border-top: 3px solid #0C0F19;
+            margin: 10px 0;
+        }
+
+        .buttons-stack {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Redesign buttons to be chunky 3D casual game buttons */
+        .btn {
+            width: 100%;
+            max-width: 280px;
+            padding: 12px 18px;
+            font-size: 15px;
+            font-weight: 900;
+            border: 4px solid #0C0F19;
+            border-radius: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            position: relative;
+            outline: none;
+            display: inline-block;
+        }
+
+        .btn-play {
+            background: #22C55E; /* Vibrant Emerald Green */
+            color: #FFFFFF;
+            box-shadow: inset 0 -6px 0 #15803D, 0 6px 0 #0C0F19;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+        }
+        .btn-play:hover {
+            transform: translateY(2px);
+            box-shadow: inset 0 -4px 0 #15803D, 0 4px 0 #0C0F19;
+        }
+        .btn-play:active {
+            transform: translateY(6px);
+            box-shadow: inset 0 0px 0 #15803D, 0 0px 0 #0C0F19;
+        }
+
+        .btn-leaderboard {
+            background: #8B5CF6; /* Vibrant Purple */
+            color: #FFFFFF;
+            box-shadow: inset 0 -6px 0 #6D28D9, 0 6px 0 #0C0F19;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+        }
+        .btn-leaderboard:hover {
+            transform: translateY(2px);
+            box-shadow: inset 0 -4px 0 #6D28D9, 0 4px 0 #0C0F19;
+        }
+        .btn-leaderboard:active {
+            transform: translateY(6px);
+            box-shadow: inset 0 0px 0 #6D28D9, 0 0px 0 #0C0F19;
+        }
+
+        .welcome-tag {
+            color: #E2E8F0;
+            font-size: 13px;
+            margin-top: 5px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        h1 { margin: 0; font-size: 3.5rem; text-shadow: 2px 2px 4px #000; text-align: center; }
+        h2 { margin-top: 5px; font-size: 1.8rem; color: #ccc; }
+        p { font-size: 1.2rem; text-align: center; line-height: 1.5; color: #eee; }
+
+        .stats { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); pointer-events: none; z-index: 100; padding: 60px 15px 15px 15px; }
+        
+        .hud-box { background: rgba(0,0,0,0.6); padding: 8px 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(4px); transition: transform 0.15s ease-out; }
+        
+        .energy-wrapper { text-align: right; }
+        .energy-bar-container { width: 120px; height: 12px; background: #333; margin-top: 6px; border-radius: 6px; overflow: hidden; border: 1px solid #000; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); }
+        .energy-bar { width: 100%; height: 100%; background: linear-gradient(90deg, #00FF00, #00FFFF); transition: width 0.1s, background 0.3s; }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    
+    <div id="ui-layer">
+        
+        <!-- Audio UI -->
+        <button id="sound-btn" style="position: absolute; top: 15px; right: 15px; z-index: 200; background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; cursor: pointer;">🔊</button>
+        
+        <!-- Top Sleek Progress Bar -->
+        <div id="progress-container" class="hidden" style="position: absolute; top: 0; left: 0; width: 100%; z-index: 1000; pointer-events: none; background: rgba(0,0,0,0.8);">
+            <div style="width: 100%; height: 6px;">
+                <div id="level-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #FFD700, #00FF44); transition: width 0.3s; box-shadow: 0 0 10px rgba(0,255,68,0.8);"></div>
+            </div>
+            <div style="position: absolute; top: 8px; width: 100%; text-align: center; color: rgba(255,255,255,0.6); font-size: 10px; font-weight: bold; letter-spacing: 2px;">LEVEL PROGRESS</div>
+        </div>
+
+        <div class="stats hidden" id="game-stats">
+            <div class="hud-box">
+                <span style="color: #aaa; font-size: 0.8em;">SCORE</span><br>
+                <span id="score-val">0</span>m <br>
+                <span style="color: #00FFDD; font-size: 0.9em;">LVL <span id="level-val">1</span></span>
+            </div>
+            <div class="hud-box energy-wrapper">
+                <span style="color: #FFD700; font-size: 1.2em;">₹ <span id="coins-val">0</span></span><br>
+                <span style="color: #00FFFF; font-size: 0.7em; font-weight: 900;">⚡ CNG FUEL</span>
+                <div class="energy-bar-container"><div id="energy-bar" class="energy-bar"></div></div>
+            </div>
+        </div>
+
+        <div id="start-screen" class="screen">
+            <div class="menu-card">
+                <!-- Glowing Pulsing Badge Offset -->
+                <div class="badge-offset">
+                    <span>🛺</span>
+                </div>
+                
+                <!-- Ribbon Title -->
+                <div class="ribbon-title">
+                    <h1 class="ribbon-text-main">CNG RICKSHAW</h1>
+                    <h2 class="ribbon-text-sub">TRAFFIC TOD</h2>
+                </div>
+                
+                <h3 class="game-gu-title">રિક્ષા ટ્રાફિક તોડ</h3>
+
+                <!-- Info Box -->
+                <div class="info-box">
+                    <p>👈 <b>સ્વાઇપ કરો:</b> રિક્ષાની લેન બદલવા માટે.</p>
+                    <p>👆 <b>ટેપ કરો:</b> રમત રોકવા/ચાલુ કરવા ⏸️</p>
+                    <p style="color: #FFD700;">👤 પેસેન્જર બેસાડો અને ₹ ભાડું મેળવો!</p>
+                    <p style="color: #00FFBB;">⛽ CNG સિલિન્ડર લઈને ફ્યુઅલ ભરો!</p>
+                    <hr class="info-hr">
+                    <p style="color: #38BDF8; font-weight: 800; text-align: center; margin: 0; font-size: 11px;">ઉપરની પટ્ટી ભરીને આગલા લેવલમાં પહોંચો!</p>
+                </div>
+                
+                <!-- Buttons Wrapper -->
+                <div class="buttons-stack">
+                    <button class="btn btn-play" id="start-btn">START ENGINE</button>
+                    <button class="btn btn-leaderboard" id="menu-leaderboard-btn">🏆 LEADERBOARD</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pause Screen -->
+        <div id="pause-screen" class="screen hidden" style="background: rgba(0,0,0,0.6); pointer-events: none;">
+            <h1 style="color: #FFF; font-size: 4rem; text-shadow: 0 0 20px rgba(255,255,255,0.5);">PAUSED</h1>
+            <p style="color: #DDD; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 20px;">Tap anywhere to resume</p>
+        </div>
+
+        <!-- Level Complete Screen -->
+        <div id="level-complete-screen" class="screen hidden" style="background: rgba(0, 40, 20, 0.95);">
+            <h1 id="success-text" style="color: #00FF44; font-size: 3.5rem; text-shadow: 0 0 30px rgba(0,255,68,1); animation: pop 1s ease-out forwards;">LEVEL 1 CLEARED!</h1>
+            <p style="color: #FFD700; font-size: 1.5rem; font-weight: bold; margin-top: 15px; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 10px;">BHAADA: ₹<span id="success-coins">0</span></p>
+            <p style="color: #00FFFF; margin-top: 10px;">Get ready... traffic is getting faster!</p>
+            <button class="btn" id="next-level-btn" style="background: linear-gradient(135deg, #00FFDD, #0088FF); box-shadow: 0 6px 20px rgba(0, 255, 221, 0.5);">START LEVEL 2</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d', { alpha: false });
+        
+        const rickshawImg = new Image(); rickshawImg.src = 'rickshaw.png';
+        const busImg = new Image(); busImg.src = 'st_bus.png';
+        const carImg = new Image(); carImg.src = 'car.png';
+        const cowImg = new Image(); cowImg.src = 'cow.png';
+        const whiteBusImg = new Image(); whiteBusImg.src = 'white_bus.png';
+        const greenCarImg = new Image(); greenCarImg.src = 'green_car.png';
+        const whiteCowImg = new Image(); whiteCowImg.src = 'white_cow.png';
+        
+        const ui = {
+            start: document.getElementById('start-screen'),
+            stats: document.getElementById('game-stats'),
+            score: document.getElementById('score-val'),
+            coins: document.getElementById('coins-val'),
+            level: document.getElementById('level-val'),
+            energy: document.getElementById('energy-bar'),
+            progContainer: document.getElementById('progress-container'),
+            progBar: document.getElementById('level-progress-bar'),
+            pauseScreen: document.getElementById('pause-screen'),
+            lvlCompleteScreen: document.getElementById('level-complete-screen'),
+            successText: document.getElementById('success-text'),
+            successCoins: document.getElementById('success-coins'),
+            nextLvlBtn: document.getElementById('next-level-btn')
+        };
+
+        let state = 'START'; // START, PLAYING, PAUSED, LEVEL_COMPLETE, GAMEOVER
+        let reqId;
+        
+        let width, height, laneWidth;
+        const numLanes = 3;
+        
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            const dpr = window.devicePixelRatio || 1;
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            ctx.scale(dpr, dpr);
+            laneWidth = width / numLanes;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+        document.body.addEventListener('touchmove', function(e) { e.preventDefault(); }, { passive: false });
+
+        // --- Audio System ---
+        let audioCtx, engineOsc, engineGain;
+        let soundEnabled = true;
+        
+        function initAudio() {
+            if (audioCtx) return;
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if(!AudioContext) return;
+            audioCtx = new AudioContext();
+            
+            engineOsc = audioCtx.createOscillator();
+            engineOsc.type = 'sawtooth';
+            engineOsc.frequency.value = 60;
+            engineGain = audioCtx.createGain();
+            engineGain.gain.value = 0;
+            
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass'; filter.frequency.value = 200;
+            
+            engineOsc.connect(filter); filter.connect(engineGain); engineGain.connect(audioCtx.destination);
+            engineOsc.start();
+        }
+        
+
+        
+        function updateEngineSound() {
+            if (!audioCtx || !soundEnabled) return;
+            if (state === 'PLAYING') {
+                engineGain.gain.setTargetAtTime(0.3, audioCtx.currentTime, 0.1);
+                engineOsc.frequency.setTargetAtTime(60 + (currentSpeed * 4), audioCtx.currentTime, 0.1);
+            } else {
+                engineGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+            }
+        }
+        
+        function playCoinSound() {
+            if (!soundEnabled || !audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine'; osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(2000, audioCtx.currentTime + 0.1);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start();
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            setTimeout(() => osc.stop(), 150);
+        }
+
+        function playPowerupSound() {
+            if (!soundEnabled || !audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle'; osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.3);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start();
+            gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
+            setTimeout(() => osc.stop(), 350);
+        }
+        
+        document.getElementById('sound-btn').addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            document.getElementById('sound-btn').innerText = soundEnabled ? '🔊' : '🔇';
+            if(!soundEnabled && engineGain) engineGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+        });
+
+
+
+        const baseSpeed = 5.5;
+        let currentSpeed = baseSpeed;
+        
+        let distance = 0, coins = 0, coinsAtStartOfLevel = 0, energy = 100, level = 1, frameCount = 0;
+        let freeCngSpawnedThisLevel = 0;
+        const COINS_PER_LEVEL = 200;
+        
+        let entities = [], particles = [];
+        
+        function sendBridgeMessage(type, payload) {
+            const msg = JSON.stringify({ event: type, data: payload });
+            window.parent.postMessage(msg, '*');
+            if (window.ReactNativeWebView && window.ReactNativeWebView.postMessage) window.ReactNativeWebView.postMessage(msg);
+        }
+
+        const player = {
+            lane: 1, w: 0, h: 0, x: 0, y: 0, targetX: 0,
+            update() {
+                this.w = laneWidth * 0.55;
+                this.h = this.w * 1.5;
+                this.y = height - this.h - 80;
+                this.targetX = (this.lane * laneWidth) + (laneWidth / 2);
+                this.x += (this.targetX - this.x) * 0.3;
+            },
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                // Removed hardcoded rectangle shadow
+                
+                if (rickshawImg.complete && rickshawImg.naturalWidth > 0) {
+                    const aspect = rickshawImg.naturalHeight / rickshawImg.naturalWidth;
+                    const drawH = this.w * aspect;
+                    ctx.drawImage(rickshawImg, -this.w/2, -drawH/2 + this.h/2, this.w, drawH);
+                } else {
+                    ctx.fillStyle = '#00B140'; ctx.beginPath(); ctx.roundRect(-this.w/2, 0, this.w, this.h, 10); ctx.fill();
+                }
+                ctx.restore();
+            }
+        };
+
+        class Entity {
+            constructor(type, lane) {
+                this.type = type;
+                this.lane = lane;
+                this.x = (lane * laneWidth) + (laneWidth / 2);
+                this.y = -200;
+                this.w = laneWidth * 0.6;
+                this.h = this.w * 2;
+                this.speedMult = 1;
+                this.isChangingLane = false;
+                
+                if (type === 'bus' || type === 'white_bus') {
+                    this.w = laneWidth * 0.75; this.h = this.w * 2.2; this.speedMult = 0.85;
+                } else if (type === 'car' || type === 'green_car') {
+                    this.w = laneWidth * 0.6; this.h = this.w * 1.8; this.speedMult = 1.1;
+                } else if (type === 'cow' || type === 'white_cow') {
+                    this.w = laneWidth * 0.6; this.h = this.w * 1.2;
+                } else if (type === 'passenger') {
+                    this.w = laneWidth * 0.3; this.h = this.w; this.color = '#FFA500';
+                    this.val = Math.floor(Math.random() * 20) + 15;
+                } else if (type === 'cng') {
+                    this.w = laneWidth * 0.45; this.h = this.w * 1.3; this.color = '#00FFFF';
+                    this.boost = 40;
+                    this.cost = 15;
+                } else if (type === 'free_cng') {
+                    this.w = laneWidth * 0.5; this.h = this.w * 1.4; this.color = '#FFD700';
+                }
+            }
+            update() { 
+                this.y += currentSpeed * this.speedMult; 
+                if (this.isChangingLane) {
+                    const diff = this.targetX - this.x;
+                    this.x += diff * 0.1;
+                    if (Math.abs(diff) < 2) {
+                        this.x = this.targetX;
+                        this.lane = this.targetLane;
+                        this.isChangingLane = false;
+                    }
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                // Removed hardcoded rectangle shadow
+
+                if (this.type === 'bus') {
+                    if (busImg.complete && busImg.naturalWidth > 0) {
+                        const aspect = busImg.naturalHeight / busImg.naturalWidth;
+                        const drawH = this.w * aspect;
+                        ctx.drawImage(busImg, -this.w/2, -drawH/2 + this.h/2, this.w, drawH);
+                    }
+                    else { ctx.fillStyle = '#DD0000'; ctx.fillRect(-this.w/2, 0, this.w, this.h); }
+                } 
+                else if (this.type === 'white_bus') {
+                    if (whiteBusImg.complete && whiteBusImg.naturalWidth > 0) {
+                        const aspect = whiteBusImg.naturalHeight / whiteBusImg.naturalWidth;
+                        const drawH = this.w * aspect;
+                        ctx.drawImage(whiteBusImg, -this.w/2, -drawH/2 + this.h/2, this.w, drawH);
+                    }
+                    else { ctx.fillStyle = '#FFFFFF'; ctx.fillRect(-this.w/2, 0, this.w, this.h); }
+                } 
+                else if (this.type === 'car') {
+                    if (carImg.complete && carImg.naturalWidth > 0) {
+                        const aspect = carImg.naturalHeight / carImg.naturalWidth;
+                        const drawH = this.w * aspect;
+                        ctx.drawImage(carImg, -this.w/2, -drawH/2 + this.h/2, this.w, drawH);
+                    }
+                    else { ctx.fillStyle = '#3366FF'; ctx.fillRect(-this.w/2, 0, this.w, this.h); }
+                } 
+                else if (this.type === 'green_car') {
+                    if (greenCarImg.complete && greenCarImg.naturalWidth > 0) {
+                        const aspect = greenCarImg.naturalHeight / greenCarImg.naturalWidth;
+                        const drawH = this.w * aspect;
+                        ctx.drawImage(greenCarImg, -this.w/2, -drawH/2 + this.h/2, this.w, drawH);
+                    }
+                    else { ctx.fillStyle = '#00FF00'; ctx.fillRect(-this.w/2, 0, this.w, this.h); }
+                } 
+                else if (this.type === 'cow') {
+                    if (cowImg.complete && cowImg.naturalWidth > 0) {
+                        const aspect = cowImg.naturalHeight / cowImg.naturalWidth;
+                        const drawH = this.w * aspect;
+                        ctx.drawImage(cowImg, -this.w/2, -drawH/2 + this.h/2, this.w, drawH);
+                    }
+                    else { ctx.fillStyle = '#FFFFFF'; ctx.fillRect(-this.w/2, 0, this.w, this.h); }
+                } 
+                else if (this.type === 'white_cow') {
+                    if (whiteCowImg.complete && whiteCowImg.naturalWidth > 0) {
+                        const aspect = whiteCowImg.naturalHeight / whiteCowImg.naturalWidth;
+                        const drawH = this.w * aspect;
+                        ctx.drawImage(whiteCowImg, -this.w/2, -drawH/2 + this.h/2, this.w, drawH);
+                    }
+                    else { ctx.fillStyle = '#FFFFFF'; ctx.fillRect(-this.w/2, 0, this.w, this.h); }
+                } 
+                else if (this.type === 'passenger') {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath(); ctx.arc(0, this.h/2, this.w/2, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = '#FFF'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    ctx.font = 'bold ' + (this.w*0.6) + 'px sans-serif'; ctx.fillText('₹', 0, this.h/2);
+                } 
+                else if (this.type === 'cng') {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath(); ctx.roundRect(-this.w/2, 0, this.w, this.h, 15); ctx.fill();
+                    ctx.shadowBlur = 15; ctx.shadowColor = '#00FFFF';
+                    ctx.fillStyle = '#FFF'; ctx.textAlign = 'center'; ctx.font = 'bold 20px sans-serif';
+                    ctx.fillText('⚡', 0, this.h/2);
+                    ctx.shadowBlur = 0;
+                    ctx.font = 'bold 16px sans-serif'; ctx.fillStyle = '#FFD700'; ctx.fillText('-₹'+this.cost, 0, -10);
+                }
+                else if (this.type === 'free_cng') {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath(); ctx.roundRect(-this.w/2, 0, this.w, this.h, 15); ctx.fill();
+                    ctx.shadowBlur = 15; ctx.shadowColor = '#FFD700';
+                    ctx.fillStyle = '#000'; ctx.textAlign = 'center'; ctx.font = 'bold 20px sans-serif';
+                    ctx.fillText('100%', 0, this.h/2);
+                    ctx.shadowBlur = 0;
+                    ctx.font = 'bold 16px sans-serif'; ctx.fillStyle = '#00FF44'; ctx.fillText('FREE', 0, -10);
+                }
+                ctx.restore();
+            }
+        }
+
+        class Particle {
+            constructor(x, y, text, color, isExplosion = false) {
+                this.x = x; this.y = y; this.text = text; this.color = color;
+                this.life = 1.0; this.isExplosion = isExplosion;
+                this.scale = 2.0;
+                if(isExplosion) {
+                    this.vx = (Math.random() - 0.5) * 10;
+                    this.vy = (Math.random() - 0.5) * 10;
+                } else {
+                    this.vy = -3;
+                }
+            }
+            update() {
+                this.scale += (1.0 - this.scale) * 0.15;
+                if(this.isExplosion) { this.x += this.vx; this.y += this.vy; this.life -= 0.02; }
+                else { this.y += this.vy; this.life -= 0.02; }
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, this.life);
+                ctx.translate(this.x, this.y);
+                if(this.isExplosion) {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath(); ctx.arc(0, 0, 5, 0, Math.PI*2); ctx.fill();
+                } else {
+                    ctx.scale(this.scale, this.scale);
+                    ctx.fillStyle = this.color;
+                    ctx.font = 'bold 28px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.shadowColor = 'black'; ctx.shadowBlur = 4;
+                    ctx.fillText(this.text, 0, 0);
+                }
+                ctx.restore();
+            }
+        }
+
+        // --- Input & Pause Logic ---
+        let startX = 0, endX = 0;
+        
+        function togglePause() {
+            if (state === 'PLAYING') {
+                state = 'PAUSED';
+                ui.pauseScreen.classList.remove('hidden');
+            } else if (state === 'PAUSED') {
+                state = 'PLAYING';
+                ui.pauseScreen.classList.add('hidden');
+            }
+        }
+
+        function handleInput(diff) {
+            if (state !== 'PLAYING') return;
+            if (diff > 35 && player.lane < 2) player.lane++;
+            else if (diff < -35 && player.lane > 0) player.lane--;
+        }
+
+        canvas.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, {passive: false});
+        canvas.addEventListener('touchend', e => { 
+            endX = e.changedTouches[0].clientX; 
+            const diff = endX - startX;
+            if (Math.abs(diff) < 15 && (state === 'PLAYING' || state === 'PAUSED')) {
+                togglePause();
+            } else {
+                handleInput(diff); 
+            }
+            e.preventDefault(); 
+        }, {passive: false});
+        
+        window.addEventListener('keydown', e => {
+            if (e.key === ' ' || e.key === 'p') togglePause();
+            if (state !== 'PLAYING') return;
+            if (e.key === 'ArrowLeft' && player.lane > 0) player.lane--;
+            if (e.key === 'ArrowRight' && player.lane < 2) player.lane++;
+        });
+        
+        // Mouse support for desktop testing
+        let isDown = false;
+        canvas.addEventListener('mousedown', e => { isDown = true; startX = e.clientX; });
+        canvas.addEventListener('mouseup', e => {
+            if(!isDown) return;
+            endX = e.clientX;
+            const diff = endX - startX;
+            if (Math.abs(diff) < 10 && (state === 'PLAYING' || state === 'PAUSED')) {
+                togglePause();
+            } else {
+                handleInput(diff);
+            }
+            isDown = false;
+        });
+
+        // --- Logic ---
+        function spawn() {
+            if(state !== 'PLAYING') return;
+            const spawnRate = Math.max(20, 70 - (level * 5));
+            if (frameCount % spawnRate === 0) {
+                const lane = Math.floor(Math.random() * numLanes);
+                if(entities.some(e => e.lane === lane && e.y < 250)) return;
+                const r = Math.random();
+                const progressCoins = coins - coinsAtStartOfLevel;
+                const cngExists = entities.some(e => e.type === 'cng' || e.type === 'free_cng');
+                
+                // Guarantee Free CNG around 80 and 160 coins
+                if (progressCoins >= 80 && freeCngSpawnedThisLevel === 0) {
+                    entities.push(new Entity('free_cng', lane));
+                    freeCngSpawnedThisLevel++;
+                } else if (progressCoins >= 160 && freeCngSpawnedThisLevel === 1) {
+                    entities.push(new Entity('free_cng', lane));
+                    freeCngSpawnedThisLevel++;
+                } else if (energy < 30 && !cngExists) {
+                    entities.push(new Entity('cng', lane));
+                } else {
+                    if (r < 0.60) {
+                        const types = ['car', 'car', 'bus', 'cow', 'white_bus', 'green_car', 'white_cow'];
+                        entities.push(new Entity(types[Math.floor(Math.random()*types.length)], lane));
+                    } else if (r < 0.85) {
+                        entities.push(new Entity('passenger', lane));
+                    } else {
+                        entities.push(new Entity('cng', lane));
+                    }
+                }
+            }
+        }
+
+        function triggerLevelComplete() {
+            state = 'LEVEL_COMPLETE';
+            ui.lvlCompleteScreen.classList.remove('hidden');
+            ui.successText.innerText = `LEVEL ${level} CLEARED!`;
+            ui.successCoins.innerText = coins;
+            ui.nextLvlBtn.innerText = `START LEVEL ${level + 1}`;
+            
+            for(let i=0; i<150; i++) {
+                const colors = ['#FFD700', '#00FF44', '#00FFFF', '#FF00FF', '#FF4400'];
+                particles.push(new Particle(width/2, height*0.3, '', colors[Math.floor(Math.random()*colors.length)], true));
+            }
+        }
+
+        function checkProgression() {
+            const progressCoins = coins - coinsAtStartOfLevel;
+            let percent = (progressCoins / COINS_PER_LEVEL) * 100;
+            if (percent < 0) percent = 0;
+            
+            if (progressCoins >= COINS_PER_LEVEL) {
+                percent = 100;
+                ui.progBar.style.width = percent + '%';
+                setTimeout(triggerLevelComplete, 200); 
+                return;
+            }
+            ui.progBar.style.width = percent + '%';
+        }
+
+        function collide() {
+            if(state !== 'PLAYING') return;
+            const pad = 12;
+            const px = player.x - player.w/2 + pad, py = player.y + pad;
+            const pw = player.w - pad*2, ph = player.h - pad*2;
+
+            for (let i = entities.length - 1; i >= 0; i--) {
+                const e = entities[i];
+                // 15% safe margin on top/bottom/sides for obstacles
+                const ePadX = e.w * 0.15;
+                const ePadY = e.h * 0.15;
+                const ex = e.x - e.w/2 + ePadX;
+                const ey = e.y + ePadY;
+                const ew = e.w - ePadX*2;
+                const eh = e.h - ePadY*2;
+                
+                if (px < ex + ew && px + pw > ex && py < ey + eh && py + ph > ey) {
+                    if (['bus', 'car', 'cow', 'white_bus', 'green_car', 'white_cow'].includes(e.type)) {
+                        gameOver(); return;
+                    } else if (e.type === 'passenger') {
+                        coins += e.val;
+                        playCoinSound();
+                        particles.push(new Particle(e.x, e.y, '+₹'+e.val, '#FFD700'));
+                        entities.splice(i, 1);
+                        checkProgression();
+                        ui.coins.parentElement.style.transform = 'scale(1.15)';
+                        setTimeout(() => ui.coins.parentElement.style.transform = 'scale(1)', 150);
+                    } else if (e.type === 'free_cng') {
+                        energy = 100;
+                        playPowerupSound();
+                        particles.push(new Particle(e.x, e.y, 'FREE 100%!', '#00FF44'));
+                        entities.splice(i, 1);
+                        ui.energy.parentElement.style.transform = 'scale(1.15)';
+                        setTimeout(() => ui.energy.parentElement.style.transform = 'scale(1)', 150);
+                    } else if (e.type === 'cng') {
+                        playPowerupSound();
+                        if (coins > 0) {
+                            coins -= Math.min(coins, e.cost);
+                            energy = Math.min(100, energy + e.boost);
+                            particles.push(new Particle(e.x, e.y, '⚡ CNG FULL!', '#00FFFF'));
+                        } else {
+                            energy = Math.min(100, energy + e.boost);
+                            particles.push(new Particle(e.x, e.y, '⚡ FREE FUEL!', '#00FFFF'));
+                        }
+                        entities.splice(i, 1);
+                        checkProgression();
+                        ui.energy.parentElement.style.transform = 'scale(1.15)';
+                        setTimeout(() => ui.energy.parentElement.style.transform = 'scale(1)', 150);
+                    }
+                }
+            }
+        }
+
+        function updateHUD() {
+            ui.score.innerText = Math.floor(distance / 10);
+            ui.coins.innerText = coins;
+            ui.level.innerText = level;
+            ui.energy.style.width = energy + '%';
+            if(energy < 20) ui.energy.style.background = 'linear-gradient(90deg, #FF0000, #FF5555)';
+            else if(energy < 50) ui.energy.style.background = 'linear-gradient(90deg, #FFA500, #FFD700)';
+            else ui.energy.style.background = 'linear-gradient(90deg, #00FFFF, #00FF00)';
+        }
+
+        function renderRoad() {
+            ctx.fillStyle = '#1c1c1c'; ctx.fillRect(0, 0, width, height);
+            ctx.strokeStyle = '#FFD700'; ctx.lineWidth = 6; ctx.setLineDash([80, 50]);
+            if(state === 'PLAYING') ctx.lineDashOffset = -(distance * 0.8) % 130;
+            for (let i = 1; i < numLanes; i++) {
+                ctx.beginPath(); ctx.moveTo(i * laneWidth, 0); ctx.lineTo(i * laneWidth, height); ctx.stroke();
+            }
+            ctx.setLineDash([]);
+        }
+
+        function update() {
+            if (state === 'PLAYING') {
+                distance += currentSpeed;
+                energy -= 0.08;
+                if (energy <= 0) { gameOver(); return; }
+                player.update();
+                spawn();
+                
+                // Auto Dodge Logic for polite vehicles
+                entities.forEach(e => {
+                    if (['white_bus', 'green_car', 'white_cow'].includes(e.type) && e.lane === player.lane && e.y < player.y && e.y > player.y - 600 && !e.isChangingLane) {
+                        const safeLanes = [];
+                        for(let l=0; l<numLanes; l++) {
+                            if(l === e.lane) continue;
+                            let isSafe = true;
+                            entities.forEach(other => {
+                                if(other !== e && other.lane === l && Math.abs(other.y - e.y) < e.h + 100) isSafe = false;
+                            });
+                            if(isSafe) safeLanes.push(l);
+                        }
+                        if (safeLanes.length > 0) {
+                            e.isChangingLane = true;
+                            let newLane = safeLanes[0];
+                            if (safeLanes.includes(e.lane + 1)) newLane = e.lane + 1;
+                            else if (safeLanes.includes(e.lane - 1)) newLane = e.lane - 1;
+                            e.targetLane = newLane;
+                            e.targetX = (newLane * laneWidth) + (laneWidth / 2);
+                        }
+                    }
+                });
+            }
+            
+            for (let i = entities.length - 1; i >= 0; i--) {
+                if(state === 'PLAYING') entities[i].update();
+                if (entities[i].y > height + 200) entities.splice(i, 1);
+            }
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                if (particles[i].life <= 0) particles.splice(i, 1);
+            }
+            if(state === 'PLAYING') { collide(); updateHUD(); frameCount++; }
+        }
+
+        function draw() {
+            renderRoad();
+            entities.sort((a,b) => a.y - b.y);
+            entities.forEach(e => e.draw());
+            player.draw();
+            particles.forEach(p => p.draw());
+        }
+
+        function loop() {
+            if (state === 'PLAYING' || state === 'LEVEL_COMPLETE' || state === 'PAUSED') {
+                update(); draw();
+            }
+            updateEngineSound();
+            reqId = requestAnimationFrame(loop);
+        }
+
+        // --- Flow Control ---
+        function startGame() {
+            initAudio();
+            state = 'PLAYING';
+            distance = 0; coins = 0; coinsAtStartOfLevel = 0; energy = 100; level = 1; currentSpeed = baseSpeed;
+            entities = []; particles = []; frameCount = 0; freeCngSpawnedThisLevel = 0;
+            player.lane = 1; player.x = (1 * laneWidth) + (laneWidth / 2);
+            
+            ui.start.classList.add('hidden');
+            ui.stats.classList.remove('hidden');
+            ui.progContainer.classList.remove('hidden');
+            checkProgression(); 
+            
+            sendBridgeMessage('GAME_START', { level: 1 });
+        }
+
+        document.getElementById('next-level-btn').addEventListener('click', () => {
+            level++;
+            currentSpeed += 0.8;
+            energy = 100; 
+            coinsAtStartOfLevel = coins;
+            entities = []; 
+            particles = []; 
+            freeCngSpawnedThisLevel = 0;
+            ui.lvlCompleteScreen.classList.add('hidden');
+            state = 'PLAYING';
+            checkProgression(); 
+        });
+
+        function gameOver() {
+            state = 'GAMEOVER';
+            for(let i=0; i<30; i++) particles.push(new Particle(player.x, player.y, '', '#FF0000', true));
+            draw();
+            ui.stats.classList.add('hidden');
+            ui.progContainer.classList.add('hidden');
+            coins = coinsAtStartOfLevel;
+            sendBridgeMessage('GAME_OVER', { score: Math.floor(distance/10), coins: coins, level: level });
+        }
+
+        document.getElementById('start-btn').addEventListener('click', startGame);
+
+        const menuLeaderboardBtn = document.getElementById('menu-leaderboard-btn');
+        if (menuLeaderboardBtn) {
+            menuLeaderboardBtn.addEventListener('click', () => {
+                sendBridgeMessage('SHOW_LEADERBOARD', {});
+            });
+        }
+
+        // Retrieve username and update welcome message
+        try {
+            const userProfile = JSON.parse(localStorage.getItem('user_profile') || '{}');
+            const userName = userProfile.name || localStorage.getItem('google_name') || localStorage.getItem('user_full_name') || '';
+            if (userName) {
+                const welcomeEl = document.createElement('p');
+                welcomeEl.className = 'welcome-tag';
+                welcomeEl.innerHTML = `આવો, <span style="color: #FFD700; font-weight: 800;">${userName}</span>!`;
+                
+                const card = document.querySelector('.info-box');
+                if (card) {
+                    card.parentNode.insertBefore(welcomeEl, card);
+                }
+            }
+        } catch (e) {
+            console.error("Error reading username", e);
+        }
+
+        player.update(); renderRoad(); player.draw();
+        reqId = requestAnimationFrame(loop);
+    </script>
+</body>
+</html>

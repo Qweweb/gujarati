@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { ScratchCardModal, MOCK_COUPONS } from './ScratchRewards';
+import { ScratchCardModal, fetchMatchingCoupon } from './ScratchRewards';
+import LeaderboardUnified from './LeaderboardUnified';
 
 const QUIZ_QUESTIONS = [
   {
@@ -39,6 +39,8 @@ const QUIZ_QUESTIONS = [
   }
 ];
 
+const defaultAvatar = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23a8a29e"><circle cx="12" cy="8" r="4"/><path d="M12 14c-6.1 0-8 4-8 4v2h16v-2s-1.9-4-8-4z"/></svg>`;
+
 export default function GujaratQuiz() {
   const [gameState, setGameState] = useState('start'); // start | play | end
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -67,14 +69,18 @@ export default function GujaratQuiz() {
   // Load Leaderboard on mount/end
   useEffect(() => {
     const userCoins = parseInt(localStorage.getItem('gujarat_coins') || '120', 10);
+    const profile = JSON.parse(localStorage.getItem('user_profile') || '{}');
+    const userName = profile.name || localStorage.getItem('google_name') || "તમે (User)";
+    const userAvatar = (profile.avatar && !profile.avatar.includes('pravatar.cc')) ? profile.avatar : (localStorage.getItem('google_avatar') || defaultAvatar);
+
     const mockCompetitors = [
-      { name: "ભાવેશ રાઠોડ", score: 280, rank: 1 },
-      { name: "નિરવ વાઘેલા", score: 220, rank: 2 },
-      { name: "તમે (અનિલભાઈ)", score: userCoins, rank: 3 },
-      { name: "જયેશ મેવાડા", score: 180, rank: 4 },
-      { name: "પ્રીતિ ચૌહાણ", score: 140, rank: 5 }
+      { name: "ભાવેશ રાઠોડ", score: 280, avatar: "https://i.pravatar.cc/150?u=bhavesh", city: "અમદાવાદ" },
+      { name: "નિરવ વાઘેલા", score: 220, avatar: "https://i.pravatar.cc/150?u=nirav", city: "ગાંધીનગર" },
+      { name: userName, score: userCoins, isUser: true, avatar: userAvatar, city: profile.city },
+      { name: "જયેશ મેવાડા", score: 180, avatar: "https://i.pravatar.cc/150?u=jayesh", city: "પાટણ" },
+      { name: "પ્રીતિ ચૌહાણ", score: 140, avatar: "https://i.pravatar.cc/150?u=priti", city: "સુરત" }
     ];
-    setLeaderboard(mockCompetitors.sort((a, b) => b.score - a.score).map((item, idx) => ({ ...item, rank: idx + 1 })));
+    setLeaderboard(mockCompetitors.sort((a, b) => b.score - a.score));
   }, [gameState]);
 
   const handleStartGame = () => {
@@ -113,9 +119,11 @@ export default function GujaratQuiz() {
       // If perfect score, unlock coupon!
       if (score + (lastWasCorrect ? 1 : 0) === QUIZ_QUESTIONS.length) {
         // Trigger Scratch Reward Modal
-        const randomCoupon = MOCK_COUPONS[Math.floor(Math.random() * MOCK_COUPONS.length)];
-        setTimeout(() => {
-          setActiveCoupon(randomCoupon);
+        setTimeout(async () => {
+          const userLoc = JSON.parse(localStorage.getItem('user_location') || 'null');
+          const profile = JSON.parse(localStorage.getItem('user_profile') || '{}');
+          const coupon = await fetchMatchingCoupon(userLoc, profile);
+          setActiveCoupon(coupon);
         }, 800);
       }
     }
@@ -131,14 +139,14 @@ export default function GujaratQuiz() {
 
       {gameState === 'start' && (
         <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-850 p-8 rounded-[2.5rem] shadow-sm text-center flex flex-col items-center justify-center gap-6">
-          <span className="material-symbols-outlined text-6xl text-amber-500 animate-bounce">emoji_events</span>
+          <span className="material-symbols-outlined text-6xl text-yellow-600 animate-bounce">emoji_events</span>
           <h3 className="font-gujarati font-black text-2xl text-on-surface">ક્વિઝ શરૂ કરવા તૈયાર છો?</h3>
           <p className="font-gujarati text-xs text-stone-500 max-w-sm leading-relaxed">
             દરેક પ્રશ્ન માટે ૧૫ સેકન્ડનો સમય મળશે. સાચા જવાબ પર **+૫ સિક્કા** અને ૫ માંથી ૫ સાચા પડે તો **સરપ્રાઇઝ સ્ક્રૅચ કૂપન** મળશે!
           </p>
           <button
             onClick={handleStartGame}
-            className="px-10 py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white rounded-2xl font-gujarati font-black text-base shadow-xl active:scale-95 transition-all"
+            className="px-10 py-4 bg-gradient-to-r from-yellow-600 to-teal-600 hover:from-yellow-400 hover:to-teal-400 text-white rounded-2xl font-gujarati font-black text-base shadow-xl active:scale-95 transition-all"
           >
             રમત શરૂ કરો 🚀
           </button>
@@ -152,7 +160,7 @@ export default function GujaratQuiz() {
             <span className="font-gujarati font-bold text-xs text-stone-400">
               પ્રશ્ન {currentIdx + 1} / {QUIZ_QUESTIONS.length}
             </span>
-            <span className={`h-8 w-16 rounded-full flex items-center justify-center font-mono font-black text-sm text-white ${timer < 5 ? 'bg-red-500 animate-pulse' : 'bg-primary'}`}>
+            <span className={`h-8 w-16 rounded-full flex items-center justify-center font-mono font-black text-sm text-white ${timer < 5 ? 'bg-emerald-600 animate-pulse' : 'bg-primary'}`}>
               00:{timer < 10 ? `0${timer}` : timer}
             </span>
           </div>
@@ -177,7 +185,7 @@ export default function GujaratQuiz() {
               let btnClass = "border-stone-200 dark:border-stone-800 hover:border-primary text-stone-700 dark:text-stone-300";
               if (selectedAns !== null) {
                 if (isCorrectAns) btnClass = "bg-emerald-500 border-emerald-500 text-white shadow-lg";
-                else if (isSelected) btnClass = "bg-red-500 border-red-500 text-white shadow-lg";
+                else if (isSelected) btnClass = "bg-emerald-600 border-emerald-600 text-white shadow-lg";
                 else btnClass = "opacity-50 border-stone-100 dark:border-stone-850 text-stone-400";
               }
 
@@ -203,7 +211,7 @@ export default function GujaratQuiz() {
           <div className="flex-1 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-850 p-8 rounded-[2.5rem] shadow-sm text-center flex flex-col items-center justify-center gap-6">
             <span className="material-symbols-outlined text-6xl text-primary animate-pulse">check_circle</span>
             <h3 className="font-gujarati font-black text-2xl text-on-surface">ક્વિઝ સમાપ્ત! 🏁</h3>
-            <div className="bg-[#fef8f1] dark:bg-stone-950 p-5 rounded-2xl border border-primary/10 max-w-xs w-full text-center">
+            <div className="bg-[#F8FAFC] dark:bg-stone-950 p-5 rounded-2xl border border-primary/10 max-w-xs w-full text-center">
               <p className="font-gujarati text-xs text-stone-400 font-bold uppercase tracking-widest">તમારો સ્કોર</p>
               <h4 className="font-headline font-black text-4xl mt-1 text-primary">{score} / {QUIZ_QUESTIONS.length}</h4>
               <p className="font-gujarati text-[10px] text-stone-500 mt-2">જીતેલા કોઈન્સ: +{score * 5} 🪙</p>
@@ -224,22 +232,15 @@ export default function GujaratQuiz() {
           </div>
 
           {/* Leaderboard Panel */}
-          <div className="w-full md:w-80 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-850 p-6 rounded-[2.5rem] shadow-sm space-y-4">
-            <h4 className="font-gujarati font-black text-xl text-on-surface">ગુજરાત લીડરબોર્ડ 🏆</h4>
-            <div className="space-y-3">
-              {leaderboard.map((item, idx) => (
-                <div key={idx} className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${item.name.includes("તમે") ? 'bg-primary/10 border-primary/20 scale-[1.02]' : 'border-stone-100 dark:border-stone-800'}`}>
-                  <span className={`h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs text-white ${item.rank === 1 ? 'bg-yellow-400' : item.rank === 2 ? 'bg-stone-400' : item.rank === 3 ? 'bg-orange-400' : 'bg-stone-200 text-stone-600'}`}>
-                    {item.rank}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <h5 className="font-gujarati font-bold text-sm text-stone-800 dark:text-stone-100 truncate">{item.name}</h5>
-                    <p className="font-gujarati text-[9px] text-stone-400">મુખ્ય કોઈન્સ સ્કોર</p>
-                  </div>
-                  <span className="font-headline font-black text-sm text-primary">{item.score} 🪙</span>
-                </div>
-              ))}
-            </div>
+          <div className="w-full md:w-80">
+            <LeaderboardUnified 
+              title="ગુજરાત ક્વિઝ લીડરબોર્ડ" 
+              icon="social_leaderboard"
+              data={leaderboard}
+              userRank={leaderboard.findIndex(u => u.isUser) + 1}
+              scoreLabel="🪙"
+              showStreak={false}
+            />
           </div>
 
         </div>

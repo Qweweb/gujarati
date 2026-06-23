@@ -1,7 +1,7 @@
 {
   "name": "gujarati",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.2.7",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -24,9 +24,13 @@
     "@capacitor/splash-screen": "^8.0.1",
     "@capacitor/status-bar": "^8.0.2",
     "@supabase/supabase-js": "^2.106.1",
+    "astronomy-engine": "^2.1.19",
+    "dotenv": "^17.4.2",
     "html-to-image": "^1.11.13",
     "html2canvas": "^1.4.1",
+    "html2pdf.js": "^0.14.0",
     "lz-string": "^1.5.0",
+    "qrcode.react": "^4.2.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router-dom": "^7.14.0"
@@ -42,6 +46,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "playwright": "^1.60.0",
     "postcss": "^8.5.9",
     "tailwindcss": "^4.2.2",
     "vite": "^8.0.4"

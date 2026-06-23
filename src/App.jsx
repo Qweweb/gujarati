@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 import Layout from './components/Layout';
 import Dashboard from './components/Dashboard';
 import HealthAssistant from './components/HealthAssistant';
@@ -14,6 +15,10 @@ import Onboarding from './components/Onboarding';
 import Login from './components/Login';
 import OfflineSettings from './components/OfflineSettings';
 import Settings from './components/Settings';
+import VCardDashboard from './components/vcard/VCardDashboard';
+import VCardEditor from './components/vcard/VCardEditor';
+import VCardPublic from './components/vcard/VCardPublic';
+
 import Panchang from './components/Panchang';
 import KundaliGenerator from './components/KundaliGenerator';
 import VastuCalculator from './components/VastuCalculator';
@@ -28,13 +33,62 @@ import AdminDashboard from './components/AdminDashboard';
 import DailyChallenge from './components/DailyChallenge';
 import GujaratSafari from './components/GujaratSafari';
 import GujaratQuiz from './components/GujaratQuiz';
+import MariSociety from './components/MariSociety';
+import RamatoHub from './components/RamatoHub';
+import EnglishZone from './components/EnglishZone';
+import KbcQuizGame from './components/KbcQuizGame';
+import KhamanJalebiCrusher from './components/KhamanJalebiCrusher';
+import TrafficTod from './components/TrafficTod';
+import FarasanSlicer from './components/FarasanSlicer';
+import KiteCutter from './components/KiteCutter';
+import PrivacyPolicy from './components/PrivacyPolicy';
 import SwipeCards from './components/SwipeCards';
 import MysteryHub from './components/MysteryHub';
 import TravelPassport from './components/TravelPassport';
 import ScratchRewards from './components/ScratchRewards';
 import './App.css';
 import { App as CapApp } from '@capacitor/app';
+import { PushNotifications } from '@capacitor/push-notifications';
 import { supabase } from './supabaseClient';
+
+// Route guard component to check feature flags
+const FeatureGuard = ({ children, featureKey, fallbackPath = "/" }) => {
+  const { featureFlags } = useTheme();
+  const status = featureFlags[featureKey] || 'live';
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (status === 'off') {
+      window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: "આ વિભાગ હાલ પૂરતો બંધ છે." } }));
+      navigate(fallbackPath);
+    }
+  }, [status, navigate, fallbackPath]);
+
+  if (status === 'off') {
+    return null;
+  }
+
+  if (status === 'coming_soon') {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center animate-fade-in">
+        <div className="w-20 h-20 mx-auto bg-gradient-to-tr from-amber-500 to-amber-600 rounded-full flex items-center justify-center shadow-lg animate-bounce mb-6">
+           <span className="material-symbols-outlined text-white text-4xl">construction</span>
+        </div>
+        <h2 className="font-gujarati font-black text-2xl text-amber-800 dark:text-amber-500 mb-3">
+          ટૂંક સમયમાં આવી રહ્યું છે!
+        </h2>
+        <p className="font-gujarati text-stone-600 dark:text-stone-300 text-sm max-w-xs mx-auto leading-relaxed mb-6">
+          આ સેક્શન પર હજુ કામ ચાલુ છે. ખૂબ જ નજીકના સમયમાં આ સેવા શરૂ કરવામાં આવશે. કૃપા કરીને થોડી પ્રતીક્ષા કરો. 🙏
+        </p>
+        <button onClick={() => navigate('/')} className="px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-gujarati font-bold shadow-md transition-all cursor-pointer">
+          મુખ્ય પેજ પર પાછા જાઓ
+        </button>
+      </div>
+    );
+  }
+
+  return children;
+};
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -45,6 +99,17 @@ function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+
+  // Initialize Speech Synthesis Voices globally
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      // For Windows/Chrome, calling getVoices() once triggers the background load
+      window.speechSynthesis.getVoices();
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+    }
+  }, []);
 
   // Extremely robust theme applier
   useEffect(() => {
@@ -157,6 +222,19 @@ function App() {
 
     setupDeepLink();
 
+    // Hardware Back Button Listener (Android)
+    try {
+      CapApp.addListener('backButton', () => {
+        if (window.location.pathname === '/') {
+          CapApp.exitApp();
+        } else {
+          window.history.back();
+        }
+      });
+    } catch (e) {
+      console.warn("Back button listener not supported in browser:", e);
+    }
+
     return () => {
       subscription.unsubscribe();
       try {
@@ -166,6 +244,56 @@ function App() {
       }
     };
   }, []);
+
+  
+    // Push Notifications Setup
+    useEffect(() => {
+      let isMounted = true;
+      const setupPush = async () => {
+        try {
+          // Check if it's native platform (PushNotifications don't work on web easily without service workers setup)
+          const isPushAvailable = !!PushNotifications.requestPermissions;
+          if (!isPushAvailable) return;
+          
+          let permStatus = await PushNotifications.checkPermissions();
+          if (permStatus.receive === 'prompt') {
+            permStatus = await PushNotifications.requestPermissions();
+          }
+          if (permStatus.receive !== 'granted') {
+            console.log('Push notification permission denied');
+            return;
+          }
+          
+          await PushNotifications.register();
+          
+          await PushNotifications.addListener('registration', (token) => {
+            console.log('Push registration success, token: ' + token.value);
+            // Here you could send token to backend or supabase
+          });
+          
+          await PushNotifications.addListener('registrationError', (error) => {
+            console.error('Push registration error: ', JSON.stringify(error));
+          });
+          
+          await PushNotifications.addListener('pushNotificationReceived', (notification) => {
+            console.log('Push received: ', JSON.stringify(notification));
+          });
+          
+          await PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
+            console.log('Push action performed: ', JSON.stringify(action));
+          });
+        } catch(e) {
+          console.warn('Push setup failed (might be running in web):', e);
+        }
+      };
+      
+      setupPush();
+      
+      return () => {
+        isMounted = false;
+        try { PushNotifications.removeAllListeners(); } catch(e) {}
+      }
+    }, []);
 
   const toggleDarkMode = () => setDarkMode(prev => !prev);
 
@@ -191,49 +319,79 @@ function App() {
 
 
   const currentPath = window.location.pathname;
-  const isPublicCardRoute = currentPath === '/c' || currentPath.startsWith('/c/') || (currentPath.startsWith('/card/') && currentPath !== '/card');
+  const isPublicCardRoute = currentPath === '/c' || currentPath.startsWith('/c/') || (currentPath.startsWith('/card/') && currentPath !== '/card') || currentPath.startsWith('/vcard/');
+  const isAdminRoute = currentPath.startsWith('/gujarati-admin');
 
-  if (!isLoggedIn && !isPublicCardRoute) {
-     return <Login onLogin={handleLogin} />;
+  if (!isLoggedIn && !isPublicCardRoute && !isAdminRoute) {
+     return (
+       <ThemeProvider>
+         <Login onLogin={handleLogin} />
+       </ThemeProvider>
+     );
   }
 
   return (
-    <Router>
-      <Layout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
+    <ThemeProvider>
+      <Router>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/devotional" element={<DevotionalHub />} />
-          <Route path="/health" element={<HealthAssistant />} />
-          <Route path="/community" element={<Community />} />
-          <Route path="/tools" element={<Tools />} />
-          <Route path="/status" element={<StatusGenerator />} />
-          <Route path="/biodata" element={<BiodataMaker />} />
-          <Route path="/offline" element={<OfflineSettings />} />
-          <Route path="/settings" element={<Settings darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
-          <Route path="/panchang" element={<Panchang />} />
-          <Route path="/kundali" element={<KundaliGenerator />} />
-          <Route path="/vastu" element={<VastuCalculator />} />
-          <Route path="/namkaran" element={<NamkaranTool />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/card" element={<DigitalCard />} />
-          <Route path="/card/:slug" element={<DigitalCard />} />
+          {/* Standalone Admin Route (No App Layout) */}
+          <Route path="/gujarati-admin/*" element={<AdminDashboard />} />
+          
+          {/* Standalone Public vCard Route */}
+          <Route path="/vcard/:slug" element={<VCardPublic />} />
+          
+          {/* Main App Routes (Wrapped in Layout) */}
+          <Route path="*" element={
+            <Layout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/devotional" element={<FeatureGuard featureKey="devotional"><DevotionalHub /></FeatureGuard>} />
+                <Route path="/health" element={<FeatureGuard featureKey="health"><HealthAssistant /></FeatureGuard>} />
+                <Route path="/community" element={<FeatureGuard featureKey="community"><Community /></FeatureGuard>} />
+                <Route path="/tools" element={<FeatureGuard featureKey="tools"><Tools /></FeatureGuard>} />
+                <Route path="/status" element={<StatusGenerator />} />
+                <Route path="/biodata" element={<FeatureGuard featureKey="biodata"><BiodataMaker /></FeatureGuard>} />
+                <Route path="/offline" element={<OfflineSettings />} />
+                <Route path="/settings" element={<Settings darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+                <Route path="/panchang" element={<FeatureGuard featureKey="panchang"><Panchang /></FeatureGuard>} />
+                <Route path="/kundali" element={<FeatureGuard featureKey="kundali"><KundaliGenerator /></FeatureGuard>} />
+                <Route path="/vastu" element={<FeatureGuard featureKey="vastu"><VastuCalculator /></FeatureGuard>} />
+                <Route path="/namkaran" element={<FeatureGuard featureKey="namkaran"><NamkaranTool /></FeatureGuard>} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/card" element={<FeatureGuard featureKey="card"><DigitalCard /></FeatureGuard>} />
+                <Route path="/card/:slug" element={<FeatureGuard featureKey="card"><DigitalCard /></FeatureGuard>} />
+                
+                <Route path="/vcard-dashboard" element={<VCardDashboard />} />
+                <Route path="/vcard-editor" element={<VCardEditor />} />
 
-          <Route path="/interest-calculator" element={<InterestCalculator />} />
-          <Route path="/devotional-cards" element={<DevotionalCards />} />
-          <Route path="/kuldevi" element={<KuldeviGuide />} />
-          <Route path="/gita" element={<GitaHub />} />
-          <Route path="/shradhanjali" element={<ShradhanjaliMaker />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/daily-challenge" element={<DailyChallenge />} />
-          <Route path="/gujarat-safari" element={<GujaratSafari />} />
-          <Route path="/gujarat-quiz" element={<GujaratQuiz />} />
-          <Route path="/swipe-cards" element={<SwipeCards />} />
-          <Route path="/mysteries" element={<MysteryHub />} />
-          <Route path="/passport" element={<TravelPassport />} />
-          <Route path="/rewards" element={<ScratchRewards />} />
+                <Route path="/interest-calculator" element={<FeatureGuard featureKey="interest_calculator"><InterestCalculator /></FeatureGuard>} />
+                <Route path="/devotional-cards" element={<FeatureGuard featureKey="devotional_cards"><DevotionalCards /></FeatureGuard>} />
+                <Route path="/kuldevi" element={<FeatureGuard featureKey="kuldevi"><KuldeviGuide /></FeatureGuard>} />
+                <Route path="/gita" element={<FeatureGuard featureKey="gita"><GitaHub /></FeatureGuard>} />
+                <Route path="/shradhanjali" element={<FeatureGuard featureKey="shradhanjali"><ShradhanjaliMaker /></FeatureGuard>} />
+                <Route path="/daily-challenge" element={<FeatureGuard featureKey="daily_challenge"><DailyChallenge /></FeatureGuard>} />
+                <Route path="/gujarat-safari" element={<FeatureGuard featureKey="gujarat_safari"><GujaratSafari /></FeatureGuard>} />
+                <Route path="/gujarat-quiz" element={<FeatureGuard featureKey="gujarat_safari"><GujaratQuiz /></FeatureGuard>} />
+                <Route path="/swipe-cards" element={<FeatureGuard featureKey="swipe_cards"><SwipeCards /></FeatureGuard>} />
+                <Route path="/mysteries" element={<FeatureGuard featureKey="mysteries"><MysteryHub /></FeatureGuard>} />
+                <Route path="/passport" element={<FeatureGuard featureKey="passport"><TravelPassport /></FeatureGuard>} />
+                <Route path="/rewards" element={<FeatureGuard featureKey="rewards"><ScratchRewards /></FeatureGuard>} />
+                
+                <Route path="/society" element={<FeatureGuard featureKey="society"><MariSociety /></FeatureGuard>} />
+                <Route path="/games" element={<FeatureGuard featureKey="games"><RamatoHub /></FeatureGuard>} />
+                <Route path="/english" element={<FeatureGuard featureKey="english"><EnglishZone /></FeatureGuard>} />
+                <Route path="/kbc-quiz" element={<FeatureGuard featureKey="games"><KbcQuizGame /></FeatureGuard>} />
+                <Route path="/brick-breaker" element={<FeatureGuard featureKey="games"><KhamanJalebiCrusher /></FeatureGuard>} />
+                <Route path="/traffic-tod" element={<FeatureGuard featureKey="games"><TrafficTod /></FeatureGuard>} />
+                <Route path="/farasan-slicer" element={<FeatureGuard featureKey="games"><FarasanSlicer /></FeatureGuard>} />
+                <Route path="/kite-cutter" element={<FeatureGuard featureKey="games"><KiteCutter /></FeatureGuard>} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              </Routes>
+            </Layout>
+          } />
         </Routes>
-      </Layout>
-    </Router>
+      </Router>
+    </ThemeProvider>
   );
 }
 

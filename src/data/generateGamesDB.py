@@ -502,7 +502,7 @@ cricket_templates = [
 ]
 
 cricket_extended = []
-for i in range(120):
+for i in range(250):
     base = cricket_templates[i % len(cricket_templates)]
     choices = list(base[2])
     ans = base[1]
@@ -527,7 +527,7 @@ places_templates = [
     ("સૂર્ય મંદિર", "મોઢેરા", "sun_temple.jpg", "પુષ્પાવતી નદી કિનારે આવેલું મોઢેરાનું સૂર્ય મંદિર તેના શિલ્પ સ્થાપત્ય માટે અદભુત છે.")
 ]
 visual_extended = []
-for i in range(60):
+for i in range(250):
     base = places_templates[i % len(places_templates)]
     visual_extended.append({
         "id": f"v{i+1}",
@@ -548,7 +548,7 @@ bhajan_templates = [
     ("કાનજી તારી માં કેશે પણ અમે કાનુડો કહીશું", "લોકપ્રિય પદ", "ગોપીઓ અને કાનુડાના પ્રેમ અને વાત્સલ્ય રસથી ભરપૂર લોકગીત.")
 ]
 bhajans_extended = []
-for i in range(60):
+for i in range(250):
     base = bhajan_templates[i % len(bhajan_templates)]
     bhajans_extended.append({
         "id": f"bh{i+1}",

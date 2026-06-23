@@ -670,7 +670,7 @@ export const WORD_EMOJI_PAIRS = [
   },
   {
     "english": "GINGER",
-    "emoji": "𫫳",
+    "emoji": "🫚",
     "gujarati": "આદુ",
     "category": "vegetables"
   },
@@ -712,7 +712,7 @@ export const WORD_EMOJI_PAIRS = [
   },
   {
     "english": "PEAS",
-    "emoji": "𫫛",
+    "emoji": "🫛",
     "gujarati": "વટાણા",
     "category": "vegetables"
   },
@@ -796,7 +796,7 @@ export const WORD_EMOJI_PAIRS = [
   },
   {
     "english": "GREEN_BEAN",
-    "emoji": "𫫛",
+    "emoji": "🫛",
     "gujarati": "ફણસી",
     "category": "vegetables"
   },
@@ -12421,6 +12421,806 @@ export const SPEED_WORDS = [
       "રસ (જ્યુસ)",
       "ગંદુ"
     ]
+  },
+  {
+    "word": "ACTOR",
+    "meaning": "અભિનેતા",
+    "options": [
+      "સાંભળવું (ધ્યાનથી)",
+      "હોલો",
+      "વાટકો",
+      "અભિનેતા"
+    ]
+  },
+  {
+    "word": "TIGER",
+    "meaning": "વાઘ",
+    "options": [
+      "ડુંગળી",
+      "વાઘ",
+      "કેક",
+      "રણ"
+    ]
+  },
+  {
+    "word": "LEAF",
+    "meaning": "પાંદડું",
+    "options": [
+      "પીળો",
+      "બગલો",
+      "પાંદડું",
+      "ગળી જેવો વાદળી"
+    ]
+  },
+  {
+    "word": "GLASS",
+    "meaning": "કાચનો પ્યાલો",
+    "options": [
+      "સપાટ",
+      "તળાવ",
+      "કાચનો પ્યાલો",
+      "ફ્રિજ"
+    ]
+  },
+  {
+    "word": "KOALA",
+    "meaning": "કોઆલા",
+    "options": [
+      "કોઆલા",
+      "કીવી",
+      "સીતાફળ",
+      "છપરું"
+    ]
+  },
+  {
+    "word": "BOSS",
+    "meaning": "માલિક (બોસ)",
+    "options": [
+      "ચોરસ",
+      "તળાવ",
+      "માલિક (બોસ)",
+      "મીઠાઈ"
+    ]
+  },
+  {
+    "word": "ACTIVE",
+    "meaning": "ઉત્સાહી (સક્રિય)",
+    "options": [
+      "ઉત્સાહી (સક્રિય)",
+      "પેન",
+      "નાશપતિ",
+      "સાવધ"
+    ]
+  },
+  {
+    "word": "SOUP",
+    "meaning": "સૂપ",
+    "options": [
+      "સૂપ",
+      "પંખો",
+      "સ્વચ્છ",
+      "દૂધ"
+    ]
+  },
+  {
+    "word": "POLICEMAN",
+    "meaning": "પોલીસવાળો",
+    "options": [
+      "જેટ વિમાન",
+      "કીડી",
+      "થેલો (બેગ)",
+      "પોલીસવાળો"
+    ]
+  },
+  {
+    "word": "QUICK",
+    "meaning": "ઉતાવળું (ત્વરિત)",
+    "options": [
+      "ઉતાવળું (ત્વરિત)",
+      "ટોપલી",
+      "હોલો",
+      "આપવું"
+    ]
+  },
+  {
+    "word": "SCHOOL",
+    "meaning": "શાળા",
+    "options": [
+      "શાળા",
+      "વોલીબોલ",
+      "ડ્રાઈવર (ચાલક)",
+      "લીલો"
+    ]
+  },
+  {
+    "word": "SWEATER",
+    "meaning": "સ્વેટર",
+    "options": [
+      "કૂદવું",
+      "ગધેડો",
+      "સ્વેટર",
+      "સફરજન"
+    ]
+  },
+  {
+    "word": "STRAIGHT_SHAPE",
+    "meaning": "સીધું",
+    "options": [
+      "સીધું",
+      "લેડીબગ",
+      "હંસ",
+      "દીવાલ"
+    ]
+  },
+  {
+    "word": "TENNIS",
+    "meaning": "ટેનિસ",
+    "options": [
+      "ક્રિકેટ",
+      "ખરીદવું",
+      "કુસ્તી",
+      "ટેનિસ"
+    ]
+  },
+  {
+    "word": "WINTER",
+    "meaning": "શિયાળો",
+    "options": [
+      "શિયાળો",
+      "લીંબુ",
+      "બસ",
+      "રોટલી"
+    ]
+  },
+  {
+    "word": "UGLY",
+    "meaning": "કદરૂપું",
+    "options": [
+      "અતિ નાનું",
+      "ઘી",
+      "કદરૂપું",
+      "આંગળી"
+    ]
+  },
+  {
+    "word": "RED",
+    "meaning": "લાલ",
+    "options": [
+      "રોટલી",
+      "ખોખું (બોક્સ)",
+      "ખૂણો",
+      "લાલ"
+    ]
+  },
+  {
+    "word": "RADISH",
+    "meaning": "મૂળો",
+    "options": [
+      "એરપોર્ટ",
+      "હૃદયનો આકાર",
+      "વટાણા",
+      "મૂળો"
+    ]
+  },
+  {
+    "word": "CURRY",
+    "meaning": "શાક/કઢી",
+    "options": [
+      "કોથમીર",
+      "વરુ",
+      "કથ્થઈ",
+      "શાક/કઢી"
+    ]
+  },
+  {
+    "word": "GRASS",
+    "meaning": "ઘાસ",
+    "options": [
+      "ઘાસ",
+      "પવન",
+      "શાંત (શાંતચિત્ત)",
+      "કદરૂપું"
+    ]
+  },
+  {
+    "word": "LARGE",
+    "meaning": "વિશાળ",
+    "options": [
+      "વિશાળ",
+      "કેલ્ક્યુલેટર",
+      "બીટ/શલગમ",
+      "શક્કરિયા"
+    ]
+  },
+  {
+    "word": "DO",
+    "meaning": "કરવું",
+    "options": [
+      "ઇયળ",
+      "મજબૂત (બળવાન)",
+      "ફાઈલ",
+      "કરવું"
+    ]
+  },
+  {
+    "word": "COME",
+    "meaning": "આવવું",
+    "options": [
+      "આવવું",
+      "સાફ કરવું",
+      "જવાબ આપવો",
+      "બગીચો"
+    ]
+  },
+  {
+    "word": "GINGER",
+    "meaning": "આદુ",
+    "options": [
+      "પેટ",
+      "આદુ",
+      "ગરદન",
+      "રણ"
+    ]
+  },
+  {
+    "word": "PANDA",
+    "meaning": "પાન્ડા",
+    "options": [
+      "ગાય",
+      "કપ",
+      "બનાવવું",
+      "પાન્ડા"
+    ]
+  },
+  {
+    "word": "SCARF",
+    "meaning": "સ્કાફ",
+    "options": [
+      "ડોલ્ફિન",
+      "સ્કાફ",
+      "માટી",
+      "બેસવું"
+    ]
+  },
+  {
+    "word": "SANDWICH",
+    "meaning": "સેન્ડવીચ",
+    "options": [
+      "ગરુડ",
+      "સેન્ડવીચ",
+      "સાવધ",
+      "બેડમિન્ટન"
+    ]
+  },
+  {
+    "word": "GRADE",
+    "meaning": "શ્રેણી (ગ્રેડ)",
+    "options": [
+      "શ્રેણી (ગ્રેડ)",
+      "માછલી (ખોરાક)",
+      "ફૂટબોલ",
+      "નોટબુક"
+    ]
+  },
+  {
+    "word": "MOUSE",
+    "meaning": "ઉંદર",
+    "options": [
+      "ઉંદર",
+      "કોથમીર",
+      "વેચવું",
+      "મધમાખી"
+    ]
+  },
+  {
+    "word": "HONEYBEE",
+    "meaning": "મધમાખી",
+    "options": [
+      "મધમાખી",
+      "શેરી (ગલી)",
+      "બગલો",
+      "મજૂર (કામદાર)"
+    ]
+  },
+  {
+    "word": "POLICE_CAR",
+    "meaning": "પોલીસ ગાડી",
+    "options": [
+      "ઓફિસ",
+      "કીવી",
+      "સાવધ",
+      "પોલીસ ગાડી"
+    ]
+  },
+  {
+    "word": "PARROT",
+    "meaning": "પોપટ",
+    "options": [
+      "પોપટ",
+      "રિક્ષા",
+      "કોફી",
+      "ખરાબ"
+    ]
+  },
+  {
+    "word": "HELICOPTER",
+    "meaning": "હેલિકોપ્ટર",
+    "options": [
+      "ઉતાવળું (ત્વરિત)",
+      "શીખવું",
+      "વૉલેટ",
+      "હેલિકોપ્ટર"
+    ]
+  },
+  {
+    "word": "KIWI",
+    "meaning": "કીવી",
+    "options": [
+      "રમતો",
+      "પાન્ડા",
+      "કીવી",
+      "કચરાપેટી"
+    ]
+  },
+  {
+    "word": "CORN",
+    "meaning": "મકાઈ",
+    "options": [
+      "મકાઈ",
+      "નર્સ (પરિચારિકા)",
+      "બિલાડી",
+      "સૂકો મેવો"
+    ]
+  },
+  {
+    "word": "KANGAROO",
+    "meaning": "કાંગારુ",
+    "options": [
+      "બેડમિન્ટન",
+      "કાંગારુ",
+      "મેજ",
+      "ગરમ"
+    ]
+  },
+  {
+    "word": "FLOUR",
+    "meaning": "લોટ",
+    "options": [
+      "સાયકલ",
+      "લોટ",
+      "સ્કવિડ",
+      "જરૂદાળુ"
+    ]
+  },
+  {
+    "word": "BOXING",
+    "meaning": "બોક્સિંગ",
+    "options": [
+      "નાશપતિ",
+      "ચોમાસું",
+      "સંગ્રહાલય (મ્યુઝિયમ)",
+      "બોક્સિંગ"
+    ]
+  },
+  {
+    "word": "MUG",
+    "meaning": "મગ/ટમ્બલર",
+    "options": [
+      "કડિયો",
+      "પેંગ્વિન",
+      "દ્રાક્ષ",
+      "મગ/ટમ્બલર"
+    ]
+  },
+  {
+    "word": "PIG",
+    "meaning": "ભૂંડ",
+    "options": [
+      "ભૂંડ",
+      "કાચનો પ્યાલો",
+      "શિક્ષક",
+      "રિક્ષા"
+    ]
+  },
+  {
+    "word": "PAPAYA",
+    "meaning": "પપૈયું",
+    "options": [
+      "પપૈયું",
+      "ઇંડું",
+      "સ્ટેશન",
+      "ફાઈલ"
+    ]
+  },
+  {
+    "word": "RULER",
+    "meaning": "ફૂટપટ્ટી",
+    "options": [
+      "ફૂટપટ્ટી",
+      "આંગળી",
+      "ગુલાબી",
+      "આદુ"
+    ]
+  },
+  {
+    "word": "SWIMMING",
+    "meaning": "તરવું",
+    "options": [
+      "તરવું",
+      "જાળી (નેટ)",
+      "બિસ્કિટ",
+      "રસ્તો"
+    ]
+  },
+  {
+    "word": "EGG",
+    "meaning": "ઇંડું",
+    "options": [
+      "ઇંડું",
+      "થાળી",
+      "ચીઝ",
+      "ચર્ચ (દેવળ)"
+    ]
+  },
+  {
+    "word": "POOR",
+    "meaning": "ગરીબ",
+    "options": [
+      "કોફી",
+      "ગરીબ",
+      "જામફળ",
+      "ગરદન"
+    ]
+  },
+  {
+    "word": "FRUIT",
+    "meaning": "ફળ",
+    "options": [
+      "ફળ",
+      "પેન",
+      "બ્લુબેરી",
+      "નાક"
+    ]
+  },
+  {
+    "word": "WORLD",
+    "meaning": "દુનિયા (વિશ્વ)",
+    "options": [
+      "શર્ટ",
+      "દુનિયા (વિશ્વ)",
+      "વર્ગખંડ",
+      "લશ્કરી ટેન્ક"
+    ]
+  },
+  {
+    "word": "SOCKS",
+    "meaning": "મોજાં",
+    "options": [
+      "મોજાં",
+      "પ્રમાણિક",
+      "નરમ (સુવાળું)",
+      "દફતર"
+    ]
+  },
+  {
+    "word": "CAT",
+    "meaning": "બિલાડી",
+    "options": [
+      "બિલાડી",
+      "લેટીસ",
+      "સોનેરી",
+      "વરુ"
+    ]
+  },
+  {
+    "word": "NECK",
+    "meaning": "ગરદન",
+    "options": [
+      "ચોમાસું",
+      "મજૂર (કામદાર)",
+      "કાંડા ઘડિયાળ",
+      "ગરદન"
+    ]
+  },
+  {
+    "word": "COFFEE",
+    "meaning": "કોફી",
+    "options": [
+      "જીરાફ",
+      "દ્રાક્ષ",
+      "કોફી",
+      "મધમાખી"
+    ]
+  },
+  {
+    "word": "SWAN",
+    "meaning": "હંસ",
+    "options": [
+      "પિઝા",
+      "આલુબુખારા",
+      "હંસ",
+      "કેપ્સિકમ"
+    ]
+  },
+  {
+    "word": "TELL",
+    "meaning": "વાત કહેવી (જણાવવું)",
+    "options": [
+      "તારાનો આકાર",
+      "લોહી",
+      "વાત કહેવી (જણાવવું)",
+      "ગરોળી"
+    ]
+  },
+  {
+    "word": "PANTS",
+    "meaning": "પેન્ટ",
+    "options": [
+      "ગાયક",
+      "પગનો અંગૂઠો",
+      "વ્યાયામશાળા (જીમ)",
+      "પેન્ટ"
+    ]
+  },
+  {
+    "word": "MEDAL",
+    "meaning": "ચંદ્રક (મેડલ)",
+    "options": [
+      "શાળા",
+      "સાયકલ",
+      "પુસ્તકાલય",
+      "ચંદ્રક (મેડલ)"
+    ]
+  },
+  {
+    "word": "BROCCOLI",
+    "meaning": "બ્રોકોલી",
+    "options": [
+      "વાત કહેવી (જણાવવું)",
+      "જેટ વિમાન",
+      "બ્રોકોલી",
+      "કૂદવું"
+    ]
+  },
+  {
+    "word": "OCTOPUS",
+    "meaning": "ઓક્ટોપસ",
+    "options": [
+      "નર્તક",
+      "સાયકલ",
+      "ઓક્ટોપસ",
+      "કથ્થઈ"
+    ]
+  },
+  {
+    "word": "PILOT",
+    "meaning": "પાઈલોટ",
+    "options": [
+      "હલકું",
+      "પાઈલોટ",
+      "ભૂંડ",
+      "ગાયક"
+    ]
+  },
+  {
+    "word": "SAREE",
+    "meaning": "સાડી",
+    "options": [
+      "વાદળ",
+      "વેચવું",
+      "સાડી",
+      "શાકભાજી"
+    ]
+  },
+  {
+    "word": "TEA",
+    "meaning": "ચા",
+    "options": [
+      "ધાબળો",
+      "માંસ",
+      "ચા",
+      "ચિત્તો"
+    ]
+  },
+  {
+    "word": "DRIVER",
+    "meaning": "ડ્રાઈવર (ચાલક)",
+    "options": [
+      "ડ્રાઈવર (ચાલક)",
+      "બેસવું",
+      "ગરમ",
+      "ફૂલ"
+    ]
+  },
+  {
+    "word": "SKIN",
+    "meaning": "ચામડી",
+    "options": [
+      "ચોપડી",
+      "ટોપલી",
+      "ચામડી",
+      "પાઠ"
+    ]
+  },
+  {
+    "word": "ALMOND",
+    "meaning": "બદામ",
+    "options": [
+      "પીઠ",
+      "બદામ",
+      "ટેકરી",
+      "બૂટ"
+    ]
+  },
+  {
+    "word": "DUST",
+    "meaning": "ધૂળ",
+    "options": [
+      "ધૂળ",
+      "ઘાસ",
+      "દરિયો",
+      "ચામાચીડિયું"
+    ]
+  },
+  {
+    "word": "RUNNING",
+    "meaning": "દોડવું",
+    "options": [
+      "દોડવું",
+      "ભારે",
+      "ભાત (ચોખા)",
+      "જાણવું"
+    ]
+  },
+  {
+    "word": "PILLOW",
+    "meaning": "ઓશીકું",
+    "options": [
+      "કચરાપેટી",
+      "ઓશીકું",
+      "વીંછી",
+      "જામફળ"
+    ]
+  },
+  {
+    "word": "RESULT",
+    "meaning": "પરિણામ",
+    "options": [
+      "પિઝા",
+      "કૂતરો",
+      "ખુરશી",
+      "પરિણામ"
+    ]
+  },
+  {
+    "word": "RIVER",
+    "meaning": "નદી",
+    "options": [
+      "જીરાફ",
+      "અળસિયું",
+      "નદી",
+      "ખાંડ"
+    ]
+  },
+  {
+    "word": "POINT_SHAPE",
+    "meaning": "બિંદુ",
+    "options": [
+      "ધૂળ",
+      "બહાદુર (નીડર)",
+      "બિંદુ",
+      "પાલક"
+    ]
+  },
+  {
+    "word": "CAPSICUM",
+    "meaning": "કેપ્સિકમ",
+    "options": [
+      "કેપ્સિકમ",
+      "સીંગદાણા",
+      "પાણી",
+      "બટાકા"
+    ]
+  },
+  {
+    "word": "DANCER",
+    "meaning": "નર્તક",
+    "options": [
+      "કામ કરવું",
+      "ખૂણો",
+      "આઈસ્ક્રીમ",
+      "નર્તક"
+    ]
+  },
+  {
+    "word": "SQUIRREL",
+    "meaning": "ખિસકોલી",
+    "options": [
+      "સાડી",
+      "ખિસકોલી",
+      "પોલીસવાળો",
+      "સાબુ"
+    ]
+  },
+  {
+    "word": "INK",
+    "meaning": "શાહી",
+    "options": [
+      "બિલાડી",
+      "શાહી",
+      "ઝુકીની",
+      "ટોપી"
+    ]
+  },
+  {
+    "word": "SUMMER",
+    "meaning": "ઉનાળો",
+    "options": [
+      "ઇંડું",
+      "મગ/ટમ્બલર",
+      "ટોપો",
+      "ઉનાળો"
+    ]
+  },
+  {
+    "word": "EYE",
+    "meaning": "આંખ",
+    "options": [
+      "પપૈયું",
+      "આંખ",
+      "મેજ",
+      "પિઝા"
+    ]
+  },
+  {
+    "word": "LOOK",
+    "meaning": "નજર કરવી (જોવું)",
+    "options": [
+      "નજર કરવી (જોવું)",
+      "સૂકો મેવો",
+      "હોસ્પિટલ",
+      "એવોકાડો"
+    ]
+  },
+  {
+    "word": "DRIVE_ACTION",
+    "meaning": "ચલાવવું (વાહન)",
+    "options": [
+      "નદી",
+      "ચલાવવું (વાહન)",
+      "દફતર",
+      "કબૂતર"
+    ]
+  },
+  {
+    "word": "COOK",
+    "meaning": "રાંધવું (રસોઈ કરવી)",
+    "options": [
+      "પેટી જેવો આકાર",
+      "કાચબો",
+      "રાંધવું (રસોઈ કરવી)",
+      "પાઈલોટ"
+    ]
+  },
+  {
+    "word": "DOG",
+    "meaning": "કૂતરો",
+    "options": [
+      "તળાવ",
+      "જાણવું",
+      "કૂતરો",
+      "પોલીસવાળો"
+    ]
+  },
+  {
+    "word": "ZOO",
+    "meaning": "પ્રાણીસંગ્રહાલય",
+    "options": [
+      "ચર્ચ (દેવળ)",
+      "ફુવારો",
+      "પ્રાણીસંગ્રહાલય",
+      "હડપચી"
+    ]
   }
 ];
 
@@ -13722,6 +14522,1947 @@ export const SENTENCE_BUILDER_DATA = [
     "correct": "They are planning a picnic",
     "gujaratiMeaning": "તેઓ પિકનિકનું આયોજન કરી રહ્યા છે.",
     "grammarTip": "આગામી પ્લાનિંગ: They + are + planning + a picnic."
+  },
+  {
+    "id": "sb1_100",
+    "jumbled": [
+      "I",
+      "am",
+      "school",
+      "going",
+      "to"
+    ],
+    "correct": "I am going to school",
+    "gujaratiMeaning": "હું શાળાએ જઈ રહ્યો છું.",
+    "grammarTip": "વાક્ય રચના: કર્તા (I) + to-be ક્રિયાપદ (am) + વર્તમાન કૃદંત (going) + પ્રિપોઝિશન/કર્મ (to school)."
+  },
+  {
+    "id": "sb2_101",
+    "jumbled": [
+      "apples",
+      "I",
+      "eating",
+      "like"
+    ],
+    "correct": "I like eating apples",
+    "gujaratiMeaning": "મને સફરજન ખાવા ગમે છે.",
+    "grammarTip": "'like' ક્રિયાપદ પછી સામાન્ય રીતે Gerund (-ing વાળું નામ) 'eating' વપરાય છે."
+  },
+  {
+    "id": "sb3_102",
+    "jumbled": [
+      "doctor",
+      "a",
+      "is",
+      "father",
+      "My"
+    ],
+    "correct": "My father is a doctor",
+    "gujaratiMeaning": "મારા પિતા એક ડોક્ટર છે.",
+    "grammarTip": "સંબંધક વિશેષણ (My father) + એકવચન ક્રિયાપદ (is) + આર્ટિકલ અને વ્યવસાય (a doctor)."
+  },
+  {
+    "id": "sb4_103",
+    "jumbled": [
+      "live",
+      "in",
+      "We",
+      "Gujarat"
+    ],
+    "correct": "We live in Gujarat",
+    "gujaratiMeaning": "અમે ગુજરાતમાં રહીએ છીએ.",
+    "grammarTip": "ચોક્કસ ભૌગોલિક રાજ્ય કે દેશના નામની આગળ અંદર રહેવા માટે 'in' પ્રિપોઝિશન વપરાય છે."
+  },
+  {
+    "id": "sb5_104",
+    "jumbled": [
+      "is",
+      "The",
+      "sun",
+      "shining"
+    ],
+    "correct": "The sun is shining",
+    "gujaratiMeaning": "સૂર્ય પ્રકાશી રહ્યો છે.",
+    "grammarTip": "ચાલુ વર્તમાનકાળની વાક્યરચના: કર્તા (The sun) + is + shining."
+  },
+  {
+    "id": "sb6_105",
+    "jumbled": [
+      "brothers",
+      "I",
+      "have",
+      "two"
+    ],
+    "correct": "I have two brothers",
+    "gujaratiMeaning": "મારે બે ભાઈઓ છે.",
+    "grammarTip": "માલિકી કે સંબંધ દર્શાવવા માટે પ્રથમ કે બીજા પુરુષ કર્તા સાથે 'have' નો ઉપયોગ થાય છે."
+  },
+  {
+    "id": "sb7_106",
+    "jumbled": [
+      "She",
+      "English",
+      "fluent",
+      "speaks"
+    ],
+    "correct": "She speaks fluent English",
+    "gujaratiMeaning": "તેણી અસ્ખલિત અંગ્રેજી બોલે છે.",
+    "grammarTip": "કર્તા (She) + ક્રિયાપદનું s વાળું વર્તમાન રૂપ (speaks) + વિશેષણ (fluent) + નામ (English)."
+  },
+  {
+    "id": "sb8_107",
+    "jumbled": [
+      "should",
+      "exercise",
+      "You",
+      "daily"
+    ],
+    "correct": "You should exercise daily",
+    "gujaratiMeaning": "તમારે દરરોજ કસરત કરવી જોઈએ.",
+    "grammarTip": "નૈતિક કે સામાન્ય ફરજ દર્શાવવા માટે સહાયકારક ક્રિયાપદ 'should' નો પ્રયોગ થાય છે."
+  },
+  {
+    "id": "sb9_108",
+    "jumbled": [
+      "Please",
+      "give",
+      "me",
+      "water",
+      "some"
+    ],
+    "correct": "Please give me some water",
+    "gujaratiMeaning": "મહેરબાની કરીને મને થોડું પાણી આપો.",
+    "grammarTip": "નમ્ર વિનંતી દર્શાવવા આજ્ઞાર્થ વાક્યની શરૂઆતમાં 'Please' અને ક્રિયાપદનું મૂળ રૂપ વપરાય છે."
+  },
+  {
+    "id": "sb10_109",
+    "jumbled": [
+      "cricket",
+      "playing",
+      "were",
+      "They"
+    ],
+    "correct": "They were playing cricket",
+    "gujaratiMeaning": "તેઓ ક્રિકેટ રમી રહ્યા હતા.",
+    "grammarTip": "ચાલુ ભૂતકાળની વાક્યરચના: બહુવચન કર્તા (They) + were + playing."
+  },
+  {
+    "id": "sb11_110",
+    "jumbled": [
+      "flower",
+      "beautiful",
+      "is",
+      "This",
+      "a"
+    ],
+    "correct": "This is a beautiful flower",
+    "gujaratiMeaning": "આ એક સુંદર ફૂલ છે.",
+    "grammarTip": "વાક્ય રચના: Demonstrative pronoun (This) + is + a + adjective (beautiful) + noun (flower)."
+  },
+  {
+    "id": "sb12_111",
+    "jumbled": [
+      "protect",
+      "nature",
+      "must",
+      "our",
+      "We"
+    ],
+    "correct": "We must protect our nature",
+    "gujaratiMeaning": "આપણે આપણી પ્રકૃતિનું રક્ષણ કરવું જોઈએ.",
+    "grammarTip": "ભારપૂર્વકની સલાહ કે ફરજ માટે 'must' ની સાથે ક્રિયાપદનું મૂળ રૂપ આવે છે."
+  },
+  {
+    "id": "sb13_112",
+    "jumbled": [
+      "in",
+      "works",
+      "a",
+      "He",
+      "bank"
+    ],
+    "correct": "He works in a bank",
+    "gujaratiMeaning": "તે બેંકમાં કામ કરે છે.",
+    "grammarTip": "કર્તા (He) + s-ક્રિયાપદ (works) + સ્થળ નિર્દેશક (in a bank)."
+  },
+  {
+    "id": "sb14_113",
+    "jumbled": [
+      "She",
+      "sweet",
+      "a",
+      "sings",
+      "song"
+    ],
+    "correct": "She sings a sweet song",
+    "gujaratiMeaning": "તેણી મધુર ગીત ગાય છે.",
+    "grammarTip": "નિયમિત ક્રિયા: કર્તા (She) + s-ક્રિયાપદ (sings) + કર્મ (a sweet song)."
+  },
+  {
+    "id": "sb15_114",
+    "jumbled": [
+      "are",
+      "books",
+      "They",
+      "now",
+      "reading"
+    ],
+    "correct": "They are reading books now",
+    "gujaratiMeaning": "તેઓ અત્યારે પુસ્તકો વાંચી રહ્યા છે.",
+    "grammarTip": "ચાલુ ક્રિયા: They + are + reading + books + time indicator (now)."
+  },
+  {
+    "id": "sb16_115",
+    "jumbled": [
+      "I",
+      "bought",
+      "phone",
+      "a",
+      "new"
+    ],
+    "correct": "I bought a new phone",
+    "gujaratiMeaning": "મેં એક નવો ફોન ખરીદ્યો.",
+    "grammarTip": "ભૂતકાળની ઘટના: કર્તા (I) + ભૂતકાળનું રૂપ (bought) + કર્મ (a new phone)."
+  },
+  {
+    "id": "sb17_116",
+    "jumbled": [
+      "train",
+      "late",
+      "The",
+      "very",
+      "was"
+    ],
+    "correct": "The train was very late",
+    "gujaratiMeaning": "ટ્રેન ઘણી મોડી હતી.",
+    "grammarTip": "ભૂતકાળની સ્થિતિ: The train + was + adverb (very) + adjective (late)."
+  },
+  {
+    "id": "sb18_117",
+    "jumbled": [
+      "next",
+      "go",
+      "week",
+      "We",
+      "will"
+    ],
+    "correct": "We will go next week",
+    "gujaratiMeaning": "અમે આવતા અઠવાડિયે જઈશું.",
+    "grammarTip": "ભવિષ્યકાળ: We + will + go + time (next week)."
+  },
+  {
+    "id": "sb19_118",
+    "jumbled": [
+      "wants",
+      "She",
+      "learn",
+      "music",
+      "to"
+    ],
+    "correct": "She wants to learn music",
+    "gujaratiMeaning": "તેણી સંગીત શીખવા માંગે છે.",
+    "grammarTip": "ઈચ્છા દર્શાવવા: She + wants + to-infinitive (to learn) + music."
+  },
+  {
+    "id": "sb20_119",
+    "jumbled": [
+      "a",
+      "honest",
+      "person",
+      "very",
+      "is",
+      "He"
+    ],
+    "correct": "He is a very honest person",
+    "gujaratiMeaning": "તે ખૂબ જ પ્રમાણિક વ્યક્તિ છે.",
+    "grammarTip": "વિશેષણની ગુણવત્તા દર્શાવવા 'a very honest person' નો પ્રયોગ થયો છે."
+  },
+  {
+    "id": "sb21_120",
+    "jumbled": [
+      "on",
+      "the",
+      "chair",
+      "cat",
+      "is",
+      "The"
+    ],
+    "correct": "The cat is on the chair",
+    "gujaratiMeaning": "બિલાડી ખુરશી પર છે.",
+    "grammarTip": "સ્થિતિ દર્શાવવા માટે સપાટી ઉપરનો સંબંધ દર્શાવતો પ્રિપોઝિશન 'on' ઉપયોગી છે."
+  },
+  {
+    "id": "sb22_121",
+    "jumbled": [
+      "water",
+      "We",
+      "thirsty",
+      "drink",
+      "when"
+    ],
+    "correct": "We drink water when thirsty",
+    "gujaratiMeaning": "તરસ લાગે ત્યારે આપણે પાણી પીએ છીએ.",
+    "grammarTip": "સામાન્ય સત્ય: We + drink + water + when + condition (thirsty)."
+  },
+  {
+    "id": "sb23_122",
+    "jumbled": [
+      "trees",
+      "on",
+      "build",
+      "Birds",
+      "nests"
+    ],
+    "correct": "Birds build nests on trees",
+    "gujaratiMeaning": "પક્ષીઓ વૃક્ષો પર માળો બાંધે છે.",
+    "grammarTip": "સામાન્ય ટેવ: બહુવચન કર્તા (Birds) + build (મૂળ રૂપ) + nests + on trees."
+  },
+  {
+    "id": "sb24_123",
+    "jumbled": [
+      "big",
+      "a",
+      "is",
+      "Ahmedabad",
+      "city"
+    ],
+    "correct": "Ahmedabad is a big city",
+    "gujaratiMeaning": "અમદાવાદ મોટું શહેર છે.",
+    "grammarTip": "સરળ માહિતીપ્રદ વાક્ય: Ahmedabad + is + a + big + city."
+  },
+  {
+    "id": "sb25_124",
+    "jumbled": [
+      "is",
+      "My",
+      "cooking",
+      "mother",
+      "food"
+    ],
+    "correct": "My mother is cooking food",
+    "gujaratiMeaning": "મારી માતા રસોઈ બનાવી રહી છે.",
+    "grammarTip": "ચાલુ ક્રિયા: My mother + is + cooking + food."
+  },
+  {
+    "id": "sb26_125",
+    "jumbled": [
+      "big",
+      "has",
+      "a",
+      "He",
+      "house"
+    ],
+    "correct": "He has a big house",
+    "gujaratiMeaning": "તેની પાસે મોટું ઘર છે.",
+    "grammarTip": "માલિકીનો સંબંધ: He + has + a big house."
+  },
+  {
+    "id": "sb27_126",
+    "jumbled": [
+      "are",
+      "You",
+      "my",
+      "best",
+      "friend"
+    ],
+    "correct": "You are my best friend",
+    "gujaratiMeaning": "તમે મારા શ્રેષ્ઠ મિત્ર છો.",
+    "grammarTip": "સંબંધ નિર્દેશક: You + are + my best friend."
+  },
+  {
+    "id": "sb28_127",
+    "jumbled": [
+      "us",
+      "The",
+      "gives",
+      "cow",
+      "milk"
+    ],
+    "correct": "The cow gives us milk",
+    "gujaratiMeaning": "ગાય આપણને દૂધ આપે છે.",
+    "grammarTip": "કુદરતી નિયમ: The cow (એકવચન) + gives + us + milk."
+  },
+  {
+    "id": "sb29_128",
+    "jumbled": [
+      "morning",
+      "wake",
+      "up",
+      "early",
+      "I"
+    ],
+    "correct": "I wake up early morning",
+    "gujaratiMeaning": "હું વહેલી સવારે જાગી જાઉં છું.",
+    "grammarTip": "દિનચર્યા: I + wake up + time (early morning)."
+  },
+  {
+    "id": "sb30_129",
+    "jumbled": [
+      "playing",
+      "They",
+      "love",
+      "football"
+    ],
+    "correct": "They love playing football",
+    "gujaratiMeaning": "તેમને ફૂટબોલ રમવું ગમે છે.",
+    "grammarTip": "'love' પછી ગમતી પ્રવૃત્તિ દર્શાવવા Gerund 'playing' વપરાયેલું છે."
+  },
+  {
+    "id": "sb31_130",
+    "jumbled": [
+      "Please",
+      "window",
+      "close",
+      "the"
+    ],
+    "correct": "Please close the window",
+    "gujaratiMeaning": "મહેરબાની કરીને બારી બંધ કરો.",
+    "grammarTip": "નમ્ર વિનંતી દર્શાવતું આજ્ઞાર્થ વાક્ય: Please + close + the window."
+  },
+  {
+    "id": "sb32_131",
+    "jumbled": [
+      "the",
+      "me",
+      "Open",
+      "for",
+      "door"
+    ],
+    "correct": "Open the door for me",
+    "gujaratiMeaning": "મારા માટે દરવોજો ખોલો.",
+    "grammarTip": "વિનંતી/આજ્ઞા: Open + the door + prepositional object (for me)."
+  },
+  {
+    "id": "sb33_132",
+    "jumbled": [
+      "This",
+      "book",
+      "me",
+      "belongs",
+      "to"
+    ],
+    "correct": "This book belongs to me",
+    "gujaratiMeaning": "આ પુસ્તક મારું છે.",
+    "grammarTip": "સંબંધ દર્શાવવા 'belongs to' નો ઉપયોગ યોગ્ય છે."
+  },
+  {
+    "id": "sb34_133",
+    "jumbled": [
+      "the",
+      "help",
+      "We",
+      "should",
+      "poor"
+    ],
+    "correct": "We should help the poor",
+    "gujaratiMeaning": "આપણે ગરીબોને મદદ કરવી જોઈએ.",
+    "grammarTip": "સામાજિક ફરજ: We + should + help + the poor."
+  },
+  {
+    "id": "sb35_134",
+    "jumbled": [
+      "The",
+      "rose",
+      "red",
+      "is",
+      "color"
+    ],
+    "correct": "The rose is red color",
+    "gujaratiMeaning": "ગુલાબ લાલ રંગનું હોય છે.",
+    "grammarTip": "વર્ણન: The rose + is + red + color."
+  },
+  {
+    "id": "sb36_135",
+    "jumbled": [
+      "He",
+      "to",
+      "learning",
+      "drive",
+      "is"
+    ],
+    "correct": "He is learning to drive",
+    "gujaratiMeaning": "તે ગાડી ચલાવતા શીખી રહ્યો છે.",
+    "grammarTip": "ચાલુ ક્રિયા સાથે હેતુ: He is learning + to-infinitive (to drive)."
+  },
+  {
+    "id": "sb37_136",
+    "jumbled": [
+      "picture",
+      "is",
+      "a",
+      "drawing",
+      "She"
+    ],
+    "correct": "She is drawing a picture",
+    "gujaratiMeaning": "તેણી ચિત્ર દોરી રહી છે.",
+    "grammarTip": "ચાલુ ક્રિયા: She + is + drawing + a picture."
+  },
+  {
+    "id": "sb38_137",
+    "jumbled": [
+      "speak",
+      "home",
+      "Gujarati",
+      "They",
+      "at"
+    ],
+    "correct": "They speak Gujarati at home",
+    "gujaratiMeaning": "તેઓ ઘરે ગુજરાતી બોલે છે.",
+    "grammarTip": "સામાન્ય આદત: They + speak + Gujarati + at home."
+  },
+  {
+    "id": "sb39_138",
+    "jumbled": [
+      "need",
+      "some",
+      "now",
+      "sleep",
+      "I"
+    ],
+    "correct": "I need some sleep now",
+    "gujaratiMeaning": "મારે અત્યારે થોડી ઊંઘની જરૂર છે.",
+    "grammarTip": "જરૂરિયાત દર્શાવતું વાક્ય: I + need + some sleep + now."
+  },
+  {
+    "id": "sb40_139",
+    "jumbled": [
+      "are",
+      "loudly",
+      "laughing",
+      "children",
+      "The"
+    ],
+    "correct": "The children are laughing loudly",
+    "gujaratiMeaning": "બાળકો જોરથી હસી રહ્યા છે.",
+    "grammarTip": "ક્રિયાની રીત દર્શાવવા માટે ક્રિયાવિશેષણ (loudly) વપરાય છે."
+  },
+  {
+    "id": "sb41_140",
+    "jumbled": [
+      "celebrate",
+      "every",
+      "We",
+      "year",
+      "Diwali"
+    ],
+    "correct": "We celebrate Diwali every year",
+    "gujaratiMeaning": "અમે દર વર્ષે દિવાળી ઉજવીએ છીએ.",
+    "grammarTip": "ચોક્કસ વર્ષનો તહેવાર: We + celebrate + Diwali + every year."
+  },
+  {
+    "id": "sb42_141",
+    "jumbled": [
+      "very",
+      "My",
+      "far",
+      "school",
+      "is"
+    ],
+    "correct": "My school is very far",
+    "gujaratiMeaning": "મારી શાળા ખૂબ દૂર છે.",
+    "grammarTip": "અંતર દર્શાવવા: My school + is + very far."
+  },
+  {
+    "id": "sb43_142",
+    "jumbled": [
+      "plays",
+      "well",
+      "He",
+      "very",
+      "guitar"
+    ],
+    "correct": "He plays guitar very well",
+    "gujaratiMeaning": "તે ગિટાર ખૂબ સરસ વગાડે છે.",
+    "grammarTip": "ક્રિયાવિશેષણનો ઉપયોગ: He + plays + guitar + very well."
+  },
+  {
+    "id": "sb44_143",
+    "jumbled": [
+      "her",
+      "loves",
+      "She",
+      "small",
+      "cat"
+    ],
+    "correct": "She loves her small cat",
+    "gujaratiMeaning": "તેણી તેણીની નાની બિલાડીને પ્રેમ કરે છે.",
+    "grammarTip": "લાગણી દર્શાવતું વાક્ય: She + loves + her small cat."
+  },
+  {
+    "id": "sb45_144",
+    "jumbled": [
+      "rules",
+      "obey",
+      "must",
+      "traffic",
+      "We"
+    ],
+    "correct": "We must obey traffic rules",
+    "gujaratiMeaning": "આપણે ટ્રાફિકના નિયમોનું પાલન કરવું જોઈએ.",
+    "grammarTip": "કાનૂની ફરજ: We + must + obey + traffic rules."
+  },
+  {
+    "id": "sb46_145",
+    "jumbled": [
+      "letter",
+      "am",
+      "a",
+      "I",
+      "writing"
+    ],
+    "correct": "I am writing a letter",
+    "gujaratiMeaning": "હું પત્ર લખી રહ્યો છું.",
+    "grammarTip": "ચાલુ પ્રક્રિયા: I + am + writing + a letter."
+  },
+  {
+    "id": "sb47_146",
+    "jumbled": [
+      "in",
+      "village",
+      "They",
+      "a",
+      "live"
+    ],
+    "correct": "They live in a village",
+    "gujaratiMeaning": "તેઓ ગામડામાં રહે છે.",
+    "grammarTip": "વસવાટ: They + live + in a village."
+  },
+  {
+    "id": "sb48_147",
+    "jumbled": [
+      "very",
+      "The",
+      "is",
+      "water",
+      "cold"
+    ],
+    "correct": "The water is very cold",
+    "gujaratiMeaning": "પાણી ખૂબ ઠંડું છે.",
+    "grammarTip": "ગુણવત્તા: The water + is + very + cold."
+  },
+  {
+    "id": "sb49_148",
+    "jumbled": [
+      "is",
+      "doctor",
+      "He",
+      "great",
+      "a"
+    ],
+    "correct": "He is a great doctor",
+    "gujaratiMeaning": "તે એક મહાન ડોક્ટર છે.",
+    "grammarTip": "પ્રશંસા દર્શાવતું વાક્ય: He + is + a + great + doctor."
+  },
+  {
+    "id": "sb50_149",
+    "jumbled": [
+      "a",
+      "She",
+      "in",
+      "school",
+      "works"
+    ],
+    "correct": "She works in a school",
+    "gujaratiMeaning": "તેણી શાળામાં કામ કરે છે.",
+    "grammarTip": "કાર્યસ્થળ: She + works + in a school."
+  },
+  {
+    "id": "sb51_150",
+    "jumbled": [
+      "park",
+      "go",
+      "us",
+      "Let",
+      "to"
+    ],
+    "correct": "Let us go to park",
+    "gujaratiMeaning": "ચાલો આપણે બગીચામાં જઈએ.",
+    "grammarTip": "દરખાસ્ત દર્શાવતું વાક્ય: Let us (Let's) + go + to park."
+  },
+  {
+    "id": "sb52_151",
+    "jumbled": [
+      "will",
+      "you",
+      "I",
+      "call",
+      "later"
+    ],
+    "correct": "I will call you later",
+    "gujaratiMeaning": "હું તમને પછી ફોન કરીશ.",
+    "grammarTip": "ભવિષ્યનો વાયદો: I + will + call + you + later."
+  },
+  {
+    "id": "sb53_152",
+    "jumbled": [
+      "new",
+      "have",
+      "They",
+      "a",
+      "car"
+    ],
+    "correct": "They have a new car",
+    "gujaratiMeaning": "તેમની પાસે નવી કાર છે.",
+    "grammarTip": "માલિકી દર્શાવવા: They + have + a new car."
+  },
+  {
+    "id": "sb54_153",
+    "jumbled": [
+      "drives",
+      "He",
+      "very",
+      "slowly"
+    ],
+    "correct": "He drives very slowly",
+    "gujaratiMeaning": "તે ખૂબ ધીમેથી ગાડી ચલાવે છે.",
+    "grammarTip": "રીતભાત: He + drives + adverbial phrase (very slowly)."
+  },
+  {
+    "id": "sb55_154",
+    "jumbled": [
+      "is",
+      "now",
+      "sleeping",
+      "baby",
+      "The"
+    ],
+    "correct": "The baby is sleeping now",
+    "gujaratiMeaning": "બાળક અત્યારે સૂઈ રહ્યું છે.",
+    "grammarTip": "ચાલુ પ્રક્રિયા: The baby + is + sleeping + now."
+  },
+  {
+    "id": "sb56_155",
+    "jumbled": [
+      "We",
+      "big",
+      "saw",
+      "a",
+      "elephant"
+    ],
+    "correct": "We saw a big elephant",
+    "gujaratiMeaning": "અમે એક મોટો હાથી જોયો.",
+    "grammarTip": "ભૂતકાળનું અવલોકન: We + saw + a big elephant."
+  },
+  {
+    "id": "sb57_156",
+    "jumbled": [
+      "has",
+      "hair",
+      "black",
+      "long",
+      "She"
+    ],
+    "correct": "She has long black hair",
+    "gujaratiMeaning": "તેણીને લાંબા કાળા વાળ છે.",
+    "grammarTip": "વર્ણન: She + has + long + black + hair."
+  },
+  {
+    "id": "sb58_157",
+    "jumbled": [
+      "day",
+      "hot",
+      "a",
+      "It",
+      "is"
+    ],
+    "correct": "It is a hot day",
+    "gujaratiMeaning": "આજે ગરમ દિવસ છે.",
+    "grammarTip": "હવામાન: It + is + a + hot + day."
+  },
+  {
+    "id": "sb59_158",
+    "jumbled": [
+      "English",
+      "speak",
+      "They",
+      "well",
+      "very"
+    ],
+    "correct": "They speak English very well",
+    "gujaratiMeaning": "તેઓ અંગ્રેજી ખૂબ સારું બોલે છે.",
+    "grammarTip": "ભાષાકીય કૌશલ્ય: They + speak + English + very well."
+  },
+  {
+    "id": "sb60_159",
+    "jumbled": [
+      "I",
+      "to",
+      "meet",
+      "happy",
+      "you",
+      "am"
+    ],
+    "correct": "I am happy to meet you",
+    "gujaratiMeaning": "હું તમને મળીને ખુશ છું.",
+    "grammarTip": "લાગણીની પ્રતિક્રિયા: I am happy + to-infinitive (to meet you)."
+  },
+  {
+    "id": "sb61_160",
+    "jumbled": [
+      "We",
+      "new",
+      "words",
+      "are",
+      "learning"
+    ],
+    "correct": "We are learning new words",
+    "gujaratiMeaning": "આપણે નવા શબ્દો શીખી રહ્યા છીએ.",
+    "grammarTip": "પ્રગતિ દર્શાવતું વાક્ય: We + are + learning + new words."
+  },
+  {
+    "id": "sb62_161",
+    "jumbled": [
+      "absent",
+      "was",
+      "yesterday",
+      "He"
+    ],
+    "correct": "He was absent yesterday",
+    "gujaratiMeaning": "તે ગઈકાલે ગેરહાજર હતો.",
+    "grammarTip": "ભૂતકાળની ગેરહાજરી: He + was + absent + yesterday."
+  },
+  {
+    "id": "sb63_162",
+    "jumbled": [
+      "girl",
+      "She",
+      "a",
+      "is",
+      "beautiful"
+    ],
+    "correct": "She is a beautiful girl",
+    "gujaratiMeaning": "તેણી એક સુંદર છોકરી છે.",
+    "grammarTip": "વ્યક્તિ વર્ણન: She + is + a + beautiful + girl."
+  },
+  {
+    "id": "sb64_163",
+    "jumbled": [
+      "the",
+      "market",
+      "went",
+      "to",
+      "They"
+    ],
+    "correct": "They went to the market",
+    "gujaratiMeaning": "તેઓ બજારમાં ગયા.",
+    "grammarTip": "ભૂતકાળની મુસાફરી: They + went + to the market."
+  },
+  {
+    "id": "sb65_164",
+    "jumbled": [
+      "The",
+      "mango",
+      "sweet",
+      "is",
+      "very"
+    ],
+    "correct": "The mango is very sweet",
+    "gujaratiMeaning": "કેરી ખૂબ મીઠી છે.",
+    "grammarTip": "ફળનું વર્ણન: The mango + is + very + sweet."
+  },
+  {
+    "id": "sb66_165",
+    "jumbled": [
+      "milk",
+      "like",
+      "drink",
+      "to",
+      "I"
+    ],
+    "correct": "I like to drink milk",
+    "gujaratiMeaning": "મને દૂધ પીવું ગમે છે.",
+    "grammarTip": "પસંદગી: I + like + to-infinitive (to drink milk)."
+  },
+  {
+    "id": "sb67_166",
+    "jumbled": [
+      "is",
+      "engineer",
+      "brother",
+      "My",
+      "an"
+    ],
+    "correct": "My brother is an engineer",
+    "gujaratiMeaning": "મારો ભાઈ એન્જિનિયર છે.",
+    "grammarTip": "વ્યવસાય નિર્દેશક: My brother + is + an engineer."
+  },
+  {
+    "id": "sb68_167",
+    "jumbled": [
+      "should",
+      "truth",
+      "the",
+      "We",
+      "speak"
+    ],
+    "correct": "We should speak the truth",
+    "gujaratiMeaning": "આપણે સત્ય બોલવું જોઈએ.",
+    "grammarTip": "નૈતિક મૂલ્ય: We + should + speak + the truth."
+  },
+  {
+    "id": "sb69_168",
+    "jumbled": [
+      "peacock",
+      "very",
+      "is",
+      "The",
+      "beautiful"
+    ],
+    "correct": "The peacock is very beautiful",
+    "gujaratiMeaning": "મોર ખૂબ સુંદર છે.",
+    "grammarTip": "પક્ષીનું વર્ણન: The peacock + is + very + beautiful."
+  },
+  {
+    "id": "sb70_169",
+    "jumbled": [
+      "fast",
+      "He",
+      "very",
+      "runs"
+    ],
+    "correct": "He runs very fast",
+    "gujaratiMeaning": "તે ખૂબ ઝડપથી દોડે છે.",
+    "grammarTip": "રીતભાત: He + runs + very fast."
+  },
+  {
+    "id": "sb71_170",
+    "jumbled": [
+      "her",
+      "lost",
+      "ring",
+      "She",
+      "gold"
+    ],
+    "correct": "She lost her gold ring",
+    "gujaratiMeaning": "તેણીએ તેણીની સોનાની વીંટી ગુમાવી દીધી.",
+    "grammarTip": "ભૂતકાળનું નુકસાન: She + lost + her gold ring."
+  },
+  {
+    "id": "sb72_171",
+    "jumbled": [
+      "build",
+      "a",
+      "house",
+      "will",
+      "They"
+    ],
+    "correct": "They will build a house",
+    "gujaratiMeaning": "તેઓ ઘર બનાવશે.",
+    "grammarTip": "ભવિષ્યનું આયોજન: They + will + build + a house."
+  },
+  {
+    "id": "sb73_172",
+    "jumbled": [
+      "have",
+      "of",
+      "lot",
+      "I",
+      "a",
+      "work"
+    ],
+    "correct": "I have a lot of work",
+    "gujaratiMeaning": "મારી પાસે ઘણું કામ છે.",
+    "grammarTip": "કામનો જથ્થો દર્શાવવા: I + have + a lot of work."
+  },
+  {
+    "id": "sb74_173",
+    "jumbled": [
+      "food",
+      "live",
+      "to",
+      "eat",
+      "We"
+    ],
+    "correct": "We eat food to live",
+    "gujaratiMeaning": "આપણે જીવવા માટે ખોરાક ખાઈએ છીએ.",
+    "grammarTip": "હેતુ દર્શાવતું વાક્ય: We + eat + food + purpose (to live)."
+  },
+  {
+    "id": "sb75_174",
+    "jumbled": [
+      "He",
+      "in",
+      "the",
+      "works",
+      "farm"
+    ],
+    "correct": "He works in the farm",
+    "gujaratiMeaning": "તે ખેતરમાં કામ કરે છે.",
+    "grammarTip": "ખેડૂત વિશે માહિતી: He + works + in the farm."
+  },
+  {
+    "id": "sb76_175",
+    "jumbled": [
+      "She",
+      "wants",
+      "to",
+      "clothes",
+      "buy"
+    ],
+    "correct": "She wants to buy clothes",
+    "gujaratiMeaning": "તેણી કપડાં ખરીદવા માંગે છે.",
+    "grammarTip": "ખરીદીની ઈચ્છા: She + wants + to buy + clothes."
+  },
+  {
+    "id": "sb77_176",
+    "jumbled": [
+      "games",
+      "are",
+      "They",
+      "playing",
+      "video"
+    ],
+    "correct": "They are playing video games",
+    "gujaratiMeaning": "તેઓ વિડીયો ગેમ્સ રમી રહ્યા છે.",
+    "grammarTip": "રમતની ચાલુ ક્રિયા: They + are + playing + video games."
+  },
+  {
+    "id": "sb78_177",
+    "jumbled": [
+      "clock",
+      "correct",
+      "shows",
+      "time",
+      "The"
+    ],
+    "correct": "The clock shows correct time",
+    "gujaratiMeaning": "ઘડિયાળ સાચો સમય બતાવે છે.",
+    "grammarTip": "સામાન્ય સત્ય: The clock + shows + correct + time."
+  },
+  {
+    "id": "sb79_178",
+    "jumbled": [
+      "need",
+      "glass",
+      "a",
+      "I",
+      "of",
+      "water"
+    ],
+    "correct": "I need a glass of water",
+    "gujaratiMeaning": "મને એક ગ્લાસ પાણી જોઈએ છે.",
+    "grammarTip": "માગણી: I + need + a glass of water."
+  },
+  {
+    "id": "sb80_179",
+    "jumbled": [
+      "our",
+      "clean",
+      "should",
+      "We",
+      "city",
+      "keep"
+    ],
+    "correct": "We should keep our city clean",
+    "gujaratiMeaning": "આપણે આપણું શહેર સ્વચ્છ રાખવું જોઈએ.",
+    "grammarTip": "સામાજિક ફરજ: We + should + keep + our city + clean."
+  },
+  {
+    "id": "sb81_180",
+    "jumbled": [
+      "job",
+      "for",
+      "is",
+      "looking",
+      "He",
+      "a"
+    ],
+    "correct": "He is looking for a job",
+    "gujaratiMeaning": "તે નોકરી શોધી રહ્યો છે.",
+    "grammarTip": "નોકરીની શોધ: He + is looking for + a job."
+  },
+  {
+    "id": "sb82_181",
+    "jumbled": [
+      "washing",
+      "clothes",
+      "is",
+      "She",
+      "her"
+    ],
+    "correct": "She is washing her clothes",
+    "gujaratiMeaning": "તેણી તેણીના કપડાં ધોઈ રહી છે.",
+    "grammarTip": "ઘરનું કામ: She + is + washing + her clothes."
+  },
+  {
+    "id": "sb83_182",
+    "jumbled": [
+      "some",
+      "fresh",
+      "They",
+      "bought",
+      "fruits"
+    ],
+    "correct": "They bought some fresh fruits",
+    "gujaratiMeaning": "તેઓએ કેટલાક તાજા ફળો ખરીદ્યા.",
+    "grammarTip": "ભૂતકાળની ખરીદી: They + bought + some + fresh + fruits."
+  },
+  {
+    "id": "sb84_183",
+    "jumbled": [
+      "birds",
+      "The",
+      "singing",
+      "are",
+      "happily"
+    ],
+    "correct": "The birds are singing happily",
+    "gujaratiMeaning": "પક્ષીઓ ખુશીથી ગાઈ રહ્યા છે.",
+    "grammarTip": "કુદરતની સુંદરતા: The birds + are + singing + happily."
+  },
+  {
+    "id": "sb85_184",
+    "jumbled": [
+      "want",
+      "become",
+      "I",
+      "doctor",
+      "to"
+    ],
+    "correct": "I want to become doctor",
+    "gujaratiMeaning": "હું ડોક્ટર બનવા માંગુ છું.",
+    "grammarTip": "ધ્યેય દર્શાવતું વાક્ય: I + want + to become + doctor."
+  },
+  {
+    "id": "sb86_185",
+    "jumbled": [
+      "clean",
+      "must",
+      "our",
+      "hands",
+      "We"
+    ],
+    "correct": "We must clean our hands",
+    "gujaratiMeaning": "આપણે આપણા હાથ સાફ કરવા જોઈએ.",
+    "grammarTip": "સ્વચ્છતાનો આગ્રહ: We + must + clean + our hands."
+  },
+  {
+    "id": "sb87_186",
+    "jumbled": [
+      "near",
+      "the",
+      "lives",
+      "He",
+      "temple"
+    ],
+    "correct": "He lives near the temple",
+    "gujaratiMeaning": "તે મંદિરની નજીક રહે છે.",
+    "grammarTip": "સ્થાન દર્શાવવા: He + lives + near + the temple."
+  },
+  {
+    "id": "sb88_187",
+    "jumbled": [
+      "blue",
+      "She",
+      "a",
+      "is",
+      "wearing",
+      "dress"
+    ],
+    "correct": "She is wearing a blue dress",
+    "gujaratiMeaning": "તેણીએ વાદળી ડ્રેસ પહેર્યો છે.",
+    "grammarTip": "ચાલુ પૂર્વતૈયારી: She + is + wearing + a blue dress."
+  },
+  {
+    "id": "sb89_188",
+    "jumbled": [
+      "done",
+      "their",
+      "They",
+      "homework",
+      "have"
+    ],
+    "correct": "They have done their homework",
+    "gujaratiMeaning": "તેઓએ તેમનું હોમવર્ક કરી લીધું છે.",
+    "grammarTip": "પૂર્ણ થયેલી ક્રિયા: They + have + done + their homework."
+  },
+  {
+    "id": "sb90_189",
+    "jumbled": [
+      "history",
+      "interested",
+      "in",
+      "I",
+      "am"
+    ],
+    "correct": "I am interested in history",
+    "gujaratiMeaning": "મને ઇતિહાસમાં રસ છે.",
+    "grammarTip": "રસનો વિષય: I am + interested in + history."
+  },
+  {
+    "id": "sb91_190",
+    "jumbled": [
+      "are",
+      "We",
+      "proud",
+      "of",
+      "India"
+    ],
+    "correct": "We are proud of India",
+    "gujaratiMeaning": "આપણને ભારત પર ગર્વ છે.",
+    "grammarTip": "દેશપ્રેમ: We + are + proud of + India."
+  },
+  {
+    "id": "sb92_191",
+    "jumbled": [
+      "has",
+      "very",
+      "busy",
+      "schedule",
+      "He",
+      "a"
+    ],
+    "correct": "He has a very busy schedule",
+    "gujaratiMeaning": "તેનું સમયપત્રક ખૂબ વ્યસ્ત છે.",
+    "grammarTip": "દિનચર્યાની પરિસ્થિતિ: He + has + a very busy schedule."
+  },
+  {
+    "id": "sb93_192",
+    "jumbled": [
+      "She",
+      "delicious",
+      "cooks",
+      "food",
+      "daily"
+    ],
+    "correct": "She cooks delicious food daily",
+    "gujaratiMeaning": "તેણી દરરોજ સ્વાદિષ્ટ રસોઈ બનાવે છે.",
+    "grammarTip": "માતાની પ્રશંસા: She + cooks + delicious food + daily."
+  },
+  {
+    "id": "sb94_193",
+    "jumbled": [
+      "to",
+      "the",
+      "They",
+      "hospital",
+      "went"
+    ],
+    "correct": "They went to the hospital",
+    "gujaratiMeaning": "તેઓ હોસ્પિટલ ગયા.",
+    "grammarTip": "મુલાકાત: They + went + to the hospital."
+  },
+  {
+    "id": "sb95_194",
+    "jumbled": [
+      "goes",
+      "earth",
+      "round",
+      "The",
+      "sun"
+    ],
+    "correct": "The earth goes round sun",
+    "gujaratiMeaning": "પૃથ્વી સૂર્યની આસપાસ ફરે છે.",
+    "grammarTip": "ભૌગોલિક નિયમ: The earth + goes + round + sun."
+  },
+  {
+    "id": "sb96_195",
+    "jumbled": [
+      "I",
+      "reading",
+      "like",
+      "books",
+      "historical"
+    ],
+    "correct": "I like reading historical books",
+    "gujaratiMeaning": "મને ઐતિહાસિક પુસ્તકો વાંચવા ગમે છે.",
+    "grammarTip": "પસંદગીની આદત: I + like + reading + historical books."
+  },
+  {
+    "id": "sb97_196",
+    "jumbled": [
+      "We",
+      "clean",
+      "save",
+      "should",
+      "water"
+    ],
+    "correct": "We should save clean water",
+    "gujaratiMeaning": "આપણે સ્વચ્છ પાણી બચાવવું જોઈએ.",
+    "grammarTip": "પાણી બચાવવાનો સંદેશ: We + should + save + clean water."
+  },
+  {
+    "id": "sb98_197",
+    "jumbled": [
+      "speaks",
+      "language",
+      "He",
+      "polite",
+      "very"
+    ],
+    "correct": "He speaks very polite language",
+    "gujaratiMeaning": "તે ખૂબ નમ્ર ભાષા બોલે છે.",
+    "grammarTip": "વાણી વર્ણન: He + speaks + very + polite + language."
+  },
+  {
+    "id": "sb99_198",
+    "jumbled": [
+      "She",
+      "work",
+      "time",
+      "on",
+      "finished",
+      "her"
+    ],
+    "correct": "She finished her work on time",
+    "gujaratiMeaning": "તેણીએ તેનું કામ સમયસર પૂરું કર્યું.",
+    "grammarTip": "સમયસર કાર્યપૂર્તિ: She + finished + her work + on time."
+  },
+  {
+    "id": "sb100_199",
+    "jumbled": [
+      "a",
+      "are",
+      "They",
+      "picnic",
+      "planning"
+    ],
+    "correct": "They are planning a picnic",
+    "gujaratiMeaning": "તેઓ પિકનિકનું આયોજન કરી રહ્યા છે.",
+    "grammarTip": "આગામી પ્લાનિંગ: They + are + planning + a picnic."
+  },
+  {
+    "id": "sb1_200",
+    "jumbled": [
+      "I",
+      "am",
+      "school",
+      "going",
+      "to"
+    ],
+    "correct": "I am going to school",
+    "gujaratiMeaning": "હું શાળાએ જઈ રહ્યો છું.",
+    "grammarTip": "વાક્ય રચના: કર્તા (I) + to-be ક્રિયાપદ (am) + વર્તમાન કૃદંત (going) + પ્રિપોઝિશન/કર્મ (to school)."
+  },
+  {
+    "id": "sb2_201",
+    "jumbled": [
+      "apples",
+      "I",
+      "eating",
+      "like"
+    ],
+    "correct": "I like eating apples",
+    "gujaratiMeaning": "મને સફરજન ખાવા ગમે છે.",
+    "grammarTip": "'like' ક્રિયાપદ પછી સામાન્ય રીતે Gerund (-ing વાળું નામ) 'eating' વપરાય છે."
+  },
+  {
+    "id": "sb3_202",
+    "jumbled": [
+      "doctor",
+      "a",
+      "is",
+      "father",
+      "My"
+    ],
+    "correct": "My father is a doctor",
+    "gujaratiMeaning": "મારા પિતા એક ડોક્ટર છે.",
+    "grammarTip": "સંબંધક વિશેષણ (My father) + એકવચન ક્રિયાપદ (is) + આર્ટિકલ અને વ્યવસાય (a doctor)."
+  },
+  {
+    "id": "sb4_203",
+    "jumbled": [
+      "live",
+      "in",
+      "We",
+      "Gujarat"
+    ],
+    "correct": "We live in Gujarat",
+    "gujaratiMeaning": "અમે ગુજરાતમાં રહીએ છીએ.",
+    "grammarTip": "ચોક્કસ ભૌગોલિક રાજ્ય કે દેશના નામની આગળ અંદર રહેવા માટે 'in' પ્રિપોઝિશન વપરાય છે."
+  },
+  {
+    "id": "sb5_204",
+    "jumbled": [
+      "is",
+      "The",
+      "sun",
+      "shining"
+    ],
+    "correct": "The sun is shining",
+    "gujaratiMeaning": "સૂર્ય પ્રકાશી રહ્યો છે.",
+    "grammarTip": "ચાલુ વર્તમાનકાળની વાક્યરચના: કર્તા (The sun) + is + shining."
+  },
+  {
+    "id": "sb6_205",
+    "jumbled": [
+      "brothers",
+      "I",
+      "have",
+      "two"
+    ],
+    "correct": "I have two brothers",
+    "gujaratiMeaning": "મારે બે ભાઈઓ છે.",
+    "grammarTip": "માલિકી કે સંબંધ દર્શાવવા માટે પ્રથમ કે બીજા પુરુષ કર્તા સાથે 'have' નો ઉપયોગ થાય છે."
+  },
+  {
+    "id": "sb7_206",
+    "jumbled": [
+      "She",
+      "English",
+      "fluent",
+      "speaks"
+    ],
+    "correct": "She speaks fluent English",
+    "gujaratiMeaning": "તેણી અસ્ખલિત અંગ્રેજી બોલે છે.",
+    "grammarTip": "કર્તા (She) + ક્રિયાપદનું s વાળું વર્તમાન રૂપ (speaks) + વિશેષણ (fluent) + નામ (English)."
+  },
+  {
+    "id": "sb8_207",
+    "jumbled": [
+      "should",
+      "exercise",
+      "You",
+      "daily"
+    ],
+    "correct": "You should exercise daily",
+    "gujaratiMeaning": "તમારે દરરોજ કસરત કરવી જોઈએ.",
+    "grammarTip": "નૈતિક કે સામાન્ય ફરજ દર્શાવવા માટે સહાયકારક ક્રિયાપદ 'should' નો પ્રયોગ થાય છે."
+  },
+  {
+    "id": "sb9_208",
+    "jumbled": [
+      "Please",
+      "give",
+      "me",
+      "water",
+      "some"
+    ],
+    "correct": "Please give me some water",
+    "gujaratiMeaning": "મહેરબાની કરીને મને થોડું પાણી આપો.",
+    "grammarTip": "નમ્ર વિનંતી દર્શાવવા આજ્ઞાર્થ વાક્યની શરૂઆતમાં 'Please' અને ક્રિયાપદનું મૂળ રૂપ વપરાય છે."
+  },
+  {
+    "id": "sb10_209",
+    "jumbled": [
+      "cricket",
+      "playing",
+      "were",
+      "They"
+    ],
+    "correct": "They were playing cricket",
+    "gujaratiMeaning": "તેઓ ક્રિકેટ રમી રહ્યા હતા.",
+    "grammarTip": "ચાલુ ભૂતકાળની વાક્યરચના: બહુવચન કર્તા (They) + were + playing."
+  },
+  {
+    "id": "sb11_210",
+    "jumbled": [
+      "flower",
+      "beautiful",
+      "is",
+      "This",
+      "a"
+    ],
+    "correct": "This is a beautiful flower",
+    "gujaratiMeaning": "આ એક સુંદર ફૂલ છે.",
+    "grammarTip": "વાક્ય રચના: Demonstrative pronoun (This) + is + a + adjective (beautiful) + noun (flower)."
+  },
+  {
+    "id": "sb12_211",
+    "jumbled": [
+      "protect",
+      "nature",
+      "must",
+      "our",
+      "We"
+    ],
+    "correct": "We must protect our nature",
+    "gujaratiMeaning": "આપણે આપણી પ્રકૃતિનું રક્ષણ કરવું જોઈએ.",
+    "grammarTip": "ભારપૂર્વકની સલાહ કે ફરજ માટે 'must' ની સાથે ક્રિયાપદનું મૂળ રૂપ આવે છે."
+  },
+  {
+    "id": "sb13_212",
+    "jumbled": [
+      "in",
+      "works",
+      "a",
+      "He",
+      "bank"
+    ],
+    "correct": "He works in a bank",
+    "gujaratiMeaning": "તે બેંકમાં કામ કરે છે.",
+    "grammarTip": "કર્તા (He) + s-ક્રિયાપદ (works) + સ્થળ નિર્દેશક (in a bank)."
+  },
+  {
+    "id": "sb14_213",
+    "jumbled": [
+      "She",
+      "sweet",
+      "a",
+      "sings",
+      "song"
+    ],
+    "correct": "She sings a sweet song",
+    "gujaratiMeaning": "તેણી મધુર ગીત ગાય છે.",
+    "grammarTip": "નિયમિત ક્રિયા: કર્તા (She) + s-ક્રિયાપદ (sings) + કર્મ (a sweet song)."
+  },
+  {
+    "id": "sb15_214",
+    "jumbled": [
+      "are",
+      "books",
+      "They",
+      "now",
+      "reading"
+    ],
+    "correct": "They are reading books now",
+    "gujaratiMeaning": "તેઓ અત્યારે પુસ્તકો વાંચી રહ્યા છે.",
+    "grammarTip": "ચાલુ ક્રિયા: They + are + reading + books + time indicator (now)."
+  },
+  {
+    "id": "sb16_215",
+    "jumbled": [
+      "I",
+      "bought",
+      "phone",
+      "a",
+      "new"
+    ],
+    "correct": "I bought a new phone",
+    "gujaratiMeaning": "મેં એક નવો ફોન ખરીદ્યો.",
+    "grammarTip": "ભૂતકાળની ઘટના: કર્તા (I) + ભૂતકાળનું રૂપ (bought) + કર્મ (a new phone)."
+  },
+  {
+    "id": "sb17_216",
+    "jumbled": [
+      "train",
+      "late",
+      "The",
+      "very",
+      "was"
+    ],
+    "correct": "The train was very late",
+    "gujaratiMeaning": "ટ્રેન ઘણી મોડી હતી.",
+    "grammarTip": "ભૂતકાળની સ્થિતિ: The train + was + adverb (very) + adjective (late)."
+  },
+  {
+    "id": "sb18_217",
+    "jumbled": [
+      "next",
+      "go",
+      "week",
+      "We",
+      "will"
+    ],
+    "correct": "We will go next week",
+    "gujaratiMeaning": "અમે આવતા અઠવાડિયે જઈશું.",
+    "grammarTip": "ભવિષ્યકાળ: We + will + go + time (next week)."
+  },
+  {
+    "id": "sb19_218",
+    "jumbled": [
+      "wants",
+      "She",
+      "learn",
+      "music",
+      "to"
+    ],
+    "correct": "She wants to learn music",
+    "gujaratiMeaning": "તેણી સંગીત શીખવા માંગે છે.",
+    "grammarTip": "ઈચ્છા દર્શાવવા: She + wants + to-infinitive (to learn) + music."
+  },
+  {
+    "id": "sb20_219",
+    "jumbled": [
+      "a",
+      "honest",
+      "person",
+      "very",
+      "is",
+      "He"
+    ],
+    "correct": "He is a very honest person",
+    "gujaratiMeaning": "તે ખૂબ જ પ્રમાણિક વ્યક્તિ છે.",
+    "grammarTip": "વિશેષણની ગુણવત્તા દર્શાવવા 'a very honest person' નો પ્રયોગ થયો છે."
+  },
+  {
+    "id": "sb21_220",
+    "jumbled": [
+      "on",
+      "the",
+      "chair",
+      "cat",
+      "is",
+      "The"
+    ],
+    "correct": "The cat is on the chair",
+    "gujaratiMeaning": "બિલાડી ખુરશી પર છે.",
+    "grammarTip": "સ્થિતિ દર્શાવવા માટે સપાટી ઉપરનો સંબંધ દર્શાવતો પ્રિપોઝિશન 'on' ઉપયોગી છે."
+  },
+  {
+    "id": "sb22_221",
+    "jumbled": [
+      "water",
+      "We",
+      "thirsty",
+      "drink",
+      "when"
+    ],
+    "correct": "We drink water when thirsty",
+    "gujaratiMeaning": "તરસ લાગે ત્યારે આપણે પાણી પીએ છીએ.",
+    "grammarTip": "સામાન્ય સત્ય: We + drink + water + when + condition (thirsty)."
+  },
+  {
+    "id": "sb23_222",
+    "jumbled": [
+      "trees",
+      "on",
+      "build",
+      "Birds",
+      "nests"
+    ],
+    "correct": "Birds build nests on trees",
+    "gujaratiMeaning": "પક્ષીઓ વૃક્ષો પર માળો બાંધે છે.",
+    "grammarTip": "સામાન્ય ટેવ: બહુવચન કર્તા (Birds) + build (મૂળ રૂપ) + nests + on trees."
+  },
+  {
+    "id": "sb24_223",
+    "jumbled": [
+      "big",
+      "a",
+      "is",
+      "Ahmedabad",
+      "city"
+    ],
+    "correct": "Ahmedabad is a big city",
+    "gujaratiMeaning": "અમદાવાદ મોટું શહેર છે.",
+    "grammarTip": "સરળ માહિતીપ્રદ વાક્ય: Ahmedabad + is + a + big + city."
+  },
+  {
+    "id": "sb25_224",
+    "jumbled": [
+      "is",
+      "My",
+      "cooking",
+      "mother",
+      "food"
+    ],
+    "correct": "My mother is cooking food",
+    "gujaratiMeaning": "મારી માતા રસોઈ બનાવી રહી છે.",
+    "grammarTip": "ચાલુ ક્રિયા: My mother + is + cooking + food."
+  },
+  {
+    "id": "sb26_225",
+    "jumbled": [
+      "big",
+      "has",
+      "a",
+      "He",
+      "house"
+    ],
+    "correct": "He has a big house",
+    "gujaratiMeaning": "તેની પાસે મોટું ઘર છે.",
+    "grammarTip": "માલિકીનો સંબંધ: He + has + a big house."
+  },
+  {
+    "id": "sb27_226",
+    "jumbled": [
+      "are",
+      "You",
+      "my",
+      "best",
+      "friend"
+    ],
+    "correct": "You are my best friend",
+    "gujaratiMeaning": "તમે મારા શ્રેષ્ઠ મિત્ર છો.",
+    "grammarTip": "સંબંધ નિર્દેશક: You + are + my best friend."
+  },
+  {
+    "id": "sb28_227",
+    "jumbled": [
+      "us",
+      "The",
+      "gives",
+      "cow",
+      "milk"
+    ],
+    "correct": "The cow gives us milk",
+    "gujaratiMeaning": "ગાય આપણને દૂધ આપે છે.",
+    "grammarTip": "કુદરતી નિયમ: The cow (એકવચન) + gives + us + milk."
+  },
+  {
+    "id": "sb29_228",
+    "jumbled": [
+      "morning",
+      "wake",
+      "up",
+      "early",
+      "I"
+    ],
+    "correct": "I wake up early morning",
+    "gujaratiMeaning": "હું વહેલી સવારે જાગી જાઉં છું.",
+    "grammarTip": "દિનચર્યા: I + wake up + time (early morning)."
+  },
+  {
+    "id": "sb30_229",
+    "jumbled": [
+      "playing",
+      "They",
+      "love",
+      "football"
+    ],
+    "correct": "They love playing football",
+    "gujaratiMeaning": "તેમને ફૂટબોલ રમવું ગમે છે.",
+    "grammarTip": "'love' પછી ગમતી પ્રવૃત્તિ દર્શાવવા Gerund 'playing' વપરાયેલું છે."
+  },
+  {
+    "id": "sb31_230",
+    "jumbled": [
+      "Please",
+      "window",
+      "close",
+      "the"
+    ],
+    "correct": "Please close the window",
+    "gujaratiMeaning": "મહેરબાની કરીને બારી બંધ કરો.",
+    "grammarTip": "નમ્ર વિનંતી દર્શાવતું આજ્ઞાર્થ વાક્ય: Please + close + the window."
+  },
+  {
+    "id": "sb32_231",
+    "jumbled": [
+      "the",
+      "me",
+      "Open",
+      "for",
+      "door"
+    ],
+    "correct": "Open the door for me",
+    "gujaratiMeaning": "મારા માટે દરવોજો ખોલો.",
+    "grammarTip": "વિનંતી/આજ્ઞા: Open + the door + prepositional object (for me)."
+  },
+  {
+    "id": "sb33_232",
+    "jumbled": [
+      "This",
+      "book",
+      "me",
+      "belongs",
+      "to"
+    ],
+    "correct": "This book belongs to me",
+    "gujaratiMeaning": "આ પુસ્તક મારું છે.",
+    "grammarTip": "સંબંધ દર્શાવવા 'belongs to' નો ઉપયોગ યોગ્ય છે."
+  },
+  {
+    "id": "sb34_233",
+    "jumbled": [
+      "the",
+      "help",
+      "We",
+      "should",
+      "poor"
+    ],
+    "correct": "We should help the poor",
+    "gujaratiMeaning": "આપણે ગરીબોને મદદ કરવી જોઈએ.",
+    "grammarTip": "સામાજિક ફરજ: We + should + help + the poor."
+  },
+  {
+    "id": "sb35_234",
+    "jumbled": [
+      "The",
+      "rose",
+      "red",
+      "is",
+      "color"
+    ],
+    "correct": "The rose is red color",
+    "gujaratiMeaning": "ગુલાબ લાલ રંગનું હોય છે.",
+    "grammarTip": "વર્ણન: The rose + is + red + color."
+  },
+  {
+    "id": "sb36_235",
+    "jumbled": [
+      "He",
+      "to",
+      "learning",
+      "drive",
+      "is"
+    ],
+    "correct": "He is learning to drive",
+    "gujaratiMeaning": "તે ગાડી ચલાવતા શીખી રહ્યો છે.",
+    "grammarTip": "ચાલુ ક્રિયા સાથે હેતુ: He is learning + to-infinitive (to drive)."
+  },
+  {
+    "id": "sb37_236",
+    "jumbled": [
+      "picture",
+      "is",
+      "a",
+      "drawing",
+      "She"
+    ],
+    "correct": "She is drawing a picture",
+    "gujaratiMeaning": "તેણી ચિત્ર દોરી રહી છે.",
+    "grammarTip": "ચાલુ ક્રિયા: She + is + drawing + a picture."
+  },
+  {
+    "id": "sb38_237",
+    "jumbled": [
+      "speak",
+      "home",
+      "Gujarati",
+      "They",
+      "at"
+    ],
+    "correct": "They speak Gujarati at home",
+    "gujaratiMeaning": "તેઓ ઘરે ગુજરાતી બોલે છે.",
+    "grammarTip": "સામાન્ય આદત: They + speak + Gujarati + at home."
+  },
+  {
+    "id": "sb39_238",
+    "jumbled": [
+      "need",
+      "some",
+      "now",
+      "sleep",
+      "I"
+    ],
+    "correct": "I need some sleep now",
+    "gujaratiMeaning": "મારે અત્યારે થોડી ઊંઘની જરૂર છે.",
+    "grammarTip": "જરૂરિયાત દર્શાવતું વાક્ય: I + need + some sleep + now."
+  },
+  {
+    "id": "sb40_239",
+    "jumbled": [
+      "are",
+      "loudly",
+      "laughing",
+      "children",
+      "The"
+    ],
+    "correct": "The children are laughing loudly",
+    "gujaratiMeaning": "બાળકો જોરથી હસી રહ્યા છે.",
+    "grammarTip": "ક્રિયાની રીત દર્શાવવા માટે ક્રિયાવિશેષણ (loudly) વપરાય છે."
+  },
+  {
+    "id": "sb41_240",
+    "jumbled": [
+      "celebrate",
+      "every",
+      "We",
+      "year",
+      "Diwali"
+    ],
+    "correct": "We celebrate Diwali every year",
+    "gujaratiMeaning": "અમે દર વર્ષે દિવાળી ઉજવીએ છીએ.",
+    "grammarTip": "ચોક્કસ વર્ષનો તહેવાર: We + celebrate + Diwali + every year."
+  },
+  {
+    "id": "sb42_241",
+    "jumbled": [
+      "very",
+      "My",
+      "far",
+      "school",
+      "is"
+    ],
+    "correct": "My school is very far",
+    "gujaratiMeaning": "મારી શાળા ખૂબ દૂર છે.",
+    "grammarTip": "અંતર દર્શાવવા: My school + is + very far."
+  },
+  {
+    "id": "sb43_242",
+    "jumbled": [
+      "plays",
+      "well",
+      "He",
+      "very",
+      "guitar"
+    ],
+    "correct": "He plays guitar very well",
+    "gujaratiMeaning": "તે ગિટાર ખૂબ સરસ વગાડે છે.",
+    "grammarTip": "ક્રિયાવિશેષણનો ઉપયોગ: He + plays + guitar + very well."
+  },
+  {
+    "id": "sb44_243",
+    "jumbled": [
+      "her",
+      "loves",
+      "She",
+      "small",
+      "cat"
+    ],
+    "correct": "She loves her small cat",
+    "gujaratiMeaning": "તેણી તેણીની નાની બિલાડીને પ્રેમ કરે છે.",
+    "grammarTip": "લાગણી દર્શાવતું વાક્ય: She + loves + her small cat."
+  },
+  {
+    "id": "sb45_244",
+    "jumbled": [
+      "rules",
+      "obey",
+      "must",
+      "traffic",
+      "We"
+    ],
+    "correct": "We must obey traffic rules",
+    "gujaratiMeaning": "આપણે ટ્રાફિકના નિયમોનું પાલન કરવું જોઈએ.",
+    "grammarTip": "કાનૂની ફરજ: We + must + obey + traffic rules."
+  },
+  {
+    "id": "sb46_245",
+    "jumbled": [
+      "letter",
+      "am",
+      "a",
+      "I",
+      "writing"
+    ],
+    "correct": "I am writing a letter",
+    "gujaratiMeaning": "હું પત્ર લખી રહ્યો છું.",
+    "grammarTip": "ચાલુ પ્રક્રિયા: I + am + writing + a letter."
+  },
+  {
+    "id": "sb47_246",
+    "jumbled": [
+      "in",
+      "village",
+      "They",
+      "a",
+      "live"
+    ],
+    "correct": "They live in a village",
+    "gujaratiMeaning": "તેઓ ગામડામાં રહે છે.",
+    "grammarTip": "વસવાટ: They + live + in a village."
+  },
+  {
+    "id": "sb48_247",
+    "jumbled": [
+      "very",
+      "The",
+      "is",
+      "water",
+      "cold"
+    ],
+    "correct": "The water is very cold",
+    "gujaratiMeaning": "પાણી ખૂબ ઠંડું છે.",
+    "grammarTip": "ગુણવત્તા: The water + is + very + cold."
+  },
+  {
+    "id": "sb49_248",
+    "jumbled": [
+      "is",
+      "doctor",
+      "He",
+      "great",
+      "a"
+    ],
+    "correct": "He is a great doctor",
+    "gujaratiMeaning": "તે એક મહાન ડોક્ટર છે.",
+    "grammarTip": "પ્રશંસા દર્શાવતું વાક્ય: He + is + a + great + doctor."
+  },
+  {
+    "id": "sb50_249",
+    "jumbled": [
+      "a",
+      "She",
+      "in",
+      "school",
+      "works"
+    ],
+    "correct": "She works in a school",
+    "gujaratiMeaning": "તેણી શાળામાં કામ કરે છે.",
+    "grammarTip": "કાર્યસ્થળ: She + works + in a school."
   }
 ];
 
@@ -14508,6 +17249,8151 @@ export const DAILY_CONVERSATIONS = [
         ],
         "gujaratiHint": "ક્લાર્ક: મહેરબાની કરીને પહેલા તેને વજન કાંટા (સ્કેલ) પર મૂકો.",
         "explanation": "વજન માપવાના મશીનને અંગ્રેજીમાં 'weighing scale' અથવા 'weighing machine' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દવાખાનામાં (At the Doctor)",
+    "dialogues": [
+      {
+        "id": "d1",
+        "speaker": "Doctor",
+        "prompt": "Doctor: What is the problem? What ___ to you?",
+        "text": "What is the problem? What happened to you?",
+        "blankWord": "happened",
+        "options": [
+          "happen",
+          "happened",
+          "happening",
+          "happens"
+        ],
+        "gujaratiHint": "ડોક્ટર: શું તકલીફ છે? તમને શું થયું છે?",
+        "explanation": "ભૂતકાળની ઘટના પૂછવા માટે ક્રિયાપદનું ભૂતકાળનું રૂપ 'happened' યોગ્ય છે."
+      },
+      {
+        "id": "d2",
+        "speaker": "Patient",
+        "prompt": "Patient: I have a ___ since yesterday.",
+        "text": "I have a headache since yesterday.",
+        "blankWord": "headache",
+        "options": [
+          "painful",
+          "headache",
+          "aching",
+          "hurt"
+        ],
+        "gujaratiHint": "દર્દી: મને ગઈકાલથી માથું દુખે છે.",
+        "explanation": "નામ તરીકે 'headache' (માથાનો દુખાવો) વપરાય છે."
+      },
+      {
+        "id": "d3",
+        "speaker": "Doctor",
+        "prompt": "Doctor: Take this medicine ___ a day.",
+        "text": "Take this medicine twice a day.",
+        "blankWord": "twice",
+        "options": [
+          "two",
+          "twice",
+          "double",
+          "second"
+        ],
+        "gujaratiHint": "ડોક્ટર: આ દવા દિવસમાં બે વાર લેજો.",
+        "explanation": "દિવસમાં કેટલી વાર તે દર્શાવવા માટે 'twice' (બે વાર) નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દુકાનદાર સાથે (At the Shop)",
+    "dialogues": [
+      {
+        "id": "d4",
+        "speaker": "Customer",
+        "prompt": "Customer: How ___ is this shirt?",
+        "text": "How much is this shirt?",
+        "blankWord": "much",
+        "options": [
+          "many",
+          "much",
+          "cost",
+          "price"
+        ],
+        "gujaratiHint": "ગ્રાહક: આ શર્ટની કિંમત કેટલી છે?",
+        "explanation": "કિંમત પૂછવા માટે સામાન્ય રીતે 'How much' નો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d5",
+        "speaker": "Shopkeeper",
+        "prompt": "Shopkeeper: It ___ five hundred rupees.",
+        "text": "It costs five hundred rupees.",
+        "blankWord": "costs",
+        "options": [
+          "cost",
+          "costs",
+          "costing",
+          "price"
+        ],
+        "gujaratiHint": "દુકાનદાર: તેની કિંમત ૫૦૦ રૂપિયા છે.",
+        "explanation": "It (ત્રીજો પુરુષ એકવચન) કર્તા હોવાથી ક્રિયાપદને 's' લાગીને 'costs' બને છે."
+      }
+    ]
+  },
+  {
+    "situation": "બસ સ્ટેશન પર (At the Bus Station)",
+    "dialogues": [
+      {
+        "id": "d6",
+        "speaker": "Passenger",
+        "prompt": "Passenger: When ___ the bus to Ahmedabad leave?",
+        "text": "When does the bus to Ahmedabad leave?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: અમદાવાદ જવાની બસ ક્યારે ઉપડશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં ત્રીજો પુરુષ એકવચન કર્તા (the bus) હોવાથી પ્રશ્નાર્થ માટે 'does' વપરાય છે."
+      },
+      {
+        "id": "d7",
+        "speaker": "Clerk",
+        "prompt": "Clerk: It ___ at 4:30 PM from platform three.",
+        "text": "It leaves at 4:30 PM from platform three.",
+        "blankWord": "leaves",
+        "options": [
+          "leave",
+          "leaves",
+          "leaving",
+          "left"
+        ],
+        "gujaratiHint": "ક્લાર્ક: તે સાંજે ૪:૩૦ વાગ્યે પ્લેટફોર્મ નંબર ૩ પરથી ઉપડશે.",
+        "explanation": "સમયપત્રકની નિયમિત ઘટના દર્શાવવા માટે સાદા વર્તમાનકાળનું 'leaves' ક્રિયાપદ આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલમાં ઓર્ડર આપતી વખતે (At the Restaurant)",
+    "dialogues": [
+      {
+        "id": "d8",
+        "speaker": "Waiter",
+        "prompt": "Waiter: Are you ready to ___ now?",
+        "text": "Are you ready to order now?",
+        "blankWord": "order",
+        "options": [
+          "eat",
+          "order",
+          "drink",
+          "pay"
+        ],
+        "gujaratiHint": "વેઈટર: શું આપ અત્યારે ઓર્ડર આપવા માટે તૈયાર છો?",
+        "explanation": "જમવાનું મંગાવવા માટે 'order' શબ્દનો ઉપયોગ થાય છે."
+      },
+      {
+        "id": "d9",
+        "speaker": "Customer",
+        "prompt": "Customer: Yes, we ___ two plates of Gujarati Thali, please.",
+        "text": "Yes, we want two plates of Gujarati Thali, please.",
+        "blankWord": "want",
+        "options": [
+          "want",
+          "wants",
+          "wanted",
+          "wanting"
+        ],
+        "gujaratiHint": "ગ્રાહક: હા, અમને બે પ્લેટ ગુજરાતી થાળી આપો.",
+        "explanation": "We (બહુવચન) કર્તા હોવાથી ક્રિયાપદનું મૂળ રૂપ 'want' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રસ્તો પૂછતી વખતે (Asking for Directions)",
+    "dialogues": [
+      {
+        "id": "d10",
+        "speaker": "Traveler",
+        "prompt": "Traveler: Excuse me, can you tell me the ___ to the bank?",
+        "text": "Excuse me, can you tell me the way to the bank?",
+        "blankWord": "way",
+        "options": [
+          "way",
+          "road",
+          "street",
+          "map"
+        ],
+        "gujaratiHint": "પ્રવાસી: માફ કરજો, શું તમે મને બેંકનો રસ્તો બતાવી શકશો?",
+        "explanation": "કોઈ ચોક્કસ સ્થાન સુધી પહોંચવાનો રસ્તો પૂછવા 'the way to' વપરાય છે."
+      },
+      {
+        "id": "d11",
+        "speaker": "Local Person",
+        "prompt": "Local Person: Go straight and ___ left at the corner.",
+        "text": "Go straight and turn left at the corner.",
+        "blankWord": "turn",
+        "options": [
+          "go",
+          "turn",
+          "take",
+          "walk"
+        ],
+        "gujaratiHint": "સ્થાનિક વ્યક્તિ: સીધા જાઓ અને ખૂણા પરથી ડાબી બાજુ વળો.",
+        "explanation": "દિશા બદલવા માટે ક્રિયાપદ તરીકે 'turn' વપરાય છે (turn left/right)."
+      }
+    ]
+  },
+  {
+    "situation": "પરિચય આપતી વખતે (Introducing Yourself)",
+    "dialogues": [
+      {
+        "id": "d12",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Hello! My name is Rohan. What ___ your name?",
+        "text": "Hello! My name is Rohan. What is your name?",
+        "blankWord": "is",
+        "options": [
+          "are",
+          "is",
+          "am",
+          "be"
+        ],
+        "gujaratiHint": "રોહન: નમસ્તે! મારું નામ રોહન છે. તમારું નામ શું છે?",
+        "explanation": "એકવચન કર્તાના નામ પૂછવા માટે સાદા વર્તમાનકાળમાં 'is' વપરાય છે."
+      },
+      {
+        "id": "d13",
+        "speaker": "Smit",
+        "prompt": "Smit: Nice to ___ you, Rohan. I am Smit.",
+        "text": "Nice to meet you, Rohan. I am Smit.",
+        "blankWord": "meet",
+        "options": [
+          "meet",
+          "meeting",
+          "met",
+          "meets"
+        ],
+        "gujaratiHint": "સ્મિત: તમને મળીને આનંદ થયો, રોહન. હું સ્મિત છું.",
+        "explanation": "'Nice to meet you' એ કોઈને પહેલી વાર મળતી વખતે વપરાતું ચોક્કસ અભિવાદન છે."
+      }
+    ]
+  },
+  {
+    "situation": "બેંકમાં (At the Bank)",
+    "dialogues": [
+      {
+        "id": "d14",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to ___ some money from my account.",
+        "text": "I want to withdraw some money from my account.",
+        "blankWord": "withdraw",
+        "options": [
+          "withdraw",
+          "deposit",
+          "give",
+          "send"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે મારા ખાતામાંથી થોડા રૂપિયા ઉપાડવા છે.",
+        "explanation": "બેંક ખાતામાંથી પૈસા ઉપાડવા માટે 'withdraw' શબ્દનો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d15",
+        "speaker": "Cashier",
+        "prompt": "Cashier: Sure, please fill out this ___ slip first.",
+        "text": "Sure, please fill out this withdrawal slip first.",
+        "blankWord": "withdrawal",
+        "options": [
+          "deposit",
+          "withdrawal",
+          "cheque",
+          "passbook"
+        ],
+        "gujaratiHint": "કેશિયર: ચોક્કસ, મહેરબાની કરીને પહેલા આ વિથડ્રોઅલ સ્લિપ ભરો.",
+        "explanation": "પૈસા ઉપાડવા માટે વપરાતા ફોર્મને 'withdrawal slip' કહેવામાં આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "વર્ગખંડમાં (At the School)",
+    "dialogues": [
+      {
+        "id": "d16",
+        "speaker": "Teacher",
+        "prompt": "Teacher: Why ___ you absent yesterday, Rohan?",
+        "text": "Why were you absent yesterday, Rohan?",
+        "blankWord": "were",
+        "options": [
+          "was",
+          "were",
+          "are",
+          "did"
+        ],
+        "gujaratiHint": "શિક્ષક: રોહન, તું ગઈકાલે કેમ ગેરહાજર હતો?",
+        "explanation": "ભૂતકાળમાં 'you' કર્તા સાથે સહાયકારક ક્રિયાપદ 'were' વપરાય છે."
+      },
+      {
+        "id": "d17",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Sir, I ___ not well yesterday. I had a fever.",
+        "text": "Sir, I was not well yesterday. I had a fever.",
+        "blankWord": "was",
+        "options": [
+          "was",
+          "were",
+          "am",
+          "had"
+        ],
+        "gujaratiHint": "રોહન: સર, ગઈકાલે મારી તબિયત સારી નહોતી. મને તાવ હતો.",
+        "explanation": "ભૂતકાળમાં 'I' કર્તા સાથે સ્થિતિ દર્શાવવા 'was' નો પ્રયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હવામાનની ચર્ચા (Weather Talk)",
+    "dialogues": [
+      {
+        "id": "d18",
+        "speaker": "Aarav",
+        "prompt": "Aarav: It is very ___ today, isn't it?",
+        "text": "It is very hot today, isn't it?",
+        "blankWord": "hot",
+        "options": [
+          "cold",
+          "hot",
+          "rainy",
+          "windy"
+        ],
+        "gujaratiHint": "આરવ: આજે ખૂબ ગરમી છે, ખરું ને?",
+        "explanation": "ઉનાળાના વાતાવરણની સ્થિતિને દર્શાવવા માટે 'hot' વપરાયું છે."
+      },
+      {
+        "id": "d19",
+        "speaker": "Soham",
+        "prompt": "Soham: Yes, I think it ___ rain tonight.",
+        "text": "Yes, I think it might rain tonight.",
+        "blankWord": "might",
+        "options": [
+          "might",
+          "must",
+          "should",
+          "shall"
+        ],
+        "gujaratiHint": "સોહમ: હા, મને લાગે છે કે આજે રાત્રે વરસાદ પડી શકે છે.",
+        "explanation": "ભવિષ્યમાં વરસાદ પડવાની અનિશ્ચિત શક્યતા દર્શાવવા 'might' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રેલવે સ્ટેશન પર (At the Railway Station)",
+    "dialogues": [
+      {
+        "id": "d20",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Which platform ___ the train to Mumbai arrive on?",
+        "text": "Which platform does the train to Mumbai arrive on?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: મુંબઈની ટ્રેન કયા પ્લેટફોર્મ પર આવશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં એકવચન કર્તા (the train) સાથે પ્રશ્નાર્થ બનાવવા 'does' આવે."
+      },
+      {
+        "id": "d21",
+        "speaker": "Inquiry Clerk",
+        "prompt": "Inquiry Clerk: It usually ___ on platform number four.",
+        "text": "It usually arrives on platform number four.",
+        "blankWord": "arrives",
+        "options": [
+          "arrive",
+          "arrives",
+          "arrived",
+          "arriving"
+        ],
+        "gujaratiHint": "પૂછપરછ ક્લાર્ક: તે સામાન્ય રીતે પ્લેટફોર્મ નંબર ૪ પર આવે છે.",
+        "explanation": "નિયમિત ઘટના હોવાથી ત્રીજો પુરુષ એકવચન 'It' સાથે ક્રિયાપદ 'arrives' આવશે."
+      }
+    ]
+  },
+  {
+    "situation": "શાકભાજીની ખરીદી (Buying Vegetables)",
+    "dialogues": [
+      {
+        "id": "d22",
+        "speaker": "Buyer",
+        "prompt": "Buyer: What is the ___ of potatoes per kg?",
+        "text": "What is the price of potatoes per kg?",
+        "blankWord": "price",
+        "options": [
+          "price",
+          "cost",
+          "money",
+          "rupees"
+        ],
+        "gujaratiHint": "ખરીદનાર: બટાકાનો પ્રતિ કિલો ભાવ શું છે?",
+        "explanation": "કોઈ વસ્તુની બજાર કિંમત પૂછવા માટે સામાન્ય નામ તરીકે 'price' વપરાય છે."
+      },
+      {
+        "id": "d23",
+        "speaker": "Seller",
+        "prompt": "Seller: It is forty rupees ___ kilogram, sir.",
+        "text": "It is forty rupees per kilogram, sir.",
+        "blankWord": "per",
+        "options": [
+          "for",
+          "per",
+          "in",
+          "by"
+        ],
+        "gujaratiHint": "વેચનાર: સર, ચાલીસ રૂપિયા કિલો છે.",
+        "explanation": "પ્રતિ એકમ દર્શાવવા માટે 'per' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ટેક્સી બુક કરતી વખતે (Booking a Taxi)",
+    "dialogues": [
+      {
+        "id": "d24",
+        "speaker": "Rider",
+        "prompt": "Rider: I want to ___ a cab to the airport.",
+        "text": "I want to book a cab to the airport.",
+        "blankWord": "book",
+        "options": [
+          "book",
+          "call",
+          "take",
+          "rent"
+        ],
+        "gujaratiHint": "મુસાફર: મારે એરપોર્ટ માટે ટેક્સી બુક કરવી છે.",
+        "explanation": "ગાડી અગાઉથી આરક્ષિત કરવા માટે 'book' શબ્દ યોગ્ય છે."
+      },
+      {
+        "id": "d25",
+        "speaker": "Operator",
+        "prompt": "Operator: Alright, the driver ___ arrive in five minutes.",
+        "text": "Alright, the driver will arrive in five minutes.",
+        "blankWord": "will",
+        "options": [
+          "will",
+          "would",
+          "shall",
+          "is"
+        ],
+        "gujaratiHint": "ઓપરેટર: બરાબર, ડ્રાઈવર પાંચ મિનિટમાં આવી જશે.",
+        "explanation": "ટૂંક સમયમાં થનારી ભવિષ્યની ઘટના માટે 'will' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ફોન પર વાતચીત (Phone Conversation)",
+    "dialogues": [
+      {
+        "id": "d26",
+        "speaker": "Caller",
+        "prompt": "Caller: Hello, ___ I speak to Amit, please?",
+        "text": "Hello, may I speak to Amit, please?",
+        "blankWord": "may",
+        "options": [
+          "may",
+          "should",
+          "must",
+          "will"
+        ],
+        "gujaratiHint": "કોલર: નમસ્તે, શું હું અમિત સાથે વાત કરી શકું?",
+        "explanation": "ફોન પર નમ્રતાપૂર્વક પરવાનગી મેળવવા 'may' અથવા 'could' નો ઉપયોગ કરાય છે."
+      },
+      {
+        "id": "d27",
+        "speaker": "Receiver",
+        "prompt": "Receiver: Sorry, he is not at home. Can I take a ___?",
+        "text": "Sorry, he is not at home. Can I take a message?",
+        "blankWord": "message",
+        "options": [
+          "message",
+          "letter",
+          "note",
+          "call"
+        ],
+        "gujaratiHint": "સામેની વ્યક્તિ: માફ કરજો, તે ઘરે નથી. શું હું કોઈ સંદેશો લઈ શકું?",
+        "explanation": "કોઈના વતી વાત સાંભળીને પહોંચાડવા માટે 'take a message' ફ્રેઝ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલ ચેક-ઈન (At the Hotel Check-in)",
+    "dialogues": [
+      {
+        "id": "d28",
+        "speaker": "Guest",
+        "prompt": "Guest: Hello, I have a ___ under the name of Patel.",
+        "text": "Hello, I have a reservation under the name of Patel.",
+        "blankWord": "reservation",
+        "options": [
+          "reservation",
+          "room",
+          "ticket",
+          "bill"
+        ],
+        "gujaratiHint": "મહેમાન: નમસ્તે, મારે પટેલ નામ હેઠળ બુકિંગ (આરક્ષણ) છે.",
+        "explanation": "હોટેલમાં પહેલેથી નક્કી કરાયેલા રૂમ માટે 'reservation' અથવા 'booking' બોલાય છે."
+      },
+      {
+        "id": "d29",
+        "speaker": "Receptionist",
+        "prompt": "Receptionist: Yes sir, here is your room ___.",
+        "text": "Yes sir, here is your room key.",
+        "blankWord": "key",
+        "options": [
+          "key",
+          "card",
+          "lock",
+          "number"
+        ],
+        "gujaratiHint": "રિસેપ્શનિસ્ટ: હા સર, આ રહી તમારા રૂમની ચાવી.",
+        "explanation": "રૂમ ખોલવા માટે આપવામાં આવતી ભૌતિક કે ઇલેક્ટ્રોનિક વસ્તુ માટે 'key' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "લાઇબ્રેરીમાં (At the Library)",
+    "dialogues": [
+      {
+        "id": "d30",
+        "speaker": "Student",
+        "prompt": "Student: Can I ___ this grammar book for a week?",
+        "text": "Can I borrow this grammar book for a week?",
+        "blankWord": "borrow",
+        "options": [
+          "borrow",
+          "lend",
+          "take",
+          "buy"
+        ],
+        "gujaratiHint": "વિદ્યાર્થી: શું હું આ વ્યાકરણનું પુસ્તક એક અઠવાડિયા માટે ઉધાર લઈ શકું?",
+        "explanation": "બીજાની પાસેથી વાંચીને પાછું આપવાની શરતે લેવા માટે 'borrow' શબ્દ વપરાય છે."
+      },
+      {
+        "id": "d31",
+        "speaker": "Librarian",
+        "prompt": "Librarian: Yes, but make sure to ___ it on time.",
+        "text": "Yes, but make sure to return it on time.",
+        "blankWord": "return",
+        "options": [
+          "return",
+          "give",
+          "keep",
+          "lose"
+        ],
+        "gujaratiHint": "ગ્રંથપાલ: હા, પણ તેને સમયસર પરત કરવાનું ભૂલતા નહિ.",
+        "explanation": "પુસ્તકાલયનું પુસ્તક પાછું આપવા માટે 'return' શબ્દ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "શોખ વિશે વાતચીત (Talking about Hobbies)",
+    "dialogues": [
+      {
+        "id": "d32",
+        "speaker": "Kabir",
+        "prompt": "Kabir: What do you like to do in your ___ time?",
+        "text": "What do you like to do in your free time?",
+        "blankWord": "free",
+        "options": [
+          "busy",
+          "free",
+          "working",
+          "study"
+        ],
+        "gujaratiHint": "કબીર: તમને તમારા નવરાશના સમયમાં શું કરવું ગમે છે?",
+        "explanation": "નવરાશના કે વધારાના સમય માટે 'free time' અથવા 'leisure time' વપરાય છે."
+      },
+      {
+        "id": "d33",
+        "speaker": "Meera",
+        "prompt": "Meera: I am fond ___ reading novels.",
+        "text": "I am fond of reading novels.",
+        "blankWord": "of",
+        "options": [
+          "of",
+          "for",
+          "in",
+          "to"
+        ],
+        "gujaratiHint": "મીરા: મને નવલકથાઓ વાંચવાનો ખૂબ શોખ છે.",
+        "explanation": "'fond' શબ્દ સાથે હંમેશાં 'of' પ્રિપોઝિશન આવે છે (fond of doing something)."
+      }
+    ]
+  },
+  {
+    "situation": "જોબ ઈન્ટરવ્યુ (Job Interview)",
+    "dialogues": [
+      {
+        "id": "d34",
+        "speaker": "Interviewer",
+        "prompt": "Interviewer: Tell me about your educational ___.",
+        "text": "Tell me about your educational background.",
+        "blankWord": "background",
+        "options": [
+          "background",
+          "history",
+          "future",
+          "result"
+        ],
+        "gujaratiHint": "ઇન્ટરવ્યુઅર: મને તમારી શૈક્ષણિક પૃષ્ઠભૂમિ (અભ્યાસ વિશે) જણાવો.",
+        "explanation": "વ્યક્તિના ભૂતકાળના અભ્યાસ અને ડિગ્રીઓની માહિતી માટે 'educational background' વપરાય છે."
+      },
+      {
+        "id": "d35",
+        "speaker": "Candidate",
+        "prompt": "Candidate: I have ___ my graduation in computer science.",
+        "text": "I have completed my graduation in computer science.",
+        "blankWord": "completed",
+        "options": [
+          "complete",
+          "completed",
+          "finish",
+          "done"
+        ],
+        "gujaratiHint": "ઉમેદવાર: મેં કમ્પ્યુટર સાયન્સમાં મારું ગ્રેજ્યુએશન પૂરું કર્યું છે.",
+        "explanation": "પૂર્ણ વર્તમાનકાળની રચનામાં 'have' પછી ભૂતકૃદંત 'completed' યોગ્ય છે."
+      }
+    ]
+  },
+  {
+    "situation": "મિત્રને મળતી વખતે (Meeting a Friend)",
+    "dialogues": [
+      {
+        "id": "d36",
+        "speaker": "Riya",
+        "prompt": "Riya: How have you ___? We met after a long time.",
+        "text": "How have you been? We met after a long time.",
+        "blankWord": "been",
+        "options": [
+          "be",
+          "been",
+          "being",
+          "was"
+        ],
+        "gujaratiHint": "રિયા: તું કેમ છે? આપણે લાંબા સમય પછી મળ્યા.",
+        "explanation": "ઘણા સમય પછી કુશળતા પૂછવા 'How have you been?' બોલાય છે."
+      },
+      {
+        "id": "d37",
+        "speaker": "Keya",
+        "prompt": "Keya: I am doing ___! How about you?",
+        "text": "I am doing great! How about you?",
+        "blankWord": "great",
+        "options": [
+          "well",
+          "great",
+          "good",
+          "nice"
+        ],
+        "gujaratiHint": "કેયા: હું ખૂબ જ મજામાં છું! તારા શું સમાચાર છે?",
+        "explanation": "અહીં 'great' અથવા 'well' બંને આવી શકે, પણ સામાન્ય ચર્ચામાં 'doing great' નો અર્થ ઉત્તમ છું થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "એરપોર્ટ પર (At the Airport)",
+    "dialogues": [
+      {
+        "id": "d38",
+        "speaker": "Agent",
+        "prompt": "Agent: May I see your passport and ___ ticket?",
+        "text": "May I see your passport and flight ticket?",
+        "blankWord": "flight",
+        "options": [
+          "bus",
+          "train",
+          "flight",
+          "road"
+        ],
+        "gujaratiHint": "એજન્ટ: શું હું તમારો પાસપોર્ટ અને પ્લેનની (ફ્લાઇટ) ટિકિટ જોઈ શકું?",
+        "explanation": "એરપોર્ટ પર હવાઈ સફરની ટિકિટ માટે 'flight ticket' કહેવામાં આવે છે."
+      },
+      {
+        "id": "d39",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Yes, here they ___. I only have one handbag.",
+        "text": "Yes, here they are. I only have one handbag.",
+        "blankWord": "are",
+        "options": [
+          "is",
+          "are",
+          "am",
+          "were"
+        ],
+        "gujaratiHint": "મુસાફર: હા, આ રહ્યા. મારી પાસે માત્ર એક હેન્ડબેગ છે.",
+        "explanation": "બહુવચન કર્તા 'they' હોવાથી ક્રિયાપદ તરીકે 'are' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "કપડાંની ખરીદી (Shopping for Clothes)",
+    "dialogues": [
+      {
+        "id": "d40",
+        "speaker": "Customer",
+        "prompt": "Customer: Do you have this dress in a larger ___?",
+        "text": "Do you have this dress in a larger size?",
+        "blankWord": "size",
+        "options": [
+          "size",
+          "color",
+          "length",
+          "fit"
+        ],
+        "gujaratiHint": "ગ્રાહક: શું તમારી પાસે આ ડ્રેસ મોટા માપમાં (સાઈઝમાં) છે?",
+        "explanation": "કપડાંના માપને અંગ્રેજીમાં 'size' તરીકે ઓળખવામાં આવે છે."
+      },
+      {
+        "id": "d41",
+        "speaker": "Salesman",
+        "prompt": "Salesman: Yes, let me check in the ___ room.",
+        "text": "Yes, let me check in the stock room.",
+        "blankWord": "stock",
+        "options": [
+          "stock",
+          "trial",
+          "fitting",
+          "rest"
+        ],
+        "gujaratiHint": "સેલ્સમેન: હા, મને ગોદામમાં (સ્ટોક રૂમમાં) તપાસવા દો.",
+        "explanation": "જ્યાં વધારાનો સામાન રાખવામાં આવે છે તેને 'stock room' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પિકનિકનું આયોજન (Planning a Picnic)",
+    "dialogues": [
+      {
+        "id": "d42",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Where should we ___ for the picnic?",
+        "text": "Where should we go for the picnic?",
+        "blankWord": "go",
+        "options": [
+          "go",
+          "going",
+          "went",
+          "gone"
+        ],
+        "gujaratiHint": "રોહન: આપણે પિકનિક માટે ક્યાં જવું જોઈએ?",
+        "explanation": "સહાયકારક ક્રિયાપદ 'should' સાથે હંમેશાં ક્રિયાપદનું મૂળ રૂપ 'go' વપરાય છે."
+      },
+      {
+        "id": "d43",
+        "speaker": "Sneha",
+        "prompt": "Sneha: Let's go to the ___ near the lake.",
+        "text": "Let's go to the park near the lake.",
+        "blankWord": "park",
+        "options": [
+          "park",
+          "school",
+          "office",
+          "bank"
+        ],
+        "gujaratiHint": "સ્નેહા: ચાલો તળાવ નજીક આવેલા બગીચામાં (પાર્ક) જઈએ.",
+        "explanation": "પિકનિક અને કુદરતી આનંદ માટે સૌથી યોગ્ય સ્થાનોમાં 'park' નો સમાવેશ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પોસ્ટ ઓફિસમાં (At the Post Office)",
+    "dialogues": [
+      {
+        "id": "d44",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to send this ___ to Surat.",
+        "text": "I want to send this parcel to Surat.",
+        "blankWord": "parcel",
+        "options": [
+          "parcel",
+          "email",
+          "box",
+          "money"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે આ પાર્સલ સુરત મોકલવું છે.",
+        "explanation": "પોસ્ટ ઓફિસ દ્વારા મોકલવામાં આવતા સામાનના પેકેટને 'parcel' કહે છે."
+      },
+      {
+        "id": "d45",
+        "speaker": "Clerk",
+        "prompt": "Clerk: Please place it on the weighing ___ first.",
+        "text": "Please place it on the weighing scale first.",
+        "blankWord": "scale",
+        "options": [
+          "scale",
+          "table",
+          "chair",
+          "box"
+        ],
+        "gujaratiHint": "ક્લાર્ક: મહેરબાની કરીને પહેલા તેને વજન કાંટા (સ્કેલ) પર મૂકો.",
+        "explanation": "વજન માપવાના મશીનને અંગ્રેજીમાં 'weighing scale' અથવા 'weighing machine' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દવાખાનામાં (At the Doctor)",
+    "dialogues": [
+      {
+        "id": "d1",
+        "speaker": "Doctor",
+        "prompt": "Doctor: What is the problem? What ___ to you?",
+        "text": "What is the problem? What happened to you?",
+        "blankWord": "happened",
+        "options": [
+          "happen",
+          "happened",
+          "happening",
+          "happens"
+        ],
+        "gujaratiHint": "ડોક્ટર: શું તકલીફ છે? તમને શું થયું છે?",
+        "explanation": "ભૂતકાળની ઘટના પૂછવા માટે ક્રિયાપદનું ભૂતકાળનું રૂપ 'happened' યોગ્ય છે."
+      },
+      {
+        "id": "d2",
+        "speaker": "Patient",
+        "prompt": "Patient: I have a ___ since yesterday.",
+        "text": "I have a headache since yesterday.",
+        "blankWord": "headache",
+        "options": [
+          "painful",
+          "headache",
+          "aching",
+          "hurt"
+        ],
+        "gujaratiHint": "દર્દી: મને ગઈકાલથી માથું દુખે છે.",
+        "explanation": "નામ તરીકે 'headache' (માથાનો દુખાવો) વપરાય છે."
+      },
+      {
+        "id": "d3",
+        "speaker": "Doctor",
+        "prompt": "Doctor: Take this medicine ___ a day.",
+        "text": "Take this medicine twice a day.",
+        "blankWord": "twice",
+        "options": [
+          "two",
+          "twice",
+          "double",
+          "second"
+        ],
+        "gujaratiHint": "ડોક્ટર: આ દવા દિવસમાં બે વાર લેજો.",
+        "explanation": "દિવસમાં કેટલી વાર તે દર્શાવવા માટે 'twice' (બે વાર) નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દુકાનદાર સાથે (At the Shop)",
+    "dialogues": [
+      {
+        "id": "d4",
+        "speaker": "Customer",
+        "prompt": "Customer: How ___ is this shirt?",
+        "text": "How much is this shirt?",
+        "blankWord": "much",
+        "options": [
+          "many",
+          "much",
+          "cost",
+          "price"
+        ],
+        "gujaratiHint": "ગ્રાહક: આ શર્ટની કિંમત કેટલી છે?",
+        "explanation": "કિંમત પૂછવા માટે સામાન્ય રીતે 'How much' નો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d5",
+        "speaker": "Shopkeeper",
+        "prompt": "Shopkeeper: It ___ five hundred rupees.",
+        "text": "It costs five hundred rupees.",
+        "blankWord": "costs",
+        "options": [
+          "cost",
+          "costs",
+          "costing",
+          "price"
+        ],
+        "gujaratiHint": "દુકાનદાર: તેની કિંમત ૫૦૦ રૂપિયા છે.",
+        "explanation": "It (ત્રીજો પુરુષ એકવચન) કર્તા હોવાથી ક્રિયાપદને 's' લાગીને 'costs' બને છે."
+      }
+    ]
+  },
+  {
+    "situation": "બસ સ્ટેશન પર (At the Bus Station)",
+    "dialogues": [
+      {
+        "id": "d6",
+        "speaker": "Passenger",
+        "prompt": "Passenger: When ___ the bus to Ahmedabad leave?",
+        "text": "When does the bus to Ahmedabad leave?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: અમદાવાદ જવાની બસ ક્યારે ઉપડશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં ત્રીજો પુરુષ એકવચન કર્તા (the bus) હોવાથી પ્રશ્નાર્થ માટે 'does' વપરાય છે."
+      },
+      {
+        "id": "d7",
+        "speaker": "Clerk",
+        "prompt": "Clerk: It ___ at 4:30 PM from platform three.",
+        "text": "It leaves at 4:30 PM from platform three.",
+        "blankWord": "leaves",
+        "options": [
+          "leave",
+          "leaves",
+          "leaving",
+          "left"
+        ],
+        "gujaratiHint": "ક્લાર્ક: તે સાંજે ૪:૩૦ વાગ્યે પ્લેટફોર્મ નંબર ૩ પરથી ઉપડશે.",
+        "explanation": "સમયપત્રકની નિયમિત ઘટના દર્શાવવા માટે સાદા વર્તમાનકાળનું 'leaves' ક્રિયાપદ આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલમાં ઓર્ડર આપતી વખતે (At the Restaurant)",
+    "dialogues": [
+      {
+        "id": "d8",
+        "speaker": "Waiter",
+        "prompt": "Waiter: Are you ready to ___ now?",
+        "text": "Are you ready to order now?",
+        "blankWord": "order",
+        "options": [
+          "eat",
+          "order",
+          "drink",
+          "pay"
+        ],
+        "gujaratiHint": "વેઈટર: શું આપ અત્યારે ઓર્ડર આપવા માટે તૈયાર છો?",
+        "explanation": "જમવાનું મંગાવવા માટે 'order' શબ્દનો ઉપયોગ થાય છે."
+      },
+      {
+        "id": "d9",
+        "speaker": "Customer",
+        "prompt": "Customer: Yes, we ___ two plates of Gujarati Thali, please.",
+        "text": "Yes, we want two plates of Gujarati Thali, please.",
+        "blankWord": "want",
+        "options": [
+          "want",
+          "wants",
+          "wanted",
+          "wanting"
+        ],
+        "gujaratiHint": "ગ્રાહક: હા, અમને બે પ્લેટ ગુજરાતી થાળી આપો.",
+        "explanation": "We (બહુવચન) કર્તા હોવાથી ક્રિયાપદનું મૂળ રૂપ 'want' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રસ્તો પૂછતી વખતે (Asking for Directions)",
+    "dialogues": [
+      {
+        "id": "d10",
+        "speaker": "Traveler",
+        "prompt": "Traveler: Excuse me, can you tell me the ___ to the bank?",
+        "text": "Excuse me, can you tell me the way to the bank?",
+        "blankWord": "way",
+        "options": [
+          "way",
+          "road",
+          "street",
+          "map"
+        ],
+        "gujaratiHint": "પ્રવાસી: માફ કરજો, શું તમે મને બેંકનો રસ્તો બતાવી શકશો?",
+        "explanation": "કોઈ ચોક્કસ સ્થાન સુધી પહોંચવાનો રસ્તો પૂછવા 'the way to' વપરાય છે."
+      },
+      {
+        "id": "d11",
+        "speaker": "Local Person",
+        "prompt": "Local Person: Go straight and ___ left at the corner.",
+        "text": "Go straight and turn left at the corner.",
+        "blankWord": "turn",
+        "options": [
+          "go",
+          "turn",
+          "take",
+          "walk"
+        ],
+        "gujaratiHint": "સ્થાનિક વ્યક્તિ: સીધા જાઓ અને ખૂણા પરથી ડાબી બાજુ વળો.",
+        "explanation": "દિશા બદલવા માટે ક્રિયાપદ તરીકે 'turn' વપરાય છે (turn left/right)."
+      }
+    ]
+  },
+  {
+    "situation": "પરિચય આપતી વખતે (Introducing Yourself)",
+    "dialogues": [
+      {
+        "id": "d12",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Hello! My name is Rohan. What ___ your name?",
+        "text": "Hello! My name is Rohan. What is your name?",
+        "blankWord": "is",
+        "options": [
+          "are",
+          "is",
+          "am",
+          "be"
+        ],
+        "gujaratiHint": "રોહન: નમસ્તે! મારું નામ રોહન છે. તમારું નામ શું છે?",
+        "explanation": "એકવચન કર્તાના નામ પૂછવા માટે સાદા વર્તમાનકાળમાં 'is' વપરાય છે."
+      },
+      {
+        "id": "d13",
+        "speaker": "Smit",
+        "prompt": "Smit: Nice to ___ you, Rohan. I am Smit.",
+        "text": "Nice to meet you, Rohan. I am Smit.",
+        "blankWord": "meet",
+        "options": [
+          "meet",
+          "meeting",
+          "met",
+          "meets"
+        ],
+        "gujaratiHint": "સ્મિત: તમને મળીને આનંદ થયો, રોહન. હું સ્મિત છું.",
+        "explanation": "'Nice to meet you' એ કોઈને પહેલી વાર મળતી વખતે વપરાતું ચોક્કસ અભિવાદન છે."
+      }
+    ]
+  },
+  {
+    "situation": "બેંકમાં (At the Bank)",
+    "dialogues": [
+      {
+        "id": "d14",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to ___ some money from my account.",
+        "text": "I want to withdraw some money from my account.",
+        "blankWord": "withdraw",
+        "options": [
+          "withdraw",
+          "deposit",
+          "give",
+          "send"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે મારા ખાતામાંથી થોડા રૂપિયા ઉપાડવા છે.",
+        "explanation": "બેંક ખાતામાંથી પૈસા ઉપાડવા માટે 'withdraw' શબ્દનો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d15",
+        "speaker": "Cashier",
+        "prompt": "Cashier: Sure, please fill out this ___ slip first.",
+        "text": "Sure, please fill out this withdrawal slip first.",
+        "blankWord": "withdrawal",
+        "options": [
+          "deposit",
+          "withdrawal",
+          "cheque",
+          "passbook"
+        ],
+        "gujaratiHint": "કેશિયર: ચોક્કસ, મહેરબાની કરીને પહેલા આ વિથડ્રોઅલ સ્લિપ ભરો.",
+        "explanation": "પૈસા ઉપાડવા માટે વપરાતા ફોર્મને 'withdrawal slip' કહેવામાં આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "વર્ગખંડમાં (At the School)",
+    "dialogues": [
+      {
+        "id": "d16",
+        "speaker": "Teacher",
+        "prompt": "Teacher: Why ___ you absent yesterday, Rohan?",
+        "text": "Why were you absent yesterday, Rohan?",
+        "blankWord": "were",
+        "options": [
+          "was",
+          "were",
+          "are",
+          "did"
+        ],
+        "gujaratiHint": "શિક્ષક: રોહન, તું ગઈકાલે કેમ ગેરહાજર હતો?",
+        "explanation": "ભૂતકાળમાં 'you' કર્તા સાથે સહાયકારક ક્રિયાપદ 'were' વપરાય છે."
+      },
+      {
+        "id": "d17",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Sir, I ___ not well yesterday. I had a fever.",
+        "text": "Sir, I was not well yesterday. I had a fever.",
+        "blankWord": "was",
+        "options": [
+          "was",
+          "were",
+          "am",
+          "had"
+        ],
+        "gujaratiHint": "રોહન: સર, ગઈકાલે મારી તબિયત સારી નહોતી. મને તાવ હતો.",
+        "explanation": "ભૂતકાળમાં 'I' કર્તા સાથે સ્થિતિ દર્શાવવા 'was' નો પ્રયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હવામાનની ચર્ચા (Weather Talk)",
+    "dialogues": [
+      {
+        "id": "d18",
+        "speaker": "Aarav",
+        "prompt": "Aarav: It is very ___ today, isn't it?",
+        "text": "It is very hot today, isn't it?",
+        "blankWord": "hot",
+        "options": [
+          "cold",
+          "hot",
+          "rainy",
+          "windy"
+        ],
+        "gujaratiHint": "આરવ: આજે ખૂબ ગરમી છે, ખરું ને?",
+        "explanation": "ઉનાળાના વાતાવરણની સ્થિતિને દર્શાવવા માટે 'hot' વપરાયું છે."
+      },
+      {
+        "id": "d19",
+        "speaker": "Soham",
+        "prompt": "Soham: Yes, I think it ___ rain tonight.",
+        "text": "Yes, I think it might rain tonight.",
+        "blankWord": "might",
+        "options": [
+          "might",
+          "must",
+          "should",
+          "shall"
+        ],
+        "gujaratiHint": "સોહમ: હા, મને લાગે છે કે આજે રાત્રે વરસાદ પડી શકે છે.",
+        "explanation": "ભવિષ્યમાં વરસાદ પડવાની અનિશ્ચિત શક્યતા દર્શાવવા 'might' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રેલવે સ્ટેશન પર (At the Railway Station)",
+    "dialogues": [
+      {
+        "id": "d20",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Which platform ___ the train to Mumbai arrive on?",
+        "text": "Which platform does the train to Mumbai arrive on?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: મુંબઈની ટ્રેન કયા પ્લેટફોર્મ પર આવશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં એકવચન કર્તા (the train) સાથે પ્રશ્નાર્થ બનાવવા 'does' આવે."
+      },
+      {
+        "id": "d21",
+        "speaker": "Inquiry Clerk",
+        "prompt": "Inquiry Clerk: It usually ___ on platform number four.",
+        "text": "It usually arrives on platform number four.",
+        "blankWord": "arrives",
+        "options": [
+          "arrive",
+          "arrives",
+          "arrived",
+          "arriving"
+        ],
+        "gujaratiHint": "પૂછપરછ ક્લાર્ક: તે સામાન્ય રીતે પ્લેટફોર્મ નંબર ૪ પર આવે છે.",
+        "explanation": "નિયમિત ઘટના હોવાથી ત્રીજો પુરુષ એકવચન 'It' સાથે ક્રિયાપદ 'arrives' આવશે."
+      }
+    ]
+  },
+  {
+    "situation": "શાકભાજીની ખરીદી (Buying Vegetables)",
+    "dialogues": [
+      {
+        "id": "d22",
+        "speaker": "Buyer",
+        "prompt": "Buyer: What is the ___ of potatoes per kg?",
+        "text": "What is the price of potatoes per kg?",
+        "blankWord": "price",
+        "options": [
+          "price",
+          "cost",
+          "money",
+          "rupees"
+        ],
+        "gujaratiHint": "ખરીદનાર: બટાકાનો પ્રતિ કિલો ભાવ શું છે?",
+        "explanation": "કોઈ વસ્તુની બજાર કિંમત પૂછવા માટે સામાન્ય નામ તરીકે 'price' વપરાય છે."
+      },
+      {
+        "id": "d23",
+        "speaker": "Seller",
+        "prompt": "Seller: It is forty rupees ___ kilogram, sir.",
+        "text": "It is forty rupees per kilogram, sir.",
+        "blankWord": "per",
+        "options": [
+          "for",
+          "per",
+          "in",
+          "by"
+        ],
+        "gujaratiHint": "વેચનાર: સર, ચાલીસ રૂપિયા કિલો છે.",
+        "explanation": "પ્રતિ એકમ દર્શાવવા માટે 'per' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ટેક્સી બુક કરતી વખતે (Booking a Taxi)",
+    "dialogues": [
+      {
+        "id": "d24",
+        "speaker": "Rider",
+        "prompt": "Rider: I want to ___ a cab to the airport.",
+        "text": "I want to book a cab to the airport.",
+        "blankWord": "book",
+        "options": [
+          "book",
+          "call",
+          "take",
+          "rent"
+        ],
+        "gujaratiHint": "મુસાફર: મારે એરપોર્ટ માટે ટેક્સી બુક કરવી છે.",
+        "explanation": "ગાડી અગાઉથી આરક્ષિત કરવા માટે 'book' શબ્દ યોગ્ય છે."
+      },
+      {
+        "id": "d25",
+        "speaker": "Operator",
+        "prompt": "Operator: Alright, the driver ___ arrive in five minutes.",
+        "text": "Alright, the driver will arrive in five minutes.",
+        "blankWord": "will",
+        "options": [
+          "will",
+          "would",
+          "shall",
+          "is"
+        ],
+        "gujaratiHint": "ઓપરેટર: બરાબર, ડ્રાઈવર પાંચ મિનિટમાં આવી જશે.",
+        "explanation": "ટૂંક સમયમાં થનારી ભવિષ્યની ઘટના માટે 'will' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ફોન પર વાતચીત (Phone Conversation)",
+    "dialogues": [
+      {
+        "id": "d26",
+        "speaker": "Caller",
+        "prompt": "Caller: Hello, ___ I speak to Amit, please?",
+        "text": "Hello, may I speak to Amit, please?",
+        "blankWord": "may",
+        "options": [
+          "may",
+          "should",
+          "must",
+          "will"
+        ],
+        "gujaratiHint": "કોલર: નમસ્તે, શું હું અમિત સાથે વાત કરી શકું?",
+        "explanation": "ફોન પર નમ્રતાપૂર્વક પરવાનગી મેળવવા 'may' અથવા 'could' નો ઉપયોગ કરાય છે."
+      },
+      {
+        "id": "d27",
+        "speaker": "Receiver",
+        "prompt": "Receiver: Sorry, he is not at home. Can I take a ___?",
+        "text": "Sorry, he is not at home. Can I take a message?",
+        "blankWord": "message",
+        "options": [
+          "message",
+          "letter",
+          "note",
+          "call"
+        ],
+        "gujaratiHint": "સામેની વ્યક્તિ: માફ કરજો, તે ઘરે નથી. શું હું કોઈ સંદેશો લઈ શકું?",
+        "explanation": "કોઈના વતી વાત સાંભળીને પહોંચાડવા માટે 'take a message' ફ્રેઝ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલ ચેક-ઈન (At the Hotel Check-in)",
+    "dialogues": [
+      {
+        "id": "d28",
+        "speaker": "Guest",
+        "prompt": "Guest: Hello, I have a ___ under the name of Patel.",
+        "text": "Hello, I have a reservation under the name of Patel.",
+        "blankWord": "reservation",
+        "options": [
+          "reservation",
+          "room",
+          "ticket",
+          "bill"
+        ],
+        "gujaratiHint": "મહેમાન: નમસ્તે, મારે પટેલ નામ હેઠળ બુકિંગ (આરક્ષણ) છે.",
+        "explanation": "હોટેલમાં પહેલેથી નક્કી કરાયેલા રૂમ માટે 'reservation' અથવા 'booking' બોલાય છે."
+      },
+      {
+        "id": "d29",
+        "speaker": "Receptionist",
+        "prompt": "Receptionist: Yes sir, here is your room ___.",
+        "text": "Yes sir, here is your room key.",
+        "blankWord": "key",
+        "options": [
+          "key",
+          "card",
+          "lock",
+          "number"
+        ],
+        "gujaratiHint": "રિસેપ્શનિસ્ટ: હા સર, આ રહી તમારા રૂમની ચાવી.",
+        "explanation": "રૂમ ખોલવા માટે આપવામાં આવતી ભૌતિક કે ઇલેક્ટ્રોનિક વસ્તુ માટે 'key' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "લાઇબ્રેરીમાં (At the Library)",
+    "dialogues": [
+      {
+        "id": "d30",
+        "speaker": "Student",
+        "prompt": "Student: Can I ___ this grammar book for a week?",
+        "text": "Can I borrow this grammar book for a week?",
+        "blankWord": "borrow",
+        "options": [
+          "borrow",
+          "lend",
+          "take",
+          "buy"
+        ],
+        "gujaratiHint": "વિદ્યાર્થી: શું હું આ વ્યાકરણનું પુસ્તક એક અઠવાડિયા માટે ઉધાર લઈ શકું?",
+        "explanation": "બીજાની પાસેથી વાંચીને પાછું આપવાની શરતે લેવા માટે 'borrow' શબ્દ વપરાય છે."
+      },
+      {
+        "id": "d31",
+        "speaker": "Librarian",
+        "prompt": "Librarian: Yes, but make sure to ___ it on time.",
+        "text": "Yes, but make sure to return it on time.",
+        "blankWord": "return",
+        "options": [
+          "return",
+          "give",
+          "keep",
+          "lose"
+        ],
+        "gujaratiHint": "ગ્રંથપાલ: હા, પણ તેને સમયસર પરત કરવાનું ભૂલતા નહિ.",
+        "explanation": "પુસ્તકાલયનું પુસ્તક પાછું આપવા માટે 'return' શબ્દ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "શોખ વિશે વાતચીત (Talking about Hobbies)",
+    "dialogues": [
+      {
+        "id": "d32",
+        "speaker": "Kabir",
+        "prompt": "Kabir: What do you like to do in your ___ time?",
+        "text": "What do you like to do in your free time?",
+        "blankWord": "free",
+        "options": [
+          "busy",
+          "free",
+          "working",
+          "study"
+        ],
+        "gujaratiHint": "કબીર: તમને તમારા નવરાશના સમયમાં શું કરવું ગમે છે?",
+        "explanation": "નવરાશના કે વધારાના સમય માટે 'free time' અથવા 'leisure time' વપરાય છે."
+      },
+      {
+        "id": "d33",
+        "speaker": "Meera",
+        "prompt": "Meera: I am fond ___ reading novels.",
+        "text": "I am fond of reading novels.",
+        "blankWord": "of",
+        "options": [
+          "of",
+          "for",
+          "in",
+          "to"
+        ],
+        "gujaratiHint": "મીરા: મને નવલકથાઓ વાંચવાનો ખૂબ શોખ છે.",
+        "explanation": "'fond' શબ્દ સાથે હંમેશાં 'of' પ્રિપોઝિશન આવે છે (fond of doing something)."
+      }
+    ]
+  },
+  {
+    "situation": "જોબ ઈન્ટરવ્યુ (Job Interview)",
+    "dialogues": [
+      {
+        "id": "d34",
+        "speaker": "Interviewer",
+        "prompt": "Interviewer: Tell me about your educational ___.",
+        "text": "Tell me about your educational background.",
+        "blankWord": "background",
+        "options": [
+          "background",
+          "history",
+          "future",
+          "result"
+        ],
+        "gujaratiHint": "ઇન્ટરવ્યુઅર: મને તમારી શૈક્ષણિક પૃષ્ઠભૂમિ (અભ્યાસ વિશે) જણાવો.",
+        "explanation": "વ્યક્તિના ભૂતકાળના અભ્યાસ અને ડિગ્રીઓની માહિતી માટે 'educational background' વપરાય છે."
+      },
+      {
+        "id": "d35",
+        "speaker": "Candidate",
+        "prompt": "Candidate: I have ___ my graduation in computer science.",
+        "text": "I have completed my graduation in computer science.",
+        "blankWord": "completed",
+        "options": [
+          "complete",
+          "completed",
+          "finish",
+          "done"
+        ],
+        "gujaratiHint": "ઉમેદવાર: મેં કમ્પ્યુટર સાયન્સમાં મારું ગ્રેજ્યુએશન પૂરું કર્યું છે.",
+        "explanation": "પૂર્ણ વર્તમાનકાળની રચનામાં 'have' પછી ભૂતકૃદંત 'completed' યોગ્ય છે."
+      }
+    ]
+  },
+  {
+    "situation": "મિત્રને મળતી વખતે (Meeting a Friend)",
+    "dialogues": [
+      {
+        "id": "d36",
+        "speaker": "Riya",
+        "prompt": "Riya: How have you ___? We met after a long time.",
+        "text": "How have you been? We met after a long time.",
+        "blankWord": "been",
+        "options": [
+          "be",
+          "been",
+          "being",
+          "was"
+        ],
+        "gujaratiHint": "રિયા: તું કેમ છે? આપણે લાંબા સમય પછી મળ્યા.",
+        "explanation": "ઘણા સમય પછી કુશળતા પૂછવા 'How have you been?' બોલાય છે."
+      },
+      {
+        "id": "d37",
+        "speaker": "Keya",
+        "prompt": "Keya: I am doing ___! How about you?",
+        "text": "I am doing great! How about you?",
+        "blankWord": "great",
+        "options": [
+          "well",
+          "great",
+          "good",
+          "nice"
+        ],
+        "gujaratiHint": "કેયા: હું ખૂબ જ મજામાં છું! તારા શું સમાચાર છે?",
+        "explanation": "અહીં 'great' અથવા 'well' બંને આવી શકે, પણ સામાન્ય ચર્ચામાં 'doing great' નો અર્થ ઉત્તમ છું થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "એરપોર્ટ પર (At the Airport)",
+    "dialogues": [
+      {
+        "id": "d38",
+        "speaker": "Agent",
+        "prompt": "Agent: May I see your passport and ___ ticket?",
+        "text": "May I see your passport and flight ticket?",
+        "blankWord": "flight",
+        "options": [
+          "bus",
+          "train",
+          "flight",
+          "road"
+        ],
+        "gujaratiHint": "એજન્ટ: શું હું તમારો પાસપોર્ટ અને પ્લેનની (ફ્લાઇટ) ટિકિટ જોઈ શકું?",
+        "explanation": "એરપોર્ટ પર હવાઈ સફરની ટિકિટ માટે 'flight ticket' કહેવામાં આવે છે."
+      },
+      {
+        "id": "d39",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Yes, here they ___. I only have one handbag.",
+        "text": "Yes, here they are. I only have one handbag.",
+        "blankWord": "are",
+        "options": [
+          "is",
+          "are",
+          "am",
+          "were"
+        ],
+        "gujaratiHint": "મુસાફર: હા, આ રહ્યા. મારી પાસે માત્ર એક હેન્ડબેગ છે.",
+        "explanation": "બહુવચન કર્તા 'they' હોવાથી ક્રિયાપદ તરીકે 'are' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "કપડાંની ખરીદી (Shopping for Clothes)",
+    "dialogues": [
+      {
+        "id": "d40",
+        "speaker": "Customer",
+        "prompt": "Customer: Do you have this dress in a larger ___?",
+        "text": "Do you have this dress in a larger size?",
+        "blankWord": "size",
+        "options": [
+          "size",
+          "color",
+          "length",
+          "fit"
+        ],
+        "gujaratiHint": "ગ્રાહક: શું તમારી પાસે આ ડ્રેસ મોટા માપમાં (સાઈઝમાં) છે?",
+        "explanation": "કપડાંના માપને અંગ્રેજીમાં 'size' તરીકે ઓળખવામાં આવે છે."
+      },
+      {
+        "id": "d41",
+        "speaker": "Salesman",
+        "prompt": "Salesman: Yes, let me check in the ___ room.",
+        "text": "Yes, let me check in the stock room.",
+        "blankWord": "stock",
+        "options": [
+          "stock",
+          "trial",
+          "fitting",
+          "rest"
+        ],
+        "gujaratiHint": "સેલ્સમેન: હા, મને ગોદામમાં (સ્ટોક રૂમમાં) તપાસવા દો.",
+        "explanation": "જ્યાં વધારાનો સામાન રાખવામાં આવે છે તેને 'stock room' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પિકનિકનું આયોજન (Planning a Picnic)",
+    "dialogues": [
+      {
+        "id": "d42",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Where should we ___ for the picnic?",
+        "text": "Where should we go for the picnic?",
+        "blankWord": "go",
+        "options": [
+          "go",
+          "going",
+          "went",
+          "gone"
+        ],
+        "gujaratiHint": "રોહન: આપણે પિકનિક માટે ક્યાં જવું જોઈએ?",
+        "explanation": "સહાયકારક ક્રિયાપદ 'should' સાથે હંમેશાં ક્રિયાપદનું મૂળ રૂપ 'go' વપરાય છે."
+      },
+      {
+        "id": "d43",
+        "speaker": "Sneha",
+        "prompt": "Sneha: Let's go to the ___ near the lake.",
+        "text": "Let's go to the park near the lake.",
+        "blankWord": "park",
+        "options": [
+          "park",
+          "school",
+          "office",
+          "bank"
+        ],
+        "gujaratiHint": "સ્નેહા: ચાલો તળાવ નજીક આવેલા બગીચામાં (પાર્ક) જઈએ.",
+        "explanation": "પિકનિક અને કુદરતી આનંદ માટે સૌથી યોગ્ય સ્થાનોમાં 'park' નો સમાવેશ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પોસ્ટ ઓફિસમાં (At the Post Office)",
+    "dialogues": [
+      {
+        "id": "d44",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to send this ___ to Surat.",
+        "text": "I want to send this parcel to Surat.",
+        "blankWord": "parcel",
+        "options": [
+          "parcel",
+          "email",
+          "box",
+          "money"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે આ પાર્સલ સુરત મોકલવું છે.",
+        "explanation": "પોસ્ટ ઓફિસ દ્વારા મોકલવામાં આવતા સામાનના પેકેટને 'parcel' કહે છે."
+      },
+      {
+        "id": "d45",
+        "speaker": "Clerk",
+        "prompt": "Clerk: Please place it on the weighing ___ first.",
+        "text": "Please place it on the weighing scale first.",
+        "blankWord": "scale",
+        "options": [
+          "scale",
+          "table",
+          "chair",
+          "box"
+        ],
+        "gujaratiHint": "ક્લાર્ક: મહેરબાની કરીને પહેલા તેને વજન કાંટા (સ્કેલ) પર મૂકો.",
+        "explanation": "વજન માપવાના મશીનને અંગ્રેજીમાં 'weighing scale' અથવા 'weighing machine' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દવાખાનામાં (At the Doctor)",
+    "dialogues": [
+      {
+        "id": "d1",
+        "speaker": "Doctor",
+        "prompt": "Doctor: What is the problem? What ___ to you?",
+        "text": "What is the problem? What happened to you?",
+        "blankWord": "happened",
+        "options": [
+          "happen",
+          "happened",
+          "happening",
+          "happens"
+        ],
+        "gujaratiHint": "ડોક્ટર: શું તકલીફ છે? તમને શું થયું છે?",
+        "explanation": "ભૂતકાળની ઘટના પૂછવા માટે ક્રિયાપદનું ભૂતકાળનું રૂપ 'happened' યોગ્ય છે."
+      },
+      {
+        "id": "d2",
+        "speaker": "Patient",
+        "prompt": "Patient: I have a ___ since yesterday.",
+        "text": "I have a headache since yesterday.",
+        "blankWord": "headache",
+        "options": [
+          "painful",
+          "headache",
+          "aching",
+          "hurt"
+        ],
+        "gujaratiHint": "દર્દી: મને ગઈકાલથી માથું દુખે છે.",
+        "explanation": "નામ તરીકે 'headache' (માથાનો દુખાવો) વપરાય છે."
+      },
+      {
+        "id": "d3",
+        "speaker": "Doctor",
+        "prompt": "Doctor: Take this medicine ___ a day.",
+        "text": "Take this medicine twice a day.",
+        "blankWord": "twice",
+        "options": [
+          "two",
+          "twice",
+          "double",
+          "second"
+        ],
+        "gujaratiHint": "ડોક્ટર: આ દવા દિવસમાં બે વાર લેજો.",
+        "explanation": "દિવસમાં કેટલી વાર તે દર્શાવવા માટે 'twice' (બે વાર) નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દુકાનદાર સાથે (At the Shop)",
+    "dialogues": [
+      {
+        "id": "d4",
+        "speaker": "Customer",
+        "prompt": "Customer: How ___ is this shirt?",
+        "text": "How much is this shirt?",
+        "blankWord": "much",
+        "options": [
+          "many",
+          "much",
+          "cost",
+          "price"
+        ],
+        "gujaratiHint": "ગ્રાહક: આ શર્ટની કિંમત કેટલી છે?",
+        "explanation": "કિંમત પૂછવા માટે સામાન્ય રીતે 'How much' નો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d5",
+        "speaker": "Shopkeeper",
+        "prompt": "Shopkeeper: It ___ five hundred rupees.",
+        "text": "It costs five hundred rupees.",
+        "blankWord": "costs",
+        "options": [
+          "cost",
+          "costs",
+          "costing",
+          "price"
+        ],
+        "gujaratiHint": "દુકાનદાર: તેની કિંમત ૫૦૦ રૂપિયા છે.",
+        "explanation": "It (ત્રીજો પુરુષ એકવચન) કર્તા હોવાથી ક્રિયાપદને 's' લાગીને 'costs' બને છે."
+      }
+    ]
+  },
+  {
+    "situation": "બસ સ્ટેશન પર (At the Bus Station)",
+    "dialogues": [
+      {
+        "id": "d6",
+        "speaker": "Passenger",
+        "prompt": "Passenger: When ___ the bus to Ahmedabad leave?",
+        "text": "When does the bus to Ahmedabad leave?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: અમદાવાદ જવાની બસ ક્યારે ઉપડશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં ત્રીજો પુરુષ એકવચન કર્તા (the bus) હોવાથી પ્રશ્નાર્થ માટે 'does' વપરાય છે."
+      },
+      {
+        "id": "d7",
+        "speaker": "Clerk",
+        "prompt": "Clerk: It ___ at 4:30 PM from platform three.",
+        "text": "It leaves at 4:30 PM from platform three.",
+        "blankWord": "leaves",
+        "options": [
+          "leave",
+          "leaves",
+          "leaving",
+          "left"
+        ],
+        "gujaratiHint": "ક્લાર્ક: તે સાંજે ૪:૩૦ વાગ્યે પ્લેટફોર્મ નંબર ૩ પરથી ઉપડશે.",
+        "explanation": "સમયપત્રકની નિયમિત ઘટના દર્શાવવા માટે સાદા વર્તમાનકાળનું 'leaves' ક્રિયાપદ આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલમાં ઓર્ડર આપતી વખતે (At the Restaurant)",
+    "dialogues": [
+      {
+        "id": "d8",
+        "speaker": "Waiter",
+        "prompt": "Waiter: Are you ready to ___ now?",
+        "text": "Are you ready to order now?",
+        "blankWord": "order",
+        "options": [
+          "eat",
+          "order",
+          "drink",
+          "pay"
+        ],
+        "gujaratiHint": "વેઈટર: શું આપ અત્યારે ઓર્ડર આપવા માટે તૈયાર છો?",
+        "explanation": "જમવાનું મંગાવવા માટે 'order' શબ્દનો ઉપયોગ થાય છે."
+      },
+      {
+        "id": "d9",
+        "speaker": "Customer",
+        "prompt": "Customer: Yes, we ___ two plates of Gujarati Thali, please.",
+        "text": "Yes, we want two plates of Gujarati Thali, please.",
+        "blankWord": "want",
+        "options": [
+          "want",
+          "wants",
+          "wanted",
+          "wanting"
+        ],
+        "gujaratiHint": "ગ્રાહક: હા, અમને બે પ્લેટ ગુજરાતી થાળી આપો.",
+        "explanation": "We (બહુવચન) કર્તા હોવાથી ક્રિયાપદનું મૂળ રૂપ 'want' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રસ્તો પૂછતી વખતે (Asking for Directions)",
+    "dialogues": [
+      {
+        "id": "d10",
+        "speaker": "Traveler",
+        "prompt": "Traveler: Excuse me, can you tell me the ___ to the bank?",
+        "text": "Excuse me, can you tell me the way to the bank?",
+        "blankWord": "way",
+        "options": [
+          "way",
+          "road",
+          "street",
+          "map"
+        ],
+        "gujaratiHint": "પ્રવાસી: માફ કરજો, શું તમે મને બેંકનો રસ્તો બતાવી શકશો?",
+        "explanation": "કોઈ ચોક્કસ સ્થાન સુધી પહોંચવાનો રસ્તો પૂછવા 'the way to' વપરાય છે."
+      },
+      {
+        "id": "d11",
+        "speaker": "Local Person",
+        "prompt": "Local Person: Go straight and ___ left at the corner.",
+        "text": "Go straight and turn left at the corner.",
+        "blankWord": "turn",
+        "options": [
+          "go",
+          "turn",
+          "take",
+          "walk"
+        ],
+        "gujaratiHint": "સ્થાનિક વ્યક્તિ: સીધા જાઓ અને ખૂણા પરથી ડાબી બાજુ વળો.",
+        "explanation": "દિશા બદલવા માટે ક્રિયાપદ તરીકે 'turn' વપરાય છે (turn left/right)."
+      }
+    ]
+  },
+  {
+    "situation": "પરિચય આપતી વખતે (Introducing Yourself)",
+    "dialogues": [
+      {
+        "id": "d12",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Hello! My name is Rohan. What ___ your name?",
+        "text": "Hello! My name is Rohan. What is your name?",
+        "blankWord": "is",
+        "options": [
+          "are",
+          "is",
+          "am",
+          "be"
+        ],
+        "gujaratiHint": "રોહન: નમસ્તે! મારું નામ રોહન છે. તમારું નામ શું છે?",
+        "explanation": "એકવચન કર્તાના નામ પૂછવા માટે સાદા વર્તમાનકાળમાં 'is' વપરાય છે."
+      },
+      {
+        "id": "d13",
+        "speaker": "Smit",
+        "prompt": "Smit: Nice to ___ you, Rohan. I am Smit.",
+        "text": "Nice to meet you, Rohan. I am Smit.",
+        "blankWord": "meet",
+        "options": [
+          "meet",
+          "meeting",
+          "met",
+          "meets"
+        ],
+        "gujaratiHint": "સ્મિત: તમને મળીને આનંદ થયો, રોહન. હું સ્મિત છું.",
+        "explanation": "'Nice to meet you' એ કોઈને પહેલી વાર મળતી વખતે વપરાતું ચોક્કસ અભિવાદન છે."
+      }
+    ]
+  },
+  {
+    "situation": "બેંકમાં (At the Bank)",
+    "dialogues": [
+      {
+        "id": "d14",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to ___ some money from my account.",
+        "text": "I want to withdraw some money from my account.",
+        "blankWord": "withdraw",
+        "options": [
+          "withdraw",
+          "deposit",
+          "give",
+          "send"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે મારા ખાતામાંથી થોડા રૂપિયા ઉપાડવા છે.",
+        "explanation": "બેંક ખાતામાંથી પૈસા ઉપાડવા માટે 'withdraw' શબ્દનો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d15",
+        "speaker": "Cashier",
+        "prompt": "Cashier: Sure, please fill out this ___ slip first.",
+        "text": "Sure, please fill out this withdrawal slip first.",
+        "blankWord": "withdrawal",
+        "options": [
+          "deposit",
+          "withdrawal",
+          "cheque",
+          "passbook"
+        ],
+        "gujaratiHint": "કેશિયર: ચોક્કસ, મહેરબાની કરીને પહેલા આ વિથડ્રોઅલ સ્લિપ ભરો.",
+        "explanation": "પૈસા ઉપાડવા માટે વપરાતા ફોર્મને 'withdrawal slip' કહેવામાં આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "વર્ગખંડમાં (At the School)",
+    "dialogues": [
+      {
+        "id": "d16",
+        "speaker": "Teacher",
+        "prompt": "Teacher: Why ___ you absent yesterday, Rohan?",
+        "text": "Why were you absent yesterday, Rohan?",
+        "blankWord": "were",
+        "options": [
+          "was",
+          "were",
+          "are",
+          "did"
+        ],
+        "gujaratiHint": "શિક્ષક: રોહન, તું ગઈકાલે કેમ ગેરહાજર હતો?",
+        "explanation": "ભૂતકાળમાં 'you' કર્તા સાથે સહાયકારક ક્રિયાપદ 'were' વપરાય છે."
+      },
+      {
+        "id": "d17",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Sir, I ___ not well yesterday. I had a fever.",
+        "text": "Sir, I was not well yesterday. I had a fever.",
+        "blankWord": "was",
+        "options": [
+          "was",
+          "were",
+          "am",
+          "had"
+        ],
+        "gujaratiHint": "રોહન: સર, ગઈકાલે મારી તબિયત સારી નહોતી. મને તાવ હતો.",
+        "explanation": "ભૂતકાળમાં 'I' કર્તા સાથે સ્થિતિ દર્શાવવા 'was' નો પ્રયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હવામાનની ચર્ચા (Weather Talk)",
+    "dialogues": [
+      {
+        "id": "d18",
+        "speaker": "Aarav",
+        "prompt": "Aarav: It is very ___ today, isn't it?",
+        "text": "It is very hot today, isn't it?",
+        "blankWord": "hot",
+        "options": [
+          "cold",
+          "hot",
+          "rainy",
+          "windy"
+        ],
+        "gujaratiHint": "આરવ: આજે ખૂબ ગરમી છે, ખરું ને?",
+        "explanation": "ઉનાળાના વાતાવરણની સ્થિતિને દર્શાવવા માટે 'hot' વપરાયું છે."
+      },
+      {
+        "id": "d19",
+        "speaker": "Soham",
+        "prompt": "Soham: Yes, I think it ___ rain tonight.",
+        "text": "Yes, I think it might rain tonight.",
+        "blankWord": "might",
+        "options": [
+          "might",
+          "must",
+          "should",
+          "shall"
+        ],
+        "gujaratiHint": "સોહમ: હા, મને લાગે છે કે આજે રાત્રે વરસાદ પડી શકે છે.",
+        "explanation": "ભવિષ્યમાં વરસાદ પડવાની અનિશ્ચિત શક્યતા દર્શાવવા 'might' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રેલવે સ્ટેશન પર (At the Railway Station)",
+    "dialogues": [
+      {
+        "id": "d20",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Which platform ___ the train to Mumbai arrive on?",
+        "text": "Which platform does the train to Mumbai arrive on?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: મુંબઈની ટ્રેન કયા પ્લેટફોર્મ પર આવશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં એકવચન કર્તા (the train) સાથે પ્રશ્નાર્થ બનાવવા 'does' આવે."
+      },
+      {
+        "id": "d21",
+        "speaker": "Inquiry Clerk",
+        "prompt": "Inquiry Clerk: It usually ___ on platform number four.",
+        "text": "It usually arrives on platform number four.",
+        "blankWord": "arrives",
+        "options": [
+          "arrive",
+          "arrives",
+          "arrived",
+          "arriving"
+        ],
+        "gujaratiHint": "પૂછપરછ ક્લાર્ક: તે સામાન્ય રીતે પ્લેટફોર્મ નંબર ૪ પર આવે છે.",
+        "explanation": "નિયમિત ઘટના હોવાથી ત્રીજો પુરુષ એકવચન 'It' સાથે ક્રિયાપદ 'arrives' આવશે."
+      }
+    ]
+  },
+  {
+    "situation": "શાકભાજીની ખરીદી (Buying Vegetables)",
+    "dialogues": [
+      {
+        "id": "d22",
+        "speaker": "Buyer",
+        "prompt": "Buyer: What is the ___ of potatoes per kg?",
+        "text": "What is the price of potatoes per kg?",
+        "blankWord": "price",
+        "options": [
+          "price",
+          "cost",
+          "money",
+          "rupees"
+        ],
+        "gujaratiHint": "ખરીદનાર: બટાકાનો પ્રતિ કિલો ભાવ શું છે?",
+        "explanation": "કોઈ વસ્તુની બજાર કિંમત પૂછવા માટે સામાન્ય નામ તરીકે 'price' વપરાય છે."
+      },
+      {
+        "id": "d23",
+        "speaker": "Seller",
+        "prompt": "Seller: It is forty rupees ___ kilogram, sir.",
+        "text": "It is forty rupees per kilogram, sir.",
+        "blankWord": "per",
+        "options": [
+          "for",
+          "per",
+          "in",
+          "by"
+        ],
+        "gujaratiHint": "વેચનાર: સર, ચાલીસ રૂપિયા કિલો છે.",
+        "explanation": "પ્રતિ એકમ દર્શાવવા માટે 'per' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ટેક્સી બુક કરતી વખતે (Booking a Taxi)",
+    "dialogues": [
+      {
+        "id": "d24",
+        "speaker": "Rider",
+        "prompt": "Rider: I want to ___ a cab to the airport.",
+        "text": "I want to book a cab to the airport.",
+        "blankWord": "book",
+        "options": [
+          "book",
+          "call",
+          "take",
+          "rent"
+        ],
+        "gujaratiHint": "મુસાફર: મારે એરપોર્ટ માટે ટેક્સી બુક કરવી છે.",
+        "explanation": "ગાડી અગાઉથી આરક્ષિત કરવા માટે 'book' શબ્દ યોગ્ય છે."
+      },
+      {
+        "id": "d25",
+        "speaker": "Operator",
+        "prompt": "Operator: Alright, the driver ___ arrive in five minutes.",
+        "text": "Alright, the driver will arrive in five minutes.",
+        "blankWord": "will",
+        "options": [
+          "will",
+          "would",
+          "shall",
+          "is"
+        ],
+        "gujaratiHint": "ઓપરેટર: બરાબર, ડ્રાઈવર પાંચ મિનિટમાં આવી જશે.",
+        "explanation": "ટૂંક સમયમાં થનારી ભવિષ્યની ઘટના માટે 'will' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ફોન પર વાતચીત (Phone Conversation)",
+    "dialogues": [
+      {
+        "id": "d26",
+        "speaker": "Caller",
+        "prompt": "Caller: Hello, ___ I speak to Amit, please?",
+        "text": "Hello, may I speak to Amit, please?",
+        "blankWord": "may",
+        "options": [
+          "may",
+          "should",
+          "must",
+          "will"
+        ],
+        "gujaratiHint": "કોલર: નમસ્તે, શું હું અમિત સાથે વાત કરી શકું?",
+        "explanation": "ફોન પર નમ્રતાપૂર્વક પરવાનગી મેળવવા 'may' અથવા 'could' નો ઉપયોગ કરાય છે."
+      },
+      {
+        "id": "d27",
+        "speaker": "Receiver",
+        "prompt": "Receiver: Sorry, he is not at home. Can I take a ___?",
+        "text": "Sorry, he is not at home. Can I take a message?",
+        "blankWord": "message",
+        "options": [
+          "message",
+          "letter",
+          "note",
+          "call"
+        ],
+        "gujaratiHint": "સામેની વ્યક્તિ: માફ કરજો, તે ઘરે નથી. શું હું કોઈ સંદેશો લઈ શકું?",
+        "explanation": "કોઈના વતી વાત સાંભળીને પહોંચાડવા માટે 'take a message' ફ્રેઝ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલ ચેક-ઈન (At the Hotel Check-in)",
+    "dialogues": [
+      {
+        "id": "d28",
+        "speaker": "Guest",
+        "prompt": "Guest: Hello, I have a ___ under the name of Patel.",
+        "text": "Hello, I have a reservation under the name of Patel.",
+        "blankWord": "reservation",
+        "options": [
+          "reservation",
+          "room",
+          "ticket",
+          "bill"
+        ],
+        "gujaratiHint": "મહેમાન: નમસ્તે, મારે પટેલ નામ હેઠળ બુકિંગ (આરક્ષણ) છે.",
+        "explanation": "હોટેલમાં પહેલેથી નક્કી કરાયેલા રૂમ માટે 'reservation' અથવા 'booking' બોલાય છે."
+      },
+      {
+        "id": "d29",
+        "speaker": "Receptionist",
+        "prompt": "Receptionist: Yes sir, here is your room ___.",
+        "text": "Yes sir, here is your room key.",
+        "blankWord": "key",
+        "options": [
+          "key",
+          "card",
+          "lock",
+          "number"
+        ],
+        "gujaratiHint": "રિસેપ્શનિસ્ટ: હા સર, આ રહી તમારા રૂમની ચાવી.",
+        "explanation": "રૂમ ખોલવા માટે આપવામાં આવતી ભૌતિક કે ઇલેક્ટ્રોનિક વસ્તુ માટે 'key' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "લાઇબ્રેરીમાં (At the Library)",
+    "dialogues": [
+      {
+        "id": "d30",
+        "speaker": "Student",
+        "prompt": "Student: Can I ___ this grammar book for a week?",
+        "text": "Can I borrow this grammar book for a week?",
+        "blankWord": "borrow",
+        "options": [
+          "borrow",
+          "lend",
+          "take",
+          "buy"
+        ],
+        "gujaratiHint": "વિદ્યાર્થી: શું હું આ વ્યાકરણનું પુસ્તક એક અઠવાડિયા માટે ઉધાર લઈ શકું?",
+        "explanation": "બીજાની પાસેથી વાંચીને પાછું આપવાની શરતે લેવા માટે 'borrow' શબ્દ વપરાય છે."
+      },
+      {
+        "id": "d31",
+        "speaker": "Librarian",
+        "prompt": "Librarian: Yes, but make sure to ___ it on time.",
+        "text": "Yes, but make sure to return it on time.",
+        "blankWord": "return",
+        "options": [
+          "return",
+          "give",
+          "keep",
+          "lose"
+        ],
+        "gujaratiHint": "ગ્રંથપાલ: હા, પણ તેને સમયસર પરત કરવાનું ભૂલતા નહિ.",
+        "explanation": "પુસ્તકાલયનું પુસ્તક પાછું આપવા માટે 'return' શબ્દ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "શોખ વિશે વાતચીત (Talking about Hobbies)",
+    "dialogues": [
+      {
+        "id": "d32",
+        "speaker": "Kabir",
+        "prompt": "Kabir: What do you like to do in your ___ time?",
+        "text": "What do you like to do in your free time?",
+        "blankWord": "free",
+        "options": [
+          "busy",
+          "free",
+          "working",
+          "study"
+        ],
+        "gujaratiHint": "કબીર: તમને તમારા નવરાશના સમયમાં શું કરવું ગમે છે?",
+        "explanation": "નવરાશના કે વધારાના સમય માટે 'free time' અથવા 'leisure time' વપરાય છે."
+      },
+      {
+        "id": "d33",
+        "speaker": "Meera",
+        "prompt": "Meera: I am fond ___ reading novels.",
+        "text": "I am fond of reading novels.",
+        "blankWord": "of",
+        "options": [
+          "of",
+          "for",
+          "in",
+          "to"
+        ],
+        "gujaratiHint": "મીરા: મને નવલકથાઓ વાંચવાનો ખૂબ શોખ છે.",
+        "explanation": "'fond' શબ્દ સાથે હંમેશાં 'of' પ્રિપોઝિશન આવે છે (fond of doing something)."
+      }
+    ]
+  },
+  {
+    "situation": "જોબ ઈન્ટરવ્યુ (Job Interview)",
+    "dialogues": [
+      {
+        "id": "d34",
+        "speaker": "Interviewer",
+        "prompt": "Interviewer: Tell me about your educational ___.",
+        "text": "Tell me about your educational background.",
+        "blankWord": "background",
+        "options": [
+          "background",
+          "history",
+          "future",
+          "result"
+        ],
+        "gujaratiHint": "ઇન્ટરવ્યુઅર: મને તમારી શૈક્ષણિક પૃષ્ઠભૂમિ (અભ્યાસ વિશે) જણાવો.",
+        "explanation": "વ્યક્તિના ભૂતકાળના અભ્યાસ અને ડિગ્રીઓની માહિતી માટે 'educational background' વપરાય છે."
+      },
+      {
+        "id": "d35",
+        "speaker": "Candidate",
+        "prompt": "Candidate: I have ___ my graduation in computer science.",
+        "text": "I have completed my graduation in computer science.",
+        "blankWord": "completed",
+        "options": [
+          "complete",
+          "completed",
+          "finish",
+          "done"
+        ],
+        "gujaratiHint": "ઉમેદવાર: મેં કમ્પ્યુટર સાયન્સમાં મારું ગ્રેજ્યુએશન પૂરું કર્યું છે.",
+        "explanation": "પૂર્ણ વર્તમાનકાળની રચનામાં 'have' પછી ભૂતકૃદંત 'completed' યોગ્ય છે."
+      }
+    ]
+  },
+  {
+    "situation": "મિત્રને મળતી વખતે (Meeting a Friend)",
+    "dialogues": [
+      {
+        "id": "d36",
+        "speaker": "Riya",
+        "prompt": "Riya: How have you ___? We met after a long time.",
+        "text": "How have you been? We met after a long time.",
+        "blankWord": "been",
+        "options": [
+          "be",
+          "been",
+          "being",
+          "was"
+        ],
+        "gujaratiHint": "રિયા: તું કેમ છે? આપણે લાંબા સમય પછી મળ્યા.",
+        "explanation": "ઘણા સમય પછી કુશળતા પૂછવા 'How have you been?' બોલાય છે."
+      },
+      {
+        "id": "d37",
+        "speaker": "Keya",
+        "prompt": "Keya: I am doing ___! How about you?",
+        "text": "I am doing great! How about you?",
+        "blankWord": "great",
+        "options": [
+          "well",
+          "great",
+          "good",
+          "nice"
+        ],
+        "gujaratiHint": "કેયા: હું ખૂબ જ મજામાં છું! તારા શું સમાચાર છે?",
+        "explanation": "અહીં 'great' અથવા 'well' બંને આવી શકે, પણ સામાન્ય ચર્ચામાં 'doing great' નો અર્થ ઉત્તમ છું થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "એરપોર્ટ પર (At the Airport)",
+    "dialogues": [
+      {
+        "id": "d38",
+        "speaker": "Agent",
+        "prompt": "Agent: May I see your passport and ___ ticket?",
+        "text": "May I see your passport and flight ticket?",
+        "blankWord": "flight",
+        "options": [
+          "bus",
+          "train",
+          "flight",
+          "road"
+        ],
+        "gujaratiHint": "એજન્ટ: શું હું તમારો પાસપોર્ટ અને પ્લેનની (ફ્લાઇટ) ટિકિટ જોઈ શકું?",
+        "explanation": "એરપોર્ટ પર હવાઈ સફરની ટિકિટ માટે 'flight ticket' કહેવામાં આવે છે."
+      },
+      {
+        "id": "d39",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Yes, here they ___. I only have one handbag.",
+        "text": "Yes, here they are. I only have one handbag.",
+        "blankWord": "are",
+        "options": [
+          "is",
+          "are",
+          "am",
+          "were"
+        ],
+        "gujaratiHint": "મુસાફર: હા, આ રહ્યા. મારી પાસે માત્ર એક હેન્ડબેગ છે.",
+        "explanation": "બહુવચન કર્તા 'they' હોવાથી ક્રિયાપદ તરીકે 'are' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "કપડાંની ખરીદી (Shopping for Clothes)",
+    "dialogues": [
+      {
+        "id": "d40",
+        "speaker": "Customer",
+        "prompt": "Customer: Do you have this dress in a larger ___?",
+        "text": "Do you have this dress in a larger size?",
+        "blankWord": "size",
+        "options": [
+          "size",
+          "color",
+          "length",
+          "fit"
+        ],
+        "gujaratiHint": "ગ્રાહક: શું તમારી પાસે આ ડ્રેસ મોટા માપમાં (સાઈઝમાં) છે?",
+        "explanation": "કપડાંના માપને અંગ્રેજીમાં 'size' તરીકે ઓળખવામાં આવે છે."
+      },
+      {
+        "id": "d41",
+        "speaker": "Salesman",
+        "prompt": "Salesman: Yes, let me check in the ___ room.",
+        "text": "Yes, let me check in the stock room.",
+        "blankWord": "stock",
+        "options": [
+          "stock",
+          "trial",
+          "fitting",
+          "rest"
+        ],
+        "gujaratiHint": "સેલ્સમેન: હા, મને ગોદામમાં (સ્ટોક રૂમમાં) તપાસવા દો.",
+        "explanation": "જ્યાં વધારાનો સામાન રાખવામાં આવે છે તેને 'stock room' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પિકનિકનું આયોજન (Planning a Picnic)",
+    "dialogues": [
+      {
+        "id": "d42",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Where should we ___ for the picnic?",
+        "text": "Where should we go for the picnic?",
+        "blankWord": "go",
+        "options": [
+          "go",
+          "going",
+          "went",
+          "gone"
+        ],
+        "gujaratiHint": "રોહન: આપણે પિકનિક માટે ક્યાં જવું જોઈએ?",
+        "explanation": "સહાયકારક ક્રિયાપદ 'should' સાથે હંમેશાં ક્રિયાપદનું મૂળ રૂપ 'go' વપરાય છે."
+      },
+      {
+        "id": "d43",
+        "speaker": "Sneha",
+        "prompt": "Sneha: Let's go to the ___ near the lake.",
+        "text": "Let's go to the park near the lake.",
+        "blankWord": "park",
+        "options": [
+          "park",
+          "school",
+          "office",
+          "bank"
+        ],
+        "gujaratiHint": "સ્નેહા: ચાલો તળાવ નજીક આવેલા બગીચામાં (પાર્ક) જઈએ.",
+        "explanation": "પિકનિક અને કુદરતી આનંદ માટે સૌથી યોગ્ય સ્થાનોમાં 'park' નો સમાવેશ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પોસ્ટ ઓફિસમાં (At the Post Office)",
+    "dialogues": [
+      {
+        "id": "d44",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to send this ___ to Surat.",
+        "text": "I want to send this parcel to Surat.",
+        "blankWord": "parcel",
+        "options": [
+          "parcel",
+          "email",
+          "box",
+          "money"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે આ પાર્સલ સુરત મોકલવું છે.",
+        "explanation": "પોસ્ટ ઓફિસ દ્વારા મોકલવામાં આવતા સામાનના પેકેટને 'parcel' કહે છે."
+      },
+      {
+        "id": "d45",
+        "speaker": "Clerk",
+        "prompt": "Clerk: Please place it on the weighing ___ first.",
+        "text": "Please place it on the weighing scale first.",
+        "blankWord": "scale",
+        "options": [
+          "scale",
+          "table",
+          "chair",
+          "box"
+        ],
+        "gujaratiHint": "ક્લાર્ક: મહેરબાની કરીને પહેલા તેને વજન કાંટા (સ્કેલ) પર મૂકો.",
+        "explanation": "વજન માપવાના મશીનને અંગ્રેજીમાં 'weighing scale' અથવા 'weighing machine' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દવાખાનામાં (At the Doctor)",
+    "dialogues": [
+      {
+        "id": "d1",
+        "speaker": "Doctor",
+        "prompt": "Doctor: What is the problem? What ___ to you?",
+        "text": "What is the problem? What happened to you?",
+        "blankWord": "happened",
+        "options": [
+          "happen",
+          "happened",
+          "happening",
+          "happens"
+        ],
+        "gujaratiHint": "ડોક્ટર: શું તકલીફ છે? તમને શું થયું છે?",
+        "explanation": "ભૂતકાળની ઘટના પૂછવા માટે ક્રિયાપદનું ભૂતકાળનું રૂપ 'happened' યોગ્ય છે."
+      },
+      {
+        "id": "d2",
+        "speaker": "Patient",
+        "prompt": "Patient: I have a ___ since yesterday.",
+        "text": "I have a headache since yesterday.",
+        "blankWord": "headache",
+        "options": [
+          "painful",
+          "headache",
+          "aching",
+          "hurt"
+        ],
+        "gujaratiHint": "દર્દી: મને ગઈકાલથી માથું દુખે છે.",
+        "explanation": "નામ તરીકે 'headache' (માથાનો દુખાવો) વપરાય છે."
+      },
+      {
+        "id": "d3",
+        "speaker": "Doctor",
+        "prompt": "Doctor: Take this medicine ___ a day.",
+        "text": "Take this medicine twice a day.",
+        "blankWord": "twice",
+        "options": [
+          "two",
+          "twice",
+          "double",
+          "second"
+        ],
+        "gujaratiHint": "ડોક્ટર: આ દવા દિવસમાં બે વાર લેજો.",
+        "explanation": "દિવસમાં કેટલી વાર તે દર્શાવવા માટે 'twice' (બે વાર) નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દુકાનદાર સાથે (At the Shop)",
+    "dialogues": [
+      {
+        "id": "d4",
+        "speaker": "Customer",
+        "prompt": "Customer: How ___ is this shirt?",
+        "text": "How much is this shirt?",
+        "blankWord": "much",
+        "options": [
+          "many",
+          "much",
+          "cost",
+          "price"
+        ],
+        "gujaratiHint": "ગ્રાહક: આ શર્ટની કિંમત કેટલી છે?",
+        "explanation": "કિંમત પૂછવા માટે સામાન્ય રીતે 'How much' નો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d5",
+        "speaker": "Shopkeeper",
+        "prompt": "Shopkeeper: It ___ five hundred rupees.",
+        "text": "It costs five hundred rupees.",
+        "blankWord": "costs",
+        "options": [
+          "cost",
+          "costs",
+          "costing",
+          "price"
+        ],
+        "gujaratiHint": "દુકાનદાર: તેની કિંમત ૫૦૦ રૂપિયા છે.",
+        "explanation": "It (ત્રીજો પુરુષ એકવચન) કર્તા હોવાથી ક્રિયાપદને 's' લાગીને 'costs' બને છે."
+      }
+    ]
+  },
+  {
+    "situation": "બસ સ્ટેશન પર (At the Bus Station)",
+    "dialogues": [
+      {
+        "id": "d6",
+        "speaker": "Passenger",
+        "prompt": "Passenger: When ___ the bus to Ahmedabad leave?",
+        "text": "When does the bus to Ahmedabad leave?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: અમદાવાદ જવાની બસ ક્યારે ઉપડશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં ત્રીજો પુરુષ એકવચન કર્તા (the bus) હોવાથી પ્રશ્નાર્થ માટે 'does' વપરાય છે."
+      },
+      {
+        "id": "d7",
+        "speaker": "Clerk",
+        "prompt": "Clerk: It ___ at 4:30 PM from platform three.",
+        "text": "It leaves at 4:30 PM from platform three.",
+        "blankWord": "leaves",
+        "options": [
+          "leave",
+          "leaves",
+          "leaving",
+          "left"
+        ],
+        "gujaratiHint": "ક્લાર્ક: તે સાંજે ૪:૩૦ વાગ્યે પ્લેટફોર્મ નંબર ૩ પરથી ઉપડશે.",
+        "explanation": "સમયપત્રકની નિયમિત ઘટના દર્શાવવા માટે સાદા વર્તમાનકાળનું 'leaves' ક્રિયાપદ આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલમાં ઓર્ડર આપતી વખતે (At the Restaurant)",
+    "dialogues": [
+      {
+        "id": "d8",
+        "speaker": "Waiter",
+        "prompt": "Waiter: Are you ready to ___ now?",
+        "text": "Are you ready to order now?",
+        "blankWord": "order",
+        "options": [
+          "eat",
+          "order",
+          "drink",
+          "pay"
+        ],
+        "gujaratiHint": "વેઈટર: શું આપ અત્યારે ઓર્ડર આપવા માટે તૈયાર છો?",
+        "explanation": "જમવાનું મંગાવવા માટે 'order' શબ્દનો ઉપયોગ થાય છે."
+      },
+      {
+        "id": "d9",
+        "speaker": "Customer",
+        "prompt": "Customer: Yes, we ___ two plates of Gujarati Thali, please.",
+        "text": "Yes, we want two plates of Gujarati Thali, please.",
+        "blankWord": "want",
+        "options": [
+          "want",
+          "wants",
+          "wanted",
+          "wanting"
+        ],
+        "gujaratiHint": "ગ્રાહક: હા, અમને બે પ્લેટ ગુજરાતી થાળી આપો.",
+        "explanation": "We (બહુવચન) કર્તા હોવાથી ક્રિયાપદનું મૂળ રૂપ 'want' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રસ્તો પૂછતી વખતે (Asking for Directions)",
+    "dialogues": [
+      {
+        "id": "d10",
+        "speaker": "Traveler",
+        "prompt": "Traveler: Excuse me, can you tell me the ___ to the bank?",
+        "text": "Excuse me, can you tell me the way to the bank?",
+        "blankWord": "way",
+        "options": [
+          "way",
+          "road",
+          "street",
+          "map"
+        ],
+        "gujaratiHint": "પ્રવાસી: માફ કરજો, શું તમે મને બેંકનો રસ્તો બતાવી શકશો?",
+        "explanation": "કોઈ ચોક્કસ સ્થાન સુધી પહોંચવાનો રસ્તો પૂછવા 'the way to' વપરાય છે."
+      },
+      {
+        "id": "d11",
+        "speaker": "Local Person",
+        "prompt": "Local Person: Go straight and ___ left at the corner.",
+        "text": "Go straight and turn left at the corner.",
+        "blankWord": "turn",
+        "options": [
+          "go",
+          "turn",
+          "take",
+          "walk"
+        ],
+        "gujaratiHint": "સ્થાનિક વ્યક્તિ: સીધા જાઓ અને ખૂણા પરથી ડાબી બાજુ વળો.",
+        "explanation": "દિશા બદલવા માટે ક્રિયાપદ તરીકે 'turn' વપરાય છે (turn left/right)."
+      }
+    ]
+  },
+  {
+    "situation": "પરિચય આપતી વખતે (Introducing Yourself)",
+    "dialogues": [
+      {
+        "id": "d12",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Hello! My name is Rohan. What ___ your name?",
+        "text": "Hello! My name is Rohan. What is your name?",
+        "blankWord": "is",
+        "options": [
+          "are",
+          "is",
+          "am",
+          "be"
+        ],
+        "gujaratiHint": "રોહન: નમસ્તે! મારું નામ રોહન છે. તમારું નામ શું છે?",
+        "explanation": "એકવચન કર્તાના નામ પૂછવા માટે સાદા વર્તમાનકાળમાં 'is' વપરાય છે."
+      },
+      {
+        "id": "d13",
+        "speaker": "Smit",
+        "prompt": "Smit: Nice to ___ you, Rohan. I am Smit.",
+        "text": "Nice to meet you, Rohan. I am Smit.",
+        "blankWord": "meet",
+        "options": [
+          "meet",
+          "meeting",
+          "met",
+          "meets"
+        ],
+        "gujaratiHint": "સ્મિત: તમને મળીને આનંદ થયો, રોહન. હું સ્મિત છું.",
+        "explanation": "'Nice to meet you' એ કોઈને પહેલી વાર મળતી વખતે વપરાતું ચોક્કસ અભિવાદન છે."
+      }
+    ]
+  },
+  {
+    "situation": "બેંકમાં (At the Bank)",
+    "dialogues": [
+      {
+        "id": "d14",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to ___ some money from my account.",
+        "text": "I want to withdraw some money from my account.",
+        "blankWord": "withdraw",
+        "options": [
+          "withdraw",
+          "deposit",
+          "give",
+          "send"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે મારા ખાતામાંથી થોડા રૂપિયા ઉપાડવા છે.",
+        "explanation": "બેંક ખાતામાંથી પૈસા ઉપાડવા માટે 'withdraw' શબ્દનો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d15",
+        "speaker": "Cashier",
+        "prompt": "Cashier: Sure, please fill out this ___ slip first.",
+        "text": "Sure, please fill out this withdrawal slip first.",
+        "blankWord": "withdrawal",
+        "options": [
+          "deposit",
+          "withdrawal",
+          "cheque",
+          "passbook"
+        ],
+        "gujaratiHint": "કેશિયર: ચોક્કસ, મહેરબાની કરીને પહેલા આ વિથડ્રોઅલ સ્લિપ ભરો.",
+        "explanation": "પૈસા ઉપાડવા માટે વપરાતા ફોર્મને 'withdrawal slip' કહેવામાં આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "વર્ગખંડમાં (At the School)",
+    "dialogues": [
+      {
+        "id": "d16",
+        "speaker": "Teacher",
+        "prompt": "Teacher: Why ___ you absent yesterday, Rohan?",
+        "text": "Why were you absent yesterday, Rohan?",
+        "blankWord": "were",
+        "options": [
+          "was",
+          "were",
+          "are",
+          "did"
+        ],
+        "gujaratiHint": "શિક્ષક: રોહન, તું ગઈકાલે કેમ ગેરહાજર હતો?",
+        "explanation": "ભૂતકાળમાં 'you' કર્તા સાથે સહાયકારક ક્રિયાપદ 'were' વપરાય છે."
+      },
+      {
+        "id": "d17",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Sir, I ___ not well yesterday. I had a fever.",
+        "text": "Sir, I was not well yesterday. I had a fever.",
+        "blankWord": "was",
+        "options": [
+          "was",
+          "were",
+          "am",
+          "had"
+        ],
+        "gujaratiHint": "રોહન: સર, ગઈકાલે મારી તબિયત સારી નહોતી. મને તાવ હતો.",
+        "explanation": "ભૂતકાળમાં 'I' કર્તા સાથે સ્થિતિ દર્શાવવા 'was' નો પ્રયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હવામાનની ચર્ચા (Weather Talk)",
+    "dialogues": [
+      {
+        "id": "d18",
+        "speaker": "Aarav",
+        "prompt": "Aarav: It is very ___ today, isn't it?",
+        "text": "It is very hot today, isn't it?",
+        "blankWord": "hot",
+        "options": [
+          "cold",
+          "hot",
+          "rainy",
+          "windy"
+        ],
+        "gujaratiHint": "આરવ: આજે ખૂબ ગરમી છે, ખરું ને?",
+        "explanation": "ઉનાળાના વાતાવરણની સ્થિતિને દર્શાવવા માટે 'hot' વપરાયું છે."
+      },
+      {
+        "id": "d19",
+        "speaker": "Soham",
+        "prompt": "Soham: Yes, I think it ___ rain tonight.",
+        "text": "Yes, I think it might rain tonight.",
+        "blankWord": "might",
+        "options": [
+          "might",
+          "must",
+          "should",
+          "shall"
+        ],
+        "gujaratiHint": "સોહમ: હા, મને લાગે છે કે આજે રાત્રે વરસાદ પડી શકે છે.",
+        "explanation": "ભવિષ્યમાં વરસાદ પડવાની અનિશ્ચિત શક્યતા દર્શાવવા 'might' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રેલવે સ્ટેશન પર (At the Railway Station)",
+    "dialogues": [
+      {
+        "id": "d20",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Which platform ___ the train to Mumbai arrive on?",
+        "text": "Which platform does the train to Mumbai arrive on?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: મુંબઈની ટ્રેન કયા પ્લેટફોર્મ પર આવશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં એકવચન કર્તા (the train) સાથે પ્રશ્નાર્થ બનાવવા 'does' આવે."
+      },
+      {
+        "id": "d21",
+        "speaker": "Inquiry Clerk",
+        "prompt": "Inquiry Clerk: It usually ___ on platform number four.",
+        "text": "It usually arrives on platform number four.",
+        "blankWord": "arrives",
+        "options": [
+          "arrive",
+          "arrives",
+          "arrived",
+          "arriving"
+        ],
+        "gujaratiHint": "પૂછપરછ ક્લાર્ક: તે સામાન્ય રીતે પ્લેટફોર્મ નંબર ૪ પર આવે છે.",
+        "explanation": "નિયમિત ઘટના હોવાથી ત્રીજો પુરુષ એકવચન 'It' સાથે ક્રિયાપદ 'arrives' આવશે."
+      }
+    ]
+  },
+  {
+    "situation": "શાકભાજીની ખરીદી (Buying Vegetables)",
+    "dialogues": [
+      {
+        "id": "d22",
+        "speaker": "Buyer",
+        "prompt": "Buyer: What is the ___ of potatoes per kg?",
+        "text": "What is the price of potatoes per kg?",
+        "blankWord": "price",
+        "options": [
+          "price",
+          "cost",
+          "money",
+          "rupees"
+        ],
+        "gujaratiHint": "ખરીદનાર: બટાકાનો પ્રતિ કિલો ભાવ શું છે?",
+        "explanation": "કોઈ વસ્તુની બજાર કિંમત પૂછવા માટે સામાન્ય નામ તરીકે 'price' વપરાય છે."
+      },
+      {
+        "id": "d23",
+        "speaker": "Seller",
+        "prompt": "Seller: It is forty rupees ___ kilogram, sir.",
+        "text": "It is forty rupees per kilogram, sir.",
+        "blankWord": "per",
+        "options": [
+          "for",
+          "per",
+          "in",
+          "by"
+        ],
+        "gujaratiHint": "વેચનાર: સર, ચાલીસ રૂપિયા કિલો છે.",
+        "explanation": "પ્રતિ એકમ દર્શાવવા માટે 'per' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ટેક્સી બુક કરતી વખતે (Booking a Taxi)",
+    "dialogues": [
+      {
+        "id": "d24",
+        "speaker": "Rider",
+        "prompt": "Rider: I want to ___ a cab to the airport.",
+        "text": "I want to book a cab to the airport.",
+        "blankWord": "book",
+        "options": [
+          "book",
+          "call",
+          "take",
+          "rent"
+        ],
+        "gujaratiHint": "મુસાફર: મારે એરપોર્ટ માટે ટેક્સી બુક કરવી છે.",
+        "explanation": "ગાડી અગાઉથી આરક્ષિત કરવા માટે 'book' શબ્દ યોગ્ય છે."
+      },
+      {
+        "id": "d25",
+        "speaker": "Operator",
+        "prompt": "Operator: Alright, the driver ___ arrive in five minutes.",
+        "text": "Alright, the driver will arrive in five minutes.",
+        "blankWord": "will",
+        "options": [
+          "will",
+          "would",
+          "shall",
+          "is"
+        ],
+        "gujaratiHint": "ઓપરેટર: બરાબર, ડ્રાઈવર પાંચ મિનિટમાં આવી જશે.",
+        "explanation": "ટૂંક સમયમાં થનારી ભવિષ્યની ઘટના માટે 'will' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ફોન પર વાતચીત (Phone Conversation)",
+    "dialogues": [
+      {
+        "id": "d26",
+        "speaker": "Caller",
+        "prompt": "Caller: Hello, ___ I speak to Amit, please?",
+        "text": "Hello, may I speak to Amit, please?",
+        "blankWord": "may",
+        "options": [
+          "may",
+          "should",
+          "must",
+          "will"
+        ],
+        "gujaratiHint": "કોલર: નમસ્તે, શું હું અમિત સાથે વાત કરી શકું?",
+        "explanation": "ફોન પર નમ્રતાપૂર્વક પરવાનગી મેળવવા 'may' અથવા 'could' નો ઉપયોગ કરાય છે."
+      },
+      {
+        "id": "d27",
+        "speaker": "Receiver",
+        "prompt": "Receiver: Sorry, he is not at home. Can I take a ___?",
+        "text": "Sorry, he is not at home. Can I take a message?",
+        "blankWord": "message",
+        "options": [
+          "message",
+          "letter",
+          "note",
+          "call"
+        ],
+        "gujaratiHint": "સામેની વ્યક્તિ: માફ કરજો, તે ઘરે નથી. શું હું કોઈ સંદેશો લઈ શકું?",
+        "explanation": "કોઈના વતી વાત સાંભળીને પહોંચાડવા માટે 'take a message' ફ્રેઝ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલ ચેક-ઈન (At the Hotel Check-in)",
+    "dialogues": [
+      {
+        "id": "d28",
+        "speaker": "Guest",
+        "prompt": "Guest: Hello, I have a ___ under the name of Patel.",
+        "text": "Hello, I have a reservation under the name of Patel.",
+        "blankWord": "reservation",
+        "options": [
+          "reservation",
+          "room",
+          "ticket",
+          "bill"
+        ],
+        "gujaratiHint": "મહેમાન: નમસ્તે, મારે પટેલ નામ હેઠળ બુકિંગ (આરક્ષણ) છે.",
+        "explanation": "હોટેલમાં પહેલેથી નક્કી કરાયેલા રૂમ માટે 'reservation' અથવા 'booking' બોલાય છે."
+      },
+      {
+        "id": "d29",
+        "speaker": "Receptionist",
+        "prompt": "Receptionist: Yes sir, here is your room ___.",
+        "text": "Yes sir, here is your room key.",
+        "blankWord": "key",
+        "options": [
+          "key",
+          "card",
+          "lock",
+          "number"
+        ],
+        "gujaratiHint": "રિસેપ્શનિસ્ટ: હા સર, આ રહી તમારા રૂમની ચાવી.",
+        "explanation": "રૂમ ખોલવા માટે આપવામાં આવતી ભૌતિક કે ઇલેક્ટ્રોનિક વસ્તુ માટે 'key' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "લાઇબ્રેરીમાં (At the Library)",
+    "dialogues": [
+      {
+        "id": "d30",
+        "speaker": "Student",
+        "prompt": "Student: Can I ___ this grammar book for a week?",
+        "text": "Can I borrow this grammar book for a week?",
+        "blankWord": "borrow",
+        "options": [
+          "borrow",
+          "lend",
+          "take",
+          "buy"
+        ],
+        "gujaratiHint": "વિદ્યાર્થી: શું હું આ વ્યાકરણનું પુસ્તક એક અઠવાડિયા માટે ઉધાર લઈ શકું?",
+        "explanation": "બીજાની પાસેથી વાંચીને પાછું આપવાની શરતે લેવા માટે 'borrow' શબ્દ વપરાય છે."
+      },
+      {
+        "id": "d31",
+        "speaker": "Librarian",
+        "prompt": "Librarian: Yes, but make sure to ___ it on time.",
+        "text": "Yes, but make sure to return it on time.",
+        "blankWord": "return",
+        "options": [
+          "return",
+          "give",
+          "keep",
+          "lose"
+        ],
+        "gujaratiHint": "ગ્રંથપાલ: હા, પણ તેને સમયસર પરત કરવાનું ભૂલતા નહિ.",
+        "explanation": "પુસ્તકાલયનું પુસ્તક પાછું આપવા માટે 'return' શબ્દ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "શોખ વિશે વાતચીત (Talking about Hobbies)",
+    "dialogues": [
+      {
+        "id": "d32",
+        "speaker": "Kabir",
+        "prompt": "Kabir: What do you like to do in your ___ time?",
+        "text": "What do you like to do in your free time?",
+        "blankWord": "free",
+        "options": [
+          "busy",
+          "free",
+          "working",
+          "study"
+        ],
+        "gujaratiHint": "કબીર: તમને તમારા નવરાશના સમયમાં શું કરવું ગમે છે?",
+        "explanation": "નવરાશના કે વધારાના સમય માટે 'free time' અથવા 'leisure time' વપરાય છે."
+      },
+      {
+        "id": "d33",
+        "speaker": "Meera",
+        "prompt": "Meera: I am fond ___ reading novels.",
+        "text": "I am fond of reading novels.",
+        "blankWord": "of",
+        "options": [
+          "of",
+          "for",
+          "in",
+          "to"
+        ],
+        "gujaratiHint": "મીરા: મને નવલકથાઓ વાંચવાનો ખૂબ શોખ છે.",
+        "explanation": "'fond' શબ્દ સાથે હંમેશાં 'of' પ્રિપોઝિશન આવે છે (fond of doing something)."
+      }
+    ]
+  },
+  {
+    "situation": "જોબ ઈન્ટરવ્યુ (Job Interview)",
+    "dialogues": [
+      {
+        "id": "d34",
+        "speaker": "Interviewer",
+        "prompt": "Interviewer: Tell me about your educational ___.",
+        "text": "Tell me about your educational background.",
+        "blankWord": "background",
+        "options": [
+          "background",
+          "history",
+          "future",
+          "result"
+        ],
+        "gujaratiHint": "ઇન્ટરવ્યુઅર: મને તમારી શૈક્ષણિક પૃષ્ઠભૂમિ (અભ્યાસ વિશે) જણાવો.",
+        "explanation": "વ્યક્તિના ભૂતકાળના અભ્યાસ અને ડિગ્રીઓની માહિતી માટે 'educational background' વપરાય છે."
+      },
+      {
+        "id": "d35",
+        "speaker": "Candidate",
+        "prompt": "Candidate: I have ___ my graduation in computer science.",
+        "text": "I have completed my graduation in computer science.",
+        "blankWord": "completed",
+        "options": [
+          "complete",
+          "completed",
+          "finish",
+          "done"
+        ],
+        "gujaratiHint": "ઉમેદવાર: મેં કમ્પ્યુટર સાયન્સમાં મારું ગ્રેજ્યુએશન પૂરું કર્યું છે.",
+        "explanation": "પૂર્ણ વર્તમાનકાળની રચનામાં 'have' પછી ભૂતકૃદંત 'completed' યોગ્ય છે."
+      }
+    ]
+  },
+  {
+    "situation": "મિત્રને મળતી વખતે (Meeting a Friend)",
+    "dialogues": [
+      {
+        "id": "d36",
+        "speaker": "Riya",
+        "prompt": "Riya: How have you ___? We met after a long time.",
+        "text": "How have you been? We met after a long time.",
+        "blankWord": "been",
+        "options": [
+          "be",
+          "been",
+          "being",
+          "was"
+        ],
+        "gujaratiHint": "રિયા: તું કેમ છે? આપણે લાંબા સમય પછી મળ્યા.",
+        "explanation": "ઘણા સમય પછી કુશળતા પૂછવા 'How have you been?' બોલાય છે."
+      },
+      {
+        "id": "d37",
+        "speaker": "Keya",
+        "prompt": "Keya: I am doing ___! How about you?",
+        "text": "I am doing great! How about you?",
+        "blankWord": "great",
+        "options": [
+          "well",
+          "great",
+          "good",
+          "nice"
+        ],
+        "gujaratiHint": "કેયા: હું ખૂબ જ મજામાં છું! તારા શું સમાચાર છે?",
+        "explanation": "અહીં 'great' અથવા 'well' બંને આવી શકે, પણ સામાન્ય ચર્ચામાં 'doing great' નો અર્થ ઉત્તમ છું થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "એરપોર્ટ પર (At the Airport)",
+    "dialogues": [
+      {
+        "id": "d38",
+        "speaker": "Agent",
+        "prompt": "Agent: May I see your passport and ___ ticket?",
+        "text": "May I see your passport and flight ticket?",
+        "blankWord": "flight",
+        "options": [
+          "bus",
+          "train",
+          "flight",
+          "road"
+        ],
+        "gujaratiHint": "એજન્ટ: શું હું તમારો પાસપોર્ટ અને પ્લેનની (ફ્લાઇટ) ટિકિટ જોઈ શકું?",
+        "explanation": "એરપોર્ટ પર હવાઈ સફરની ટિકિટ માટે 'flight ticket' કહેવામાં આવે છે."
+      },
+      {
+        "id": "d39",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Yes, here they ___. I only have one handbag.",
+        "text": "Yes, here they are. I only have one handbag.",
+        "blankWord": "are",
+        "options": [
+          "is",
+          "are",
+          "am",
+          "were"
+        ],
+        "gujaratiHint": "મુસાફર: હા, આ રહ્યા. મારી પાસે માત્ર એક હેન્ડબેગ છે.",
+        "explanation": "બહુવચન કર્તા 'they' હોવાથી ક્રિયાપદ તરીકે 'are' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "કપડાંની ખરીદી (Shopping for Clothes)",
+    "dialogues": [
+      {
+        "id": "d40",
+        "speaker": "Customer",
+        "prompt": "Customer: Do you have this dress in a larger ___?",
+        "text": "Do you have this dress in a larger size?",
+        "blankWord": "size",
+        "options": [
+          "size",
+          "color",
+          "length",
+          "fit"
+        ],
+        "gujaratiHint": "ગ્રાહક: શું તમારી પાસે આ ડ્રેસ મોટા માપમાં (સાઈઝમાં) છે?",
+        "explanation": "કપડાંના માપને અંગ્રેજીમાં 'size' તરીકે ઓળખવામાં આવે છે."
+      },
+      {
+        "id": "d41",
+        "speaker": "Salesman",
+        "prompt": "Salesman: Yes, let me check in the ___ room.",
+        "text": "Yes, let me check in the stock room.",
+        "blankWord": "stock",
+        "options": [
+          "stock",
+          "trial",
+          "fitting",
+          "rest"
+        ],
+        "gujaratiHint": "સેલ્સમેન: હા, મને ગોદામમાં (સ્ટોક રૂમમાં) તપાસવા દો.",
+        "explanation": "જ્યાં વધારાનો સામાન રાખવામાં આવે છે તેને 'stock room' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પિકનિકનું આયોજન (Planning a Picnic)",
+    "dialogues": [
+      {
+        "id": "d42",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Where should we ___ for the picnic?",
+        "text": "Where should we go for the picnic?",
+        "blankWord": "go",
+        "options": [
+          "go",
+          "going",
+          "went",
+          "gone"
+        ],
+        "gujaratiHint": "રોહન: આપણે પિકનિક માટે ક્યાં જવું જોઈએ?",
+        "explanation": "સહાયકારક ક્રિયાપદ 'should' સાથે હંમેશાં ક્રિયાપદનું મૂળ રૂપ 'go' વપરાય છે."
+      },
+      {
+        "id": "d43",
+        "speaker": "Sneha",
+        "prompt": "Sneha: Let's go to the ___ near the lake.",
+        "text": "Let's go to the park near the lake.",
+        "blankWord": "park",
+        "options": [
+          "park",
+          "school",
+          "office",
+          "bank"
+        ],
+        "gujaratiHint": "સ્નેહા: ચાલો તળાવ નજીક આવેલા બગીચામાં (પાર્ક) જઈએ.",
+        "explanation": "પિકનિક અને કુદરતી આનંદ માટે સૌથી યોગ્ય સ્થાનોમાં 'park' નો સમાવેશ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પોસ્ટ ઓફિસમાં (At the Post Office)",
+    "dialogues": [
+      {
+        "id": "d44",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to send this ___ to Surat.",
+        "text": "I want to send this parcel to Surat.",
+        "blankWord": "parcel",
+        "options": [
+          "parcel",
+          "email",
+          "box",
+          "money"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે આ પાર્સલ સુરત મોકલવું છે.",
+        "explanation": "પોસ્ટ ઓફિસ દ્વારા મોકલવામાં આવતા સામાનના પેકેટને 'parcel' કહે છે."
+      },
+      {
+        "id": "d45",
+        "speaker": "Clerk",
+        "prompt": "Clerk: Please place it on the weighing ___ first.",
+        "text": "Please place it on the weighing scale first.",
+        "blankWord": "scale",
+        "options": [
+          "scale",
+          "table",
+          "chair",
+          "box"
+        ],
+        "gujaratiHint": "ક્લાર્ક: મહેરબાની કરીને પહેલા તેને વજન કાંટા (સ્કેલ) પર મૂકો.",
+        "explanation": "વજન માપવાના મશીનને અંગ્રેજીમાં 'weighing scale' અથવા 'weighing machine' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દવાખાનામાં (At the Doctor)",
+    "dialogues": [
+      {
+        "id": "d1",
+        "speaker": "Doctor",
+        "prompt": "Doctor: What is the problem? What ___ to you?",
+        "text": "What is the problem? What happened to you?",
+        "blankWord": "happened",
+        "options": [
+          "happen",
+          "happened",
+          "happening",
+          "happens"
+        ],
+        "gujaratiHint": "ડોક્ટર: શું તકલીફ છે? તમને શું થયું છે?",
+        "explanation": "ભૂતકાળની ઘટના પૂછવા માટે ક્રિયાપદનું ભૂતકાળનું રૂપ 'happened' યોગ્ય છે."
+      },
+      {
+        "id": "d2",
+        "speaker": "Patient",
+        "prompt": "Patient: I have a ___ since yesterday.",
+        "text": "I have a headache since yesterday.",
+        "blankWord": "headache",
+        "options": [
+          "painful",
+          "headache",
+          "aching",
+          "hurt"
+        ],
+        "gujaratiHint": "દર્દી: મને ગઈકાલથી માથું દુખે છે.",
+        "explanation": "નામ તરીકે 'headache' (માથાનો દુખાવો) વપરાય છે."
+      },
+      {
+        "id": "d3",
+        "speaker": "Doctor",
+        "prompt": "Doctor: Take this medicine ___ a day.",
+        "text": "Take this medicine twice a day.",
+        "blankWord": "twice",
+        "options": [
+          "two",
+          "twice",
+          "double",
+          "second"
+        ],
+        "gujaratiHint": "ડોક્ટર: આ દવા દિવસમાં બે વાર લેજો.",
+        "explanation": "દિવસમાં કેટલી વાર તે દર્શાવવા માટે 'twice' (બે વાર) નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દુકાનદાર સાથે (At the Shop)",
+    "dialogues": [
+      {
+        "id": "d4",
+        "speaker": "Customer",
+        "prompt": "Customer: How ___ is this shirt?",
+        "text": "How much is this shirt?",
+        "blankWord": "much",
+        "options": [
+          "many",
+          "much",
+          "cost",
+          "price"
+        ],
+        "gujaratiHint": "ગ્રાહક: આ શર્ટની કિંમત કેટલી છે?",
+        "explanation": "કિંમત પૂછવા માટે સામાન્ય રીતે 'How much' નો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d5",
+        "speaker": "Shopkeeper",
+        "prompt": "Shopkeeper: It ___ five hundred rupees.",
+        "text": "It costs five hundred rupees.",
+        "blankWord": "costs",
+        "options": [
+          "cost",
+          "costs",
+          "costing",
+          "price"
+        ],
+        "gujaratiHint": "દુકાનદાર: તેની કિંમત ૫૦૦ રૂપિયા છે.",
+        "explanation": "It (ત્રીજો પુરુષ એકવચન) કર્તા હોવાથી ક્રિયાપદને 's' લાગીને 'costs' બને છે."
+      }
+    ]
+  },
+  {
+    "situation": "બસ સ્ટેશન પર (At the Bus Station)",
+    "dialogues": [
+      {
+        "id": "d6",
+        "speaker": "Passenger",
+        "prompt": "Passenger: When ___ the bus to Ahmedabad leave?",
+        "text": "When does the bus to Ahmedabad leave?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: અમદાવાદ જવાની બસ ક્યારે ઉપડશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં ત્રીજો પુરુષ એકવચન કર્તા (the bus) હોવાથી પ્રશ્નાર્થ માટે 'does' વપરાય છે."
+      },
+      {
+        "id": "d7",
+        "speaker": "Clerk",
+        "prompt": "Clerk: It ___ at 4:30 PM from platform three.",
+        "text": "It leaves at 4:30 PM from platform three.",
+        "blankWord": "leaves",
+        "options": [
+          "leave",
+          "leaves",
+          "leaving",
+          "left"
+        ],
+        "gujaratiHint": "ક્લાર્ક: તે સાંજે ૪:૩૦ વાગ્યે પ્લેટફોર્મ નંબર ૩ પરથી ઉપડશે.",
+        "explanation": "સમયપત્રકની નિયમિત ઘટના દર્શાવવા માટે સાદા વર્તમાનકાળનું 'leaves' ક્રિયાપદ આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલમાં ઓર્ડર આપતી વખતે (At the Restaurant)",
+    "dialogues": [
+      {
+        "id": "d8",
+        "speaker": "Waiter",
+        "prompt": "Waiter: Are you ready to ___ now?",
+        "text": "Are you ready to order now?",
+        "blankWord": "order",
+        "options": [
+          "eat",
+          "order",
+          "drink",
+          "pay"
+        ],
+        "gujaratiHint": "વેઈટર: શું આપ અત્યારે ઓર્ડર આપવા માટે તૈયાર છો?",
+        "explanation": "જમવાનું મંગાવવા માટે 'order' શબ્દનો ઉપયોગ થાય છે."
+      },
+      {
+        "id": "d9",
+        "speaker": "Customer",
+        "prompt": "Customer: Yes, we ___ two plates of Gujarati Thali, please.",
+        "text": "Yes, we want two plates of Gujarati Thali, please.",
+        "blankWord": "want",
+        "options": [
+          "want",
+          "wants",
+          "wanted",
+          "wanting"
+        ],
+        "gujaratiHint": "ગ્રાહક: હા, અમને બે પ્લેટ ગુજરાતી થાળી આપો.",
+        "explanation": "We (બહુવચન) કર્તા હોવાથી ક્રિયાપદનું મૂળ રૂપ 'want' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રસ્તો પૂછતી વખતે (Asking for Directions)",
+    "dialogues": [
+      {
+        "id": "d10",
+        "speaker": "Traveler",
+        "prompt": "Traveler: Excuse me, can you tell me the ___ to the bank?",
+        "text": "Excuse me, can you tell me the way to the bank?",
+        "blankWord": "way",
+        "options": [
+          "way",
+          "road",
+          "street",
+          "map"
+        ],
+        "gujaratiHint": "પ્રવાસી: માફ કરજો, શું તમે મને બેંકનો રસ્તો બતાવી શકશો?",
+        "explanation": "કોઈ ચોક્કસ સ્થાન સુધી પહોંચવાનો રસ્તો પૂછવા 'the way to' વપરાય છે."
+      },
+      {
+        "id": "d11",
+        "speaker": "Local Person",
+        "prompt": "Local Person: Go straight and ___ left at the corner.",
+        "text": "Go straight and turn left at the corner.",
+        "blankWord": "turn",
+        "options": [
+          "go",
+          "turn",
+          "take",
+          "walk"
+        ],
+        "gujaratiHint": "સ્થાનિક વ્યક્તિ: સીધા જાઓ અને ખૂણા પરથી ડાબી બાજુ વળો.",
+        "explanation": "દિશા બદલવા માટે ક્રિયાપદ તરીકે 'turn' વપરાય છે (turn left/right)."
+      }
+    ]
+  },
+  {
+    "situation": "પરિચય આપતી વખતે (Introducing Yourself)",
+    "dialogues": [
+      {
+        "id": "d12",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Hello! My name is Rohan. What ___ your name?",
+        "text": "Hello! My name is Rohan. What is your name?",
+        "blankWord": "is",
+        "options": [
+          "are",
+          "is",
+          "am",
+          "be"
+        ],
+        "gujaratiHint": "રોહન: નમસ્તે! મારું નામ રોહન છે. તમારું નામ શું છે?",
+        "explanation": "એકવચન કર્તાના નામ પૂછવા માટે સાદા વર્તમાનકાળમાં 'is' વપરાય છે."
+      },
+      {
+        "id": "d13",
+        "speaker": "Smit",
+        "prompt": "Smit: Nice to ___ you, Rohan. I am Smit.",
+        "text": "Nice to meet you, Rohan. I am Smit.",
+        "blankWord": "meet",
+        "options": [
+          "meet",
+          "meeting",
+          "met",
+          "meets"
+        ],
+        "gujaratiHint": "સ્મિત: તમને મળીને આનંદ થયો, રોહન. હું સ્મિત છું.",
+        "explanation": "'Nice to meet you' એ કોઈને પહેલી વાર મળતી વખતે વપરાતું ચોક્કસ અભિવાદન છે."
+      }
+    ]
+  },
+  {
+    "situation": "બેંકમાં (At the Bank)",
+    "dialogues": [
+      {
+        "id": "d14",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to ___ some money from my account.",
+        "text": "I want to withdraw some money from my account.",
+        "blankWord": "withdraw",
+        "options": [
+          "withdraw",
+          "deposit",
+          "give",
+          "send"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે મારા ખાતામાંથી થોડા રૂપિયા ઉપાડવા છે.",
+        "explanation": "બેંક ખાતામાંથી પૈસા ઉપાડવા માટે 'withdraw' શબ્દનો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d15",
+        "speaker": "Cashier",
+        "prompt": "Cashier: Sure, please fill out this ___ slip first.",
+        "text": "Sure, please fill out this withdrawal slip first.",
+        "blankWord": "withdrawal",
+        "options": [
+          "deposit",
+          "withdrawal",
+          "cheque",
+          "passbook"
+        ],
+        "gujaratiHint": "કેશિયર: ચોક્કસ, મહેરબાની કરીને પહેલા આ વિથડ્રોઅલ સ્લિપ ભરો.",
+        "explanation": "પૈસા ઉપાડવા માટે વપરાતા ફોર્મને 'withdrawal slip' કહેવામાં આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "વર્ગખંડમાં (At the School)",
+    "dialogues": [
+      {
+        "id": "d16",
+        "speaker": "Teacher",
+        "prompt": "Teacher: Why ___ you absent yesterday, Rohan?",
+        "text": "Why were you absent yesterday, Rohan?",
+        "blankWord": "were",
+        "options": [
+          "was",
+          "were",
+          "are",
+          "did"
+        ],
+        "gujaratiHint": "શિક્ષક: રોહન, તું ગઈકાલે કેમ ગેરહાજર હતો?",
+        "explanation": "ભૂતકાળમાં 'you' કર્તા સાથે સહાયકારક ક્રિયાપદ 'were' વપરાય છે."
+      },
+      {
+        "id": "d17",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Sir, I ___ not well yesterday. I had a fever.",
+        "text": "Sir, I was not well yesterday. I had a fever.",
+        "blankWord": "was",
+        "options": [
+          "was",
+          "were",
+          "am",
+          "had"
+        ],
+        "gujaratiHint": "રોહન: સર, ગઈકાલે મારી તબિયત સારી નહોતી. મને તાવ હતો.",
+        "explanation": "ભૂતકાળમાં 'I' કર્તા સાથે સ્થિતિ દર્શાવવા 'was' નો પ્રયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હવામાનની ચર્ચા (Weather Talk)",
+    "dialogues": [
+      {
+        "id": "d18",
+        "speaker": "Aarav",
+        "prompt": "Aarav: It is very ___ today, isn't it?",
+        "text": "It is very hot today, isn't it?",
+        "blankWord": "hot",
+        "options": [
+          "cold",
+          "hot",
+          "rainy",
+          "windy"
+        ],
+        "gujaratiHint": "આરવ: આજે ખૂબ ગરમી છે, ખરું ને?",
+        "explanation": "ઉનાળાના વાતાવરણની સ્થિતિને દર્શાવવા માટે 'hot' વપરાયું છે."
+      },
+      {
+        "id": "d19",
+        "speaker": "Soham",
+        "prompt": "Soham: Yes, I think it ___ rain tonight.",
+        "text": "Yes, I think it might rain tonight.",
+        "blankWord": "might",
+        "options": [
+          "might",
+          "must",
+          "should",
+          "shall"
+        ],
+        "gujaratiHint": "સોહમ: હા, મને લાગે છે કે આજે રાત્રે વરસાદ પડી શકે છે.",
+        "explanation": "ભવિષ્યમાં વરસાદ પડવાની અનિશ્ચિત શક્યતા દર્શાવવા 'might' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રેલવે સ્ટેશન પર (At the Railway Station)",
+    "dialogues": [
+      {
+        "id": "d20",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Which platform ___ the train to Mumbai arrive on?",
+        "text": "Which platform does the train to Mumbai arrive on?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: મુંબઈની ટ્રેન કયા પ્લેટફોર્મ પર આવશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં એકવચન કર્તા (the train) સાથે પ્રશ્નાર્થ બનાવવા 'does' આવે."
+      },
+      {
+        "id": "d21",
+        "speaker": "Inquiry Clerk",
+        "prompt": "Inquiry Clerk: It usually ___ on platform number four.",
+        "text": "It usually arrives on platform number four.",
+        "blankWord": "arrives",
+        "options": [
+          "arrive",
+          "arrives",
+          "arrived",
+          "arriving"
+        ],
+        "gujaratiHint": "પૂછપરછ ક્લાર્ક: તે સામાન્ય રીતે પ્લેટફોર્મ નંબર ૪ પર આવે છે.",
+        "explanation": "નિયમિત ઘટના હોવાથી ત્રીજો પુરુષ એકવચન 'It' સાથે ક્રિયાપદ 'arrives' આવશે."
+      }
+    ]
+  },
+  {
+    "situation": "શાકભાજીની ખરીદી (Buying Vegetables)",
+    "dialogues": [
+      {
+        "id": "d22",
+        "speaker": "Buyer",
+        "prompt": "Buyer: What is the ___ of potatoes per kg?",
+        "text": "What is the price of potatoes per kg?",
+        "blankWord": "price",
+        "options": [
+          "price",
+          "cost",
+          "money",
+          "rupees"
+        ],
+        "gujaratiHint": "ખરીદનાર: બટાકાનો પ્રતિ કિલો ભાવ શું છે?",
+        "explanation": "કોઈ વસ્તુની બજાર કિંમત પૂછવા માટે સામાન્ય નામ તરીકે 'price' વપરાય છે."
+      },
+      {
+        "id": "d23",
+        "speaker": "Seller",
+        "prompt": "Seller: It is forty rupees ___ kilogram, sir.",
+        "text": "It is forty rupees per kilogram, sir.",
+        "blankWord": "per",
+        "options": [
+          "for",
+          "per",
+          "in",
+          "by"
+        ],
+        "gujaratiHint": "વેચનાર: સર, ચાલીસ રૂપિયા કિલો છે.",
+        "explanation": "પ્રતિ એકમ દર્શાવવા માટે 'per' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ટેક્સી બુક કરતી વખતે (Booking a Taxi)",
+    "dialogues": [
+      {
+        "id": "d24",
+        "speaker": "Rider",
+        "prompt": "Rider: I want to ___ a cab to the airport.",
+        "text": "I want to book a cab to the airport.",
+        "blankWord": "book",
+        "options": [
+          "book",
+          "call",
+          "take",
+          "rent"
+        ],
+        "gujaratiHint": "મુસાફર: મારે એરપોર્ટ માટે ટેક્સી બુક કરવી છે.",
+        "explanation": "ગાડી અગાઉથી આરક્ષિત કરવા માટે 'book' શબ્દ યોગ્ય છે."
+      },
+      {
+        "id": "d25",
+        "speaker": "Operator",
+        "prompt": "Operator: Alright, the driver ___ arrive in five minutes.",
+        "text": "Alright, the driver will arrive in five minutes.",
+        "blankWord": "will",
+        "options": [
+          "will",
+          "would",
+          "shall",
+          "is"
+        ],
+        "gujaratiHint": "ઓપરેટર: બરાબર, ડ્રાઈવર પાંચ મિનિટમાં આવી જશે.",
+        "explanation": "ટૂંક સમયમાં થનારી ભવિષ્યની ઘટના માટે 'will' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ફોન પર વાતચીત (Phone Conversation)",
+    "dialogues": [
+      {
+        "id": "d26",
+        "speaker": "Caller",
+        "prompt": "Caller: Hello, ___ I speak to Amit, please?",
+        "text": "Hello, may I speak to Amit, please?",
+        "blankWord": "may",
+        "options": [
+          "may",
+          "should",
+          "must",
+          "will"
+        ],
+        "gujaratiHint": "કોલર: નમસ્તે, શું હું અમિત સાથે વાત કરી શકું?",
+        "explanation": "ફોન પર નમ્રતાપૂર્વક પરવાનગી મેળવવા 'may' અથવા 'could' નો ઉપયોગ કરાય છે."
+      },
+      {
+        "id": "d27",
+        "speaker": "Receiver",
+        "prompt": "Receiver: Sorry, he is not at home. Can I take a ___?",
+        "text": "Sorry, he is not at home. Can I take a message?",
+        "blankWord": "message",
+        "options": [
+          "message",
+          "letter",
+          "note",
+          "call"
+        ],
+        "gujaratiHint": "સામેની વ્યક્તિ: માફ કરજો, તે ઘરે નથી. શું હું કોઈ સંદેશો લઈ શકું?",
+        "explanation": "કોઈના વતી વાત સાંભળીને પહોંચાડવા માટે 'take a message' ફ્રેઝ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલ ચેક-ઈન (At the Hotel Check-in)",
+    "dialogues": [
+      {
+        "id": "d28",
+        "speaker": "Guest",
+        "prompt": "Guest: Hello, I have a ___ under the name of Patel.",
+        "text": "Hello, I have a reservation under the name of Patel.",
+        "blankWord": "reservation",
+        "options": [
+          "reservation",
+          "room",
+          "ticket",
+          "bill"
+        ],
+        "gujaratiHint": "મહેમાન: નમસ્તે, મારે પટેલ નામ હેઠળ બુકિંગ (આરક્ષણ) છે.",
+        "explanation": "હોટેલમાં પહેલેથી નક્કી કરાયેલા રૂમ માટે 'reservation' અથવા 'booking' બોલાય છે."
+      },
+      {
+        "id": "d29",
+        "speaker": "Receptionist",
+        "prompt": "Receptionist: Yes sir, here is your room ___.",
+        "text": "Yes sir, here is your room key.",
+        "blankWord": "key",
+        "options": [
+          "key",
+          "card",
+          "lock",
+          "number"
+        ],
+        "gujaratiHint": "રિસેપ્શનિસ્ટ: હા સર, આ રહી તમારા રૂમની ચાવી.",
+        "explanation": "રૂમ ખોલવા માટે આપવામાં આવતી ભૌતિક કે ઇલેક્ટ્રોનિક વસ્તુ માટે 'key' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "લાઇબ્રેરીમાં (At the Library)",
+    "dialogues": [
+      {
+        "id": "d30",
+        "speaker": "Student",
+        "prompt": "Student: Can I ___ this grammar book for a week?",
+        "text": "Can I borrow this grammar book for a week?",
+        "blankWord": "borrow",
+        "options": [
+          "borrow",
+          "lend",
+          "take",
+          "buy"
+        ],
+        "gujaratiHint": "વિદ્યાર્થી: શું હું આ વ્યાકરણનું પુસ્તક એક અઠવાડિયા માટે ઉધાર લઈ શકું?",
+        "explanation": "બીજાની પાસેથી વાંચીને પાછું આપવાની શરતે લેવા માટે 'borrow' શબ્દ વપરાય છે."
+      },
+      {
+        "id": "d31",
+        "speaker": "Librarian",
+        "prompt": "Librarian: Yes, but make sure to ___ it on time.",
+        "text": "Yes, but make sure to return it on time.",
+        "blankWord": "return",
+        "options": [
+          "return",
+          "give",
+          "keep",
+          "lose"
+        ],
+        "gujaratiHint": "ગ્રંથપાલ: હા, પણ તેને સમયસર પરત કરવાનું ભૂલતા નહિ.",
+        "explanation": "પુસ્તકાલયનું પુસ્તક પાછું આપવા માટે 'return' શબ્દ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "શોખ વિશે વાતચીત (Talking about Hobbies)",
+    "dialogues": [
+      {
+        "id": "d32",
+        "speaker": "Kabir",
+        "prompt": "Kabir: What do you like to do in your ___ time?",
+        "text": "What do you like to do in your free time?",
+        "blankWord": "free",
+        "options": [
+          "busy",
+          "free",
+          "working",
+          "study"
+        ],
+        "gujaratiHint": "કબીર: તમને તમારા નવરાશના સમયમાં શું કરવું ગમે છે?",
+        "explanation": "નવરાશના કે વધારાના સમય માટે 'free time' અથવા 'leisure time' વપરાય છે."
+      },
+      {
+        "id": "d33",
+        "speaker": "Meera",
+        "prompt": "Meera: I am fond ___ reading novels.",
+        "text": "I am fond of reading novels.",
+        "blankWord": "of",
+        "options": [
+          "of",
+          "for",
+          "in",
+          "to"
+        ],
+        "gujaratiHint": "મીરા: મને નવલકથાઓ વાંચવાનો ખૂબ શોખ છે.",
+        "explanation": "'fond' શબ્દ સાથે હંમેશાં 'of' પ્રિપોઝિશન આવે છે (fond of doing something)."
+      }
+    ]
+  },
+  {
+    "situation": "જોબ ઈન્ટરવ્યુ (Job Interview)",
+    "dialogues": [
+      {
+        "id": "d34",
+        "speaker": "Interviewer",
+        "prompt": "Interviewer: Tell me about your educational ___.",
+        "text": "Tell me about your educational background.",
+        "blankWord": "background",
+        "options": [
+          "background",
+          "history",
+          "future",
+          "result"
+        ],
+        "gujaratiHint": "ઇન્ટરવ્યુઅર: મને તમારી શૈક્ષણિક પૃષ્ઠભૂમિ (અભ્યાસ વિશે) જણાવો.",
+        "explanation": "વ્યક્તિના ભૂતકાળના અભ્યાસ અને ડિગ્રીઓની માહિતી માટે 'educational background' વપરાય છે."
+      },
+      {
+        "id": "d35",
+        "speaker": "Candidate",
+        "prompt": "Candidate: I have ___ my graduation in computer science.",
+        "text": "I have completed my graduation in computer science.",
+        "blankWord": "completed",
+        "options": [
+          "complete",
+          "completed",
+          "finish",
+          "done"
+        ],
+        "gujaratiHint": "ઉમેદવાર: મેં કમ્પ્યુટર સાયન્સમાં મારું ગ્રેજ્યુએશન પૂરું કર્યું છે.",
+        "explanation": "પૂર્ણ વર્તમાનકાળની રચનામાં 'have' પછી ભૂતકૃદંત 'completed' યોગ્ય છે."
+      }
+    ]
+  },
+  {
+    "situation": "મિત્રને મળતી વખતે (Meeting a Friend)",
+    "dialogues": [
+      {
+        "id": "d36",
+        "speaker": "Riya",
+        "prompt": "Riya: How have you ___? We met after a long time.",
+        "text": "How have you been? We met after a long time.",
+        "blankWord": "been",
+        "options": [
+          "be",
+          "been",
+          "being",
+          "was"
+        ],
+        "gujaratiHint": "રિયા: તું કેમ છે? આપણે લાંબા સમય પછી મળ્યા.",
+        "explanation": "ઘણા સમય પછી કુશળતા પૂછવા 'How have you been?' બોલાય છે."
+      },
+      {
+        "id": "d37",
+        "speaker": "Keya",
+        "prompt": "Keya: I am doing ___! How about you?",
+        "text": "I am doing great! How about you?",
+        "blankWord": "great",
+        "options": [
+          "well",
+          "great",
+          "good",
+          "nice"
+        ],
+        "gujaratiHint": "કેયા: હું ખૂબ જ મજામાં છું! તારા શું સમાચાર છે?",
+        "explanation": "અહીં 'great' અથવા 'well' બંને આવી શકે, પણ સામાન્ય ચર્ચામાં 'doing great' નો અર્થ ઉત્તમ છું થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "એરપોર્ટ પર (At the Airport)",
+    "dialogues": [
+      {
+        "id": "d38",
+        "speaker": "Agent",
+        "prompt": "Agent: May I see your passport and ___ ticket?",
+        "text": "May I see your passport and flight ticket?",
+        "blankWord": "flight",
+        "options": [
+          "bus",
+          "train",
+          "flight",
+          "road"
+        ],
+        "gujaratiHint": "એજન્ટ: શું હું તમારો પાસપોર્ટ અને પ્લેનની (ફ્લાઇટ) ટિકિટ જોઈ શકું?",
+        "explanation": "એરપોર્ટ પર હવાઈ સફરની ટિકિટ માટે 'flight ticket' કહેવામાં આવે છે."
+      },
+      {
+        "id": "d39",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Yes, here they ___. I only have one handbag.",
+        "text": "Yes, here they are. I only have one handbag.",
+        "blankWord": "are",
+        "options": [
+          "is",
+          "are",
+          "am",
+          "were"
+        ],
+        "gujaratiHint": "મુસાફર: હા, આ રહ્યા. મારી પાસે માત્ર એક હેન્ડબેગ છે.",
+        "explanation": "બહુવચન કર્તા 'they' હોવાથી ક્રિયાપદ તરીકે 'are' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "કપડાંની ખરીદી (Shopping for Clothes)",
+    "dialogues": [
+      {
+        "id": "d40",
+        "speaker": "Customer",
+        "prompt": "Customer: Do you have this dress in a larger ___?",
+        "text": "Do you have this dress in a larger size?",
+        "blankWord": "size",
+        "options": [
+          "size",
+          "color",
+          "length",
+          "fit"
+        ],
+        "gujaratiHint": "ગ્રાહક: શું તમારી પાસે આ ડ્રેસ મોટા માપમાં (સાઈઝમાં) છે?",
+        "explanation": "કપડાંના માપને અંગ્રેજીમાં 'size' તરીકે ઓળખવામાં આવે છે."
+      },
+      {
+        "id": "d41",
+        "speaker": "Salesman",
+        "prompt": "Salesman: Yes, let me check in the ___ room.",
+        "text": "Yes, let me check in the stock room.",
+        "blankWord": "stock",
+        "options": [
+          "stock",
+          "trial",
+          "fitting",
+          "rest"
+        ],
+        "gujaratiHint": "સેલ્સમેન: હા, મને ગોદામમાં (સ્ટોક રૂમમાં) તપાસવા દો.",
+        "explanation": "જ્યાં વધારાનો સામાન રાખવામાં આવે છે તેને 'stock room' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પિકનિકનું આયોજન (Planning a Picnic)",
+    "dialogues": [
+      {
+        "id": "d42",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Where should we ___ for the picnic?",
+        "text": "Where should we go for the picnic?",
+        "blankWord": "go",
+        "options": [
+          "go",
+          "going",
+          "went",
+          "gone"
+        ],
+        "gujaratiHint": "રોહન: આપણે પિકનિક માટે ક્યાં જવું જોઈએ?",
+        "explanation": "સહાયકારક ક્રિયાપદ 'should' સાથે હંમેશાં ક્રિયાપદનું મૂળ રૂપ 'go' વપરાય છે."
+      },
+      {
+        "id": "d43",
+        "speaker": "Sneha",
+        "prompt": "Sneha: Let's go to the ___ near the lake.",
+        "text": "Let's go to the park near the lake.",
+        "blankWord": "park",
+        "options": [
+          "park",
+          "school",
+          "office",
+          "bank"
+        ],
+        "gujaratiHint": "સ્નેહા: ચાલો તળાવ નજીક આવેલા બગીચામાં (પાર્ક) જઈએ.",
+        "explanation": "પિકનિક અને કુદરતી આનંદ માટે સૌથી યોગ્ય સ્થાનોમાં 'park' નો સમાવેશ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પોસ્ટ ઓફિસમાં (At the Post Office)",
+    "dialogues": [
+      {
+        "id": "d44",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to send this ___ to Surat.",
+        "text": "I want to send this parcel to Surat.",
+        "blankWord": "parcel",
+        "options": [
+          "parcel",
+          "email",
+          "box",
+          "money"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે આ પાર્સલ સુરત મોકલવું છે.",
+        "explanation": "પોસ્ટ ઓફિસ દ્વારા મોકલવામાં આવતા સામાનના પેકેટને 'parcel' કહે છે."
+      },
+      {
+        "id": "d45",
+        "speaker": "Clerk",
+        "prompt": "Clerk: Please place it on the weighing ___ first.",
+        "text": "Please place it on the weighing scale first.",
+        "blankWord": "scale",
+        "options": [
+          "scale",
+          "table",
+          "chair",
+          "box"
+        ],
+        "gujaratiHint": "ક્લાર્ક: મહેરબાની કરીને પહેલા તેને વજન કાંટા (સ્કેલ) પર મૂકો.",
+        "explanation": "વજન માપવાના મશીનને અંગ્રેજીમાં 'weighing scale' અથવા 'weighing machine' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દવાખાનામાં (At the Doctor)",
+    "dialogues": [
+      {
+        "id": "d1",
+        "speaker": "Doctor",
+        "prompt": "Doctor: What is the problem? What ___ to you?",
+        "text": "What is the problem? What happened to you?",
+        "blankWord": "happened",
+        "options": [
+          "happen",
+          "happened",
+          "happening",
+          "happens"
+        ],
+        "gujaratiHint": "ડોક્ટર: શું તકલીફ છે? તમને શું થયું છે?",
+        "explanation": "ભૂતકાળની ઘટના પૂછવા માટે ક્રિયાપદનું ભૂતકાળનું રૂપ 'happened' યોગ્ય છે."
+      },
+      {
+        "id": "d2",
+        "speaker": "Patient",
+        "prompt": "Patient: I have a ___ since yesterday.",
+        "text": "I have a headache since yesterday.",
+        "blankWord": "headache",
+        "options": [
+          "painful",
+          "headache",
+          "aching",
+          "hurt"
+        ],
+        "gujaratiHint": "દર્દી: મને ગઈકાલથી માથું દુખે છે.",
+        "explanation": "નામ તરીકે 'headache' (માથાનો દુખાવો) વપરાય છે."
+      },
+      {
+        "id": "d3",
+        "speaker": "Doctor",
+        "prompt": "Doctor: Take this medicine ___ a day.",
+        "text": "Take this medicine twice a day.",
+        "blankWord": "twice",
+        "options": [
+          "two",
+          "twice",
+          "double",
+          "second"
+        ],
+        "gujaratiHint": "ડોક્ટર: આ દવા દિવસમાં બે વાર લેજો.",
+        "explanation": "દિવસમાં કેટલી વાર તે દર્શાવવા માટે 'twice' (બે વાર) નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દુકાનદાર સાથે (At the Shop)",
+    "dialogues": [
+      {
+        "id": "d4",
+        "speaker": "Customer",
+        "prompt": "Customer: How ___ is this shirt?",
+        "text": "How much is this shirt?",
+        "blankWord": "much",
+        "options": [
+          "many",
+          "much",
+          "cost",
+          "price"
+        ],
+        "gujaratiHint": "ગ્રાહક: આ શર્ટની કિંમત કેટલી છે?",
+        "explanation": "કિંમત પૂછવા માટે સામાન્ય રીતે 'How much' નો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d5",
+        "speaker": "Shopkeeper",
+        "prompt": "Shopkeeper: It ___ five hundred rupees.",
+        "text": "It costs five hundred rupees.",
+        "blankWord": "costs",
+        "options": [
+          "cost",
+          "costs",
+          "costing",
+          "price"
+        ],
+        "gujaratiHint": "દુકાનદાર: તેની કિંમત ૫૦૦ રૂપિયા છે.",
+        "explanation": "It (ત્રીજો પુરુષ એકવચન) કર્તા હોવાથી ક્રિયાપદને 's' લાગીને 'costs' બને છે."
+      }
+    ]
+  },
+  {
+    "situation": "બસ સ્ટેશન પર (At the Bus Station)",
+    "dialogues": [
+      {
+        "id": "d6",
+        "speaker": "Passenger",
+        "prompt": "Passenger: When ___ the bus to Ahmedabad leave?",
+        "text": "When does the bus to Ahmedabad leave?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: અમદાવાદ જવાની બસ ક્યારે ઉપડશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં ત્રીજો પુરુષ એકવચન કર્તા (the bus) હોવાથી પ્રશ્નાર્થ માટે 'does' વપરાય છે."
+      },
+      {
+        "id": "d7",
+        "speaker": "Clerk",
+        "prompt": "Clerk: It ___ at 4:30 PM from platform three.",
+        "text": "It leaves at 4:30 PM from platform three.",
+        "blankWord": "leaves",
+        "options": [
+          "leave",
+          "leaves",
+          "leaving",
+          "left"
+        ],
+        "gujaratiHint": "ક્લાર્ક: તે સાંજે ૪:૩૦ વાગ્યે પ્લેટફોર્મ નંબર ૩ પરથી ઉપડશે.",
+        "explanation": "સમયપત્રકની નિયમિત ઘટના દર્શાવવા માટે સાદા વર્તમાનકાળનું 'leaves' ક્રિયાપદ આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલમાં ઓર્ડર આપતી વખતે (At the Restaurant)",
+    "dialogues": [
+      {
+        "id": "d8",
+        "speaker": "Waiter",
+        "prompt": "Waiter: Are you ready to ___ now?",
+        "text": "Are you ready to order now?",
+        "blankWord": "order",
+        "options": [
+          "eat",
+          "order",
+          "drink",
+          "pay"
+        ],
+        "gujaratiHint": "વેઈટર: શું આપ અત્યારે ઓર્ડર આપવા માટે તૈયાર છો?",
+        "explanation": "જમવાનું મંગાવવા માટે 'order' શબ્દનો ઉપયોગ થાય છે."
+      },
+      {
+        "id": "d9",
+        "speaker": "Customer",
+        "prompt": "Customer: Yes, we ___ two plates of Gujarati Thali, please.",
+        "text": "Yes, we want two plates of Gujarati Thali, please.",
+        "blankWord": "want",
+        "options": [
+          "want",
+          "wants",
+          "wanted",
+          "wanting"
+        ],
+        "gujaratiHint": "ગ્રાહક: હા, અમને બે પ્લેટ ગુજરાતી થાળી આપો.",
+        "explanation": "We (બહુવચન) કર્તા હોવાથી ક્રિયાપદનું મૂળ રૂપ 'want' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રસ્તો પૂછતી વખતે (Asking for Directions)",
+    "dialogues": [
+      {
+        "id": "d10",
+        "speaker": "Traveler",
+        "prompt": "Traveler: Excuse me, can you tell me the ___ to the bank?",
+        "text": "Excuse me, can you tell me the way to the bank?",
+        "blankWord": "way",
+        "options": [
+          "way",
+          "road",
+          "street",
+          "map"
+        ],
+        "gujaratiHint": "પ્રવાસી: માફ કરજો, શું તમે મને બેંકનો રસ્તો બતાવી શકશો?",
+        "explanation": "કોઈ ચોક્કસ સ્થાન સુધી પહોંચવાનો રસ્તો પૂછવા 'the way to' વપરાય છે."
+      },
+      {
+        "id": "d11",
+        "speaker": "Local Person",
+        "prompt": "Local Person: Go straight and ___ left at the corner.",
+        "text": "Go straight and turn left at the corner.",
+        "blankWord": "turn",
+        "options": [
+          "go",
+          "turn",
+          "take",
+          "walk"
+        ],
+        "gujaratiHint": "સ્થાનિક વ્યક્તિ: સીધા જાઓ અને ખૂણા પરથી ડાબી બાજુ વળો.",
+        "explanation": "દિશા બદલવા માટે ક્રિયાપદ તરીકે 'turn' વપરાય છે (turn left/right)."
+      }
+    ]
+  },
+  {
+    "situation": "પરિચય આપતી વખતે (Introducing Yourself)",
+    "dialogues": [
+      {
+        "id": "d12",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Hello! My name is Rohan. What ___ your name?",
+        "text": "Hello! My name is Rohan. What is your name?",
+        "blankWord": "is",
+        "options": [
+          "are",
+          "is",
+          "am",
+          "be"
+        ],
+        "gujaratiHint": "રોહન: નમસ્તે! મારું નામ રોહન છે. તમારું નામ શું છે?",
+        "explanation": "એકવચન કર્તાના નામ પૂછવા માટે સાદા વર્તમાનકાળમાં 'is' વપરાય છે."
+      },
+      {
+        "id": "d13",
+        "speaker": "Smit",
+        "prompt": "Smit: Nice to ___ you, Rohan. I am Smit.",
+        "text": "Nice to meet you, Rohan. I am Smit.",
+        "blankWord": "meet",
+        "options": [
+          "meet",
+          "meeting",
+          "met",
+          "meets"
+        ],
+        "gujaratiHint": "સ્મિત: તમને મળીને આનંદ થયો, રોહન. હું સ્મિત છું.",
+        "explanation": "'Nice to meet you' એ કોઈને પહેલી વાર મળતી વખતે વપરાતું ચોક્કસ અભિવાદન છે."
+      }
+    ]
+  },
+  {
+    "situation": "બેંકમાં (At the Bank)",
+    "dialogues": [
+      {
+        "id": "d14",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to ___ some money from my account.",
+        "text": "I want to withdraw some money from my account.",
+        "blankWord": "withdraw",
+        "options": [
+          "withdraw",
+          "deposit",
+          "give",
+          "send"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે મારા ખાતામાંથી થોડા રૂપિયા ઉપાડવા છે.",
+        "explanation": "બેંક ખાતામાંથી પૈસા ઉપાડવા માટે 'withdraw' શબ્દનો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d15",
+        "speaker": "Cashier",
+        "prompt": "Cashier: Sure, please fill out this ___ slip first.",
+        "text": "Sure, please fill out this withdrawal slip first.",
+        "blankWord": "withdrawal",
+        "options": [
+          "deposit",
+          "withdrawal",
+          "cheque",
+          "passbook"
+        ],
+        "gujaratiHint": "કેશિયર: ચોક્કસ, મહેરબાની કરીને પહેલા આ વિથડ્રોઅલ સ્લિપ ભરો.",
+        "explanation": "પૈસા ઉપાડવા માટે વપરાતા ફોર્મને 'withdrawal slip' કહેવામાં આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "વર્ગખંડમાં (At the School)",
+    "dialogues": [
+      {
+        "id": "d16",
+        "speaker": "Teacher",
+        "prompt": "Teacher: Why ___ you absent yesterday, Rohan?",
+        "text": "Why were you absent yesterday, Rohan?",
+        "blankWord": "were",
+        "options": [
+          "was",
+          "were",
+          "are",
+          "did"
+        ],
+        "gujaratiHint": "શિક્ષક: રોહન, તું ગઈકાલે કેમ ગેરહાજર હતો?",
+        "explanation": "ભૂતકાળમાં 'you' કર્તા સાથે સહાયકારક ક્રિયાપદ 'were' વપરાય છે."
+      },
+      {
+        "id": "d17",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Sir, I ___ not well yesterday. I had a fever.",
+        "text": "Sir, I was not well yesterday. I had a fever.",
+        "blankWord": "was",
+        "options": [
+          "was",
+          "were",
+          "am",
+          "had"
+        ],
+        "gujaratiHint": "રોહન: સર, ગઈકાલે મારી તબિયત સારી નહોતી. મને તાવ હતો.",
+        "explanation": "ભૂતકાળમાં 'I' કર્તા સાથે સ્થિતિ દર્શાવવા 'was' નો પ્રયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હવામાનની ચર્ચા (Weather Talk)",
+    "dialogues": [
+      {
+        "id": "d18",
+        "speaker": "Aarav",
+        "prompt": "Aarav: It is very ___ today, isn't it?",
+        "text": "It is very hot today, isn't it?",
+        "blankWord": "hot",
+        "options": [
+          "cold",
+          "hot",
+          "rainy",
+          "windy"
+        ],
+        "gujaratiHint": "આરવ: આજે ખૂબ ગરમી છે, ખરું ને?",
+        "explanation": "ઉનાળાના વાતાવરણની સ્થિતિને દર્શાવવા માટે 'hot' વપરાયું છે."
+      },
+      {
+        "id": "d19",
+        "speaker": "Soham",
+        "prompt": "Soham: Yes, I think it ___ rain tonight.",
+        "text": "Yes, I think it might rain tonight.",
+        "blankWord": "might",
+        "options": [
+          "might",
+          "must",
+          "should",
+          "shall"
+        ],
+        "gujaratiHint": "સોહમ: હા, મને લાગે છે કે આજે રાત્રે વરસાદ પડી શકે છે.",
+        "explanation": "ભવિષ્યમાં વરસાદ પડવાની અનિશ્ચિત શક્યતા દર્શાવવા 'might' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રેલવે સ્ટેશન પર (At the Railway Station)",
+    "dialogues": [
+      {
+        "id": "d20",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Which platform ___ the train to Mumbai arrive on?",
+        "text": "Which platform does the train to Mumbai arrive on?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: મુંબઈની ટ્રેન કયા પ્લેટફોર્મ પર આવશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં એકવચન કર્તા (the train) સાથે પ્રશ્નાર્થ બનાવવા 'does' આવે."
+      },
+      {
+        "id": "d21",
+        "speaker": "Inquiry Clerk",
+        "prompt": "Inquiry Clerk: It usually ___ on platform number four.",
+        "text": "It usually arrives on platform number four.",
+        "blankWord": "arrives",
+        "options": [
+          "arrive",
+          "arrives",
+          "arrived",
+          "arriving"
+        ],
+        "gujaratiHint": "પૂછપરછ ક્લાર્ક: તે સામાન્ય રીતે પ્લેટફોર્મ નંબર ૪ પર આવે છે.",
+        "explanation": "નિયમિત ઘટના હોવાથી ત્રીજો પુરુષ એકવચન 'It' સાથે ક્રિયાપદ 'arrives' આવશે."
+      }
+    ]
+  },
+  {
+    "situation": "શાકભાજીની ખરીદી (Buying Vegetables)",
+    "dialogues": [
+      {
+        "id": "d22",
+        "speaker": "Buyer",
+        "prompt": "Buyer: What is the ___ of potatoes per kg?",
+        "text": "What is the price of potatoes per kg?",
+        "blankWord": "price",
+        "options": [
+          "price",
+          "cost",
+          "money",
+          "rupees"
+        ],
+        "gujaratiHint": "ખરીદનાર: બટાકાનો પ્રતિ કિલો ભાવ શું છે?",
+        "explanation": "કોઈ વસ્તુની બજાર કિંમત પૂછવા માટે સામાન્ય નામ તરીકે 'price' વપરાય છે."
+      },
+      {
+        "id": "d23",
+        "speaker": "Seller",
+        "prompt": "Seller: It is forty rupees ___ kilogram, sir.",
+        "text": "It is forty rupees per kilogram, sir.",
+        "blankWord": "per",
+        "options": [
+          "for",
+          "per",
+          "in",
+          "by"
+        ],
+        "gujaratiHint": "વેચનાર: સર, ચાલીસ રૂપિયા કિલો છે.",
+        "explanation": "પ્રતિ એકમ દર્શાવવા માટે 'per' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ટેક્સી બુક કરતી વખતે (Booking a Taxi)",
+    "dialogues": [
+      {
+        "id": "d24",
+        "speaker": "Rider",
+        "prompt": "Rider: I want to ___ a cab to the airport.",
+        "text": "I want to book a cab to the airport.",
+        "blankWord": "book",
+        "options": [
+          "book",
+          "call",
+          "take",
+          "rent"
+        ],
+        "gujaratiHint": "મુસાફર: મારે એરપોર્ટ માટે ટેક્સી બુક કરવી છે.",
+        "explanation": "ગાડી અગાઉથી આરક્ષિત કરવા માટે 'book' શબ્દ યોગ્ય છે."
+      },
+      {
+        "id": "d25",
+        "speaker": "Operator",
+        "prompt": "Operator: Alright, the driver ___ arrive in five minutes.",
+        "text": "Alright, the driver will arrive in five minutes.",
+        "blankWord": "will",
+        "options": [
+          "will",
+          "would",
+          "shall",
+          "is"
+        ],
+        "gujaratiHint": "ઓપરેટર: બરાબર, ડ્રાઈવર પાંચ મિનિટમાં આવી જશે.",
+        "explanation": "ટૂંક સમયમાં થનારી ભવિષ્યની ઘટના માટે 'will' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ફોન પર વાતચીત (Phone Conversation)",
+    "dialogues": [
+      {
+        "id": "d26",
+        "speaker": "Caller",
+        "prompt": "Caller: Hello, ___ I speak to Amit, please?",
+        "text": "Hello, may I speak to Amit, please?",
+        "blankWord": "may",
+        "options": [
+          "may",
+          "should",
+          "must",
+          "will"
+        ],
+        "gujaratiHint": "કોલર: નમસ્તે, શું હું અમિત સાથે વાત કરી શકું?",
+        "explanation": "ફોન પર નમ્રતાપૂર્વક પરવાનગી મેળવવા 'may' અથવા 'could' નો ઉપયોગ કરાય છે."
+      },
+      {
+        "id": "d27",
+        "speaker": "Receiver",
+        "prompt": "Receiver: Sorry, he is not at home. Can I take a ___?",
+        "text": "Sorry, he is not at home. Can I take a message?",
+        "blankWord": "message",
+        "options": [
+          "message",
+          "letter",
+          "note",
+          "call"
+        ],
+        "gujaratiHint": "સામેની વ્યક્તિ: માફ કરજો, તે ઘરે નથી. શું હું કોઈ સંદેશો લઈ શકું?",
+        "explanation": "કોઈના વતી વાત સાંભળીને પહોંચાડવા માટે 'take a message' ફ્રેઝ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલ ચેક-ઈન (At the Hotel Check-in)",
+    "dialogues": [
+      {
+        "id": "d28",
+        "speaker": "Guest",
+        "prompt": "Guest: Hello, I have a ___ under the name of Patel.",
+        "text": "Hello, I have a reservation under the name of Patel.",
+        "blankWord": "reservation",
+        "options": [
+          "reservation",
+          "room",
+          "ticket",
+          "bill"
+        ],
+        "gujaratiHint": "મહેમાન: નમસ્તે, મારે પટેલ નામ હેઠળ બુકિંગ (આરક્ષણ) છે.",
+        "explanation": "હોટેલમાં પહેલેથી નક્કી કરાયેલા રૂમ માટે 'reservation' અથવા 'booking' બોલાય છે."
+      },
+      {
+        "id": "d29",
+        "speaker": "Receptionist",
+        "prompt": "Receptionist: Yes sir, here is your room ___.",
+        "text": "Yes sir, here is your room key.",
+        "blankWord": "key",
+        "options": [
+          "key",
+          "card",
+          "lock",
+          "number"
+        ],
+        "gujaratiHint": "રિસેપ્શનિસ્ટ: હા સર, આ રહી તમારા રૂમની ચાવી.",
+        "explanation": "રૂમ ખોલવા માટે આપવામાં આવતી ભૌતિક કે ઇલેક્ટ્રોનિક વસ્તુ માટે 'key' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "લાઇબ્રેરીમાં (At the Library)",
+    "dialogues": [
+      {
+        "id": "d30",
+        "speaker": "Student",
+        "prompt": "Student: Can I ___ this grammar book for a week?",
+        "text": "Can I borrow this grammar book for a week?",
+        "blankWord": "borrow",
+        "options": [
+          "borrow",
+          "lend",
+          "take",
+          "buy"
+        ],
+        "gujaratiHint": "વિદ્યાર્થી: શું હું આ વ્યાકરણનું પુસ્તક એક અઠવાડિયા માટે ઉધાર લઈ શકું?",
+        "explanation": "બીજાની પાસેથી વાંચીને પાછું આપવાની શરતે લેવા માટે 'borrow' શબ્દ વપરાય છે."
+      },
+      {
+        "id": "d31",
+        "speaker": "Librarian",
+        "prompt": "Librarian: Yes, but make sure to ___ it on time.",
+        "text": "Yes, but make sure to return it on time.",
+        "blankWord": "return",
+        "options": [
+          "return",
+          "give",
+          "keep",
+          "lose"
+        ],
+        "gujaratiHint": "ગ્રંથપાલ: હા, પણ તેને સમયસર પરત કરવાનું ભૂલતા નહિ.",
+        "explanation": "પુસ્તકાલયનું પુસ્તક પાછું આપવા માટે 'return' શબ્દ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "શોખ વિશે વાતચીત (Talking about Hobbies)",
+    "dialogues": [
+      {
+        "id": "d32",
+        "speaker": "Kabir",
+        "prompt": "Kabir: What do you like to do in your ___ time?",
+        "text": "What do you like to do in your free time?",
+        "blankWord": "free",
+        "options": [
+          "busy",
+          "free",
+          "working",
+          "study"
+        ],
+        "gujaratiHint": "કબીર: તમને તમારા નવરાશના સમયમાં શું કરવું ગમે છે?",
+        "explanation": "નવરાશના કે વધારાના સમય માટે 'free time' અથવા 'leisure time' વપરાય છે."
+      },
+      {
+        "id": "d33",
+        "speaker": "Meera",
+        "prompt": "Meera: I am fond ___ reading novels.",
+        "text": "I am fond of reading novels.",
+        "blankWord": "of",
+        "options": [
+          "of",
+          "for",
+          "in",
+          "to"
+        ],
+        "gujaratiHint": "મીરા: મને નવલકથાઓ વાંચવાનો ખૂબ શોખ છે.",
+        "explanation": "'fond' શબ્દ સાથે હંમેશાં 'of' પ્રિપોઝિશન આવે છે (fond of doing something)."
+      }
+    ]
+  },
+  {
+    "situation": "જોબ ઈન્ટરવ્યુ (Job Interview)",
+    "dialogues": [
+      {
+        "id": "d34",
+        "speaker": "Interviewer",
+        "prompt": "Interviewer: Tell me about your educational ___.",
+        "text": "Tell me about your educational background.",
+        "blankWord": "background",
+        "options": [
+          "background",
+          "history",
+          "future",
+          "result"
+        ],
+        "gujaratiHint": "ઇન્ટરવ્યુઅર: મને તમારી શૈક્ષણિક પૃષ્ઠભૂમિ (અભ્યાસ વિશે) જણાવો.",
+        "explanation": "વ્યક્તિના ભૂતકાળના અભ્યાસ અને ડિગ્રીઓની માહિતી માટે 'educational background' વપરાય છે."
+      },
+      {
+        "id": "d35",
+        "speaker": "Candidate",
+        "prompt": "Candidate: I have ___ my graduation in computer science.",
+        "text": "I have completed my graduation in computer science.",
+        "blankWord": "completed",
+        "options": [
+          "complete",
+          "completed",
+          "finish",
+          "done"
+        ],
+        "gujaratiHint": "ઉમેદવાર: મેં કમ્પ્યુટર સાયન્સમાં મારું ગ્રેજ્યુએશન પૂરું કર્યું છે.",
+        "explanation": "પૂર્ણ વર્તમાનકાળની રચનામાં 'have' પછી ભૂતકૃદંત 'completed' યોગ્ય છે."
+      }
+    ]
+  },
+  {
+    "situation": "મિત્રને મળતી વખતે (Meeting a Friend)",
+    "dialogues": [
+      {
+        "id": "d36",
+        "speaker": "Riya",
+        "prompt": "Riya: How have you ___? We met after a long time.",
+        "text": "How have you been? We met after a long time.",
+        "blankWord": "been",
+        "options": [
+          "be",
+          "been",
+          "being",
+          "was"
+        ],
+        "gujaratiHint": "રિયા: તું કેમ છે? આપણે લાંબા સમય પછી મળ્યા.",
+        "explanation": "ઘણા સમય પછી કુશળતા પૂછવા 'How have you been?' બોલાય છે."
+      },
+      {
+        "id": "d37",
+        "speaker": "Keya",
+        "prompt": "Keya: I am doing ___! How about you?",
+        "text": "I am doing great! How about you?",
+        "blankWord": "great",
+        "options": [
+          "well",
+          "great",
+          "good",
+          "nice"
+        ],
+        "gujaratiHint": "કેયા: હું ખૂબ જ મજામાં છું! તારા શું સમાચાર છે?",
+        "explanation": "અહીં 'great' અથવા 'well' બંને આવી શકે, પણ સામાન્ય ચર્ચામાં 'doing great' નો અર્થ ઉત્તમ છું થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "એરપોર્ટ પર (At the Airport)",
+    "dialogues": [
+      {
+        "id": "d38",
+        "speaker": "Agent",
+        "prompt": "Agent: May I see your passport and ___ ticket?",
+        "text": "May I see your passport and flight ticket?",
+        "blankWord": "flight",
+        "options": [
+          "bus",
+          "train",
+          "flight",
+          "road"
+        ],
+        "gujaratiHint": "એજન્ટ: શું હું તમારો પાસપોર્ટ અને પ્લેનની (ફ્લાઇટ) ટિકિટ જોઈ શકું?",
+        "explanation": "એરપોર્ટ પર હવાઈ સફરની ટિકિટ માટે 'flight ticket' કહેવામાં આવે છે."
+      },
+      {
+        "id": "d39",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Yes, here they ___. I only have one handbag.",
+        "text": "Yes, here they are. I only have one handbag.",
+        "blankWord": "are",
+        "options": [
+          "is",
+          "are",
+          "am",
+          "were"
+        ],
+        "gujaratiHint": "મુસાફર: હા, આ રહ્યા. મારી પાસે માત્ર એક હેન્ડબેગ છે.",
+        "explanation": "બહુવચન કર્તા 'they' હોવાથી ક્રિયાપદ તરીકે 'are' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "કપડાંની ખરીદી (Shopping for Clothes)",
+    "dialogues": [
+      {
+        "id": "d40",
+        "speaker": "Customer",
+        "prompt": "Customer: Do you have this dress in a larger ___?",
+        "text": "Do you have this dress in a larger size?",
+        "blankWord": "size",
+        "options": [
+          "size",
+          "color",
+          "length",
+          "fit"
+        ],
+        "gujaratiHint": "ગ્રાહક: શું તમારી પાસે આ ડ્રેસ મોટા માપમાં (સાઈઝમાં) છે?",
+        "explanation": "કપડાંના માપને અંગ્રેજીમાં 'size' તરીકે ઓળખવામાં આવે છે."
+      },
+      {
+        "id": "d41",
+        "speaker": "Salesman",
+        "prompt": "Salesman: Yes, let me check in the ___ room.",
+        "text": "Yes, let me check in the stock room.",
+        "blankWord": "stock",
+        "options": [
+          "stock",
+          "trial",
+          "fitting",
+          "rest"
+        ],
+        "gujaratiHint": "સેલ્સમેન: હા, મને ગોદામમાં (સ્ટોક રૂમમાં) તપાસવા દો.",
+        "explanation": "જ્યાં વધારાનો સામાન રાખવામાં આવે છે તેને 'stock room' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પિકનિકનું આયોજન (Planning a Picnic)",
+    "dialogues": [
+      {
+        "id": "d42",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Where should we ___ for the picnic?",
+        "text": "Where should we go for the picnic?",
+        "blankWord": "go",
+        "options": [
+          "go",
+          "going",
+          "went",
+          "gone"
+        ],
+        "gujaratiHint": "રોહન: આપણે પિકનિક માટે ક્યાં જવું જોઈએ?",
+        "explanation": "સહાયકારક ક્રિયાપદ 'should' સાથે હંમેશાં ક્રિયાપદનું મૂળ રૂપ 'go' વપરાય છે."
+      },
+      {
+        "id": "d43",
+        "speaker": "Sneha",
+        "prompt": "Sneha: Let's go to the ___ near the lake.",
+        "text": "Let's go to the park near the lake.",
+        "blankWord": "park",
+        "options": [
+          "park",
+          "school",
+          "office",
+          "bank"
+        ],
+        "gujaratiHint": "સ્નેહા: ચાલો તળાવ નજીક આવેલા બગીચામાં (પાર્ક) જઈએ.",
+        "explanation": "પિકનિક અને કુદરતી આનંદ માટે સૌથી યોગ્ય સ્થાનોમાં 'park' નો સમાવેશ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પોસ્ટ ઓફિસમાં (At the Post Office)",
+    "dialogues": [
+      {
+        "id": "d44",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to send this ___ to Surat.",
+        "text": "I want to send this parcel to Surat.",
+        "blankWord": "parcel",
+        "options": [
+          "parcel",
+          "email",
+          "box",
+          "money"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે આ પાર્સલ સુરત મોકલવું છે.",
+        "explanation": "પોસ્ટ ઓફિસ દ્વારા મોકલવામાં આવતા સામાનના પેકેટને 'parcel' કહે છે."
+      },
+      {
+        "id": "d45",
+        "speaker": "Clerk",
+        "prompt": "Clerk: Please place it on the weighing ___ first.",
+        "text": "Please place it on the weighing scale first.",
+        "blankWord": "scale",
+        "options": [
+          "scale",
+          "table",
+          "chair",
+          "box"
+        ],
+        "gujaratiHint": "ક્લાર્ક: મહેરબાની કરીને પહેલા તેને વજન કાંટા (સ્કેલ) પર મૂકો.",
+        "explanation": "વજન માપવાના મશીનને અંગ્રેજીમાં 'weighing scale' અથવા 'weighing machine' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દવાખાનામાં (At the Doctor)",
+    "dialogues": [
+      {
+        "id": "d1",
+        "speaker": "Doctor",
+        "prompt": "Doctor: What is the problem? What ___ to you?",
+        "text": "What is the problem? What happened to you?",
+        "blankWord": "happened",
+        "options": [
+          "happen",
+          "happened",
+          "happening",
+          "happens"
+        ],
+        "gujaratiHint": "ડોક્ટર: શું તકલીફ છે? તમને શું થયું છે?",
+        "explanation": "ભૂતકાળની ઘટના પૂછવા માટે ક્રિયાપદનું ભૂતકાળનું રૂપ 'happened' યોગ્ય છે."
+      },
+      {
+        "id": "d2",
+        "speaker": "Patient",
+        "prompt": "Patient: I have a ___ since yesterday.",
+        "text": "I have a headache since yesterday.",
+        "blankWord": "headache",
+        "options": [
+          "painful",
+          "headache",
+          "aching",
+          "hurt"
+        ],
+        "gujaratiHint": "દર્દી: મને ગઈકાલથી માથું દુખે છે.",
+        "explanation": "નામ તરીકે 'headache' (માથાનો દુખાવો) વપરાય છે."
+      },
+      {
+        "id": "d3",
+        "speaker": "Doctor",
+        "prompt": "Doctor: Take this medicine ___ a day.",
+        "text": "Take this medicine twice a day.",
+        "blankWord": "twice",
+        "options": [
+          "two",
+          "twice",
+          "double",
+          "second"
+        ],
+        "gujaratiHint": "ડોક્ટર: આ દવા દિવસમાં બે વાર લેજો.",
+        "explanation": "દિવસમાં કેટલી વાર તે દર્શાવવા માટે 'twice' (બે વાર) નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દુકાનદાર સાથે (At the Shop)",
+    "dialogues": [
+      {
+        "id": "d4",
+        "speaker": "Customer",
+        "prompt": "Customer: How ___ is this shirt?",
+        "text": "How much is this shirt?",
+        "blankWord": "much",
+        "options": [
+          "many",
+          "much",
+          "cost",
+          "price"
+        ],
+        "gujaratiHint": "ગ્રાહક: આ શર્ટની કિંમત કેટલી છે?",
+        "explanation": "કિંમત પૂછવા માટે સામાન્ય રીતે 'How much' નો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d5",
+        "speaker": "Shopkeeper",
+        "prompt": "Shopkeeper: It ___ five hundred rupees.",
+        "text": "It costs five hundred rupees.",
+        "blankWord": "costs",
+        "options": [
+          "cost",
+          "costs",
+          "costing",
+          "price"
+        ],
+        "gujaratiHint": "દુકાનદાર: તેની કિંમત ૫૦૦ રૂપિયા છે.",
+        "explanation": "It (ત્રીજો પુરુષ એકવચન) કર્તા હોવાથી ક્રિયાપદને 's' લાગીને 'costs' બને છે."
+      }
+    ]
+  },
+  {
+    "situation": "બસ સ્ટેશન પર (At the Bus Station)",
+    "dialogues": [
+      {
+        "id": "d6",
+        "speaker": "Passenger",
+        "prompt": "Passenger: When ___ the bus to Ahmedabad leave?",
+        "text": "When does the bus to Ahmedabad leave?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: અમદાવાદ જવાની બસ ક્યારે ઉપડશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં ત્રીજો પુરુષ એકવચન કર્તા (the bus) હોવાથી પ્રશ્નાર્થ માટે 'does' વપરાય છે."
+      },
+      {
+        "id": "d7",
+        "speaker": "Clerk",
+        "prompt": "Clerk: It ___ at 4:30 PM from platform three.",
+        "text": "It leaves at 4:30 PM from platform three.",
+        "blankWord": "leaves",
+        "options": [
+          "leave",
+          "leaves",
+          "leaving",
+          "left"
+        ],
+        "gujaratiHint": "ક્લાર્ક: તે સાંજે ૪:૩૦ વાગ્યે પ્લેટફોર્મ નંબર ૩ પરથી ઉપડશે.",
+        "explanation": "સમયપત્રકની નિયમિત ઘટના દર્શાવવા માટે સાદા વર્તમાનકાળનું 'leaves' ક્રિયાપદ આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલમાં ઓર્ડર આપતી વખતે (At the Restaurant)",
+    "dialogues": [
+      {
+        "id": "d8",
+        "speaker": "Waiter",
+        "prompt": "Waiter: Are you ready to ___ now?",
+        "text": "Are you ready to order now?",
+        "blankWord": "order",
+        "options": [
+          "eat",
+          "order",
+          "drink",
+          "pay"
+        ],
+        "gujaratiHint": "વેઈટર: શું આપ અત્યારે ઓર્ડર આપવા માટે તૈયાર છો?",
+        "explanation": "જમવાનું મંગાવવા માટે 'order' શબ્દનો ઉપયોગ થાય છે."
+      },
+      {
+        "id": "d9",
+        "speaker": "Customer",
+        "prompt": "Customer: Yes, we ___ two plates of Gujarati Thali, please.",
+        "text": "Yes, we want two plates of Gujarati Thali, please.",
+        "blankWord": "want",
+        "options": [
+          "want",
+          "wants",
+          "wanted",
+          "wanting"
+        ],
+        "gujaratiHint": "ગ્રાહક: હા, અમને બે પ્લેટ ગુજરાતી થાળી આપો.",
+        "explanation": "We (બહુવચન) કર્તા હોવાથી ક્રિયાપદનું મૂળ રૂપ 'want' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રસ્તો પૂછતી વખતે (Asking for Directions)",
+    "dialogues": [
+      {
+        "id": "d10",
+        "speaker": "Traveler",
+        "prompt": "Traveler: Excuse me, can you tell me the ___ to the bank?",
+        "text": "Excuse me, can you tell me the way to the bank?",
+        "blankWord": "way",
+        "options": [
+          "way",
+          "road",
+          "street",
+          "map"
+        ],
+        "gujaratiHint": "પ્રવાસી: માફ કરજો, શું તમે મને બેંકનો રસ્તો બતાવી શકશો?",
+        "explanation": "કોઈ ચોક્કસ સ્થાન સુધી પહોંચવાનો રસ્તો પૂછવા 'the way to' વપરાય છે."
+      },
+      {
+        "id": "d11",
+        "speaker": "Local Person",
+        "prompt": "Local Person: Go straight and ___ left at the corner.",
+        "text": "Go straight and turn left at the corner.",
+        "blankWord": "turn",
+        "options": [
+          "go",
+          "turn",
+          "take",
+          "walk"
+        ],
+        "gujaratiHint": "સ્થાનિક વ્યક્તિ: સીધા જાઓ અને ખૂણા પરથી ડાબી બાજુ વળો.",
+        "explanation": "દિશા બદલવા માટે ક્રિયાપદ તરીકે 'turn' વપરાય છે (turn left/right)."
+      }
+    ]
+  },
+  {
+    "situation": "પરિચય આપતી વખતે (Introducing Yourself)",
+    "dialogues": [
+      {
+        "id": "d12",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Hello! My name is Rohan. What ___ your name?",
+        "text": "Hello! My name is Rohan. What is your name?",
+        "blankWord": "is",
+        "options": [
+          "are",
+          "is",
+          "am",
+          "be"
+        ],
+        "gujaratiHint": "રોહન: નમસ્તે! મારું નામ રોહન છે. તમારું નામ શું છે?",
+        "explanation": "એકવચન કર્તાના નામ પૂછવા માટે સાદા વર્તમાનકાળમાં 'is' વપરાય છે."
+      },
+      {
+        "id": "d13",
+        "speaker": "Smit",
+        "prompt": "Smit: Nice to ___ you, Rohan. I am Smit.",
+        "text": "Nice to meet you, Rohan. I am Smit.",
+        "blankWord": "meet",
+        "options": [
+          "meet",
+          "meeting",
+          "met",
+          "meets"
+        ],
+        "gujaratiHint": "સ્મિત: તમને મળીને આનંદ થયો, રોહન. હું સ્મિત છું.",
+        "explanation": "'Nice to meet you' એ કોઈને પહેલી વાર મળતી વખતે વપરાતું ચોક્કસ અભિવાદન છે."
+      }
+    ]
+  },
+  {
+    "situation": "બેંકમાં (At the Bank)",
+    "dialogues": [
+      {
+        "id": "d14",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to ___ some money from my account.",
+        "text": "I want to withdraw some money from my account.",
+        "blankWord": "withdraw",
+        "options": [
+          "withdraw",
+          "deposit",
+          "give",
+          "send"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે મારા ખાતામાંથી થોડા રૂપિયા ઉપાડવા છે.",
+        "explanation": "બેંક ખાતામાંથી પૈસા ઉપાડવા માટે 'withdraw' શબ્દનો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d15",
+        "speaker": "Cashier",
+        "prompt": "Cashier: Sure, please fill out this ___ slip first.",
+        "text": "Sure, please fill out this withdrawal slip first.",
+        "blankWord": "withdrawal",
+        "options": [
+          "deposit",
+          "withdrawal",
+          "cheque",
+          "passbook"
+        ],
+        "gujaratiHint": "કેશિયર: ચોક્કસ, મહેરબાની કરીને પહેલા આ વિથડ્રોઅલ સ્લિપ ભરો.",
+        "explanation": "પૈસા ઉપાડવા માટે વપરાતા ફોર્મને 'withdrawal slip' કહેવામાં આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "વર્ગખંડમાં (At the School)",
+    "dialogues": [
+      {
+        "id": "d16",
+        "speaker": "Teacher",
+        "prompt": "Teacher: Why ___ you absent yesterday, Rohan?",
+        "text": "Why were you absent yesterday, Rohan?",
+        "blankWord": "were",
+        "options": [
+          "was",
+          "were",
+          "are",
+          "did"
+        ],
+        "gujaratiHint": "શિક્ષક: રોહન, તું ગઈકાલે કેમ ગેરહાજર હતો?",
+        "explanation": "ભૂતકાળમાં 'you' કર્તા સાથે સહાયકારક ક્રિયાપદ 'were' વપરાય છે."
+      },
+      {
+        "id": "d17",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Sir, I ___ not well yesterday. I had a fever.",
+        "text": "Sir, I was not well yesterday. I had a fever.",
+        "blankWord": "was",
+        "options": [
+          "was",
+          "were",
+          "am",
+          "had"
+        ],
+        "gujaratiHint": "રોહન: સર, ગઈકાલે મારી તબિયત સારી નહોતી. મને તાવ હતો.",
+        "explanation": "ભૂતકાળમાં 'I' કર્તા સાથે સ્થિતિ દર્શાવવા 'was' નો પ્રયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હવામાનની ચર્ચા (Weather Talk)",
+    "dialogues": [
+      {
+        "id": "d18",
+        "speaker": "Aarav",
+        "prompt": "Aarav: It is very ___ today, isn't it?",
+        "text": "It is very hot today, isn't it?",
+        "blankWord": "hot",
+        "options": [
+          "cold",
+          "hot",
+          "rainy",
+          "windy"
+        ],
+        "gujaratiHint": "આરવ: આજે ખૂબ ગરમી છે, ખરું ને?",
+        "explanation": "ઉનાળાના વાતાવરણની સ્થિતિને દર્શાવવા માટે 'hot' વપરાયું છે."
+      },
+      {
+        "id": "d19",
+        "speaker": "Soham",
+        "prompt": "Soham: Yes, I think it ___ rain tonight.",
+        "text": "Yes, I think it might rain tonight.",
+        "blankWord": "might",
+        "options": [
+          "might",
+          "must",
+          "should",
+          "shall"
+        ],
+        "gujaratiHint": "સોહમ: હા, મને લાગે છે કે આજે રાત્રે વરસાદ પડી શકે છે.",
+        "explanation": "ભવિષ્યમાં વરસાદ પડવાની અનિશ્ચિત શક્યતા દર્શાવવા 'might' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રેલવે સ્ટેશન પર (At the Railway Station)",
+    "dialogues": [
+      {
+        "id": "d20",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Which platform ___ the train to Mumbai arrive on?",
+        "text": "Which platform does the train to Mumbai arrive on?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: મુંબઈની ટ્રેન કયા પ્લેટફોર્મ પર આવશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં એકવચન કર્તા (the train) સાથે પ્રશ્નાર્થ બનાવવા 'does' આવે."
+      },
+      {
+        "id": "d21",
+        "speaker": "Inquiry Clerk",
+        "prompt": "Inquiry Clerk: It usually ___ on platform number four.",
+        "text": "It usually arrives on platform number four.",
+        "blankWord": "arrives",
+        "options": [
+          "arrive",
+          "arrives",
+          "arrived",
+          "arriving"
+        ],
+        "gujaratiHint": "પૂછપરછ ક્લાર્ક: તે સામાન્ય રીતે પ્લેટફોર્મ નંબર ૪ પર આવે છે.",
+        "explanation": "નિયમિત ઘટના હોવાથી ત્રીજો પુરુષ એકવચન 'It' સાથે ક્રિયાપદ 'arrives' આવશે."
+      }
+    ]
+  },
+  {
+    "situation": "શાકભાજીની ખરીદી (Buying Vegetables)",
+    "dialogues": [
+      {
+        "id": "d22",
+        "speaker": "Buyer",
+        "prompt": "Buyer: What is the ___ of potatoes per kg?",
+        "text": "What is the price of potatoes per kg?",
+        "blankWord": "price",
+        "options": [
+          "price",
+          "cost",
+          "money",
+          "rupees"
+        ],
+        "gujaratiHint": "ખરીદનાર: બટાકાનો પ્રતિ કિલો ભાવ શું છે?",
+        "explanation": "કોઈ વસ્તુની બજાર કિંમત પૂછવા માટે સામાન્ય નામ તરીકે 'price' વપરાય છે."
+      },
+      {
+        "id": "d23",
+        "speaker": "Seller",
+        "prompt": "Seller: It is forty rupees ___ kilogram, sir.",
+        "text": "It is forty rupees per kilogram, sir.",
+        "blankWord": "per",
+        "options": [
+          "for",
+          "per",
+          "in",
+          "by"
+        ],
+        "gujaratiHint": "વેચનાર: સર, ચાલીસ રૂપિયા કિલો છે.",
+        "explanation": "પ્રતિ એકમ દર્શાવવા માટે 'per' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ટેક્સી બુક કરતી વખતે (Booking a Taxi)",
+    "dialogues": [
+      {
+        "id": "d24",
+        "speaker": "Rider",
+        "prompt": "Rider: I want to ___ a cab to the airport.",
+        "text": "I want to book a cab to the airport.",
+        "blankWord": "book",
+        "options": [
+          "book",
+          "call",
+          "take",
+          "rent"
+        ],
+        "gujaratiHint": "મુસાફર: મારે એરપોર્ટ માટે ટેક્સી બુક કરવી છે.",
+        "explanation": "ગાડી અગાઉથી આરક્ષિત કરવા માટે 'book' શબ્દ યોગ્ય છે."
+      },
+      {
+        "id": "d25",
+        "speaker": "Operator",
+        "prompt": "Operator: Alright, the driver ___ arrive in five minutes.",
+        "text": "Alright, the driver will arrive in five minutes.",
+        "blankWord": "will",
+        "options": [
+          "will",
+          "would",
+          "shall",
+          "is"
+        ],
+        "gujaratiHint": "ઓપરેટર: બરાબર, ડ્રાઈવર પાંચ મિનિટમાં આવી જશે.",
+        "explanation": "ટૂંક સમયમાં થનારી ભવિષ્યની ઘટના માટે 'will' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ફોન પર વાતચીત (Phone Conversation)",
+    "dialogues": [
+      {
+        "id": "d26",
+        "speaker": "Caller",
+        "prompt": "Caller: Hello, ___ I speak to Amit, please?",
+        "text": "Hello, may I speak to Amit, please?",
+        "blankWord": "may",
+        "options": [
+          "may",
+          "should",
+          "must",
+          "will"
+        ],
+        "gujaratiHint": "કોલર: નમસ્તે, શું હું અમિત સાથે વાત કરી શકું?",
+        "explanation": "ફોન પર નમ્રતાપૂર્વક પરવાનગી મેળવવા 'may' અથવા 'could' નો ઉપયોગ કરાય છે."
+      },
+      {
+        "id": "d27",
+        "speaker": "Receiver",
+        "prompt": "Receiver: Sorry, he is not at home. Can I take a ___?",
+        "text": "Sorry, he is not at home. Can I take a message?",
+        "blankWord": "message",
+        "options": [
+          "message",
+          "letter",
+          "note",
+          "call"
+        ],
+        "gujaratiHint": "સામેની વ્યક્તિ: માફ કરજો, તે ઘરે નથી. શું હું કોઈ સંદેશો લઈ શકું?",
+        "explanation": "કોઈના વતી વાત સાંભળીને પહોંચાડવા માટે 'take a message' ફ્રેઝ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલ ચેક-ઈન (At the Hotel Check-in)",
+    "dialogues": [
+      {
+        "id": "d28",
+        "speaker": "Guest",
+        "prompt": "Guest: Hello, I have a ___ under the name of Patel.",
+        "text": "Hello, I have a reservation under the name of Patel.",
+        "blankWord": "reservation",
+        "options": [
+          "reservation",
+          "room",
+          "ticket",
+          "bill"
+        ],
+        "gujaratiHint": "મહેમાન: નમસ્તે, મારે પટેલ નામ હેઠળ બુકિંગ (આરક્ષણ) છે.",
+        "explanation": "હોટેલમાં પહેલેથી નક્કી કરાયેલા રૂમ માટે 'reservation' અથવા 'booking' બોલાય છે."
+      },
+      {
+        "id": "d29",
+        "speaker": "Receptionist",
+        "prompt": "Receptionist: Yes sir, here is your room ___.",
+        "text": "Yes sir, here is your room key.",
+        "blankWord": "key",
+        "options": [
+          "key",
+          "card",
+          "lock",
+          "number"
+        ],
+        "gujaratiHint": "રિસેપ્શનિસ્ટ: હા સર, આ રહી તમારા રૂમની ચાવી.",
+        "explanation": "રૂમ ખોલવા માટે આપવામાં આવતી ભૌતિક કે ઇલેક્ટ્રોનિક વસ્તુ માટે 'key' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "લાઇબ્રેરીમાં (At the Library)",
+    "dialogues": [
+      {
+        "id": "d30",
+        "speaker": "Student",
+        "prompt": "Student: Can I ___ this grammar book for a week?",
+        "text": "Can I borrow this grammar book for a week?",
+        "blankWord": "borrow",
+        "options": [
+          "borrow",
+          "lend",
+          "take",
+          "buy"
+        ],
+        "gujaratiHint": "વિદ્યાર્થી: શું હું આ વ્યાકરણનું પુસ્તક એક અઠવાડિયા માટે ઉધાર લઈ શકું?",
+        "explanation": "બીજાની પાસેથી વાંચીને પાછું આપવાની શરતે લેવા માટે 'borrow' શબ્દ વપરાય છે."
+      },
+      {
+        "id": "d31",
+        "speaker": "Librarian",
+        "prompt": "Librarian: Yes, but make sure to ___ it on time.",
+        "text": "Yes, but make sure to return it on time.",
+        "blankWord": "return",
+        "options": [
+          "return",
+          "give",
+          "keep",
+          "lose"
+        ],
+        "gujaratiHint": "ગ્રંથપાલ: હા, પણ તેને સમયસર પરત કરવાનું ભૂલતા નહિ.",
+        "explanation": "પુસ્તકાલયનું પુસ્તક પાછું આપવા માટે 'return' શબ્દ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "શોખ વિશે વાતચીત (Talking about Hobbies)",
+    "dialogues": [
+      {
+        "id": "d32",
+        "speaker": "Kabir",
+        "prompt": "Kabir: What do you like to do in your ___ time?",
+        "text": "What do you like to do in your free time?",
+        "blankWord": "free",
+        "options": [
+          "busy",
+          "free",
+          "working",
+          "study"
+        ],
+        "gujaratiHint": "કબીર: તમને તમારા નવરાશના સમયમાં શું કરવું ગમે છે?",
+        "explanation": "નવરાશના કે વધારાના સમય માટે 'free time' અથવા 'leisure time' વપરાય છે."
+      },
+      {
+        "id": "d33",
+        "speaker": "Meera",
+        "prompt": "Meera: I am fond ___ reading novels.",
+        "text": "I am fond of reading novels.",
+        "blankWord": "of",
+        "options": [
+          "of",
+          "for",
+          "in",
+          "to"
+        ],
+        "gujaratiHint": "મીરા: મને નવલકથાઓ વાંચવાનો ખૂબ શોખ છે.",
+        "explanation": "'fond' શબ્દ સાથે હંમેશાં 'of' પ્રિપોઝિશન આવે છે (fond of doing something)."
+      }
+    ]
+  },
+  {
+    "situation": "જોબ ઈન્ટરવ્યુ (Job Interview)",
+    "dialogues": [
+      {
+        "id": "d34",
+        "speaker": "Interviewer",
+        "prompt": "Interviewer: Tell me about your educational ___.",
+        "text": "Tell me about your educational background.",
+        "blankWord": "background",
+        "options": [
+          "background",
+          "history",
+          "future",
+          "result"
+        ],
+        "gujaratiHint": "ઇન્ટરવ્યુઅર: મને તમારી શૈક્ષણિક પૃષ્ઠભૂમિ (અભ્યાસ વિશે) જણાવો.",
+        "explanation": "વ્યક્તિના ભૂતકાળના અભ્યાસ અને ડિગ્રીઓની માહિતી માટે 'educational background' વપરાય છે."
+      },
+      {
+        "id": "d35",
+        "speaker": "Candidate",
+        "prompt": "Candidate: I have ___ my graduation in computer science.",
+        "text": "I have completed my graduation in computer science.",
+        "blankWord": "completed",
+        "options": [
+          "complete",
+          "completed",
+          "finish",
+          "done"
+        ],
+        "gujaratiHint": "ઉમેદવાર: મેં કમ્પ્યુટર સાયન્સમાં મારું ગ્રેજ્યુએશન પૂરું કર્યું છે.",
+        "explanation": "પૂર્ણ વર્તમાનકાળની રચનામાં 'have' પછી ભૂતકૃદંત 'completed' યોગ્ય છે."
+      }
+    ]
+  },
+  {
+    "situation": "મિત્રને મળતી વખતે (Meeting a Friend)",
+    "dialogues": [
+      {
+        "id": "d36",
+        "speaker": "Riya",
+        "prompt": "Riya: How have you ___? We met after a long time.",
+        "text": "How have you been? We met after a long time.",
+        "blankWord": "been",
+        "options": [
+          "be",
+          "been",
+          "being",
+          "was"
+        ],
+        "gujaratiHint": "રિયા: તું કેમ છે? આપણે લાંબા સમય પછી મળ્યા.",
+        "explanation": "ઘણા સમય પછી કુશળતા પૂછવા 'How have you been?' બોલાય છે."
+      },
+      {
+        "id": "d37",
+        "speaker": "Keya",
+        "prompt": "Keya: I am doing ___! How about you?",
+        "text": "I am doing great! How about you?",
+        "blankWord": "great",
+        "options": [
+          "well",
+          "great",
+          "good",
+          "nice"
+        ],
+        "gujaratiHint": "કેયા: હું ખૂબ જ મજામાં છું! તારા શું સમાચાર છે?",
+        "explanation": "અહીં 'great' અથવા 'well' બંને આવી શકે, પણ સામાન્ય ચર્ચામાં 'doing great' નો અર્થ ઉત્તમ છું થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "એરપોર્ટ પર (At the Airport)",
+    "dialogues": [
+      {
+        "id": "d38",
+        "speaker": "Agent",
+        "prompt": "Agent: May I see your passport and ___ ticket?",
+        "text": "May I see your passport and flight ticket?",
+        "blankWord": "flight",
+        "options": [
+          "bus",
+          "train",
+          "flight",
+          "road"
+        ],
+        "gujaratiHint": "એજન્ટ: શું હું તમારો પાસપોર્ટ અને પ્લેનની (ફ્લાઇટ) ટિકિટ જોઈ શકું?",
+        "explanation": "એરપોર્ટ પર હવાઈ સફરની ટિકિટ માટે 'flight ticket' કહેવામાં આવે છે."
+      },
+      {
+        "id": "d39",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Yes, here they ___. I only have one handbag.",
+        "text": "Yes, here they are. I only have one handbag.",
+        "blankWord": "are",
+        "options": [
+          "is",
+          "are",
+          "am",
+          "were"
+        ],
+        "gujaratiHint": "મુસાફર: હા, આ રહ્યા. મારી પાસે માત્ર એક હેન્ડબેગ છે.",
+        "explanation": "બહુવચન કર્તા 'they' હોવાથી ક્રિયાપદ તરીકે 'are' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "કપડાંની ખરીદી (Shopping for Clothes)",
+    "dialogues": [
+      {
+        "id": "d40",
+        "speaker": "Customer",
+        "prompt": "Customer: Do you have this dress in a larger ___?",
+        "text": "Do you have this dress in a larger size?",
+        "blankWord": "size",
+        "options": [
+          "size",
+          "color",
+          "length",
+          "fit"
+        ],
+        "gujaratiHint": "ગ્રાહક: શું તમારી પાસે આ ડ્રેસ મોટા માપમાં (સાઈઝમાં) છે?",
+        "explanation": "કપડાંના માપને અંગ્રેજીમાં 'size' તરીકે ઓળખવામાં આવે છે."
+      },
+      {
+        "id": "d41",
+        "speaker": "Salesman",
+        "prompt": "Salesman: Yes, let me check in the ___ room.",
+        "text": "Yes, let me check in the stock room.",
+        "blankWord": "stock",
+        "options": [
+          "stock",
+          "trial",
+          "fitting",
+          "rest"
+        ],
+        "gujaratiHint": "સેલ્સમેન: હા, મને ગોદામમાં (સ્ટોક રૂમમાં) તપાસવા દો.",
+        "explanation": "જ્યાં વધારાનો સામાન રાખવામાં આવે છે તેને 'stock room' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પિકનિકનું આયોજન (Planning a Picnic)",
+    "dialogues": [
+      {
+        "id": "d42",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Where should we ___ for the picnic?",
+        "text": "Where should we go for the picnic?",
+        "blankWord": "go",
+        "options": [
+          "go",
+          "going",
+          "went",
+          "gone"
+        ],
+        "gujaratiHint": "રોહન: આપણે પિકનિક માટે ક્યાં જવું જોઈએ?",
+        "explanation": "સહાયકારક ક્રિયાપદ 'should' સાથે હંમેશાં ક્રિયાપદનું મૂળ રૂપ 'go' વપરાય છે."
+      },
+      {
+        "id": "d43",
+        "speaker": "Sneha",
+        "prompt": "Sneha: Let's go to the ___ near the lake.",
+        "text": "Let's go to the park near the lake.",
+        "blankWord": "park",
+        "options": [
+          "park",
+          "school",
+          "office",
+          "bank"
+        ],
+        "gujaratiHint": "સ્નેહા: ચાલો તળાવ નજીક આવેલા બગીચામાં (પાર્ક) જઈએ.",
+        "explanation": "પિકનિક અને કુદરતી આનંદ માટે સૌથી યોગ્ય સ્થાનોમાં 'park' નો સમાવેશ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પોસ્ટ ઓફિસમાં (At the Post Office)",
+    "dialogues": [
+      {
+        "id": "d44",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to send this ___ to Surat.",
+        "text": "I want to send this parcel to Surat.",
+        "blankWord": "parcel",
+        "options": [
+          "parcel",
+          "email",
+          "box",
+          "money"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે આ પાર્સલ સુરત મોકલવું છે.",
+        "explanation": "પોસ્ટ ઓફિસ દ્વારા મોકલવામાં આવતા સામાનના પેકેટને 'parcel' કહે છે."
+      },
+      {
+        "id": "d45",
+        "speaker": "Clerk",
+        "prompt": "Clerk: Please place it on the weighing ___ first.",
+        "text": "Please place it on the weighing scale first.",
+        "blankWord": "scale",
+        "options": [
+          "scale",
+          "table",
+          "chair",
+          "box"
+        ],
+        "gujaratiHint": "ક્લાર્ક: મહેરબાની કરીને પહેલા તેને વજન કાંટા (સ્કેલ) પર મૂકો.",
+        "explanation": "વજન માપવાના મશીનને અંગ્રેજીમાં 'weighing scale' અથવા 'weighing machine' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દવાખાનામાં (At the Doctor)",
+    "dialogues": [
+      {
+        "id": "d1",
+        "speaker": "Doctor",
+        "prompt": "Doctor: What is the problem? What ___ to you?",
+        "text": "What is the problem? What happened to you?",
+        "blankWord": "happened",
+        "options": [
+          "happen",
+          "happened",
+          "happening",
+          "happens"
+        ],
+        "gujaratiHint": "ડોક્ટર: શું તકલીફ છે? તમને શું થયું છે?",
+        "explanation": "ભૂતકાળની ઘટના પૂછવા માટે ક્રિયાપદનું ભૂતકાળનું રૂપ 'happened' યોગ્ય છે."
+      },
+      {
+        "id": "d2",
+        "speaker": "Patient",
+        "prompt": "Patient: I have a ___ since yesterday.",
+        "text": "I have a headache since yesterday.",
+        "blankWord": "headache",
+        "options": [
+          "painful",
+          "headache",
+          "aching",
+          "hurt"
+        ],
+        "gujaratiHint": "દર્દી: મને ગઈકાલથી માથું દુખે છે.",
+        "explanation": "નામ તરીકે 'headache' (માથાનો દુખાવો) વપરાય છે."
+      },
+      {
+        "id": "d3",
+        "speaker": "Doctor",
+        "prompt": "Doctor: Take this medicine ___ a day.",
+        "text": "Take this medicine twice a day.",
+        "blankWord": "twice",
+        "options": [
+          "two",
+          "twice",
+          "double",
+          "second"
+        ],
+        "gujaratiHint": "ડોક્ટર: આ દવા દિવસમાં બે વાર લેજો.",
+        "explanation": "દિવસમાં કેટલી વાર તે દર્શાવવા માટે 'twice' (બે વાર) નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દુકાનદાર સાથે (At the Shop)",
+    "dialogues": [
+      {
+        "id": "d4",
+        "speaker": "Customer",
+        "prompt": "Customer: How ___ is this shirt?",
+        "text": "How much is this shirt?",
+        "blankWord": "much",
+        "options": [
+          "many",
+          "much",
+          "cost",
+          "price"
+        ],
+        "gujaratiHint": "ગ્રાહક: આ શર્ટની કિંમત કેટલી છે?",
+        "explanation": "કિંમત પૂછવા માટે સામાન્ય રીતે 'How much' નો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d5",
+        "speaker": "Shopkeeper",
+        "prompt": "Shopkeeper: It ___ five hundred rupees.",
+        "text": "It costs five hundred rupees.",
+        "blankWord": "costs",
+        "options": [
+          "cost",
+          "costs",
+          "costing",
+          "price"
+        ],
+        "gujaratiHint": "દુકાનદાર: તેની કિંમત ૫૦૦ રૂપિયા છે.",
+        "explanation": "It (ત્રીજો પુરુષ એકવચન) કર્તા હોવાથી ક્રિયાપદને 's' લાગીને 'costs' બને છે."
+      }
+    ]
+  },
+  {
+    "situation": "બસ સ્ટેશન પર (At the Bus Station)",
+    "dialogues": [
+      {
+        "id": "d6",
+        "speaker": "Passenger",
+        "prompt": "Passenger: When ___ the bus to Ahmedabad leave?",
+        "text": "When does the bus to Ahmedabad leave?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: અમદાવાદ જવાની બસ ક્યારે ઉપડશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં ત્રીજો પુરુષ એકવચન કર્તા (the bus) હોવાથી પ્રશ્નાર્થ માટે 'does' વપરાય છે."
+      },
+      {
+        "id": "d7",
+        "speaker": "Clerk",
+        "prompt": "Clerk: It ___ at 4:30 PM from platform three.",
+        "text": "It leaves at 4:30 PM from platform three.",
+        "blankWord": "leaves",
+        "options": [
+          "leave",
+          "leaves",
+          "leaving",
+          "left"
+        ],
+        "gujaratiHint": "ક્લાર્ક: તે સાંજે ૪:૩૦ વાગ્યે પ્લેટફોર્મ નંબર ૩ પરથી ઉપડશે.",
+        "explanation": "સમયપત્રકની નિયમિત ઘટના દર્શાવવા માટે સાદા વર્તમાનકાળનું 'leaves' ક્રિયાપદ આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલમાં ઓર્ડર આપતી વખતે (At the Restaurant)",
+    "dialogues": [
+      {
+        "id": "d8",
+        "speaker": "Waiter",
+        "prompt": "Waiter: Are you ready to ___ now?",
+        "text": "Are you ready to order now?",
+        "blankWord": "order",
+        "options": [
+          "eat",
+          "order",
+          "drink",
+          "pay"
+        ],
+        "gujaratiHint": "વેઈટર: શું આપ અત્યારે ઓર્ડર આપવા માટે તૈયાર છો?",
+        "explanation": "જમવાનું મંગાવવા માટે 'order' શબ્દનો ઉપયોગ થાય છે."
+      },
+      {
+        "id": "d9",
+        "speaker": "Customer",
+        "prompt": "Customer: Yes, we ___ two plates of Gujarati Thali, please.",
+        "text": "Yes, we want two plates of Gujarati Thali, please.",
+        "blankWord": "want",
+        "options": [
+          "want",
+          "wants",
+          "wanted",
+          "wanting"
+        ],
+        "gujaratiHint": "ગ્રાહક: હા, અમને બે પ્લેટ ગુજરાતી થાળી આપો.",
+        "explanation": "We (બહુવચન) કર્તા હોવાથી ક્રિયાપદનું મૂળ રૂપ 'want' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રસ્તો પૂછતી વખતે (Asking for Directions)",
+    "dialogues": [
+      {
+        "id": "d10",
+        "speaker": "Traveler",
+        "prompt": "Traveler: Excuse me, can you tell me the ___ to the bank?",
+        "text": "Excuse me, can you tell me the way to the bank?",
+        "blankWord": "way",
+        "options": [
+          "way",
+          "road",
+          "street",
+          "map"
+        ],
+        "gujaratiHint": "પ્રવાસી: માફ કરજો, શું તમે મને બેંકનો રસ્તો બતાવી શકશો?",
+        "explanation": "કોઈ ચોક્કસ સ્થાન સુધી પહોંચવાનો રસ્તો પૂછવા 'the way to' વપરાય છે."
+      },
+      {
+        "id": "d11",
+        "speaker": "Local Person",
+        "prompt": "Local Person: Go straight and ___ left at the corner.",
+        "text": "Go straight and turn left at the corner.",
+        "blankWord": "turn",
+        "options": [
+          "go",
+          "turn",
+          "take",
+          "walk"
+        ],
+        "gujaratiHint": "સ્થાનિક વ્યક્તિ: સીધા જાઓ અને ખૂણા પરથી ડાબી બાજુ વળો.",
+        "explanation": "દિશા બદલવા માટે ક્રિયાપદ તરીકે 'turn' વપરાય છે (turn left/right)."
+      }
+    ]
+  },
+  {
+    "situation": "પરિચય આપતી વખતે (Introducing Yourself)",
+    "dialogues": [
+      {
+        "id": "d12",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Hello! My name is Rohan. What ___ your name?",
+        "text": "Hello! My name is Rohan. What is your name?",
+        "blankWord": "is",
+        "options": [
+          "are",
+          "is",
+          "am",
+          "be"
+        ],
+        "gujaratiHint": "રોહન: નમસ્તે! મારું નામ રોહન છે. તમારું નામ શું છે?",
+        "explanation": "એકવચન કર્તાના નામ પૂછવા માટે સાદા વર્તમાનકાળમાં 'is' વપરાય છે."
+      },
+      {
+        "id": "d13",
+        "speaker": "Smit",
+        "prompt": "Smit: Nice to ___ you, Rohan. I am Smit.",
+        "text": "Nice to meet you, Rohan. I am Smit.",
+        "blankWord": "meet",
+        "options": [
+          "meet",
+          "meeting",
+          "met",
+          "meets"
+        ],
+        "gujaratiHint": "સ્મિત: તમને મળીને આનંદ થયો, રોહન. હું સ્મિત છું.",
+        "explanation": "'Nice to meet you' એ કોઈને પહેલી વાર મળતી વખતે વપરાતું ચોક્કસ અભિવાદન છે."
+      }
+    ]
+  },
+  {
+    "situation": "બેંકમાં (At the Bank)",
+    "dialogues": [
+      {
+        "id": "d14",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to ___ some money from my account.",
+        "text": "I want to withdraw some money from my account.",
+        "blankWord": "withdraw",
+        "options": [
+          "withdraw",
+          "deposit",
+          "give",
+          "send"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે મારા ખાતામાંથી થોડા રૂપિયા ઉપાડવા છે.",
+        "explanation": "બેંક ખાતામાંથી પૈસા ઉપાડવા માટે 'withdraw' શબ્દનો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d15",
+        "speaker": "Cashier",
+        "prompt": "Cashier: Sure, please fill out this ___ slip first.",
+        "text": "Sure, please fill out this withdrawal slip first.",
+        "blankWord": "withdrawal",
+        "options": [
+          "deposit",
+          "withdrawal",
+          "cheque",
+          "passbook"
+        ],
+        "gujaratiHint": "કેશિયર: ચોક્કસ, મહેરબાની કરીને પહેલા આ વિથડ્રોઅલ સ્લિપ ભરો.",
+        "explanation": "પૈસા ઉપાડવા માટે વપરાતા ફોર્મને 'withdrawal slip' કહેવામાં આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "વર્ગખંડમાં (At the School)",
+    "dialogues": [
+      {
+        "id": "d16",
+        "speaker": "Teacher",
+        "prompt": "Teacher: Why ___ you absent yesterday, Rohan?",
+        "text": "Why were you absent yesterday, Rohan?",
+        "blankWord": "were",
+        "options": [
+          "was",
+          "were",
+          "are",
+          "did"
+        ],
+        "gujaratiHint": "શિક્ષક: રોહન, તું ગઈકાલે કેમ ગેરહાજર હતો?",
+        "explanation": "ભૂતકાળમાં 'you' કર્તા સાથે સહાયકારક ક્રિયાપદ 'were' વપરાય છે."
+      },
+      {
+        "id": "d17",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Sir, I ___ not well yesterday. I had a fever.",
+        "text": "Sir, I was not well yesterday. I had a fever.",
+        "blankWord": "was",
+        "options": [
+          "was",
+          "were",
+          "am",
+          "had"
+        ],
+        "gujaratiHint": "રોહન: સર, ગઈકાલે મારી તબિયત સારી નહોતી. મને તાવ હતો.",
+        "explanation": "ભૂતકાળમાં 'I' કર્તા સાથે સ્થિતિ દર્શાવવા 'was' નો પ્રયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હવામાનની ચર્ચા (Weather Talk)",
+    "dialogues": [
+      {
+        "id": "d18",
+        "speaker": "Aarav",
+        "prompt": "Aarav: It is very ___ today, isn't it?",
+        "text": "It is very hot today, isn't it?",
+        "blankWord": "hot",
+        "options": [
+          "cold",
+          "hot",
+          "rainy",
+          "windy"
+        ],
+        "gujaratiHint": "આરવ: આજે ખૂબ ગરમી છે, ખરું ને?",
+        "explanation": "ઉનાળાના વાતાવરણની સ્થિતિને દર્શાવવા માટે 'hot' વપરાયું છે."
+      },
+      {
+        "id": "d19",
+        "speaker": "Soham",
+        "prompt": "Soham: Yes, I think it ___ rain tonight.",
+        "text": "Yes, I think it might rain tonight.",
+        "blankWord": "might",
+        "options": [
+          "might",
+          "must",
+          "should",
+          "shall"
+        ],
+        "gujaratiHint": "સોહમ: હા, મને લાગે છે કે આજે રાત્રે વરસાદ પડી શકે છે.",
+        "explanation": "ભવિષ્યમાં વરસાદ પડવાની અનિશ્ચિત શક્યતા દર્શાવવા 'might' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રેલવે સ્ટેશન પર (At the Railway Station)",
+    "dialogues": [
+      {
+        "id": "d20",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Which platform ___ the train to Mumbai arrive on?",
+        "text": "Which platform does the train to Mumbai arrive on?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: મુંબઈની ટ્રેન કયા પ્લેટફોર્મ પર આવશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં એકવચન કર્તા (the train) સાથે પ્રશ્નાર્થ બનાવવા 'does' આવે."
+      },
+      {
+        "id": "d21",
+        "speaker": "Inquiry Clerk",
+        "prompt": "Inquiry Clerk: It usually ___ on platform number four.",
+        "text": "It usually arrives on platform number four.",
+        "blankWord": "arrives",
+        "options": [
+          "arrive",
+          "arrives",
+          "arrived",
+          "arriving"
+        ],
+        "gujaratiHint": "પૂછપરછ ક્લાર્ક: તે સામાન્ય રીતે પ્લેટફોર્મ નંબર ૪ પર આવે છે.",
+        "explanation": "નિયમિત ઘટના હોવાથી ત્રીજો પુરુષ એકવચન 'It' સાથે ક્રિયાપદ 'arrives' આવશે."
+      }
+    ]
+  },
+  {
+    "situation": "શાકભાજીની ખરીદી (Buying Vegetables)",
+    "dialogues": [
+      {
+        "id": "d22",
+        "speaker": "Buyer",
+        "prompt": "Buyer: What is the ___ of potatoes per kg?",
+        "text": "What is the price of potatoes per kg?",
+        "blankWord": "price",
+        "options": [
+          "price",
+          "cost",
+          "money",
+          "rupees"
+        ],
+        "gujaratiHint": "ખરીદનાર: બટાકાનો પ્રતિ કિલો ભાવ શું છે?",
+        "explanation": "કોઈ વસ્તુની બજાર કિંમત પૂછવા માટે સામાન્ય નામ તરીકે 'price' વપરાય છે."
+      },
+      {
+        "id": "d23",
+        "speaker": "Seller",
+        "prompt": "Seller: It is forty rupees ___ kilogram, sir.",
+        "text": "It is forty rupees per kilogram, sir.",
+        "blankWord": "per",
+        "options": [
+          "for",
+          "per",
+          "in",
+          "by"
+        ],
+        "gujaratiHint": "વેચનાર: સર, ચાલીસ રૂપિયા કિલો છે.",
+        "explanation": "પ્રતિ એકમ દર્શાવવા માટે 'per' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ટેક્સી બુક કરતી વખતે (Booking a Taxi)",
+    "dialogues": [
+      {
+        "id": "d24",
+        "speaker": "Rider",
+        "prompt": "Rider: I want to ___ a cab to the airport.",
+        "text": "I want to book a cab to the airport.",
+        "blankWord": "book",
+        "options": [
+          "book",
+          "call",
+          "take",
+          "rent"
+        ],
+        "gujaratiHint": "મુસાફર: મારે એરપોર્ટ માટે ટેક્સી બુક કરવી છે.",
+        "explanation": "ગાડી અગાઉથી આરક્ષિત કરવા માટે 'book' શબ્દ યોગ્ય છે."
+      },
+      {
+        "id": "d25",
+        "speaker": "Operator",
+        "prompt": "Operator: Alright, the driver ___ arrive in five minutes.",
+        "text": "Alright, the driver will arrive in five minutes.",
+        "blankWord": "will",
+        "options": [
+          "will",
+          "would",
+          "shall",
+          "is"
+        ],
+        "gujaratiHint": "ઓપરેટર: બરાબર, ડ્રાઈવર પાંચ મિનિટમાં આવી જશે.",
+        "explanation": "ટૂંક સમયમાં થનારી ભવિષ્યની ઘટના માટે 'will' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ફોન પર વાતચીત (Phone Conversation)",
+    "dialogues": [
+      {
+        "id": "d26",
+        "speaker": "Caller",
+        "prompt": "Caller: Hello, ___ I speak to Amit, please?",
+        "text": "Hello, may I speak to Amit, please?",
+        "blankWord": "may",
+        "options": [
+          "may",
+          "should",
+          "must",
+          "will"
+        ],
+        "gujaratiHint": "કોલર: નમસ્તે, શું હું અમિત સાથે વાત કરી શકું?",
+        "explanation": "ફોન પર નમ્રતાપૂર્વક પરવાનગી મેળવવા 'may' અથવા 'could' નો ઉપયોગ કરાય છે."
+      },
+      {
+        "id": "d27",
+        "speaker": "Receiver",
+        "prompt": "Receiver: Sorry, he is not at home. Can I take a ___?",
+        "text": "Sorry, he is not at home. Can I take a message?",
+        "blankWord": "message",
+        "options": [
+          "message",
+          "letter",
+          "note",
+          "call"
+        ],
+        "gujaratiHint": "સામેની વ્યક્તિ: માફ કરજો, તે ઘરે નથી. શું હું કોઈ સંદેશો લઈ શકું?",
+        "explanation": "કોઈના વતી વાત સાંભળીને પહોંચાડવા માટે 'take a message' ફ્રેઝ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલ ચેક-ઈન (At the Hotel Check-in)",
+    "dialogues": [
+      {
+        "id": "d28",
+        "speaker": "Guest",
+        "prompt": "Guest: Hello, I have a ___ under the name of Patel.",
+        "text": "Hello, I have a reservation under the name of Patel.",
+        "blankWord": "reservation",
+        "options": [
+          "reservation",
+          "room",
+          "ticket",
+          "bill"
+        ],
+        "gujaratiHint": "મહેમાન: નમસ્તે, મારે પટેલ નામ હેઠળ બુકિંગ (આરક્ષણ) છે.",
+        "explanation": "હોટેલમાં પહેલેથી નક્કી કરાયેલા રૂમ માટે 'reservation' અથવા 'booking' બોલાય છે."
+      },
+      {
+        "id": "d29",
+        "speaker": "Receptionist",
+        "prompt": "Receptionist: Yes sir, here is your room ___.",
+        "text": "Yes sir, here is your room key.",
+        "blankWord": "key",
+        "options": [
+          "key",
+          "card",
+          "lock",
+          "number"
+        ],
+        "gujaratiHint": "રિસેપ્શનિસ્ટ: હા સર, આ રહી તમારા રૂમની ચાવી.",
+        "explanation": "રૂમ ખોલવા માટે આપવામાં આવતી ભૌતિક કે ઇલેક્ટ્રોનિક વસ્તુ માટે 'key' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "લાઇબ્રેરીમાં (At the Library)",
+    "dialogues": [
+      {
+        "id": "d30",
+        "speaker": "Student",
+        "prompt": "Student: Can I ___ this grammar book for a week?",
+        "text": "Can I borrow this grammar book for a week?",
+        "blankWord": "borrow",
+        "options": [
+          "borrow",
+          "lend",
+          "take",
+          "buy"
+        ],
+        "gujaratiHint": "વિદ્યાર્થી: શું હું આ વ્યાકરણનું પુસ્તક એક અઠવાડિયા માટે ઉધાર લઈ શકું?",
+        "explanation": "બીજાની પાસેથી વાંચીને પાછું આપવાની શરતે લેવા માટે 'borrow' શબ્દ વપરાય છે."
+      },
+      {
+        "id": "d31",
+        "speaker": "Librarian",
+        "prompt": "Librarian: Yes, but make sure to ___ it on time.",
+        "text": "Yes, but make sure to return it on time.",
+        "blankWord": "return",
+        "options": [
+          "return",
+          "give",
+          "keep",
+          "lose"
+        ],
+        "gujaratiHint": "ગ્રંથપાલ: હા, પણ તેને સમયસર પરત કરવાનું ભૂલતા નહિ.",
+        "explanation": "પુસ્તકાલયનું પુસ્તક પાછું આપવા માટે 'return' શબ્દ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "શોખ વિશે વાતચીત (Talking about Hobbies)",
+    "dialogues": [
+      {
+        "id": "d32",
+        "speaker": "Kabir",
+        "prompt": "Kabir: What do you like to do in your ___ time?",
+        "text": "What do you like to do in your free time?",
+        "blankWord": "free",
+        "options": [
+          "busy",
+          "free",
+          "working",
+          "study"
+        ],
+        "gujaratiHint": "કબીર: તમને તમારા નવરાશના સમયમાં શું કરવું ગમે છે?",
+        "explanation": "નવરાશના કે વધારાના સમય માટે 'free time' અથવા 'leisure time' વપરાય છે."
+      },
+      {
+        "id": "d33",
+        "speaker": "Meera",
+        "prompt": "Meera: I am fond ___ reading novels.",
+        "text": "I am fond of reading novels.",
+        "blankWord": "of",
+        "options": [
+          "of",
+          "for",
+          "in",
+          "to"
+        ],
+        "gujaratiHint": "મીરા: મને નવલકથાઓ વાંચવાનો ખૂબ શોખ છે.",
+        "explanation": "'fond' શબ્દ સાથે હંમેશાં 'of' પ્રિપોઝિશન આવે છે (fond of doing something)."
+      }
+    ]
+  },
+  {
+    "situation": "જોબ ઈન્ટરવ્યુ (Job Interview)",
+    "dialogues": [
+      {
+        "id": "d34",
+        "speaker": "Interviewer",
+        "prompt": "Interviewer: Tell me about your educational ___.",
+        "text": "Tell me about your educational background.",
+        "blankWord": "background",
+        "options": [
+          "background",
+          "history",
+          "future",
+          "result"
+        ],
+        "gujaratiHint": "ઇન્ટરવ્યુઅર: મને તમારી શૈક્ષણિક પૃષ્ઠભૂમિ (અભ્યાસ વિશે) જણાવો.",
+        "explanation": "વ્યક્તિના ભૂતકાળના અભ્યાસ અને ડિગ્રીઓની માહિતી માટે 'educational background' વપરાય છે."
+      },
+      {
+        "id": "d35",
+        "speaker": "Candidate",
+        "prompt": "Candidate: I have ___ my graduation in computer science.",
+        "text": "I have completed my graduation in computer science.",
+        "blankWord": "completed",
+        "options": [
+          "complete",
+          "completed",
+          "finish",
+          "done"
+        ],
+        "gujaratiHint": "ઉમેદવાર: મેં કમ્પ્યુટર સાયન્સમાં મારું ગ્રેજ્યુએશન પૂરું કર્યું છે.",
+        "explanation": "પૂર્ણ વર્તમાનકાળની રચનામાં 'have' પછી ભૂતકૃદંત 'completed' યોગ્ય છે."
+      }
+    ]
+  },
+  {
+    "situation": "મિત્રને મળતી વખતે (Meeting a Friend)",
+    "dialogues": [
+      {
+        "id": "d36",
+        "speaker": "Riya",
+        "prompt": "Riya: How have you ___? We met after a long time.",
+        "text": "How have you been? We met after a long time.",
+        "blankWord": "been",
+        "options": [
+          "be",
+          "been",
+          "being",
+          "was"
+        ],
+        "gujaratiHint": "રિયા: તું કેમ છે? આપણે લાંબા સમય પછી મળ્યા.",
+        "explanation": "ઘણા સમય પછી કુશળતા પૂછવા 'How have you been?' બોલાય છે."
+      },
+      {
+        "id": "d37",
+        "speaker": "Keya",
+        "prompt": "Keya: I am doing ___! How about you?",
+        "text": "I am doing great! How about you?",
+        "blankWord": "great",
+        "options": [
+          "well",
+          "great",
+          "good",
+          "nice"
+        ],
+        "gujaratiHint": "કેયા: હું ખૂબ જ મજામાં છું! તારા શું સમાચાર છે?",
+        "explanation": "અહીં 'great' અથવા 'well' બંને આવી શકે, પણ સામાન્ય ચર્ચામાં 'doing great' નો અર્થ ઉત્તમ છું થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "એરપોર્ટ પર (At the Airport)",
+    "dialogues": [
+      {
+        "id": "d38",
+        "speaker": "Agent",
+        "prompt": "Agent: May I see your passport and ___ ticket?",
+        "text": "May I see your passport and flight ticket?",
+        "blankWord": "flight",
+        "options": [
+          "bus",
+          "train",
+          "flight",
+          "road"
+        ],
+        "gujaratiHint": "એજન્ટ: શું હું તમારો પાસપોર્ટ અને પ્લેનની (ફ્લાઇટ) ટિકિટ જોઈ શકું?",
+        "explanation": "એરપોર્ટ પર હવાઈ સફરની ટિકિટ માટે 'flight ticket' કહેવામાં આવે છે."
+      },
+      {
+        "id": "d39",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Yes, here they ___. I only have one handbag.",
+        "text": "Yes, here they are. I only have one handbag.",
+        "blankWord": "are",
+        "options": [
+          "is",
+          "are",
+          "am",
+          "were"
+        ],
+        "gujaratiHint": "મુસાફર: હા, આ રહ્યા. મારી પાસે માત્ર એક હેન્ડબેગ છે.",
+        "explanation": "બહુવચન કર્તા 'they' હોવાથી ક્રિયાપદ તરીકે 'are' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "કપડાંની ખરીદી (Shopping for Clothes)",
+    "dialogues": [
+      {
+        "id": "d40",
+        "speaker": "Customer",
+        "prompt": "Customer: Do you have this dress in a larger ___?",
+        "text": "Do you have this dress in a larger size?",
+        "blankWord": "size",
+        "options": [
+          "size",
+          "color",
+          "length",
+          "fit"
+        ],
+        "gujaratiHint": "ગ્રાહક: શું તમારી પાસે આ ડ્રેસ મોટા માપમાં (સાઈઝમાં) છે?",
+        "explanation": "કપડાંના માપને અંગ્રેજીમાં 'size' તરીકે ઓળખવામાં આવે છે."
+      },
+      {
+        "id": "d41",
+        "speaker": "Salesman",
+        "prompt": "Salesman: Yes, let me check in the ___ room.",
+        "text": "Yes, let me check in the stock room.",
+        "blankWord": "stock",
+        "options": [
+          "stock",
+          "trial",
+          "fitting",
+          "rest"
+        ],
+        "gujaratiHint": "સેલ્સમેન: હા, મને ગોદામમાં (સ્ટોક રૂમમાં) તપાસવા દો.",
+        "explanation": "જ્યાં વધારાનો સામાન રાખવામાં આવે છે તેને 'stock room' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પિકનિકનું આયોજન (Planning a Picnic)",
+    "dialogues": [
+      {
+        "id": "d42",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Where should we ___ for the picnic?",
+        "text": "Where should we go for the picnic?",
+        "blankWord": "go",
+        "options": [
+          "go",
+          "going",
+          "went",
+          "gone"
+        ],
+        "gujaratiHint": "રોહન: આપણે પિકનિક માટે ક્યાં જવું જોઈએ?",
+        "explanation": "સહાયકારક ક્રિયાપદ 'should' સાથે હંમેશાં ક્રિયાપદનું મૂળ રૂપ 'go' વપરાય છે."
+      },
+      {
+        "id": "d43",
+        "speaker": "Sneha",
+        "prompt": "Sneha: Let's go to the ___ near the lake.",
+        "text": "Let's go to the park near the lake.",
+        "blankWord": "park",
+        "options": [
+          "park",
+          "school",
+          "office",
+          "bank"
+        ],
+        "gujaratiHint": "સ્નેહા: ચાલો તળાવ નજીક આવેલા બગીચામાં (પાર્ક) જઈએ.",
+        "explanation": "પિકનિક અને કુદરતી આનંદ માટે સૌથી યોગ્ય સ્થાનોમાં 'park' નો સમાવેશ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પોસ્ટ ઓફિસમાં (At the Post Office)",
+    "dialogues": [
+      {
+        "id": "d44",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to send this ___ to Surat.",
+        "text": "I want to send this parcel to Surat.",
+        "blankWord": "parcel",
+        "options": [
+          "parcel",
+          "email",
+          "box",
+          "money"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે આ પાર્સલ સુરત મોકલવું છે.",
+        "explanation": "પોસ્ટ ઓફિસ દ્વારા મોકલવામાં આવતા સામાનના પેકેટને 'parcel' કહે છે."
+      },
+      {
+        "id": "d45",
+        "speaker": "Clerk",
+        "prompt": "Clerk: Please place it on the weighing ___ first.",
+        "text": "Please place it on the weighing scale first.",
+        "blankWord": "scale",
+        "options": [
+          "scale",
+          "table",
+          "chair",
+          "box"
+        ],
+        "gujaratiHint": "ક્લાર્ક: મહેરબાની કરીને પહેલા તેને વજન કાંટા (સ્કેલ) પર મૂકો.",
+        "explanation": "વજન માપવાના મશીનને અંગ્રેજીમાં 'weighing scale' અથવા 'weighing machine' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દવાખાનામાં (At the Doctor)",
+    "dialogues": [
+      {
+        "id": "d1",
+        "speaker": "Doctor",
+        "prompt": "Doctor: What is the problem? What ___ to you?",
+        "text": "What is the problem? What happened to you?",
+        "blankWord": "happened",
+        "options": [
+          "happen",
+          "happened",
+          "happening",
+          "happens"
+        ],
+        "gujaratiHint": "ડોક્ટર: શું તકલીફ છે? તમને શું થયું છે?",
+        "explanation": "ભૂતકાળની ઘટના પૂછવા માટે ક્રિયાપદનું ભૂતકાળનું રૂપ 'happened' યોગ્ય છે."
+      },
+      {
+        "id": "d2",
+        "speaker": "Patient",
+        "prompt": "Patient: I have a ___ since yesterday.",
+        "text": "I have a headache since yesterday.",
+        "blankWord": "headache",
+        "options": [
+          "painful",
+          "headache",
+          "aching",
+          "hurt"
+        ],
+        "gujaratiHint": "દર્દી: મને ગઈકાલથી માથું દુખે છે.",
+        "explanation": "નામ તરીકે 'headache' (માથાનો દુખાવો) વપરાય છે."
+      },
+      {
+        "id": "d3",
+        "speaker": "Doctor",
+        "prompt": "Doctor: Take this medicine ___ a day.",
+        "text": "Take this medicine twice a day.",
+        "blankWord": "twice",
+        "options": [
+          "two",
+          "twice",
+          "double",
+          "second"
+        ],
+        "gujaratiHint": "ડોક્ટર: આ દવા દિવસમાં બે વાર લેજો.",
+        "explanation": "દિવસમાં કેટલી વાર તે દર્શાવવા માટે 'twice' (બે વાર) નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દુકાનદાર સાથે (At the Shop)",
+    "dialogues": [
+      {
+        "id": "d4",
+        "speaker": "Customer",
+        "prompt": "Customer: How ___ is this shirt?",
+        "text": "How much is this shirt?",
+        "blankWord": "much",
+        "options": [
+          "many",
+          "much",
+          "cost",
+          "price"
+        ],
+        "gujaratiHint": "ગ્રાહક: આ શર્ટની કિંમત કેટલી છે?",
+        "explanation": "કિંમત પૂછવા માટે સામાન્ય રીતે 'How much' નો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d5",
+        "speaker": "Shopkeeper",
+        "prompt": "Shopkeeper: It ___ five hundred rupees.",
+        "text": "It costs five hundred rupees.",
+        "blankWord": "costs",
+        "options": [
+          "cost",
+          "costs",
+          "costing",
+          "price"
+        ],
+        "gujaratiHint": "દુકાનદાર: તેની કિંમત ૫૦૦ રૂપિયા છે.",
+        "explanation": "It (ત્રીજો પુરુષ એકવચન) કર્તા હોવાથી ક્રિયાપદને 's' લાગીને 'costs' બને છે."
+      }
+    ]
+  },
+  {
+    "situation": "બસ સ્ટેશન પર (At the Bus Station)",
+    "dialogues": [
+      {
+        "id": "d6",
+        "speaker": "Passenger",
+        "prompt": "Passenger: When ___ the bus to Ahmedabad leave?",
+        "text": "When does the bus to Ahmedabad leave?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: અમદાવાદ જવાની બસ ક્યારે ઉપડશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં ત્રીજો પુરુષ એકવચન કર્તા (the bus) હોવાથી પ્રશ્નાર્થ માટે 'does' વપરાય છે."
+      },
+      {
+        "id": "d7",
+        "speaker": "Clerk",
+        "prompt": "Clerk: It ___ at 4:30 PM from platform three.",
+        "text": "It leaves at 4:30 PM from platform three.",
+        "blankWord": "leaves",
+        "options": [
+          "leave",
+          "leaves",
+          "leaving",
+          "left"
+        ],
+        "gujaratiHint": "ક્લાર્ક: તે સાંજે ૪:૩૦ વાગ્યે પ્લેટફોર્મ નંબર ૩ પરથી ઉપડશે.",
+        "explanation": "સમયપત્રકની નિયમિત ઘટના દર્શાવવા માટે સાદા વર્તમાનકાળનું 'leaves' ક્રિયાપદ આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલમાં ઓર્ડર આપતી વખતે (At the Restaurant)",
+    "dialogues": [
+      {
+        "id": "d8",
+        "speaker": "Waiter",
+        "prompt": "Waiter: Are you ready to ___ now?",
+        "text": "Are you ready to order now?",
+        "blankWord": "order",
+        "options": [
+          "eat",
+          "order",
+          "drink",
+          "pay"
+        ],
+        "gujaratiHint": "વેઈટર: શું આપ અત્યારે ઓર્ડર આપવા માટે તૈયાર છો?",
+        "explanation": "જમવાનું મંગાવવા માટે 'order' શબ્દનો ઉપયોગ થાય છે."
+      },
+      {
+        "id": "d9",
+        "speaker": "Customer",
+        "prompt": "Customer: Yes, we ___ two plates of Gujarati Thali, please.",
+        "text": "Yes, we want two plates of Gujarati Thali, please.",
+        "blankWord": "want",
+        "options": [
+          "want",
+          "wants",
+          "wanted",
+          "wanting"
+        ],
+        "gujaratiHint": "ગ્રાહક: હા, અમને બે પ્લેટ ગુજરાતી થાળી આપો.",
+        "explanation": "We (બહુવચન) કર્તા હોવાથી ક્રિયાપદનું મૂળ રૂપ 'want' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રસ્તો પૂછતી વખતે (Asking for Directions)",
+    "dialogues": [
+      {
+        "id": "d10",
+        "speaker": "Traveler",
+        "prompt": "Traveler: Excuse me, can you tell me the ___ to the bank?",
+        "text": "Excuse me, can you tell me the way to the bank?",
+        "blankWord": "way",
+        "options": [
+          "way",
+          "road",
+          "street",
+          "map"
+        ],
+        "gujaratiHint": "પ્રવાસી: માફ કરજો, શું તમે મને બેંકનો રસ્તો બતાવી શકશો?",
+        "explanation": "કોઈ ચોક્કસ સ્થાન સુધી પહોંચવાનો રસ્તો પૂછવા 'the way to' વપરાય છે."
+      },
+      {
+        "id": "d11",
+        "speaker": "Local Person",
+        "prompt": "Local Person: Go straight and ___ left at the corner.",
+        "text": "Go straight and turn left at the corner.",
+        "blankWord": "turn",
+        "options": [
+          "go",
+          "turn",
+          "take",
+          "walk"
+        ],
+        "gujaratiHint": "સ્થાનિક વ્યક્તિ: સીધા જાઓ અને ખૂણા પરથી ડાબી બાજુ વળો.",
+        "explanation": "દિશા બદલવા માટે ક્રિયાપદ તરીકે 'turn' વપરાય છે (turn left/right)."
+      }
+    ]
+  },
+  {
+    "situation": "પરિચય આપતી વખતે (Introducing Yourself)",
+    "dialogues": [
+      {
+        "id": "d12",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Hello! My name is Rohan. What ___ your name?",
+        "text": "Hello! My name is Rohan. What is your name?",
+        "blankWord": "is",
+        "options": [
+          "are",
+          "is",
+          "am",
+          "be"
+        ],
+        "gujaratiHint": "રોહન: નમસ્તે! મારું નામ રોહન છે. તમારું નામ શું છે?",
+        "explanation": "એકવચન કર્તાના નામ પૂછવા માટે સાદા વર્તમાનકાળમાં 'is' વપરાય છે."
+      },
+      {
+        "id": "d13",
+        "speaker": "Smit",
+        "prompt": "Smit: Nice to ___ you, Rohan. I am Smit.",
+        "text": "Nice to meet you, Rohan. I am Smit.",
+        "blankWord": "meet",
+        "options": [
+          "meet",
+          "meeting",
+          "met",
+          "meets"
+        ],
+        "gujaratiHint": "સ્મિત: તમને મળીને આનંદ થયો, રોહન. હું સ્મિત છું.",
+        "explanation": "'Nice to meet you' એ કોઈને પહેલી વાર મળતી વખતે વપરાતું ચોક્કસ અભિવાદન છે."
+      }
+    ]
+  },
+  {
+    "situation": "બેંકમાં (At the Bank)",
+    "dialogues": [
+      {
+        "id": "d14",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to ___ some money from my account.",
+        "text": "I want to withdraw some money from my account.",
+        "blankWord": "withdraw",
+        "options": [
+          "withdraw",
+          "deposit",
+          "give",
+          "send"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે મારા ખાતામાંથી થોડા રૂપિયા ઉપાડવા છે.",
+        "explanation": "બેંક ખાતામાંથી પૈસા ઉપાડવા માટે 'withdraw' શબ્દનો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d15",
+        "speaker": "Cashier",
+        "prompt": "Cashier: Sure, please fill out this ___ slip first.",
+        "text": "Sure, please fill out this withdrawal slip first.",
+        "blankWord": "withdrawal",
+        "options": [
+          "deposit",
+          "withdrawal",
+          "cheque",
+          "passbook"
+        ],
+        "gujaratiHint": "કેશિયર: ચોક્કસ, મહેરબાની કરીને પહેલા આ વિથડ્રોઅલ સ્લિપ ભરો.",
+        "explanation": "પૈસા ઉપાડવા માટે વપરાતા ફોર્મને 'withdrawal slip' કહેવામાં આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "વર્ગખંડમાં (At the School)",
+    "dialogues": [
+      {
+        "id": "d16",
+        "speaker": "Teacher",
+        "prompt": "Teacher: Why ___ you absent yesterday, Rohan?",
+        "text": "Why were you absent yesterday, Rohan?",
+        "blankWord": "were",
+        "options": [
+          "was",
+          "were",
+          "are",
+          "did"
+        ],
+        "gujaratiHint": "શિક્ષક: રોહન, તું ગઈકાલે કેમ ગેરહાજર હતો?",
+        "explanation": "ભૂતકાળમાં 'you' કર્તા સાથે સહાયકારક ક્રિયાપદ 'were' વપરાય છે."
+      },
+      {
+        "id": "d17",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Sir, I ___ not well yesterday. I had a fever.",
+        "text": "Sir, I was not well yesterday. I had a fever.",
+        "blankWord": "was",
+        "options": [
+          "was",
+          "were",
+          "am",
+          "had"
+        ],
+        "gujaratiHint": "રોહન: સર, ગઈકાલે મારી તબિયત સારી નહોતી. મને તાવ હતો.",
+        "explanation": "ભૂતકાળમાં 'I' કર્તા સાથે સ્થિતિ દર્શાવવા 'was' નો પ્રયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હવામાનની ચર્ચા (Weather Talk)",
+    "dialogues": [
+      {
+        "id": "d18",
+        "speaker": "Aarav",
+        "prompt": "Aarav: It is very ___ today, isn't it?",
+        "text": "It is very hot today, isn't it?",
+        "blankWord": "hot",
+        "options": [
+          "cold",
+          "hot",
+          "rainy",
+          "windy"
+        ],
+        "gujaratiHint": "આરવ: આજે ખૂબ ગરમી છે, ખરું ને?",
+        "explanation": "ઉનાળાના વાતાવરણની સ્થિતિને દર્શાવવા માટે 'hot' વપરાયું છે."
+      },
+      {
+        "id": "d19",
+        "speaker": "Soham",
+        "prompt": "Soham: Yes, I think it ___ rain tonight.",
+        "text": "Yes, I think it might rain tonight.",
+        "blankWord": "might",
+        "options": [
+          "might",
+          "must",
+          "should",
+          "shall"
+        ],
+        "gujaratiHint": "સોહમ: હા, મને લાગે છે કે આજે રાત્રે વરસાદ પડી શકે છે.",
+        "explanation": "ભવિષ્યમાં વરસાદ પડવાની અનિશ્ચિત શક્યતા દર્શાવવા 'might' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રેલવે સ્ટેશન પર (At the Railway Station)",
+    "dialogues": [
+      {
+        "id": "d20",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Which platform ___ the train to Mumbai arrive on?",
+        "text": "Which platform does the train to Mumbai arrive on?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: મુંબઈની ટ્રેન કયા પ્લેટફોર્મ પર આવશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં એકવચન કર્તા (the train) સાથે પ્રશ્નાર્થ બનાવવા 'does' આવે."
+      },
+      {
+        "id": "d21",
+        "speaker": "Inquiry Clerk",
+        "prompt": "Inquiry Clerk: It usually ___ on platform number four.",
+        "text": "It usually arrives on platform number four.",
+        "blankWord": "arrives",
+        "options": [
+          "arrive",
+          "arrives",
+          "arrived",
+          "arriving"
+        ],
+        "gujaratiHint": "પૂછપરછ ક્લાર્ક: તે સામાન્ય રીતે પ્લેટફોર્મ નંબર ૪ પર આવે છે.",
+        "explanation": "નિયમિત ઘટના હોવાથી ત્રીજો પુરુષ એકવચન 'It' સાથે ક્રિયાપદ 'arrives' આવશે."
+      }
+    ]
+  },
+  {
+    "situation": "શાકભાજીની ખરીદી (Buying Vegetables)",
+    "dialogues": [
+      {
+        "id": "d22",
+        "speaker": "Buyer",
+        "prompt": "Buyer: What is the ___ of potatoes per kg?",
+        "text": "What is the price of potatoes per kg?",
+        "blankWord": "price",
+        "options": [
+          "price",
+          "cost",
+          "money",
+          "rupees"
+        ],
+        "gujaratiHint": "ખરીદનાર: બટાકાનો પ્રતિ કિલો ભાવ શું છે?",
+        "explanation": "કોઈ વસ્તુની બજાર કિંમત પૂછવા માટે સામાન્ય નામ તરીકે 'price' વપરાય છે."
+      },
+      {
+        "id": "d23",
+        "speaker": "Seller",
+        "prompt": "Seller: It is forty rupees ___ kilogram, sir.",
+        "text": "It is forty rupees per kilogram, sir.",
+        "blankWord": "per",
+        "options": [
+          "for",
+          "per",
+          "in",
+          "by"
+        ],
+        "gujaratiHint": "વેચનાર: સર, ચાલીસ રૂપિયા કિલો છે.",
+        "explanation": "પ્રતિ એકમ દર્શાવવા માટે 'per' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ટેક્સી બુક કરતી વખતે (Booking a Taxi)",
+    "dialogues": [
+      {
+        "id": "d24",
+        "speaker": "Rider",
+        "prompt": "Rider: I want to ___ a cab to the airport.",
+        "text": "I want to book a cab to the airport.",
+        "blankWord": "book",
+        "options": [
+          "book",
+          "call",
+          "take",
+          "rent"
+        ],
+        "gujaratiHint": "મુસાફર: મારે એરપોર્ટ માટે ટેક્સી બુક કરવી છે.",
+        "explanation": "ગાડી અગાઉથી આરક્ષિત કરવા માટે 'book' શબ્દ યોગ્ય છે."
+      },
+      {
+        "id": "d25",
+        "speaker": "Operator",
+        "prompt": "Operator: Alright, the driver ___ arrive in five minutes.",
+        "text": "Alright, the driver will arrive in five minutes.",
+        "blankWord": "will",
+        "options": [
+          "will",
+          "would",
+          "shall",
+          "is"
+        ],
+        "gujaratiHint": "ઓપરેટર: બરાબર, ડ્રાઈવર પાંચ મિનિટમાં આવી જશે.",
+        "explanation": "ટૂંક સમયમાં થનારી ભવિષ્યની ઘટના માટે 'will' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ફોન પર વાતચીત (Phone Conversation)",
+    "dialogues": [
+      {
+        "id": "d26",
+        "speaker": "Caller",
+        "prompt": "Caller: Hello, ___ I speak to Amit, please?",
+        "text": "Hello, may I speak to Amit, please?",
+        "blankWord": "may",
+        "options": [
+          "may",
+          "should",
+          "must",
+          "will"
+        ],
+        "gujaratiHint": "કોલર: નમસ્તે, શું હું અમિત સાથે વાત કરી શકું?",
+        "explanation": "ફોન પર નમ્રતાપૂર્વક પરવાનગી મેળવવા 'may' અથવા 'could' નો ઉપયોગ કરાય છે."
+      },
+      {
+        "id": "d27",
+        "speaker": "Receiver",
+        "prompt": "Receiver: Sorry, he is not at home. Can I take a ___?",
+        "text": "Sorry, he is not at home. Can I take a message?",
+        "blankWord": "message",
+        "options": [
+          "message",
+          "letter",
+          "note",
+          "call"
+        ],
+        "gujaratiHint": "સામેની વ્યક્તિ: માફ કરજો, તે ઘરે નથી. શું હું કોઈ સંદેશો લઈ શકું?",
+        "explanation": "કોઈના વતી વાત સાંભળીને પહોંચાડવા માટે 'take a message' ફ્રેઝ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલ ચેક-ઈન (At the Hotel Check-in)",
+    "dialogues": [
+      {
+        "id": "d28",
+        "speaker": "Guest",
+        "prompt": "Guest: Hello, I have a ___ under the name of Patel.",
+        "text": "Hello, I have a reservation under the name of Patel.",
+        "blankWord": "reservation",
+        "options": [
+          "reservation",
+          "room",
+          "ticket",
+          "bill"
+        ],
+        "gujaratiHint": "મહેમાન: નમસ્તે, મારે પટેલ નામ હેઠળ બુકિંગ (આરક્ષણ) છે.",
+        "explanation": "હોટેલમાં પહેલેથી નક્કી કરાયેલા રૂમ માટે 'reservation' અથવા 'booking' બોલાય છે."
+      },
+      {
+        "id": "d29",
+        "speaker": "Receptionist",
+        "prompt": "Receptionist: Yes sir, here is your room ___.",
+        "text": "Yes sir, here is your room key.",
+        "blankWord": "key",
+        "options": [
+          "key",
+          "card",
+          "lock",
+          "number"
+        ],
+        "gujaratiHint": "રિસેપ્શનિસ્ટ: હા સર, આ રહી તમારા રૂમની ચાવી.",
+        "explanation": "રૂમ ખોલવા માટે આપવામાં આવતી ભૌતિક કે ઇલેક્ટ્રોનિક વસ્તુ માટે 'key' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "લાઇબ્રેરીમાં (At the Library)",
+    "dialogues": [
+      {
+        "id": "d30",
+        "speaker": "Student",
+        "prompt": "Student: Can I ___ this grammar book for a week?",
+        "text": "Can I borrow this grammar book for a week?",
+        "blankWord": "borrow",
+        "options": [
+          "borrow",
+          "lend",
+          "take",
+          "buy"
+        ],
+        "gujaratiHint": "વિદ્યાર્થી: શું હું આ વ્યાકરણનું પુસ્તક એક અઠવાડિયા માટે ઉધાર લઈ શકું?",
+        "explanation": "બીજાની પાસેથી વાંચીને પાછું આપવાની શરતે લેવા માટે 'borrow' શબ્દ વપરાય છે."
+      },
+      {
+        "id": "d31",
+        "speaker": "Librarian",
+        "prompt": "Librarian: Yes, but make sure to ___ it on time.",
+        "text": "Yes, but make sure to return it on time.",
+        "blankWord": "return",
+        "options": [
+          "return",
+          "give",
+          "keep",
+          "lose"
+        ],
+        "gujaratiHint": "ગ્રંથપાલ: હા, પણ તેને સમયસર પરત કરવાનું ભૂલતા નહિ.",
+        "explanation": "પુસ્તકાલયનું પુસ્તક પાછું આપવા માટે 'return' શબ્દ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "શોખ વિશે વાતચીત (Talking about Hobbies)",
+    "dialogues": [
+      {
+        "id": "d32",
+        "speaker": "Kabir",
+        "prompt": "Kabir: What do you like to do in your ___ time?",
+        "text": "What do you like to do in your free time?",
+        "blankWord": "free",
+        "options": [
+          "busy",
+          "free",
+          "working",
+          "study"
+        ],
+        "gujaratiHint": "કબીર: તમને તમારા નવરાશના સમયમાં શું કરવું ગમે છે?",
+        "explanation": "નવરાશના કે વધારાના સમય માટે 'free time' અથવા 'leisure time' વપરાય છે."
+      },
+      {
+        "id": "d33",
+        "speaker": "Meera",
+        "prompt": "Meera: I am fond ___ reading novels.",
+        "text": "I am fond of reading novels.",
+        "blankWord": "of",
+        "options": [
+          "of",
+          "for",
+          "in",
+          "to"
+        ],
+        "gujaratiHint": "મીરા: મને નવલકથાઓ વાંચવાનો ખૂબ શોખ છે.",
+        "explanation": "'fond' શબ્દ સાથે હંમેશાં 'of' પ્રિપોઝિશન આવે છે (fond of doing something)."
+      }
+    ]
+  },
+  {
+    "situation": "જોબ ઈન્ટરવ્યુ (Job Interview)",
+    "dialogues": [
+      {
+        "id": "d34",
+        "speaker": "Interviewer",
+        "prompt": "Interviewer: Tell me about your educational ___.",
+        "text": "Tell me about your educational background.",
+        "blankWord": "background",
+        "options": [
+          "background",
+          "history",
+          "future",
+          "result"
+        ],
+        "gujaratiHint": "ઇન્ટરવ્યુઅર: મને તમારી શૈક્ષણિક પૃષ્ઠભૂમિ (અભ્યાસ વિશે) જણાવો.",
+        "explanation": "વ્યક્તિના ભૂતકાળના અભ્યાસ અને ડિગ્રીઓની માહિતી માટે 'educational background' વપરાય છે."
+      },
+      {
+        "id": "d35",
+        "speaker": "Candidate",
+        "prompt": "Candidate: I have ___ my graduation in computer science.",
+        "text": "I have completed my graduation in computer science.",
+        "blankWord": "completed",
+        "options": [
+          "complete",
+          "completed",
+          "finish",
+          "done"
+        ],
+        "gujaratiHint": "ઉમેદવાર: મેં કમ્પ્યુટર સાયન્સમાં મારું ગ્રેજ્યુએશન પૂરું કર્યું છે.",
+        "explanation": "પૂર્ણ વર્તમાનકાળની રચનામાં 'have' પછી ભૂતકૃદંત 'completed' યોગ્ય છે."
+      }
+    ]
+  },
+  {
+    "situation": "મિત્રને મળતી વખતે (Meeting a Friend)",
+    "dialogues": [
+      {
+        "id": "d36",
+        "speaker": "Riya",
+        "prompt": "Riya: How have you ___? We met after a long time.",
+        "text": "How have you been? We met after a long time.",
+        "blankWord": "been",
+        "options": [
+          "be",
+          "been",
+          "being",
+          "was"
+        ],
+        "gujaratiHint": "રિયા: તું કેમ છે? આપણે લાંબા સમય પછી મળ્યા.",
+        "explanation": "ઘણા સમય પછી કુશળતા પૂછવા 'How have you been?' બોલાય છે."
+      },
+      {
+        "id": "d37",
+        "speaker": "Keya",
+        "prompt": "Keya: I am doing ___! How about you?",
+        "text": "I am doing great! How about you?",
+        "blankWord": "great",
+        "options": [
+          "well",
+          "great",
+          "good",
+          "nice"
+        ],
+        "gujaratiHint": "કેયા: હું ખૂબ જ મજામાં છું! તારા શું સમાચાર છે?",
+        "explanation": "અહીં 'great' અથવા 'well' બંને આવી શકે, પણ સામાન્ય ચર્ચામાં 'doing great' નો અર્થ ઉત્તમ છું થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "એરપોર્ટ પર (At the Airport)",
+    "dialogues": [
+      {
+        "id": "d38",
+        "speaker": "Agent",
+        "prompt": "Agent: May I see your passport and ___ ticket?",
+        "text": "May I see your passport and flight ticket?",
+        "blankWord": "flight",
+        "options": [
+          "bus",
+          "train",
+          "flight",
+          "road"
+        ],
+        "gujaratiHint": "એજન્ટ: શું હું તમારો પાસપોર્ટ અને પ્લેનની (ફ્લાઇટ) ટિકિટ જોઈ શકું?",
+        "explanation": "એરપોર્ટ પર હવાઈ સફરની ટિકિટ માટે 'flight ticket' કહેવામાં આવે છે."
+      },
+      {
+        "id": "d39",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Yes, here they ___. I only have one handbag.",
+        "text": "Yes, here they are. I only have one handbag.",
+        "blankWord": "are",
+        "options": [
+          "is",
+          "are",
+          "am",
+          "were"
+        ],
+        "gujaratiHint": "મુસાફર: હા, આ રહ્યા. મારી પાસે માત્ર એક હેન્ડબેગ છે.",
+        "explanation": "બહુવચન કર્તા 'they' હોવાથી ક્રિયાપદ તરીકે 'are' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "કપડાંની ખરીદી (Shopping for Clothes)",
+    "dialogues": [
+      {
+        "id": "d40",
+        "speaker": "Customer",
+        "prompt": "Customer: Do you have this dress in a larger ___?",
+        "text": "Do you have this dress in a larger size?",
+        "blankWord": "size",
+        "options": [
+          "size",
+          "color",
+          "length",
+          "fit"
+        ],
+        "gujaratiHint": "ગ્રાહક: શું તમારી પાસે આ ડ્રેસ મોટા માપમાં (સાઈઝમાં) છે?",
+        "explanation": "કપડાંના માપને અંગ્રેજીમાં 'size' તરીકે ઓળખવામાં આવે છે."
+      },
+      {
+        "id": "d41",
+        "speaker": "Salesman",
+        "prompt": "Salesman: Yes, let me check in the ___ room.",
+        "text": "Yes, let me check in the stock room.",
+        "blankWord": "stock",
+        "options": [
+          "stock",
+          "trial",
+          "fitting",
+          "rest"
+        ],
+        "gujaratiHint": "સેલ્સમેન: હા, મને ગોદામમાં (સ્ટોક રૂમમાં) તપાસવા દો.",
+        "explanation": "જ્યાં વધારાનો સામાન રાખવામાં આવે છે તેને 'stock room' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પિકનિકનું આયોજન (Planning a Picnic)",
+    "dialogues": [
+      {
+        "id": "d42",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Where should we ___ for the picnic?",
+        "text": "Where should we go for the picnic?",
+        "blankWord": "go",
+        "options": [
+          "go",
+          "going",
+          "went",
+          "gone"
+        ],
+        "gujaratiHint": "રોહન: આપણે પિકનિક માટે ક્યાં જવું જોઈએ?",
+        "explanation": "સહાયકારક ક્રિયાપદ 'should' સાથે હંમેશાં ક્રિયાપદનું મૂળ રૂપ 'go' વપરાય છે."
+      },
+      {
+        "id": "d43",
+        "speaker": "Sneha",
+        "prompt": "Sneha: Let's go to the ___ near the lake.",
+        "text": "Let's go to the park near the lake.",
+        "blankWord": "park",
+        "options": [
+          "park",
+          "school",
+          "office",
+          "bank"
+        ],
+        "gujaratiHint": "સ્નેહા: ચાલો તળાવ નજીક આવેલા બગીચામાં (પાર્ક) જઈએ.",
+        "explanation": "પિકનિક અને કુદરતી આનંદ માટે સૌથી યોગ્ય સ્થાનોમાં 'park' નો સમાવેશ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પોસ્ટ ઓફિસમાં (At the Post Office)",
+    "dialogues": [
+      {
+        "id": "d44",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to send this ___ to Surat.",
+        "text": "I want to send this parcel to Surat.",
+        "blankWord": "parcel",
+        "options": [
+          "parcel",
+          "email",
+          "box",
+          "money"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે આ પાર્સલ સુરત મોકલવું છે.",
+        "explanation": "પોસ્ટ ઓફિસ દ્વારા મોકલવામાં આવતા સામાનના પેકેટને 'parcel' કહે છે."
+      },
+      {
+        "id": "d45",
+        "speaker": "Clerk",
+        "prompt": "Clerk: Please place it on the weighing ___ first.",
+        "text": "Please place it on the weighing scale first.",
+        "blankWord": "scale",
+        "options": [
+          "scale",
+          "table",
+          "chair",
+          "box"
+        ],
+        "gujaratiHint": "ક્લાર્ક: મહેરબાની કરીને પહેલા તેને વજન કાંટા (સ્કેલ) પર મૂકો.",
+        "explanation": "વજન માપવાના મશીનને અંગ્રેજીમાં 'weighing scale' અથવા 'weighing machine' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દવાખાનામાં (At the Doctor)",
+    "dialogues": [
+      {
+        "id": "d1",
+        "speaker": "Doctor",
+        "prompt": "Doctor: What is the problem? What ___ to you?",
+        "text": "What is the problem? What happened to you?",
+        "blankWord": "happened",
+        "options": [
+          "happen",
+          "happened",
+          "happening",
+          "happens"
+        ],
+        "gujaratiHint": "ડોક્ટર: શું તકલીફ છે? તમને શું થયું છે?",
+        "explanation": "ભૂતકાળની ઘટના પૂછવા માટે ક્રિયાપદનું ભૂતકાળનું રૂપ 'happened' યોગ્ય છે."
+      },
+      {
+        "id": "d2",
+        "speaker": "Patient",
+        "prompt": "Patient: I have a ___ since yesterday.",
+        "text": "I have a headache since yesterday.",
+        "blankWord": "headache",
+        "options": [
+          "painful",
+          "headache",
+          "aching",
+          "hurt"
+        ],
+        "gujaratiHint": "દર્દી: મને ગઈકાલથી માથું દુખે છે.",
+        "explanation": "નામ તરીકે 'headache' (માથાનો દુખાવો) વપરાય છે."
+      },
+      {
+        "id": "d3",
+        "speaker": "Doctor",
+        "prompt": "Doctor: Take this medicine ___ a day.",
+        "text": "Take this medicine twice a day.",
+        "blankWord": "twice",
+        "options": [
+          "two",
+          "twice",
+          "double",
+          "second"
+        ],
+        "gujaratiHint": "ડોક્ટર: આ દવા દિવસમાં બે વાર લેજો.",
+        "explanation": "દિવસમાં કેટલી વાર તે દર્શાવવા માટે 'twice' (બે વાર) નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દુકાનદાર સાથે (At the Shop)",
+    "dialogues": [
+      {
+        "id": "d4",
+        "speaker": "Customer",
+        "prompt": "Customer: How ___ is this shirt?",
+        "text": "How much is this shirt?",
+        "blankWord": "much",
+        "options": [
+          "many",
+          "much",
+          "cost",
+          "price"
+        ],
+        "gujaratiHint": "ગ્રાહક: આ શર્ટની કિંમત કેટલી છે?",
+        "explanation": "કિંમત પૂછવા માટે સામાન્ય રીતે 'How much' નો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d5",
+        "speaker": "Shopkeeper",
+        "prompt": "Shopkeeper: It ___ five hundred rupees.",
+        "text": "It costs five hundred rupees.",
+        "blankWord": "costs",
+        "options": [
+          "cost",
+          "costs",
+          "costing",
+          "price"
+        ],
+        "gujaratiHint": "દુકાનદાર: તેની કિંમત ૫૦૦ રૂપિયા છે.",
+        "explanation": "It (ત્રીજો પુરુષ એકવચન) કર્તા હોવાથી ક્રિયાપદને 's' લાગીને 'costs' બને છે."
+      }
+    ]
+  },
+  {
+    "situation": "બસ સ્ટેશન પર (At the Bus Station)",
+    "dialogues": [
+      {
+        "id": "d6",
+        "speaker": "Passenger",
+        "prompt": "Passenger: When ___ the bus to Ahmedabad leave?",
+        "text": "When does the bus to Ahmedabad leave?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: અમદાવાદ જવાની બસ ક્યારે ઉપડશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં ત્રીજો પુરુષ એકવચન કર્તા (the bus) હોવાથી પ્રશ્નાર્થ માટે 'does' વપરાય છે."
+      },
+      {
+        "id": "d7",
+        "speaker": "Clerk",
+        "prompt": "Clerk: It ___ at 4:30 PM from platform three.",
+        "text": "It leaves at 4:30 PM from platform three.",
+        "blankWord": "leaves",
+        "options": [
+          "leave",
+          "leaves",
+          "leaving",
+          "left"
+        ],
+        "gujaratiHint": "ક્લાર્ક: તે સાંજે ૪:૩૦ વાગ્યે પ્લેટફોર્મ નંબર ૩ પરથી ઉપડશે.",
+        "explanation": "સમયપત્રકની નિયમિત ઘટના દર્શાવવા માટે સાદા વર્તમાનકાળનું 'leaves' ક્રિયાપદ આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલમાં ઓર્ડર આપતી વખતે (At the Restaurant)",
+    "dialogues": [
+      {
+        "id": "d8",
+        "speaker": "Waiter",
+        "prompt": "Waiter: Are you ready to ___ now?",
+        "text": "Are you ready to order now?",
+        "blankWord": "order",
+        "options": [
+          "eat",
+          "order",
+          "drink",
+          "pay"
+        ],
+        "gujaratiHint": "વેઈટર: શું આપ અત્યારે ઓર્ડર આપવા માટે તૈયાર છો?",
+        "explanation": "જમવાનું મંગાવવા માટે 'order' શબ્દનો ઉપયોગ થાય છે."
+      },
+      {
+        "id": "d9",
+        "speaker": "Customer",
+        "prompt": "Customer: Yes, we ___ two plates of Gujarati Thali, please.",
+        "text": "Yes, we want two plates of Gujarati Thali, please.",
+        "blankWord": "want",
+        "options": [
+          "want",
+          "wants",
+          "wanted",
+          "wanting"
+        ],
+        "gujaratiHint": "ગ્રાહક: હા, અમને બે પ્લેટ ગુજરાતી થાળી આપો.",
+        "explanation": "We (બહુવચન) કર્તા હોવાથી ક્રિયાપદનું મૂળ રૂપ 'want' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રસ્તો પૂછતી વખતે (Asking for Directions)",
+    "dialogues": [
+      {
+        "id": "d10",
+        "speaker": "Traveler",
+        "prompt": "Traveler: Excuse me, can you tell me the ___ to the bank?",
+        "text": "Excuse me, can you tell me the way to the bank?",
+        "blankWord": "way",
+        "options": [
+          "way",
+          "road",
+          "street",
+          "map"
+        ],
+        "gujaratiHint": "પ્રવાસી: માફ કરજો, શું તમે મને બેંકનો રસ્તો બતાવી શકશો?",
+        "explanation": "કોઈ ચોક્કસ સ્થાન સુધી પહોંચવાનો રસ્તો પૂછવા 'the way to' વપરાય છે."
+      },
+      {
+        "id": "d11",
+        "speaker": "Local Person",
+        "prompt": "Local Person: Go straight and ___ left at the corner.",
+        "text": "Go straight and turn left at the corner.",
+        "blankWord": "turn",
+        "options": [
+          "go",
+          "turn",
+          "take",
+          "walk"
+        ],
+        "gujaratiHint": "સ્થાનિક વ્યક્તિ: સીધા જાઓ અને ખૂણા પરથી ડાબી બાજુ વળો.",
+        "explanation": "દિશા બદલવા માટે ક્રિયાપદ તરીકે 'turn' વપરાય છે (turn left/right)."
+      }
+    ]
+  },
+  {
+    "situation": "પરિચય આપતી વખતે (Introducing Yourself)",
+    "dialogues": [
+      {
+        "id": "d12",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Hello! My name is Rohan. What ___ your name?",
+        "text": "Hello! My name is Rohan. What is your name?",
+        "blankWord": "is",
+        "options": [
+          "are",
+          "is",
+          "am",
+          "be"
+        ],
+        "gujaratiHint": "રોહન: નમસ્તે! મારું નામ રોહન છે. તમારું નામ શું છે?",
+        "explanation": "એકવચન કર્તાના નામ પૂછવા માટે સાદા વર્તમાનકાળમાં 'is' વપરાય છે."
+      },
+      {
+        "id": "d13",
+        "speaker": "Smit",
+        "prompt": "Smit: Nice to ___ you, Rohan. I am Smit.",
+        "text": "Nice to meet you, Rohan. I am Smit.",
+        "blankWord": "meet",
+        "options": [
+          "meet",
+          "meeting",
+          "met",
+          "meets"
+        ],
+        "gujaratiHint": "સ્મિત: તમને મળીને આનંદ થયો, રોહન. હું સ્મિત છું.",
+        "explanation": "'Nice to meet you' એ કોઈને પહેલી વાર મળતી વખતે વપરાતું ચોક્કસ અભિવાદન છે."
+      }
+    ]
+  },
+  {
+    "situation": "બેંકમાં (At the Bank)",
+    "dialogues": [
+      {
+        "id": "d14",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to ___ some money from my account.",
+        "text": "I want to withdraw some money from my account.",
+        "blankWord": "withdraw",
+        "options": [
+          "withdraw",
+          "deposit",
+          "give",
+          "send"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે મારા ખાતામાંથી થોડા રૂપિયા ઉપાડવા છે.",
+        "explanation": "બેંક ખાતામાંથી પૈસા ઉપાડવા માટે 'withdraw' શબ્દનો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d15",
+        "speaker": "Cashier",
+        "prompt": "Cashier: Sure, please fill out this ___ slip first.",
+        "text": "Sure, please fill out this withdrawal slip first.",
+        "blankWord": "withdrawal",
+        "options": [
+          "deposit",
+          "withdrawal",
+          "cheque",
+          "passbook"
+        ],
+        "gujaratiHint": "કેશિયર: ચોક્કસ, મહેરબાની કરીને પહેલા આ વિથડ્રોઅલ સ્લિપ ભરો.",
+        "explanation": "પૈસા ઉપાડવા માટે વપરાતા ફોર્મને 'withdrawal slip' કહેવામાં આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "વર્ગખંડમાં (At the School)",
+    "dialogues": [
+      {
+        "id": "d16",
+        "speaker": "Teacher",
+        "prompt": "Teacher: Why ___ you absent yesterday, Rohan?",
+        "text": "Why were you absent yesterday, Rohan?",
+        "blankWord": "were",
+        "options": [
+          "was",
+          "were",
+          "are",
+          "did"
+        ],
+        "gujaratiHint": "શિક્ષક: રોહન, તું ગઈકાલે કેમ ગેરહાજર હતો?",
+        "explanation": "ભૂતકાળમાં 'you' કર્તા સાથે સહાયકારક ક્રિયાપદ 'were' વપરાય છે."
+      },
+      {
+        "id": "d17",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Sir, I ___ not well yesterday. I had a fever.",
+        "text": "Sir, I was not well yesterday. I had a fever.",
+        "blankWord": "was",
+        "options": [
+          "was",
+          "were",
+          "am",
+          "had"
+        ],
+        "gujaratiHint": "રોહન: સર, ગઈકાલે મારી તબિયત સારી નહોતી. મને તાવ હતો.",
+        "explanation": "ભૂતકાળમાં 'I' કર્તા સાથે સ્થિતિ દર્શાવવા 'was' નો પ્રયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હવામાનની ચર્ચા (Weather Talk)",
+    "dialogues": [
+      {
+        "id": "d18",
+        "speaker": "Aarav",
+        "prompt": "Aarav: It is very ___ today, isn't it?",
+        "text": "It is very hot today, isn't it?",
+        "blankWord": "hot",
+        "options": [
+          "cold",
+          "hot",
+          "rainy",
+          "windy"
+        ],
+        "gujaratiHint": "આરવ: આજે ખૂબ ગરમી છે, ખરું ને?",
+        "explanation": "ઉનાળાના વાતાવરણની સ્થિતિને દર્શાવવા માટે 'hot' વપરાયું છે."
+      },
+      {
+        "id": "d19",
+        "speaker": "Soham",
+        "prompt": "Soham: Yes, I think it ___ rain tonight.",
+        "text": "Yes, I think it might rain tonight.",
+        "blankWord": "might",
+        "options": [
+          "might",
+          "must",
+          "should",
+          "shall"
+        ],
+        "gujaratiHint": "સોહમ: હા, મને લાગે છે કે આજે રાત્રે વરસાદ પડી શકે છે.",
+        "explanation": "ભવિષ્યમાં વરસાદ પડવાની અનિશ્ચિત શક્યતા દર્શાવવા 'might' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રેલવે સ્ટેશન પર (At the Railway Station)",
+    "dialogues": [
+      {
+        "id": "d20",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Which platform ___ the train to Mumbai arrive on?",
+        "text": "Which platform does the train to Mumbai arrive on?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: મુંબઈની ટ્રેન કયા પ્લેટફોર્મ પર આવશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં એકવચન કર્તા (the train) સાથે પ્રશ્નાર્થ બનાવવા 'does' આવે."
+      },
+      {
+        "id": "d21",
+        "speaker": "Inquiry Clerk",
+        "prompt": "Inquiry Clerk: It usually ___ on platform number four.",
+        "text": "It usually arrives on platform number four.",
+        "blankWord": "arrives",
+        "options": [
+          "arrive",
+          "arrives",
+          "arrived",
+          "arriving"
+        ],
+        "gujaratiHint": "પૂછપરછ ક્લાર્ક: તે સામાન્ય રીતે પ્લેટફોર્મ નંબર ૪ પર આવે છે.",
+        "explanation": "નિયમિત ઘટના હોવાથી ત્રીજો પુરુષ એકવચન 'It' સાથે ક્રિયાપદ 'arrives' આવશે."
+      }
+    ]
+  },
+  {
+    "situation": "શાકભાજીની ખરીદી (Buying Vegetables)",
+    "dialogues": [
+      {
+        "id": "d22",
+        "speaker": "Buyer",
+        "prompt": "Buyer: What is the ___ of potatoes per kg?",
+        "text": "What is the price of potatoes per kg?",
+        "blankWord": "price",
+        "options": [
+          "price",
+          "cost",
+          "money",
+          "rupees"
+        ],
+        "gujaratiHint": "ખરીદનાર: બટાકાનો પ્રતિ કિલો ભાવ શું છે?",
+        "explanation": "કોઈ વસ્તુની બજાર કિંમત પૂછવા માટે સામાન્ય નામ તરીકે 'price' વપરાય છે."
+      },
+      {
+        "id": "d23",
+        "speaker": "Seller",
+        "prompt": "Seller: It is forty rupees ___ kilogram, sir.",
+        "text": "It is forty rupees per kilogram, sir.",
+        "blankWord": "per",
+        "options": [
+          "for",
+          "per",
+          "in",
+          "by"
+        ],
+        "gujaratiHint": "વેચનાર: સર, ચાલીસ રૂપિયા કિલો છે.",
+        "explanation": "પ્રતિ એકમ દર્શાવવા માટે 'per' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ટેક્સી બુક કરતી વખતે (Booking a Taxi)",
+    "dialogues": [
+      {
+        "id": "d24",
+        "speaker": "Rider",
+        "prompt": "Rider: I want to ___ a cab to the airport.",
+        "text": "I want to book a cab to the airport.",
+        "blankWord": "book",
+        "options": [
+          "book",
+          "call",
+          "take",
+          "rent"
+        ],
+        "gujaratiHint": "મુસાફર: મારે એરપોર્ટ માટે ટેક્સી બુક કરવી છે.",
+        "explanation": "ગાડી અગાઉથી આરક્ષિત કરવા માટે 'book' શબ્દ યોગ્ય છે."
+      },
+      {
+        "id": "d25",
+        "speaker": "Operator",
+        "prompt": "Operator: Alright, the driver ___ arrive in five minutes.",
+        "text": "Alright, the driver will arrive in five minutes.",
+        "blankWord": "will",
+        "options": [
+          "will",
+          "would",
+          "shall",
+          "is"
+        ],
+        "gujaratiHint": "ઓપરેટર: બરાબર, ડ્રાઈવર પાંચ મિનિટમાં આવી જશે.",
+        "explanation": "ટૂંક સમયમાં થનારી ભવિષ્યની ઘટના માટે 'will' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "ફોન પર વાતચીત (Phone Conversation)",
+    "dialogues": [
+      {
+        "id": "d26",
+        "speaker": "Caller",
+        "prompt": "Caller: Hello, ___ I speak to Amit, please?",
+        "text": "Hello, may I speak to Amit, please?",
+        "blankWord": "may",
+        "options": [
+          "may",
+          "should",
+          "must",
+          "will"
+        ],
+        "gujaratiHint": "કોલર: નમસ્તે, શું હું અમિત સાથે વાત કરી શકું?",
+        "explanation": "ફોન પર નમ્રતાપૂર્વક પરવાનગી મેળવવા 'may' અથવા 'could' નો ઉપયોગ કરાય છે."
+      },
+      {
+        "id": "d27",
+        "speaker": "Receiver",
+        "prompt": "Receiver: Sorry, he is not at home. Can I take a ___?",
+        "text": "Sorry, he is not at home. Can I take a message?",
+        "blankWord": "message",
+        "options": [
+          "message",
+          "letter",
+          "note",
+          "call"
+        ],
+        "gujaratiHint": "સામેની વ્યક્તિ: માફ કરજો, તે ઘરે નથી. શું હું કોઈ સંદેશો લઈ શકું?",
+        "explanation": "કોઈના વતી વાત સાંભળીને પહોંચાડવા માટે 'take a message' ફ્રેઝ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલ ચેક-ઈન (At the Hotel Check-in)",
+    "dialogues": [
+      {
+        "id": "d28",
+        "speaker": "Guest",
+        "prompt": "Guest: Hello, I have a ___ under the name of Patel.",
+        "text": "Hello, I have a reservation under the name of Patel.",
+        "blankWord": "reservation",
+        "options": [
+          "reservation",
+          "room",
+          "ticket",
+          "bill"
+        ],
+        "gujaratiHint": "મહેમાન: નમસ્તે, મારે પટેલ નામ હેઠળ બુકિંગ (આરક્ષણ) છે.",
+        "explanation": "હોટેલમાં પહેલેથી નક્કી કરાયેલા રૂમ માટે 'reservation' અથવા 'booking' બોલાય છે."
+      },
+      {
+        "id": "d29",
+        "speaker": "Receptionist",
+        "prompt": "Receptionist: Yes sir, here is your room ___.",
+        "text": "Yes sir, here is your room key.",
+        "blankWord": "key",
+        "options": [
+          "key",
+          "card",
+          "lock",
+          "number"
+        ],
+        "gujaratiHint": "રિસેપ્શનિસ્ટ: હા સર, આ રહી તમારા રૂમની ચાવી.",
+        "explanation": "રૂમ ખોલવા માટે આપવામાં આવતી ભૌતિક કે ઇલેક્ટ્રોનિક વસ્તુ માટે 'key' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "લાઇબ્રેરીમાં (At the Library)",
+    "dialogues": [
+      {
+        "id": "d30",
+        "speaker": "Student",
+        "prompt": "Student: Can I ___ this grammar book for a week?",
+        "text": "Can I borrow this grammar book for a week?",
+        "blankWord": "borrow",
+        "options": [
+          "borrow",
+          "lend",
+          "take",
+          "buy"
+        ],
+        "gujaratiHint": "વિદ્યાર્થી: શું હું આ વ્યાકરણનું પુસ્તક એક અઠવાડિયા માટે ઉધાર લઈ શકું?",
+        "explanation": "બીજાની પાસેથી વાંચીને પાછું આપવાની શરતે લેવા માટે 'borrow' શબ્દ વપરાય છે."
+      },
+      {
+        "id": "d31",
+        "speaker": "Librarian",
+        "prompt": "Librarian: Yes, but make sure to ___ it on time.",
+        "text": "Yes, but make sure to return it on time.",
+        "blankWord": "return",
+        "options": [
+          "return",
+          "give",
+          "keep",
+          "lose"
+        ],
+        "gujaratiHint": "ગ્રંથપાલ: હા, પણ તેને સમયસર પરત કરવાનું ભૂલતા નહિ.",
+        "explanation": "પુસ્તકાલયનું પુસ્તક પાછું આપવા માટે 'return' શબ્દ વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "શોખ વિશે વાતચીત (Talking about Hobbies)",
+    "dialogues": [
+      {
+        "id": "d32",
+        "speaker": "Kabir",
+        "prompt": "Kabir: What do you like to do in your ___ time?",
+        "text": "What do you like to do in your free time?",
+        "blankWord": "free",
+        "options": [
+          "busy",
+          "free",
+          "working",
+          "study"
+        ],
+        "gujaratiHint": "કબીર: તમને તમારા નવરાશના સમયમાં શું કરવું ગમે છે?",
+        "explanation": "નવરાશના કે વધારાના સમય માટે 'free time' અથવા 'leisure time' વપરાય છે."
+      },
+      {
+        "id": "d33",
+        "speaker": "Meera",
+        "prompt": "Meera: I am fond ___ reading novels.",
+        "text": "I am fond of reading novels.",
+        "blankWord": "of",
+        "options": [
+          "of",
+          "for",
+          "in",
+          "to"
+        ],
+        "gujaratiHint": "મીરા: મને નવલકથાઓ વાંચવાનો ખૂબ શોખ છે.",
+        "explanation": "'fond' શબ્દ સાથે હંમેશાં 'of' પ્રિપોઝિશન આવે છે (fond of doing something)."
+      }
+    ]
+  },
+  {
+    "situation": "જોબ ઈન્ટરવ્યુ (Job Interview)",
+    "dialogues": [
+      {
+        "id": "d34",
+        "speaker": "Interviewer",
+        "prompt": "Interviewer: Tell me about your educational ___.",
+        "text": "Tell me about your educational background.",
+        "blankWord": "background",
+        "options": [
+          "background",
+          "history",
+          "future",
+          "result"
+        ],
+        "gujaratiHint": "ઇન્ટરવ્યુઅર: મને તમારી શૈક્ષણિક પૃષ્ઠભૂમિ (અભ્યાસ વિશે) જણાવો.",
+        "explanation": "વ્યક્તિના ભૂતકાળના અભ્યાસ અને ડિગ્રીઓની માહિતી માટે 'educational background' વપરાય છે."
+      },
+      {
+        "id": "d35",
+        "speaker": "Candidate",
+        "prompt": "Candidate: I have ___ my graduation in computer science.",
+        "text": "I have completed my graduation in computer science.",
+        "blankWord": "completed",
+        "options": [
+          "complete",
+          "completed",
+          "finish",
+          "done"
+        ],
+        "gujaratiHint": "ઉમેદવાર: મેં કમ્પ્યુટર સાયન્સમાં મારું ગ્રેજ્યુએશન પૂરું કર્યું છે.",
+        "explanation": "પૂર્ણ વર્તમાનકાળની રચનામાં 'have' પછી ભૂતકૃદંત 'completed' યોગ્ય છે."
+      }
+    ]
+  },
+  {
+    "situation": "મિત્રને મળતી વખતે (Meeting a Friend)",
+    "dialogues": [
+      {
+        "id": "d36",
+        "speaker": "Riya",
+        "prompt": "Riya: How have you ___? We met after a long time.",
+        "text": "How have you been? We met after a long time.",
+        "blankWord": "been",
+        "options": [
+          "be",
+          "been",
+          "being",
+          "was"
+        ],
+        "gujaratiHint": "રિયા: તું કેમ છે? આપણે લાંબા સમય પછી મળ્યા.",
+        "explanation": "ઘણા સમય પછી કુશળતા પૂછવા 'How have you been?' બોલાય છે."
+      },
+      {
+        "id": "d37",
+        "speaker": "Keya",
+        "prompt": "Keya: I am doing ___! How about you?",
+        "text": "I am doing great! How about you?",
+        "blankWord": "great",
+        "options": [
+          "well",
+          "great",
+          "good",
+          "nice"
+        ],
+        "gujaratiHint": "કેયા: હું ખૂબ જ મજામાં છું! તારા શું સમાચાર છે?",
+        "explanation": "અહીં 'great' અથવા 'well' બંને આવી શકે, પણ સામાન્ય ચર્ચામાં 'doing great' નો અર્થ ઉત્તમ છું થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "એરપોર્ટ પર (At the Airport)",
+    "dialogues": [
+      {
+        "id": "d38",
+        "speaker": "Agent",
+        "prompt": "Agent: May I see your passport and ___ ticket?",
+        "text": "May I see your passport and flight ticket?",
+        "blankWord": "flight",
+        "options": [
+          "bus",
+          "train",
+          "flight",
+          "road"
+        ],
+        "gujaratiHint": "એજન્ટ: શું હું તમારો પાસપોર્ટ અને પ્લેનની (ફ્લાઇટ) ટિકિટ જોઈ શકું?",
+        "explanation": "એરપોર્ટ પર હવાઈ સફરની ટિકિટ માટે 'flight ticket' કહેવામાં આવે છે."
+      },
+      {
+        "id": "d39",
+        "speaker": "Passenger",
+        "prompt": "Passenger: Yes, here they ___. I only have one handbag.",
+        "text": "Yes, here they are. I only have one handbag.",
+        "blankWord": "are",
+        "options": [
+          "is",
+          "are",
+          "am",
+          "were"
+        ],
+        "gujaratiHint": "મુસાફર: હા, આ રહ્યા. મારી પાસે માત્ર એક હેન્ડબેગ છે.",
+        "explanation": "બહુવચન કર્તા 'they' હોવાથી ક્રિયાપદ તરીકે 'are' નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "કપડાંની ખરીદી (Shopping for Clothes)",
+    "dialogues": [
+      {
+        "id": "d40",
+        "speaker": "Customer",
+        "prompt": "Customer: Do you have this dress in a larger ___?",
+        "text": "Do you have this dress in a larger size?",
+        "blankWord": "size",
+        "options": [
+          "size",
+          "color",
+          "length",
+          "fit"
+        ],
+        "gujaratiHint": "ગ્રાહક: શું તમારી પાસે આ ડ્રેસ મોટા માપમાં (સાઈઝમાં) છે?",
+        "explanation": "કપડાંના માપને અંગ્રેજીમાં 'size' તરીકે ઓળખવામાં આવે છે."
+      },
+      {
+        "id": "d41",
+        "speaker": "Salesman",
+        "prompt": "Salesman: Yes, let me check in the ___ room.",
+        "text": "Yes, let me check in the stock room.",
+        "blankWord": "stock",
+        "options": [
+          "stock",
+          "trial",
+          "fitting",
+          "rest"
+        ],
+        "gujaratiHint": "સેલ્સમેન: હા, મને ગોદામમાં (સ્ટોક રૂમમાં) તપાસવા દો.",
+        "explanation": "જ્યાં વધારાનો સામાન રાખવામાં આવે છે તેને 'stock room' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પિકનિકનું આયોજન (Planning a Picnic)",
+    "dialogues": [
+      {
+        "id": "d42",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Where should we ___ for the picnic?",
+        "text": "Where should we go for the picnic?",
+        "blankWord": "go",
+        "options": [
+          "go",
+          "going",
+          "went",
+          "gone"
+        ],
+        "gujaratiHint": "રોહન: આપણે પિકનિક માટે ક્યાં જવું જોઈએ?",
+        "explanation": "સહાયકારક ક્રિયાપદ 'should' સાથે હંમેશાં ક્રિયાપદનું મૂળ રૂપ 'go' વપરાય છે."
+      },
+      {
+        "id": "d43",
+        "speaker": "Sneha",
+        "prompt": "Sneha: Let's go to the ___ near the lake.",
+        "text": "Let's go to the park near the lake.",
+        "blankWord": "park",
+        "options": [
+          "park",
+          "school",
+          "office",
+          "bank"
+        ],
+        "gujaratiHint": "સ્નેહા: ચાલો તળાવ નજીક આવેલા બગીચામાં (પાર્ક) જઈએ.",
+        "explanation": "પિકનિક અને કુદરતી આનંદ માટે સૌથી યોગ્ય સ્થાનોમાં 'park' નો સમાવેશ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "પોસ્ટ ઓફિસમાં (At the Post Office)",
+    "dialogues": [
+      {
+        "id": "d44",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to send this ___ to Surat.",
+        "text": "I want to send this parcel to Surat.",
+        "blankWord": "parcel",
+        "options": [
+          "parcel",
+          "email",
+          "box",
+          "money"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે આ પાર્સલ સુરત મોકલવું છે.",
+        "explanation": "પોસ્ટ ઓફિસ દ્વારા મોકલવામાં આવતા સામાનના પેકેટને 'parcel' કહે છે."
+      },
+      {
+        "id": "d45",
+        "speaker": "Clerk",
+        "prompt": "Clerk: Please place it on the weighing ___ first.",
+        "text": "Please place it on the weighing scale first.",
+        "blankWord": "scale",
+        "options": [
+          "scale",
+          "table",
+          "chair",
+          "box"
+        ],
+        "gujaratiHint": "ક્લાર્ક: મહેરબાની કરીને પહેલા તેને વજન કાંટા (સ્કેલ) પર મૂકો.",
+        "explanation": "વજન માપવાના મશીનને અંગ્રેજીમાં 'weighing scale' અથવા 'weighing machine' કહેવાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દવાખાનામાં (At the Doctor)",
+    "dialogues": [
+      {
+        "id": "d1",
+        "speaker": "Doctor",
+        "prompt": "Doctor: What is the problem? What ___ to you?",
+        "text": "What is the problem? What happened to you?",
+        "blankWord": "happened",
+        "options": [
+          "happen",
+          "happened",
+          "happening",
+          "happens"
+        ],
+        "gujaratiHint": "ડોક્ટર: શું તકલીફ છે? તમને શું થયું છે?",
+        "explanation": "ભૂતકાળની ઘટના પૂછવા માટે ક્રિયાપદનું ભૂતકાળનું રૂપ 'happened' યોગ્ય છે."
+      },
+      {
+        "id": "d2",
+        "speaker": "Patient",
+        "prompt": "Patient: I have a ___ since yesterday.",
+        "text": "I have a headache since yesterday.",
+        "blankWord": "headache",
+        "options": [
+          "painful",
+          "headache",
+          "aching",
+          "hurt"
+        ],
+        "gujaratiHint": "દર્દી: મને ગઈકાલથી માથું દુખે છે.",
+        "explanation": "નામ તરીકે 'headache' (માથાનો દુખાવો) વપરાય છે."
+      },
+      {
+        "id": "d3",
+        "speaker": "Doctor",
+        "prompt": "Doctor: Take this medicine ___ a day.",
+        "text": "Take this medicine twice a day.",
+        "blankWord": "twice",
+        "options": [
+          "two",
+          "twice",
+          "double",
+          "second"
+        ],
+        "gujaratiHint": "ડોક્ટર: આ દવા દિવસમાં બે વાર લેજો.",
+        "explanation": "દિવસમાં કેટલી વાર તે દર્શાવવા માટે 'twice' (બે વાર) નો ઉપયોગ થાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "દુકાનદાર સાથે (At the Shop)",
+    "dialogues": [
+      {
+        "id": "d4",
+        "speaker": "Customer",
+        "prompt": "Customer: How ___ is this shirt?",
+        "text": "How much is this shirt?",
+        "blankWord": "much",
+        "options": [
+          "many",
+          "much",
+          "cost",
+          "price"
+        ],
+        "gujaratiHint": "ગ્રાહક: આ શર્ટની કિંમત કેટલી છે?",
+        "explanation": "કિંમત પૂછવા માટે સામાન્ય રીતે 'How much' નો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d5",
+        "speaker": "Shopkeeper",
+        "prompt": "Shopkeeper: It ___ five hundred rupees.",
+        "text": "It costs five hundred rupees.",
+        "blankWord": "costs",
+        "options": [
+          "cost",
+          "costs",
+          "costing",
+          "price"
+        ],
+        "gujaratiHint": "દુકાનદાર: તેની કિંમત ૫૦૦ રૂપિયા છે.",
+        "explanation": "It (ત્રીજો પુરુષ એકવચન) કર્તા હોવાથી ક્રિયાપદને 's' લાગીને 'costs' બને છે."
+      }
+    ]
+  },
+  {
+    "situation": "બસ સ્ટેશન પર (At the Bus Station)",
+    "dialogues": [
+      {
+        "id": "d6",
+        "speaker": "Passenger",
+        "prompt": "Passenger: When ___ the bus to Ahmedabad leave?",
+        "text": "When does the bus to Ahmedabad leave?",
+        "blankWord": "does",
+        "options": [
+          "do",
+          "does",
+          "is",
+          "has"
+        ],
+        "gujaratiHint": "મુસાફર: અમદાવાદ જવાની બસ ક્યારે ઉપડશે?",
+        "explanation": "સાદા વર્તમાનકાળમાં ત્રીજો પુરુષ એકવચન કર્તા (the bus) હોવાથી પ્રશ્નાર્થ માટે 'does' વપરાય છે."
+      },
+      {
+        "id": "d7",
+        "speaker": "Clerk",
+        "prompt": "Clerk: It ___ at 4:30 PM from platform three.",
+        "text": "It leaves at 4:30 PM from platform three.",
+        "blankWord": "leaves",
+        "options": [
+          "leave",
+          "leaves",
+          "leaving",
+          "left"
+        ],
+        "gujaratiHint": "ક્લાર્ક: તે સાંજે ૪:૩૦ વાગ્યે પ્લેટફોર્મ નંબર ૩ પરથી ઉપડશે.",
+        "explanation": "સમયપત્રકની નિયમિત ઘટના દર્શાવવા માટે સાદા વર્તમાનકાળનું 'leaves' ક્રિયાપદ આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "હોટેલમાં ઓર્ડર આપતી વખતે (At the Restaurant)",
+    "dialogues": [
+      {
+        "id": "d8",
+        "speaker": "Waiter",
+        "prompt": "Waiter: Are you ready to ___ now?",
+        "text": "Are you ready to order now?",
+        "blankWord": "order",
+        "options": [
+          "eat",
+          "order",
+          "drink",
+          "pay"
+        ],
+        "gujaratiHint": "વેઈટર: શું આપ અત્યારે ઓર્ડર આપવા માટે તૈયાર છો?",
+        "explanation": "જમવાનું મંગાવવા માટે 'order' શબ્દનો ઉપયોગ થાય છે."
+      },
+      {
+        "id": "d9",
+        "speaker": "Customer",
+        "prompt": "Customer: Yes, we ___ two plates of Gujarati Thali, please.",
+        "text": "Yes, we want two plates of Gujarati Thali, please.",
+        "blankWord": "want",
+        "options": [
+          "want",
+          "wants",
+          "wanted",
+          "wanting"
+        ],
+        "gujaratiHint": "ગ્રાહક: હા, અમને બે પ્લેટ ગુજરાતી થાળી આપો.",
+        "explanation": "We (બહુવચન) કર્તા હોવાથી ક્રિયાપદનું મૂળ રૂપ 'want' વપરાય છે."
+      }
+    ]
+  },
+  {
+    "situation": "રસ્તો પૂછતી વખતે (Asking for Directions)",
+    "dialogues": [
+      {
+        "id": "d10",
+        "speaker": "Traveler",
+        "prompt": "Traveler: Excuse me, can you tell me the ___ to the bank?",
+        "text": "Excuse me, can you tell me the way to the bank?",
+        "blankWord": "way",
+        "options": [
+          "way",
+          "road",
+          "street",
+          "map"
+        ],
+        "gujaratiHint": "પ્રવાસી: માફ કરજો, શું તમે મને બેંકનો રસ્તો બતાવી શકશો?",
+        "explanation": "કોઈ ચોક્કસ સ્થાન સુધી પહોંચવાનો રસ્તો પૂછવા 'the way to' વપરાય છે."
+      },
+      {
+        "id": "d11",
+        "speaker": "Local Person",
+        "prompt": "Local Person: Go straight and ___ left at the corner.",
+        "text": "Go straight and turn left at the corner.",
+        "blankWord": "turn",
+        "options": [
+          "go",
+          "turn",
+          "take",
+          "walk"
+        ],
+        "gujaratiHint": "સ્થાનિક વ્યક્તિ: સીધા જાઓ અને ખૂણા પરથી ડાબી બાજુ વળો.",
+        "explanation": "દિશા બદલવા માટે ક્રિયાપદ તરીકે 'turn' વપરાય છે (turn left/right)."
+      }
+    ]
+  },
+  {
+    "situation": "પરિચય આપતી વખતે (Introducing Yourself)",
+    "dialogues": [
+      {
+        "id": "d12",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Hello! My name is Rohan. What ___ your name?",
+        "text": "Hello! My name is Rohan. What is your name?",
+        "blankWord": "is",
+        "options": [
+          "are",
+          "is",
+          "am",
+          "be"
+        ],
+        "gujaratiHint": "રોહન: નમસ્તે! મારું નામ રોહન છે. તમારું નામ શું છે?",
+        "explanation": "એકવચન કર્તાના નામ પૂછવા માટે સાદા વર્તમાનકાળમાં 'is' વપરાય છે."
+      },
+      {
+        "id": "d13",
+        "speaker": "Smit",
+        "prompt": "Smit: Nice to ___ you, Rohan. I am Smit.",
+        "text": "Nice to meet you, Rohan. I am Smit.",
+        "blankWord": "meet",
+        "options": [
+          "meet",
+          "meeting",
+          "met",
+          "meets"
+        ],
+        "gujaratiHint": "સ્મિત: તમને મળીને આનંદ થયો, રોહન. હું સ્મિત છું.",
+        "explanation": "'Nice to meet you' એ કોઈને પહેલી વાર મળતી વખતે વપરાતું ચોક્કસ અભિવાદન છે."
+      }
+    ]
+  },
+  {
+    "situation": "બેંકમાં (At the Bank)",
+    "dialogues": [
+      {
+        "id": "d14",
+        "speaker": "Customer",
+        "prompt": "Customer: I want to ___ some money from my account.",
+        "text": "I want to withdraw some money from my account.",
+        "blankWord": "withdraw",
+        "options": [
+          "withdraw",
+          "deposit",
+          "give",
+          "send"
+        ],
+        "gujaratiHint": "ગ્રાહક: મારે મારા ખાતામાંથી થોડા રૂપિયા ઉપાડવા છે.",
+        "explanation": "બેંક ખાતામાંથી પૈસા ઉપાડવા માટે 'withdraw' શબ્દનો પ્રયોગ થાય છે."
+      },
+      {
+        "id": "d15",
+        "speaker": "Cashier",
+        "prompt": "Cashier: Sure, please fill out this ___ slip first.",
+        "text": "Sure, please fill out this withdrawal slip first.",
+        "blankWord": "withdrawal",
+        "options": [
+          "deposit",
+          "withdrawal",
+          "cheque",
+          "passbook"
+        ],
+        "gujaratiHint": "કેશિયર: ચોક્કસ, મહેરબાની કરીને પહેલા આ વિથડ્રોઅલ સ્લિપ ભરો.",
+        "explanation": "પૈસા ઉપાડવા માટે વપરાતા ફોર્મને 'withdrawal slip' કહેવામાં આવે છે."
+      }
+    ]
+  },
+  {
+    "situation": "વર્ગખંડમાં (At the School)",
+    "dialogues": [
+      {
+        "id": "d16",
+        "speaker": "Teacher",
+        "prompt": "Teacher: Why ___ you absent yesterday, Rohan?",
+        "text": "Why were you absent yesterday, Rohan?",
+        "blankWord": "were",
+        "options": [
+          "was",
+          "were",
+          "are",
+          "did"
+        ],
+        "gujaratiHint": "શિક્ષક: રોહન, તું ગઈકાલે કેમ ગેરહાજર હતો?",
+        "explanation": "ભૂતકાળમાં 'you' કર્તા સાથે સહાયકારક ક્રિયાપદ 'were' વપરાય છે."
+      },
+      {
+        "id": "d17",
+        "speaker": "Rohan",
+        "prompt": "Rohan: Sir, I ___ not well yesterday. I had a fever.",
+        "text": "Sir, I was not well yesterday. I had a fever.",
+        "blankWord": "was",
+        "options": [
+          "was",
+          "were",
+          "am",
+          "had"
+        ],
+        "gujaratiHint": "રોહન: સર, ગઈકાલે મારી તબિયત સારી નહોતી. મને તાવ હતો.",
+        "explanation": "ભૂતકાળમાં 'I' કર્તા સાથે સ્થિતિ દર્શાવવા 'was' નો પ્રયોગ થાય છે."
       }
     ]
   }

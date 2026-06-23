@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { toPng } from 'html-to-image';
 import { useNavigate } from 'react-router-dom';
+import { downloadFile } from '../utils/downloadHelper';
 import { GITA_SHLOKAS, GITA_CHAPTERS, GITA_SITUATIONS, GITA_TAGS, KRISHNA_RESPONSES } from '../data/bhagavadGita';
 
 // ─── HELPERS ──────────────────────────────────────────────
@@ -17,14 +18,39 @@ const speakText = (text, lang = 'gu-IN', onEnd = null) => {
     if (onEnd) onEnd();
     return;
   }
+  
   window.speechSynthesis.cancel();
-  const utt = new SpeechSynthesisUtterance(text);
-  utt.lang = lang;
-  utt.rate = 0.85;
-  if (onEnd) utt.onend = onEnd;
-  window.speechSynthesis.speak(utt);
+  
+  const play = () => {
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = lang;
+    utt.rate = 0.85; // Calmer tone
+    
+    const voices = window.speechSynthesis.getVoices();
+    if (voices && voices.length > 0) {
+      let voice = voices.find(v => v.lang.toLowerCase().includes('gu')) || 
+                  voices.find(v => v.lang.toLowerCase().includes('hi'));
+      if (voice) {
+        utt.voice = voice;
+      }
+    }
+    
+    if (onEnd) {
+      utt.onend = onEnd;
+      utt.onerror = onEnd;
+    }
+    window.speechSynthesis.speak(utt);
+  };
+
+  // If voices aren't loaded yet, wait for them
+  if (window.speechSynthesis.getVoices().length === 0) {
+    window.speechSynthesis.onvoiceschanged = play;
+  } else {
+    play();
+  }
 };
 
+// Global stop function
 const stopSpeech = () => {
   if (window.speechSynthesis) {
     window.speechSynthesis.cancel();
@@ -38,8 +64,8 @@ const ls = {
 
 // ─── SHARE CARD TEMPLATES ─────────────────────────────────
 const CARD_TEMPLATES = [
-  { id: 'saffron', bg: 'from-orange-900 to-amber-800', accent: 'border-yellow-400' },
-  { id: 'night',   bg: 'from-indigo-950 to-blue-950',  accent: 'border-cyan-400' },
+  { id: 'saffron', bg: 'from-teal-950 to-yellow-900', accent: 'border-yellow-400' },
+  { id: 'night',   bg: 'from-teal-950 to-blue-950',  accent: 'border-cyan-400' },
   { id: 'forest',  bg: 'from-emerald-900 to-teal-900', accent: 'border-lime-400' },
 ];
 
@@ -123,7 +149,7 @@ export default function GitaHub() {
   const handleSpeak = (shloka) => {
     if (speaking) { stopSpeech(); setSpeaking(false); return; }
     setSpeaking(true);
-    const text = `${shloka.transliteration}. ${shloka.gujarati}. ${shloka.modernContext}`;
+    const text = `${shloka.gujarati}`;
     speakText(text, 'gu-IN', () => setSpeaking(false));
   };
 
@@ -141,10 +167,7 @@ export default function GitaHub() {
         cacheBust: true,
         style: { background: 'transparent' }
       });
-      const link = document.createElement('a');
-      link.download = `gita_${shareShloka?.id || 'shlok'}.png`;
-      link.href = dataUrl;
-      link.click();
+      await downloadFile(dataUrl, `gita_${shareShloka?.id || 'shlok'}.png`);
     } catch (e) {
       console.error(e);
       alert("Error generating card: " + (e.message || e.toString()));
@@ -196,7 +219,7 @@ export default function GitaHub() {
     const playNext = () => {
       if (idx >= moodShlokas.length) { setMeditationPlaying(false); return; }
       const s = moodShlokas[idx++];
-      speakText(`${s.gujarati}. ${s.modernContext}`, 'gu-IN', playNext);
+      speakText(`${s.gujarati}`, 'gu-IN', playNext);
     };
     playNext();
   };
@@ -232,10 +255,10 @@ export default function GitaHub() {
   ];
 
   const MEDITATION_MOODS = [
-    { id: 'stress',   name: 'Stress Relief',    emoji: '😤', duration: '5 min', color: 'from-blue-600 to-indigo-700' },
-    { id: 'focus',    name: 'Morning Focus',    emoji: '🌄', duration: '3 min', color: 'from-amber-600 to-orange-700' },
+    { id: 'stress',   name: 'Stress Relief',    emoji: '😤', duration: '5 min', color: 'from-blue-600 to-teal-700' },
+    { id: 'focus',    name: 'Morning Focus',    emoji: '🌄', duration: '3 min', color: 'from-yellow-700 to-teal-800' },
     { id: 'grief',    name: 'Grief & Loss',     emoji: '💙', duration: '7 min', color: 'from-slate-600 to-slate-800' },
-    { id: 'anger',    name: 'Anger Calm',       emoji: '🔥', duration: '5 min', color: 'from-red-700 to-rose-800' },
+    { id: 'anger',    name: 'Anger Calm',       emoji: '🔥', duration: '5 min', color: 'from-emerald-800 to-rose-800' },
     { id: 'peace',    name: 'Peace & Sleep',    emoji: '🌙', duration: '10 min', color: 'from-purple-700 to-violet-900' },
   ];
 
@@ -244,9 +267,9 @@ export default function GitaHub() {
     const isFav = favorites.includes(shloka.id);
     return (
       <div className={`bg-white dark:bg-stone-950 rounded-3xl border shadow-sm overflow-hidden transition-all
-        ${highlight ? 'border-amber-400 shadow-amber-100 dark:shadow-amber-900/20' : 'border-stone-100 dark:border-stone-800'}`}>
+        ${highlight ? 'border-yellow-400 shadow-yellow-100 dark:shadow-yellow-900/20' : 'border-stone-100 dark:border-stone-800'}`}>
         {/* Chapter badge */}
-        <div className="bg-gradient-to-r from-orange-600 to-amber-600 px-5 py-2.5 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-teal-700 to-yellow-700 px-5 py-2.5 flex items-center justify-between">
           <span className="text-white text-[11px] font-black tracking-wider font-gujarati">
             અધ્યાય {shloka.chapter} • શ્લોક {shloka.verse} — {shloka.chapterName}
           </span>
@@ -262,7 +285,7 @@ export default function GitaHub() {
 
         <div className="p-5 space-y-4">
           {/* Sanskrit */}
-          <div className="text-center bg-amber-50 dark:bg-amber-950/20 rounded-2xl p-4 border border-amber-100 dark:border-amber-900/30">
+          <div className="text-center bg-yellow-50 dark:bg-yellow-950/20 rounded-2xl p-4 border border-yellow-100 dark:border-yellow-900/30">
             <p className="text-stone-800 dark:text-stone-200 text-base leading-relaxed font-black" style={{ fontFamily: 'serif' }}>
               {shloka.sanskrit}
             </p>
@@ -283,8 +306,8 @@ export default function GitaHub() {
                 <p className="text-xs font-black text-blue-700 dark:text-blue-400 mb-1 font-gujarati">💡 આજના જીવનમાં પ્રાસંગિકતા:</p>
                 <p className="font-gujarati text-sm text-stone-700 dark:text-stone-300 leading-relaxed">{shloka.modernContext}</p>
               </div>
-              <div className="bg-orange-50 dark:bg-orange-950/20 rounded-2xl p-4 border border-orange-100 dark:border-orange-900/30">
-                <p className="text-xs font-black text-orange-700 dark:text-orange-400 mb-1 font-gujarati">⚔️ અર્જુનનો સંદર્ભ:</p>
+              <div className="bg-teal-50 dark:bg-teal-950/20 rounded-2xl p-4 border border-teal-100 dark:border-teal-950/30">
+                <p className="text-xs font-black text-teal-800 dark:text-teal-400 mb-1 font-gujarati">⚔️ અર્જુનનો સંદર્ભ:</p>
                 <p className="font-gujarati text-sm text-stone-700 dark:text-stone-300 leading-relaxed">{shloka.arjunContext}</p>
               </div>
               {shloka.wordMeaning && (
@@ -298,7 +321,7 @@ export default function GitaHub() {
           {/* Tags */}
           <div className="flex flex-wrap gap-1.5">
             {shloka.tags?.slice(0, 4).map(tag => (
-              <span key={tag} className="text-[10px] bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-400 px-2.5 py-0.5 rounded-full font-bold">
+              <span key={tag} className="text-[10px] bg-yellow-100 dark:bg-yellow-950/40 text-yellow-900 dark:text-yellow-400 px-2.5 py-0.5 rounded-full font-bold">
                 #{tag}
               </span>
             ))}
@@ -309,7 +332,7 @@ export default function GitaHub() {
             <button
               onClick={() => handleSpeak(shloka)}
               className={`flex-1 py-2.5 rounded-2xl flex items-center justify-center gap-1.5 text-xs font-bold transition-all
-                ${speaking ? 'bg-teal-600 text-white animate-pulse' : 'bg-stone-100 dark:bg-stone-900 text-stone-600 dark:text-stone-400 hover:bg-amber-100 hover:text-amber-800'}`}
+                ${speaking ? 'bg-teal-600 text-white animate-pulse' : 'bg-stone-100 dark:bg-stone-900 text-stone-600 dark:text-stone-400 hover:bg-yellow-100 hover:text-yellow-900'}`}
             >
               <span className="material-symbols-outlined text-base">{speaking ? 'volume_up' : 'record_voice_over'}</span>
               {speaking ? 'વાચન બંધ કરો' : 'અવાજ સાંભળો'}
@@ -317,7 +340,7 @@ export default function GitaHub() {
             {!showFull && (
               <button
                 onClick={() => setViewShloka(shloka)}
-                className="flex-1 py-2.5 rounded-2xl bg-amber-600 text-white text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-amber-700 active:scale-95 transition-all"
+                className="flex-1 py-2.5 rounded-2xl bg-yellow-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-yellow-800 active:scale-95 transition-all"
               >
                 <span className="material-symbols-outlined text-base">menu_book</span>
                 Full Meaning
@@ -339,7 +362,7 @@ export default function GitaHub() {
       case 'daily': return (
         <div className="space-y-6">
           {/* Streak Banner */}
-          <div className="bg-gradient-to-r from-orange-600 to-amber-500 rounded-3xl p-5 text-white flex items-center justify-between shadow-lg">
+          <div className="bg-gradient-to-r from-teal-700 to-yellow-600 rounded-3xl p-5 text-white flex items-center justify-between shadow-lg">
             <div>
               <p className="font-gujarati text-xs text-white/70 font-bold">દૈનિક શ્લોક વાચન ક્રમ</p>
               <p className="font-gujarati font-black text-3xl">{streak} 🔥</p>
@@ -355,8 +378,8 @@ export default function GitaHub() {
           {/* Daily Shloka */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="h-1 flex-1 bg-amber-200 dark:bg-amber-900 rounded-full">
-                <div className="h-1 bg-amber-500 rounded-full" style={{ width: `${((dailyIdx+1)/108)*100}%` }}></div>
+              <div className="h-1 flex-1 bg-yellow-200 dark:bg-yellow-900 rounded-full">
+                <div className="h-1 bg-yellow-600 rounded-full" style={{ width: `${((dailyIdx+1)/108)*100}%` }}></div>
               </div>
               <span className="text-xs text-stone-400 font-gujarati">{dailyIdx+1} / 108</span>
             </div>
@@ -383,7 +406,7 @@ export default function GitaHub() {
       // ════════════════════════════════════════════════════
       case 'situation': return (
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-indigo-700 to-purple-700 rounded-3xl p-6 text-white shadow-lg">
+          <div className="bg-gradient-to-r from-teal-700 to-purple-700 rounded-3xl p-6 text-white shadow-lg">
             <h2 className="font-gujarati font-black text-2xl">🤔 મારી મૂંઝવણ</h2>
             <p className="font-gujarati text-white/70 text-sm mt-1">તમારી જીવનની પરિસ્થિતિ અથવા મૂંઝવણ પસંદ કરો — ગીતાજીમાંથી માર્ગદર્શન મળશે</p>
           </div>
@@ -394,7 +417,7 @@ export default function GitaHub() {
                 <button
                   key={sit.id}
                   onClick={() => setSelectedSituation(sit)}
-                  className="p-4 bg-white dark:bg-stone-950 rounded-3xl border border-stone-100 dark:border-stone-800 shadow-sm hover:border-amber-400 hover:shadow-md active:scale-95 transition-all text-left group"
+                  className="p-4 bg-white dark:bg-stone-950 rounded-3xl border border-stone-100 dark:border-stone-800 shadow-sm hover:border-yellow-400 hover:shadow-md active:scale-95 transition-all text-left group"
                 >
                   <div className="text-3xl mb-2">{sit.emoji}</div>
                   <p className="font-gujarati font-black text-sm text-stone-800 dark:text-stone-200">{sit.name}</p>
@@ -450,13 +473,13 @@ export default function GitaHub() {
           </div>
 
           {challengeCompleted.length === 18 && (
-            <div className="bg-gradient-to-br from-yellow-400 to-amber-500 rounded-3xl p-6 text-center text-white shadow-xl">
+            <div className="bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-3xl p-6 text-center text-white shadow-xl">
               <div className="text-6xl mb-3">🏆</div>
               <h3 className="font-gujarati font-black text-2xl">Congratulations!</h3>
               <p className="font-gujarati font-bold text-white/90 mt-1">તમે શ્રીમદ ભગવદ ગીતાના ૧૮ અધ્યાય પૂર્ણ કર્યા છે!</p>
               <button
                 onClick={() => setShowCertificate(true)}
-                className="mt-4 bg-white text-amber-700 font-gujarati font-black px-6 py-3 rounded-2xl text-sm"
+                className="mt-4 bg-white text-yellow-800 font-gujarati font-black px-6 py-3 rounded-2xl text-sm"
               >
                 🎓 Certificate Download
               </button>
@@ -474,7 +497,7 @@ export default function GitaHub() {
               return (
                 <div key={ch.number} className={`rounded-3xl border overflow-hidden transition-all
                   ${isCompleted ? 'border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/20' :
-                    isActive ? 'border-amber-400 shadow-lg bg-white dark:bg-stone-950' :
+                    isActive ? 'border-yellow-400 shadow-lg bg-white dark:bg-stone-950' :
                     'border-stone-100 dark:border-stone-800 bg-stone-50 dark:bg-stone-950/50 opacity-70'}`}
                 >
                   <div
@@ -503,8 +526,8 @@ export default function GitaHub() {
                   {(isActive || isCompleted) && isExpanded && (
                     <div className="p-5 space-y-4">
                       <p className="font-gujarati text-sm text-stone-700 dark:text-stone-300 leading-relaxed">{ch.summary}</p>
-                      <div className="bg-amber-50 dark:bg-amber-950/20 rounded-2xl p-3 border border-amber-100 dark:border-amber-900/30">
-                        <p className="text-xs font-black text-amber-700 dark:text-amber-400 font-gujarati">💡 મુખ્ય જ્ઞાન / બોધ:</p>
+                      <div className="bg-yellow-50 dark:bg-yellow-950/20 rounded-2xl p-3 border border-yellow-100 dark:border-yellow-900/30">
+                        <p className="text-xs font-black text-yellow-800 dark:text-yellow-400 font-gujarati">💡 મુખ્ય જ્ઞાન / બોધ:</p>
                         <p className="font-gujarati text-sm text-stone-700 dark:text-stone-300 mt-1">{ch.keyLesson}</p>
                       </div>
                       <div className="bg-blue-50 dark:bg-blue-950/20 rounded-2xl p-3 border border-blue-100 dark:border-blue-900/30">
@@ -543,7 +566,7 @@ export default function GitaHub() {
       // ════════════════════════════════════════════════════
       case 'browse': return (
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-rose-700 to-pink-700 rounded-3xl p-6 text-white shadow-lg">
+          <div className="bg-gradient-to-r from-emerald-700 to-pink-700 rounded-3xl p-6 text-white shadow-lg">
             <h2 className="font-gujarati font-black text-2xl">🏷️ વિષય આધારિત જ્ઞાન</h2>
             <p className="font-gujarati text-white/70 text-sm mt-1">કોઈપણ વિષય પસંદ કરો — તે સંબંધિત શ્લોકો દર્શાવવામાં આવશે</p>
           </div>
@@ -555,7 +578,7 @@ export default function GitaHub() {
               value={tagSearch}
               onChange={e => setTagSearch(e.target.value)}
               placeholder="ગુજરાતી અથવા સંસ્કૃતમાં શોધો..."
-              className="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-950 font-gujarati text-sm focus:outline-none focus:border-amber-400 transition-colors"
+              className="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-950 font-gujarati text-sm focus:outline-none focus:border-yellow-400 transition-colors"
             />
             {tagSearch && (
               <button onClick={() => setTagSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-stone-400">
@@ -572,8 +595,8 @@ export default function GitaHub() {
                 onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-all border
                   ${selectedTag === tag
-                    ? 'bg-amber-600 text-white border-amber-600 shadow-md'
-                    : 'bg-white dark:bg-stone-900 text-stone-600 dark:text-stone-400 border-stone-200 dark:border-stone-700 hover:border-amber-400'}`}
+                    ? 'bg-yellow-700 text-white border-yellow-700 shadow-md'
+                    : 'bg-white dark:bg-stone-900 text-stone-600 dark:text-stone-400 border-stone-200 dark:border-stone-700 hover:border-yellow-400'}`}
               >
                 #{tag}
               </button>
@@ -595,7 +618,7 @@ export default function GitaHub() {
       // ════════════════════════════════════════════════════
       case 'meditate': return (
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-purple-800 to-indigo-800 rounded-3xl p-6 text-white shadow-lg">
+          <div className="bg-gradient-to-r from-purple-800 to-teal-800 rounded-3xl p-6 text-white shadow-lg">
             <h2 className="font-gujarati font-black text-2xl">🧘 ગીતા ધ્યાન સત્ર</h2>
             <p className="font-gujarati text-white/70 text-sm mt-1">તમારી માનસિક સ્થિતિ પસંદ કરો — શ્લોકો આપમેળે ચાલુ થશે</p>
           </div>
@@ -626,7 +649,7 @@ export default function GitaHub() {
               <div className="relative mx-auto w-32 h-32">
                 <div className="absolute inset-0 rounded-full bg-purple-400/20 animate-ping"></div>
                 <div className="absolute inset-2 rounded-full bg-purple-400/30 animate-ping" style={{ animationDelay: '0.5s' }}></div>
-                <div className="relative w-full h-full rounded-full bg-gradient-to-br from-purple-600 to-indigo-700 flex items-center justify-center shadow-xl">
+                <div className="relative w-full h-full rounded-full bg-gradient-to-br from-purple-600 to-teal-700 flex items-center justify-center shadow-xl">
                   <span className="text-5xl">{meditationMood?.emoji}</span>
                 </div>
               </div>
@@ -655,7 +678,7 @@ export default function GitaHub() {
       // ════════════════════════════════════════════════════
       case 'krishna': return (
         <div className="space-y-4 flex flex-col" style={{ minHeight: '70vh' }}>
-          <div className="bg-gradient-to-r from-blue-800 via-indigo-800 to-purple-800 rounded-3xl p-6 text-white shadow-lg">
+          <div className="bg-gradient-to-r from-blue-800 via-teal-800 to-purple-800 rounded-3xl p-6 text-white shadow-lg">
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-full bg-yellow-400/20 border-2 border-yellow-400 flex items-center justify-center">
                 <span className="text-2xl">🦚</span>
@@ -688,7 +711,7 @@ export default function GitaHub() {
                     { label: "મને ભય લાગે છે", query: "ભય" },
                     { label: "હું કોઈ નિર્ણય લઈ શકતો નથી", query: "નિર્ણય" }
                   ].map(s => (
-                    <button key={s.label} onClick={() => setChatInput(s.label)} className="text-xs bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800 px-3 py-1.5 rounded-full font-gujarati">
+                    <button key={s.label} onClick={() => setChatInput(s.label)} className="text-xs bg-yellow-50 dark:bg-yellow-950/30 text-yellow-800 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-900 px-3 py-1.5 rounded-full font-gujarati">
                       {s.label}
                     </button>
                   ))}
@@ -700,7 +723,7 @@ export default function GitaHub() {
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[85%] rounded-3xl px-4 py-3 text-sm font-gujarati leading-relaxed shadow-sm
                   ${msg.role === 'user'
-                    ? 'bg-amber-600 text-white rounded-tr-none'
+                    ? 'bg-yellow-700 text-white rounded-tr-none'
                     : 'bg-white dark:bg-stone-900 text-stone-800 dark:text-stone-200 border border-stone-100 dark:border-stone-800 rounded-tl-none'}`}
                 >
                   <p className="whitespace-pre-line">{msg.text}</p>
@@ -725,11 +748,11 @@ export default function GitaHub() {
               onChange={e => setChatInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleChatSend()}
               placeholder="તમારો પ્રશ્ન અહીં લખો..."
-              className="flex-1 px-4 py-3.5 rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-950 font-gujarati text-sm focus:outline-none focus:border-amber-400 transition-colors"
+              className="flex-1 px-4 py-3.5 rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-950 font-gujarati text-sm focus:outline-none focus:border-yellow-400 transition-colors"
             />
             <button
               onClick={handleChatSend}
-              className="px-5 bg-amber-600 hover:bg-amber-700 text-white rounded-2xl flex items-center justify-center transition-all active:scale-95"
+              className="px-5 bg-yellow-700 hover:bg-yellow-800 text-white rounded-2xl flex items-center justify-center transition-all active:scale-95"
             >
               <span className="material-symbols-outlined">send</span>
             </button>
@@ -744,7 +767,7 @@ export default function GitaHub() {
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in"
       onClick={e => e.target === e.currentTarget && setViewShloka(null)}>
       <div className="w-full max-w-2xl bg-[#fdfaf6] dark:bg-stone-950 rounded-[2.5rem] overflow-hidden shadow-2xl max-h-[85vh] flex flex-col animate-scale-in">
-        <div className="bg-gradient-to-r from-orange-600 to-amber-600 px-6 py-4 flex items-center justify-between flex-shrink-0">
+        <div className="bg-gradient-to-r from-teal-700 to-yellow-700 px-6 py-4 flex items-center justify-between flex-shrink-0">
           <span className="text-white font-gujarati font-black">Chapter {viewShloka.chapter}.{viewShloka.verse}</span>
           <button onClick={() => setViewShloka(null)} className="text-white/70 hover:text-white">
             <span className="material-symbols-outlined">close</span>
@@ -786,7 +809,7 @@ export default function GitaHub() {
           <button onClick={() => setShowShareCard(false)} className="flex-1 py-3 bg-white/10 text-white rounded-2xl font-gujarati font-bold text-sm">
             Cancel
           </button>
-          <button onClick={handleDownloadCard} className="flex-1 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-2xl font-gujarati font-bold text-sm flex items-center justify-center gap-2">
+          <button onClick={handleDownloadCard} className="flex-1 py-3 bg-yellow-600 hover:bg-yellow-700 text-white rounded-2xl font-gujarati font-bold text-sm flex items-center justify-center gap-2">
             <span className="material-symbols-outlined text-base">download</span>
             Download
           </button>
@@ -806,7 +829,7 @@ export default function GitaHub() {
             <input
               type="text"
               placeholder="તમારું નામ અહીં લખો..."
-              className="w-full px-4 py-3 rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-950 font-gujarati text-xs focus:outline-none focus:border-amber-400 text-center"
+              className="w-full px-4 py-3 rounded-2xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-950 font-gujarati text-xs focus:outline-none focus:border-yellow-400 text-center"
               value={userName}
               onChange={(e) => {
                 setUserName(e.target.value);
@@ -816,11 +839,11 @@ export default function GitaHub() {
           </div>
         )}
 
-        <div ref={certificateRef} className="bg-gradient-to-br from-amber-50 to-orange-100 dark:from-stone-900 dark:to-stone-950 p-6 rounded-[2.5rem] border-8 border-double border-amber-400 text-stone-800 dark:text-stone-200 shadow-2xl relative overflow-hidden">
+        <div ref={certificateRef} className="bg-gradient-to-br from-yellow-50 to-teal-100 dark:from-stone-900 dark:to-stone-950 p-6 rounded-[2.5rem] border-8 border-double border-yellow-400 text-stone-800 dark:text-stone-200 shadow-2xl relative overflow-hidden">
           <div className="absolute right-0 top-0 opacity-5 font-bold text-[180px] select-none pointer-events-none translate-y-[-40px] translate-x-[40px]">🕉️</div>
           <div className="absolute left-0 bottom-0 opacity-5 font-bold text-[180px] select-none pointer-events-none translate-y-[40px] translate-x-[-40px]">🦚</div>
 
-          <div className="border border-amber-250 dark:border-amber-900/60 p-4 rounded-2xl space-y-5 text-center relative z-10">
+          <div className="border border-amber-250 dark:border-yellow-900/60 p-4 rounded-2xl space-y-5 text-center relative z-10">
             <h2 className="text-amber-750 dark:text-amber-450 font-gujarati font-black text-xl tracking-wide">
               શ્રીમદ ભગવદ ગીતા જ્ઞાન પ્રમાણપત્ર
             </h2>
@@ -834,7 +857,7 @@ export default function GitaHub() {
               આથી આદરપૂર્વક પ્રમાણિત કરવામાં આવે છે કે
             </p>
 
-            <h3 className="font-gujarati font-black text-2xl text-stone-900 dark:text-white underline decoration-amber-500 decoration-wavy decoration-2 underline-offset-8 py-1">
+            <h3 className="font-gujarati font-black text-2xl text-stone-900 dark:text-white underline decoration-yellow-600 decoration-wavy decoration-2 underline-offset-8 py-1">
               {userName || "[ તમારું નામ ]"}
             </h3>
 
@@ -842,7 +865,7 @@ export default function GitaHub() {
               એ ૧૮ દિવસની શ્રીમદ ભગવદ ગીતા અધ્યાય શૃંખલા સફળતાપૂર્વક પૂર્ણ કરી છે, અને કૃષ્ણના અમૃત વચનોનું દૈનિક જીવનમાં આચરણ કરવાનો સંકલ્પ લીધો છે.
             </p>
 
-            <div className="h-px bg-amber-200 dark:bg-amber-900/50 my-2"></div>
+            <div className="h-px bg-yellow-200 dark:bg-yellow-900/50 my-2"></div>
 
             <div className="flex justify-between items-end text-[10px] text-stone-400 dark:text-stone-500 font-gujarati pt-2">
               <div className="text-left space-y-1">
@@ -850,7 +873,7 @@ export default function GitaHub() {
                 <p className="border-t border-stone-250 dark:border-stone-800 pt-0.5">અભ્યાસ પૂર્ણ તિથિ</p>
               </div>
               <div className="text-right space-y-1">
-                <p className="text-amber-700 dark:text-amber-550 font-black">શ્રી કૃષ્ણ આશીર્વાદ</p>
+                <p className="text-yellow-800 dark:text-amber-550 font-black">શ્રી કૃષ્ણ આશીર્વાદ</p>
                 <p className="border-t border-stone-250 dark:border-stone-800 pt-0.5">ભગવદ ગીતા સેવા મંચ</p>
               </div>
             </div>
@@ -871,17 +894,14 @@ export default function GitaHub() {
                   cacheBust: true,
                   style: { background: 'transparent' }
                 });
-                const link = document.createElement('a');
-                link.download = `gita_challenge_certificate.png`;
-                link.href = dataUrl;
-                link.click();
+                await downloadFile(dataUrl, 'gita_challenge_certificate.png');
               } catch (e) {
                 console.error(e);
                 alert("Error downloading certificate: " + (e.message || e.toString()));
               }
             }} 
             disabled={!userName}
-            className="flex-1 py-3 bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-white rounded-2xl font-gujarati font-bold text-sm flex items-center justify-center gap-2"
+            className="flex-1 py-3 bg-yellow-600 hover:bg-yellow-700 disabled:opacity-50 text-white rounded-2xl font-gujarati font-bold text-sm flex items-center justify-center gap-2"
           >
             <span className="material-symbols-outlined text-base">download</span>
             ડાઉનલોડ કરો
@@ -926,7 +946,7 @@ export default function GitaHub() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex-shrink-0 px-4 py-3 rounded-t-2xl text-xs font-bold font-gujarati transition-all flex items-center gap-1.5
                 ${activeTab === tab.id
-                  ? 'bg-[#fdfaf6] dark:bg-stone-950 text-amber-700 dark:text-amber-400 shadow-sm'
+                  ? 'bg-[#fdfaf6] dark:bg-stone-950 text-yellow-800 dark:text-yellow-400 shadow-sm'
                   : 'text-white/60 hover:text-white hover:bg-white/10'}`}
             >
               <span>{tab.emoji}</span>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { downloadAsPDF } from '../utils/downloadHelper';
 
 const KUNDALI_RASHIS = [
   { num: 1, name: "મેષ (Aries)", lord: "મંગળ", element: "અગ્નિ" },
@@ -39,6 +40,7 @@ const KundaliGenerator = () => {
   const [loadingCoords, setLoadingCoords] = useState(false);
   const [isCalculated, setIsCalculated] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   // Calculated Results State
   const [kundaliData, setKundaliData] = useState(null);
@@ -335,8 +337,17 @@ const KundaliGenerator = () => {
   };
 
   // --- DYNAMIC PDF PRINT TRIGGER ---
-  const triggerPDFDownload = () => {
-    window.print();
+  const triggerPDFDownload = async () => {
+    if (isGeneratingPDF) return;
+    setIsGeneratingPDF(true);
+    try {
+      await downloadAsPDF(printRef.current, `Kundali_${fullName || 'Report'}.pdf`);
+    } catch (e) {
+      console.error(e);
+      alert("Error generating PDF: " + (e.message || e.toString()));
+    } finally {
+      setIsGeneratingPDF(false);
+    }
   };
 
   // --- WHATSAPP SHARE GENERATOR ---
@@ -490,29 +501,7 @@ const KundaliGenerator = () => {
               </div>
             )}
 
-            {/* Quick Actions Header */}
-            <div className="flex flex-wrap gap-3 justify-center print:hidden">
-              <button 
-                onClick={triggerPDFDownload}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-gujarati font-black py-3.5 px-6 rounded-2xl shadow flex items-center gap-2 active:scale-95 transition-all text-xs"
-              >
-                <span className="material-symbols-outlined text-lg">download</span>
-                Direct PDF ડાઉનલોડ
-              </button>
-              <button 
-                onClick={triggerWhatsAppShare}
-                className="bg-stone-900 hover:bg-stone-850 text-white border border-stone-800 font-gujarati font-black py-3.5 px-6 rounded-2xl shadow flex items-center gap-2 active:scale-95 transition-all text-xs"
-              >
-                <span className="material-symbols-outlined text-lg">share</span>
-                વોટ્સએપ શેર કરો 🙏
-              </button>
-              <button 
-                onClick={resetGenerator}
-                className="bg-stone-150 hover:bg-stone-200 text-stone-700 font-gujarati font-black py-3.5 px-6 rounded-2xl active:scale-95 transition-all text-xs"
-              >
-                🔄 નવી કુંડળી બનાવો
-              </button>
-            </div>
+            {/* Quick Actions Header Removed */}
 
             {/* ----------------------------------------------------
                 5-PAGE KUNDALI PDF RENDERER (Cleanly separated A4 printable sheets)
@@ -556,7 +545,7 @@ const KundaliGenerator = () => {
 
               <div className="pt-8 border-t border-[#7c2d12]/10 flex justify-between items-center text-xs">
                 <p className="font-gujarati text-stone-400">સચોટ ગણતરી: વૈદિક સિદ્ધાંતો</p>
-                <p className="font-gujarati text-primary font-black">🕉️ Gujarati Appી એપ</p>
+                <p className="font-gujarati text-primary font-black">🕉️ ગુજરાતી એપ</p>
               </div>
             </div>
 
@@ -781,7 +770,7 @@ const KundaliGenerator = () => {
                     {/* Simulated App Installation QR */}
                     <span className="material-symbols-outlined text-stone-800 text-3xl">qr_code_2</span>
                   </div>
-                  <span className="font-gujarati font-black text-xs text-primary">🕉️ Gujarati Appી એપ</span>
+                  <span className="font-gujarati font-black text-xs text-primary">🕉️ ગુજરાતી એપ</span>
                 </div>
               </div>
             </div>
@@ -789,6 +778,37 @@ const KundaliGenerator = () => {
           </div>
         )}
       </div>
+
+      {/* Footer Actions */}
+      {isCalculated && (
+        <div className="flex flex-wrap gap-3 justify-center pt-4 pb-8 print:hidden">
+          <button 
+            onClick={triggerPDFDownload}
+            disabled={isGeneratingPDF}
+            className={`text-white font-gujarati font-black py-3.5 px-6 rounded-2xl shadow flex items-center gap-2 transition-all text-xs ${isGeneratingPDF ? 'bg-stone-400 cursor-wait' : 'bg-emerald-600 hover:bg-emerald-700 active:scale-95'}`}
+          >
+            {isGeneratingPDF ? (
+              <span className="material-symbols-outlined text-lg animate-spin">autorenew</span>
+            ) : (
+              <span className="material-symbols-outlined text-lg">download</span>
+            )}
+            {isGeneratingPDF ? 'PDF જનરેટ થાય છે...' : 'Direct PDF ડાઉનલોડ'}
+          </button>
+          <button 
+            onClick={triggerWhatsAppShare}
+            className="bg-stone-900 hover:bg-stone-850 text-white border border-stone-800 font-gujarati font-black py-3.5 px-6 rounded-2xl shadow flex items-center gap-2 active:scale-95 transition-all text-xs"
+          >
+            <span className="material-symbols-outlined text-lg">share</span>
+            વોટ્સએપ શેર કરો 🙏
+          </button>
+          <button 
+            onClick={resetGenerator}
+            className="bg-stone-150 hover:bg-stone-200 text-stone-700 font-gujarati font-black py-3.5 px-6 rounded-2xl active:scale-95 transition-all text-xs"
+          >
+            🔄 નવી કુંડળી બનાવો
+          </button>
+        </div>
+      )}
     </div>
   );
 };

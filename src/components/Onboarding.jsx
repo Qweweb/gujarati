@@ -6,10 +6,10 @@ const Onboarding = ({ onAgree }) => {
       <div className="max-w-md w-full space-y-8 py-12">
         {/* Logo/Icon */}
         <div className="flex flex-col items-center text-center space-y-4">
-            <div className="h-24 w-24 bg-primary rounded-[2rem] flex items-center justify-center shadow-2xl shadow-primary/30">
-                <span className="material-symbols-outlined text-white text-6xl" style={{ fontVariationSettings: "'FILL' 1" }}>health_and_safety</span>
+            <div className="h-24 w-24 bg-white/60 dark:bg-stone-800/60 backdrop-blur-xl rounded-full shadow-lg flex items-center justify-center border border-[#0D9488]/30 transform hover:scale-105 transition-transform duration-500 overflow-hidden">
+                <img src="/logo.jpg" alt="Logo" className="h-full w-full object-cover" />
             </div>
-            <h1 className="font-headline font-bold text-xl tracking-tight text-[#994700] dark:text-dark-accent">ગુજરાતી એપ</h1>
+            <h1 className="font-headline font-bold text-xl tracking-tight text-[#2D3748] dark:text-dark-accent">ગુજરાતી એપ</h1>
         </div>
 
         {/* Disclaimer Content */}

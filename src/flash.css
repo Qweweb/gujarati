@@ -1,0 +1,35 @@
+@keyframes gemini-flash {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+    filter: blur(20px);
+  }
+  30% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.5);
+    filter: blur(40px);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(4);
+    filter: blur(80px);
+  }
+}
+
+.flash-circle {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 100vw;
+  background: radial-gradient(circle, rgba(13, 148, 136, 0.4) 0%, rgba(45, 55, 72, 0.15) 50%, transparent 70%);
+  border-radius: 50%;
+  animation: gemini-flash 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  pointer-events: none;
+  z-index: 99999;
+}
+
+.dark .flash-circle {
+  background: radial-gradient(circle, rgba(13, 148, 136, 0.6) 0%, rgba(45, 55, 72, 0.25) 50%, transparent 70%);
+  mix-blend-mode: plus-lighter;
+}

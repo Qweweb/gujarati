@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 const LOAN_TYPES = [
   { id: 'home', name: 'હોમ લોન', icon: 'home', defaultRate: 8.5, defaultTenure: 240, color: 'bg-blue-100 text-blue-800 border-blue-200' },
-  { id: 'gold', name: 'ગોલ્ડ લોન', icon: 'monetization_on', defaultRate: 10.0, defaultTenure: 12, color: 'bg-amber-100 text-amber-800 border-amber-200' },
+  { id: 'gold', name: 'ગોલ્ડ લોન', icon: 'monetization_on', defaultRate: 10.0, defaultTenure: 12, color: 'bg-yellow-100 text-yellow-900 border-yellow-200' },
   { id: 'personal', name: 'પર્સનલ લોન', icon: 'person', defaultRate: 13.5, defaultTenure: 36, color: 'bg-purple-100 text-purple-800 border-purple-200' },
   { id: 'car', name: 'કાર / બાઈક લોન', icon: 'directions_car', defaultRate: 9.0, defaultTenure: 60, color: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
 ];
@@ -249,7 +249,7 @@ const InterestCalculator = () => {
               {/* EMI Box */}
               <div className="bg-white/10 border border-white/20 p-6 rounded-3xl text-center shadow-inner backdrop-blur-sm">
                 <span className="block font-gujarati text-stone-300 mb-1">તમારો માસિક હપ્તો (EMI)</span>
-                <span className="font-headline font-black text-4xl sm:text-5xl text-amber-400 drop-shadow-md">
+                <span className="font-headline font-black text-4xl sm:text-5xl text-yellow-400 drop-shadow-md">
                   {formatINR(emi)}
                 </span>
                 <span className="block text-[10px] text-stone-400 uppercase tracking-widest mt-2 font-bold">દર મહિને ચૂકવવાની રકમ</span>

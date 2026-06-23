@@ -1,12 +1,14 @@
+﻿import { uploadToCloudinary } from '../utils/cloudinaryHelper';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toPng, toBlob } from 'html-to-image';
+import { downloadFile } from '../utils/downloadHelper';
 
 // --- DATA ---
 const THEMES = [
   { id: 'purple', name: 'ભક્તિ', bg: '#1a0a2e', text: '#e9d5ff', accent: '#a855f7' },
   { id: 'green', name: 'શાંતિ', bg: '#0a2e1a', text: '#dcfce7', accent: '#22c55e' },
-  { id: 'saffron', name: 'ઊર્જા', bg: '#2e1500', text: '#ffedd5', accent: '#f97316' },
+  { id: 'saffron', name: 'ઊર્જા', bg: '#2e1500', text: '#ffedd5', accent: '#0D9488' },
   { id: 'white', name: 'સ્વચ્છ', bg: '#ffffff', text: '#1c1917', accent: '#d6d3d1' },
 ];
 
@@ -22,12 +24,12 @@ const CATEGORIES = [
 ];
 
 const DEITIES = [
-  { id: 'ganesh', name: 'શ્રી ગણેશ', img: 'https://upload.wikimedia.org/wikipedia/commons/6/6a/India_ganesha.jpg' },
-  { id: 'krishna', name: 'શ્રી કૃષ્ણ', img: 'https://upload.wikimedia.org/wikipedia/commons/d/df/Krishna_playing_the_flute.jpg' },
-  { id: 'shiv', name: 'શ્રી શિવ', img: 'https://upload.wikimedia.org/wikipedia/commons/5/52/Bangalore_Shiva.jpg' },
-  { id: 'ram', name: 'શ્રી રામ', img: 'https://upload.wikimedia.org/wikipedia/commons/4/45/Lord_Rama_with_arrows.jpg' },
-  { id: 'durga', name: 'મા દુર્ગા', img: 'https://upload.wikimedia.org/wikipedia/commons/6/65/Mahishasura-Mardini_Durga.jpg' },
-  { id: 'hanuman', name: 'હનુમાનજી', img: 'https://upload.wikimedia.org/wikipedia/commons/6/6f/Hanuman_singing.jpg' },
+  { id: 'ganesh', name: 'શ્રી ગણેશ', img: '/gods/ganesh.png' },
+  { id: 'krishna', name: 'શ્રી કૃષ્ણ', img: '/gods/vishnu-krishna.webp' },
+  { id: 'shiv', name: 'શ્રી શિવ', img: '/gods/shiv.avif' },
+  { id: 'ram', name: 'શ્રી રામ', img: '/gods/shri-raam.jpg' },
+  { id: 'durga', name: 'મા દુર્ગા', img: '/gods/aadishakti-devi.webp' },
+  { id: 'hanuman', name: 'હનુમાનજી', img: '/gods/hanuman.jpg' },
   { id: 'lakshmi', name: 'મા લક્ષ્મી', img: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Raja_Ravi_Varma%2C_Goddess_Lakshmi%2C_1896.jpg' },
   { id: 'saraswati', name: 'મા સરસ્વતી', img: 'https://upload.wikimedia.org/wikipedia/commons/1/12/Saraswati.jpg' },
   { id: 'saibaba', name: 'સાંઈ બાબા', img: 'https://upload.wikimedia.org/wikipedia/commons/d/df/Shirdi_Sai_Baba_3.jpg' },
@@ -196,10 +198,8 @@ const DevotionalCards = () => {
         style: { background: activeTheme.bg },
       });
 
-      const link = document.createElement('a');
-      link.download = `GujaratiApp_Card_${Date.now()}.png`;
-      link.href = image;
-      link.click();
+      const filename = `GujaratiApp_Card_${Date.now()}.png`;
+      await downloadFile(image, filename);
 
       // Track telemetry
       const count = parseInt(localStorage.getItem('sanskari_cards_generated_count') || "0");

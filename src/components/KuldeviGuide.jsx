@@ -147,7 +147,7 @@ const KuldeviGuide = () => {
               <span key={idx} className="inline-flex items-center">
                 <button
                   onClick={() => handleKuldeviClick(trimmed)}
-                  className="text-primary font-black hover:underline cursor-pointer flex items-center gap-0.5 hover:text-orange-600 transition-colors text-left"
+                  className="text-primary font-black hover:underline cursor-pointer flex items-center gap-0.5 hover:text-teal-700 transition-colors text-left"
                 >
                   <span>{trimmed}</span>
                   <span className="material-symbols-outlined text-[10px]">open_in_new</span>
@@ -269,7 +269,7 @@ const KuldeviGuide = () => {
     <div className="animate-fade-in space-y-8 pb-24 text-stone-850 dark:text-stone-150">
       
       {/* 1. Header with back button */}
-      <div className="flex items-center gap-4 pb-4 border-b border-orange-100/30 dark:border-orange-900/30">
+      <div className="flex items-center gap-4 pb-4 border-b border-teal-100/30 dark:border-teal-950/30">
         <button 
           onClick={() => navigate('/devotional')} 
           className="h-11 w-11 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-full flex items-center justify-center text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-850 active:scale-95 transition-all shadow-sm"
@@ -285,14 +285,14 @@ const KuldeviGuide = () => {
       </div>
 
       {/* 2. Sensitive Disclaimer Section */}
-      <section className="bg-gradient-to-r from-amber-50 to-orange-50/50 dark:from-amber-955/10 dark:to-orange-955/5 p-6 rounded-[2rem] border border-amber-250/60 dark:border-amber-900/40 space-y-4 shadow-sm relative overflow-hidden">
+      <section className="bg-gradient-to-r from-yellow-50 to-teal-50/50 dark:from-amber-955/10 dark:to-orange-955/5 p-6 rounded-[2rem] border border-amber-250/60 dark:border-yellow-900/40 space-y-4 shadow-sm relative overflow-hidden">
         <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
           <span className="material-symbols-outlined text-[80px]">warning</span>
         </div>
         <div className="flex gap-4 items-start">
-          <span className="material-symbols-outlined text-3xl text-amber-600 dark:text-amber-500 shrink-0 mt-0.5 animate-pulse">info</span>
+          <span className="material-symbols-outlined text-3xl text-yellow-700 dark:text-yellow-600 shrink-0 mt-0.5 animate-pulse">info</span>
           <div className="space-y-3">
-            <h4 className="font-gujarati font-black text-amber-950 dark:text-amber-300 text-base">⚠️ મહત્વની નોંધ (Disclaimer)</h4>
+            <h4 className="font-gujarati font-black text-yellow-950 dark:text-yellow-300 text-base">⚠️ મહત્વની નોંધ (Disclaimer)</h4>
             <p className="font-gujarati text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed font-bold">
               અહીં દર્શાવવામાં આવેલી માહિતી ઇન્ટરનેટ, લોકવાયકાઓ અને ઉપલબ્ધ ધાર્મિક ગ્રંથોમાંથી એકત્રિત કરવામાં આવી છે. અમારો હેતુ માત્ર આપણી સંસ્કૃતિની માહિતી લોકો સુધી પહોંચાડવાનો છે, કોઈ પણ જ્ઞાતિ, સમાજ કે સમુદાયની ધાર્મિક લાગણીઓને દુભાવવાનો નથી. દરેક પરિવારમાં પૂજા પદ્ધતિ અને પરંપરાઓ અલગ હોઈ શકે છે. જો આ માહિતીમાં કોઈ ભૂલ જણાય અથવા તમે કોઈ સુધારો/વધારો કરવા માંગતા હોવ, તો નીચે આપેલા બટન પર ક્લિક કરીને ફોર્મ ભરો. અમે યોગ્ય ચકાસણી કરીને સાચી માહિતી ચોક્કસ અપડેટ કરીશું.
             </p>
@@ -301,7 +301,7 @@ const KuldeviGuide = () => {
             <div className="flex flex-wrap gap-3 pt-2">
               <button 
                 onClick={() => { setShowFeedbackModal(true); setFeedbackSubmitted(false); }}
-                className="bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-700 hover:to-amber-600 text-white font-gujarati font-black py-2.5 px-5 rounded-xl shadow-sm hover:shadow active:scale-95 text-xs flex items-center gap-1.5 transition-all border-b-2 border-orange-800"
+                className="bg-gradient-to-r from-teal-700 to-yellow-600 hover:from-teal-800 hover:to-yellow-700 text-white font-gujarati font-black py-2.5 px-5 rounded-xl shadow-sm hover:shadow active:scale-95 text-xs flex items-center gap-1.5 transition-all border-b-2 border-teal-900"
               >
                 <span className="material-symbols-outlined text-sm">edit_note</span>
                 માહિતી સુધારો / ફોર્મ ભરો
@@ -324,14 +324,14 @@ const KuldeviGuide = () => {
       <div className="flex bg-stone-100 dark:bg-stone-900 p-1.5 rounded-3xl max-w-md mx-auto shadow-inner border border-stone-200/50 dark:border-stone-800">
         <button 
           onClick={() => setActiveSection('search')} 
-          className={`flex-1 py-3 px-4 rounded-2xl text-xs sm:text-sm font-gujarati font-black transition-all flex items-center justify-center gap-2 ${activeSection === 'search' ? 'bg-gradient-to-r from-primary to-orange-500 text-white shadow-md' : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'}`}
+          className={`flex-1 py-3 px-4 rounded-2xl text-xs sm:text-sm font-gujarati font-black transition-all flex items-center justify-center gap-2 ${activeSection === 'search' ? 'bg-gradient-to-r from-primary to-teal-600 text-white shadow-md' : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'}`}
         >
           <span className="material-symbols-outlined text-lg">search</span>
           🔍 અટક અને જ્ઞાતિ સર્ચ
         </button>
         <button 
           onClick={() => setActiveSection('directory')} 
-          className={`flex-1 py-3 px-4 rounded-2xl text-xs sm:text-sm font-gujarati font-black transition-all flex items-center justify-center gap-2 ${activeSection === 'directory' ? 'bg-gradient-to-r from-primary to-orange-500 text-white shadow-md' : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'}`}
+          className={`flex-1 py-3 px-4 rounded-2xl text-xs sm:text-sm font-gujarati font-black transition-all flex items-center justify-center gap-2 ${activeSection === 'directory' ? 'bg-gradient-to-r from-primary to-teal-600 text-white shadow-md' : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'}`}
         >
           <span className="material-symbols-outlined text-lg">menu_book</span>
           🕉️ માતાજીની માહિતી
@@ -341,7 +341,7 @@ const KuldeviGuide = () => {
       {/* 4. SECTION A: CASTE / SURNAME SEARCH ENGINE */}
       {activeSection === 'search' && (
         <section className="space-y-6">
-          <div className="bg-white dark:bg-dark-surface p-6 rounded-[2.5rem] shadow-sm border border-orange-50/50 dark:border-stone-800 space-y-6">
+          <div className="bg-white dark:bg-dark-surface p-6 rounded-[2.5rem] shadow-sm border border-teal-50/50 dark:border-stone-800 space-y-6">
             
             {/* Search inputs and Filters */}
             <div className="space-y-4">
@@ -411,7 +411,7 @@ const KuldeviGuide = () => {
                             <td className="py-4 px-5 text-sm">{row.surname}</td>
                             <td className="py-4 px-5 text-sm">{renderKuldeviLinks(row.kuldevi)}</td>
                             <td className="py-4 px-5 text-sm flex items-center gap-1.5 mt-0.5">
-                              <span className="material-symbols-outlined text-base text-red-500">location_on</span>
+                              <span className="material-symbols-outlined text-base text-emerald-600">location_on</span>
                               {row.temple}
                             </td>
                             <td className="py-4 px-5 text-center">
@@ -456,7 +456,7 @@ const KuldeviGuide = () => {
                           <div>
                             <span className="text-[10px] text-stone-450 uppercase block font-bold">મુખ્ય ધામ</span>
                             <span className="font-gujarati font-bold text-stone-700 dark:text-stone-300 text-xs mt-0.5 flex items-center gap-1 leading-snug">
-                              <span className="material-symbols-outlined text-xs text-red-500 shrink-0">location_on</span>
+                              <span className="material-symbols-outlined text-xs text-emerald-600 shrink-0">location_on</span>
                               {row.temple}
                             </span>
                           </div>
@@ -538,13 +538,13 @@ const KuldeviGuide = () => {
                           <h3 className="font-gujarati font-black text-lg sm:text-xl text-stone-850 dark:text-stone-150 flex items-center gap-2">
                             {mataji.name}
                             {mataji.hasNoDetails && (
-                              <span className="px-2 py-0.5 bg-amber-500/10 text-amber-600 dark:text-amber-500 rounded-md text-[10px] font-bold">
+                              <span className="px-2 py-0.5 bg-yellow-600/10 text-yellow-700 dark:text-yellow-600 rounded-md text-[10px] font-bold">
                                 માહિતી જરૂરી
                               </span>
                             )}
                           </h3>
                           <p className="text-xs text-stone-500 dark:text-stone-455 font-gujarati flex items-center gap-1 mt-0.5">
-                            <span className="material-symbols-outlined text-xs text-red-500 shrink-0">location_on</span>
+                            <span className="material-symbols-outlined text-xs text-emerald-600 shrink-0">location_on</span>
                             {mataji.location}
                           </p>
                         </div>
@@ -559,7 +559,7 @@ const KuldeviGuide = () => {
                       <div className="border-t border-stone-100 dark:border-stone-800/80 bg-stone-50/40 dark:bg-stone-950/20 p-5 sm:p-6 space-y-6 animate-slide-up">
                         {mataji.hasNoDetails ? (
                           <div className="space-y-4 font-gujarati">
-                            <div className="bg-amber-500/5 dark:bg-amber-500/10 p-5 rounded-2xl border border-amber-500/20 text-stone-750 dark:text-stone-300">
+                            <div className="bg-yellow-600/5 dark:bg-yellow-600/10 p-5 rounded-2xl border border-yellow-600/20 text-stone-750 dark:text-stone-300">
                               <p className="text-sm font-bold leading-relaxed">
                                 ⚠️ આ માતાજી વિશેનો ઇતિહાસ, પૂજા વિધિ અથવા નૈવેદ્યની વિગતવાર માહિતી હાલ ઉપલબ્ધ નથી. જો આપની પાસે આ માહિતી હોય, તો કૃપા કરીને નીચે આપેલા બટન પર ક્લિક કરી ફોર્મ ભરી અમારી સાથે શેર કરો.
                               </p>
@@ -568,7 +568,7 @@ const KuldeviGuide = () => {
                             <div className="flex flex-wrap gap-3">
                               <button 
                                 onClick={() => openFeedbackForMataji(mataji.name)}
-                                className="bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-700 hover:to-amber-600 text-white font-gujarati font-black py-2.5 px-5 rounded-xl shadow-sm hover:shadow active:scale-95 text-xs flex items-center gap-1.5 transition-all border-b-2 border-orange-800"
+                                className="bg-gradient-to-r from-teal-700 to-yellow-600 hover:from-teal-800 hover:to-yellow-700 text-white font-gujarati font-black py-2.5 px-5 rounded-xl shadow-sm hover:shadow active:scale-95 text-xs flex items-center gap-1.5 transition-all border-b-2 border-teal-900"
                               >
                                 <span className="material-symbols-outlined text-sm">edit_note</span>
                                 માહિતી મોકલો / ફોર્મ ભરો
@@ -594,7 +594,7 @@ const KuldeviGuide = () => {
 
                               <div className="md:col-span-8 space-y-3 font-gujarati text-xs sm:text-sm">
                                 <div className="flex flex-wrap gap-2">
-                                  <span className="px-3 py-1 bg-orange-100/50 dark:bg-orange-950/30 text-primary rounded-xl font-bold">
+                                  <span className="px-3 py-1 bg-teal-100/50 dark:bg-teal-950/30 text-primary rounded-xl font-bold">
                                     🔱 દેવ ધામ: {mataji.location}
                                   </span>
                                   {mataji.vehicle && (
@@ -605,9 +605,9 @@ const KuldeviGuide = () => {
                                 </div>
                                 
                                 {/* Mantra Callout inside card */}
-                                <div className="p-3.5 bg-gradient-to-r from-orange-600/10 to-amber-500/10 dark:from-orange-950/20 dark:to-amber-950/20 rounded-2xl border border-orange-200/40 dark:border-orange-900/30">
-                                  <p className="text-[10px] text-orange-600/70 font-sans font-black uppercase tracking-wider">પવિત્ર મંત્ર</p>
-                                  <p className="font-sans font-black text-sm sm:text-base text-orange-955 dark:text-orange-200 mt-0.5 leading-relaxed">
+                                <div className="p-3.5 bg-gradient-to-r from-teal-700/10 to-yellow-600/10 dark:from-teal-950/20 dark:to-yellow-950/20 rounded-2xl border border-teal-200/40 dark:border-teal-950/30">
+                                  <p className="text-[10px] text-teal-700/70 font-sans font-black uppercase tracking-wider">પવિત્ર મંત્ર</p>
+                                  <p className="font-sans font-black text-sm sm:text-base text-orange-955 dark:text-teal-200 mt-0.5 leading-relaxed">
                                     {mataji.mantra}
                                   </p>
                                 </div>
@@ -625,7 +625,7 @@ const KuldeviGuide = () => {
                                 <button
                                   key={subTab.id}
                                   onClick={() => setActiveSubTab(subTab.id)}
-                                  className={`pb-3 font-gujarati font-black text-xs sm:text-sm border-b-2 transition-all whitespace-nowrap px-1 ${activeSubTab === subTab.id ? 'border-primary text-primary dark:border-amber-400 dark:text-amber-400 font-black' : 'border-transparent text-stone-500 dark:text-stone-450 hover:text-stone-800 dark:hover:text-stone-200'}`}
+                                  className={`pb-3 font-gujarati font-black text-xs sm:text-sm border-b-2 transition-all whitespace-nowrap px-1 ${activeSubTab === subTab.id ? 'border-primary text-primary dark:border-yellow-400 dark:text-yellow-400 font-black' : 'border-transparent text-stone-500 dark:text-stone-450 hover:text-stone-800 dark:hover:text-stone-200'}`}
                                 >
                                   {subTab.label}
                                 </button>
@@ -655,7 +655,7 @@ const KuldeviGuide = () => {
                                     <button
                                       onClick={() => handleCopyToClipboard(`નૈવેદ્ય (પ્રસાદ): ${mataji.naivedya}`, 'પ્રસાદ વિગત કોપી કરી લીધી છે!')
                                       }
-                                      className="text-xs text-primary dark:text-amber-400 bg-primary/10 dark:bg-amber-400/10 hover:bg-primary/20 px-3 py-1.5 rounded-full font-bold flex items-center gap-1 transition"
+                                      className="text-xs text-primary dark:text-yellow-400 bg-primary/10 dark:bg-yellow-400/10 hover:bg-primary/20 px-3 py-1.5 rounded-full font-bold flex items-center gap-1 transition"
                                     >
                                       <span className="material-symbols-outlined text-xs">content_copy</span> કોપી કરો
                                     </button>
@@ -703,7 +703,7 @@ const KuldeviGuide = () => {
       {/* 6. INTERACTIVE FEEDBACK FORM MODAL */}
       {showFeedbackModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-dark-surface rounded-[2.5rem] border-2 border-orange-200/50 dark:border-orange-900/50 shadow-2xl max-w-lg w-full max-h-[85vh] overflow-y-auto p-6 sm:p-8 space-y-6 relative animate-scale-up">
+          <div className="bg-white dark:bg-dark-surface rounded-[2.5rem] border-2 border-teal-200/50 dark:border-teal-950/50 shadow-2xl max-w-lg w-full max-h-[85vh] overflow-y-auto p-6 sm:p-8 space-y-6 relative animate-scale-up">
             
             {/* Close button */}
             <button 
@@ -821,7 +821,7 @@ const KuldeviGuide = () => {
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-700 hover:to-amber-600 text-white py-4 rounded-xl font-black transition active:scale-95 shadow border-b-4 border-orange-800"
+                      className="flex-1 bg-gradient-to-r from-teal-700 to-yellow-600 hover:from-teal-800 hover:to-yellow-700 text-white py-4 rounded-xl font-black transition active:scale-95 shadow border-b-4 border-teal-900"
                     >
                       વિગતો સબમિટ કરો
                     </button>

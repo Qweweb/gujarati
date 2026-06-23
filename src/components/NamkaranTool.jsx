@@ -179,12 +179,12 @@ const NamkaranTool = () => {
         {/* Shortlist Floating Badge Button */}
         <button 
           onClick={() => setShowShortlistDrawer(true)}
-          className="relative h-11 px-4 bg-gradient-to-r from-orange-500 to-amber-600 dark:from-dark-accent dark:to-orange-700 text-white rounded-2xl flex items-center gap-2 font-gujarati font-bold text-sm shadow-md active:scale-95 transition-transform"
+          className="relative h-11 px-4 bg-gradient-to-r from-teal-600 to-yellow-700 dark:from-dark-accent dark:to-teal-800 text-white rounded-2xl flex items-center gap-2 font-gujarati font-bold text-sm shadow-md active:scale-95 transition-transform"
         >
           <span className="material-symbols-outlined text-white animate-pulse" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
           <span>શોર્ટલિસ્ટ</span>
           {favorites.length > 0 && (
-            <span className="absolute -top-2 -right-2 bg-rose-600 text-white text-xs font-bold h-6 w-6 rounded-full flex items-center justify-center border-2 border-white dark:border-dark-bg animate-pulse">
+            <span className="absolute -top-2 -right-2 bg-emerald-600 text-white text-xs font-bold h-6 w-6 rounded-full flex items-center justify-center border-2 border-white dark:border-dark-bg animate-pulse">
               {toGujaratiDigits(favorites.length)}
             </span>
           )}
@@ -229,7 +229,7 @@ const NamkaranTool = () => {
       </section>
 
       {/* Interactive Advanced Filters Section */}
-      <section className="bg-gradient-to-br from-primary-container/5 via-white to-primary-container/5 dark:from-dark-surface/40 dark:via-dark-surface dark:to-dark-surface/60 rounded-[2rem] p-6 shadow-sm border border-primary-container/10 dark:border-orange-950/40 space-y-6">
+      <section className="bg-gradient-to-br from-primary-container/5 via-white to-primary-container/5 dark:from-dark-surface/40 dark:via-dark-surface dark:to-dark-surface/60 rounded-[2rem] p-6 shadow-sm border border-primary-container/10 dark:border-teal-950/40 space-y-6">
         
         <h3 className="font-gujarati font-black text-lg text-stone-850 dark:text-stone-100 flex items-center gap-2">
           <span className="material-symbols-outlined text-primary dark:text-dark-accent">tune</span>
@@ -448,7 +448,7 @@ const NamkaranTool = () => {
                   <button 
                     onClick={() => toggleFavorite(item)}
                     className={`h-9 w-9 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/20 active:scale-90 transition-all flex items-center justify-center ${
-                      isNameFavorited(item) ? 'text-rose-500 bg-rose-50 dark:bg-rose-950/30' : 'text-stone-400 hover:text-rose-600 dark:hover:text-rose-400'
+                      isNameFavorited(item) ? 'text-emerald-500 bg-rose-50 dark:bg-rose-950/30' : 'text-stone-400 hover:text-emerald-600 dark:hover:text-rose-400'
                     }`}
                     title={isNameFavorited(item) ? "શોર્ટલિસ્ટમાંથી દૂર કરો" : "શોર્ટલિસ્ટમાં ઉમેરો"}
                   >
@@ -477,7 +477,7 @@ const NamkaranTool = () => {
           ></div>
 
           {/* Drawer Content */}
-          <div className="bg-white dark:bg-dark-surface w-full max-w-lg rounded-t-[2.5rem] max-h-[80vh] flex flex-col shadow-2xl border-t border-orange-100/10 z-10 transition-transform duration-300 transform translate-y-0 relative">
+          <div className="bg-white dark:bg-dark-surface w-full max-w-lg rounded-t-[2.5rem] max-h-[80vh] flex flex-col shadow-2xl border-t border-teal-100/10 z-10 transition-transform duration-300 transform translate-y-0 relative">
             
             {/* Grabber line */}
             <div className="w-12 h-1 bg-stone-300 dark:bg-stone-700 rounded-full mx-auto my-3"></div>
@@ -486,7 +486,7 @@ const NamkaranTool = () => {
             <div className="flex justify-between items-center px-6 pb-4 border-b border-stone-100 dark:border-stone-800">
               <div>
                 <h4 className="font-gujarati font-black text-xl text-stone-850 dark:text-stone-100 flex items-center gap-2">
-                  <span className="material-symbols-outlined text-rose-500" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
+                  <span className="material-symbols-outlined text-emerald-500" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
                   શોર્ટલિસ્ટ કરેલા નામો
                 </h4>
                 <p className="text-xs text-stone-500 dark:text-stone-400 font-gujarati">
@@ -550,7 +550,7 @@ const NamkaranTool = () => {
                         {/* Remove favorite */}
                         <button 
                           onClick={() => toggleFavorite(fav)}
-                          className="h-8 w-8 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/20 text-rose-500 flex items-center justify-center active:scale-90 transition-transform"
+                          className="h-8 w-8 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/20 text-emerald-500 flex items-center justify-center active:scale-90 transition-transform"
                           title="દૂર કરો"
                         >
                           <span className="material-symbols-outlined text-sm">delete</span>

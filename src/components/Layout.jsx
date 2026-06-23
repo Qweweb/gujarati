@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
+import { supabase } from '../supabaseClient';
+import { Capacitor } from '@capacitor/core';
 
 /* ─────────────────────────────────────────────────────────────────
    LAYOUT — Premium shell: 56dp header, bottom nav, sidebar drawer
    ───────────────────────────────────────────────────────────────── */
 const Layout = ({ children, darkMode, toggleDarkMode }) => {
   const location = useLocation();
+  const { activeTheme, changeTheme, themes, featureFlags, comingSoonFeature, setComingSoonFeature, PATH_TO_FEATURE_KEY } = useTheme();
   const [toastMessage, setToastMessage] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [coins, setCoins] = useState(() =>
@@ -15,14 +19,52 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
   // Google profile
   const googleAvatar = localStorage.getItem('google_avatar') || '';
   const googleName   = localStorage.getItem('google_name')   || '';
+
+  const handleLogout = async () => {
+    setIsSidebarOpen(false);
+    try {
+      await supabase.auth.signOut();
+    } catch(e) {}
+    localStorage.removeItem('sanskari_token');
+    localStorage.removeItem('user_profile');
+    localStorage.removeItem('profile_completed');
+    localStorage.removeItem('google_name');
+    localStorage.removeItem('google_email');
+    localStorage.removeItem('google_avatar');
+    window.location.reload();
+  };
   const initials     = googleName ? googleName.charAt(0).toUpperCase() : 'G';
 
   // Colors
-  const bg  = darkMode ? '#141210' : '#F9F9F7';
-  const surf = darkMode ? '#1E1A18' : '#FFFFFF';
-  const bdr  = darkMode ? '#2E2825' : '#E8E6E3';
-  const txt  = darkMode ? '#F2F0EE' : '#1A1614';
+  const bg  = darkMode ? (activeTheme.bgDark || '#141210') : (activeTheme.bgLight || '#F9F9F7');
+  const surf = darkMode ? (activeTheme.surfDark || '#1E1A18') : (activeTheme.surfLight || '#FFFFFF');
+  const bdr  = darkMode ? (activeTheme.bdrDark || '#2E2825') : (activeTheme.bdrLight || '#E8E6E3');
+  const txt  = darkMode ? (activeTheme.txtDark || '#F2F0EE') : (activeTheme.txtLight || '#1A1614');
   const muted = darkMode ? '#A8A29E' : '#78716C';
+
+  const isAndroid = Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'android';
+  const safeTop = isAndroid ? 'env(safe-area-inset-top, 36px)' : 'env(safe-area-inset-top, 0px)';
+  const safeBottom = isAndroid ? 'env(safe-area-inset-bottom, 36px)' : 'env(safe-area-inset-bottom, 0px)';
+
+  const [showExitModal, setShowExitModal] = useState(false);
+
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    let listener;
+    import('@capacitor/app').then(({ App: CapApp }) => {
+      CapApp.addListener('backButton', ({ canGoBack }) => {
+        // If we are on the home tab, ask to exit
+        if (location.pathname === '/' || location.pathname === '/home') {
+          setShowExitModal(true);
+        } else {
+          window.history.back();
+        }
+      }).then(l => listener = l);
+    });
+    return () => {
+      if (listener) listener.remove();
+    };
+  }, [location.pathname]);
 
   useEffect(() => {
     const onToast = (e) => setToastMessage(e.detail.message);
@@ -60,7 +102,11 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
   ];
 
   const isCardViewer = location.pathname === '/c' || location.pathname.startsWith('/c/') || (location.pathname.startsWith('/card/') && location.pathname !== '/card');
-  if (isCardViewer) return <div style={{ background: bg, color: txt, minHeight: '100svh' }}>{children}</div>;
+
+  const fullScreenRoutes = ['/traffic-tod', '/brick-breaker', '/farasan-slicer', '/kite-cutter', '/kbc-quiz'];
+  const isFullScreen = fullScreenRoutes.includes(location.pathname);
+
+  if (isCardViewer || isFullScreen) return <div style={{ background: bg, color: txt, minHeight: '100svh' }}>{children}</div>;
 
   return (
     <div style={{ background: bg, color: txt, minHeight: '100svh' }} className="font-body pb-24 transition-colors duration-300">
@@ -69,12 +115,14 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
       <header
         style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40,
-          height: '56px',
+          height: `calc(56px + ${safeTop})`,
+          paddingTop: safeTop,
+          paddingLeft: '16px',
+          paddingRight: '16px',
           background: darkMode ? 'rgba(20,18,16,0.96)' : 'rgba(249,249,247,0.96)',
           backdropFilter: 'blur(16px)',
           borderBottom: `1px solid ${bdr}`,
           display: 'flex', alignItems: 'center',
-          padding: '0 16px',
           gap: '12px',
         }}
       >
@@ -98,11 +146,12 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
         )}
 
         {/* Logo — centered */}
-        <Link to="/" style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', gap:8, textDecoration:'none' }}>
-          <div style={{ width:30, height:30, borderRadius:8, background:'linear-gradient(135deg,#B45309,#F59E0B)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-            <span className="material-symbols-outlined" style={{ color:'#fff', fontSize:16, fontVariationSettings:"'FILL' 1" }}>temple_hindu</span>
-          </div>
-          <span style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontWeight:800, fontSize:16, color:'#B45309', letterSpacing:'-0.02em' }}>ગુજરાતી App</span>
+        <Link to="/" style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center', textDecoration:'none' }}>
+          <img 
+            src={darkMode ? "/logo-light.png" : "/logo-dark.png"} 
+            alt="Gujarati App" 
+            style={{ height: '42px', objectFit: 'contain' }} 
+          />
         </Link>
 
         {/* Right actions */}
@@ -110,9 +159,9 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
 
           {/* Coin counter — no dollar sign, uses coin icon */}
           <Link to="/rewards"
-            style={{ display:'flex', alignItems:'center', gap:5, padding:'5px 10px', borderRadius:10, textDecoration:'none', background: darkMode ? 'rgba(217,119,6,0.18)' : '#FEF3C7', color:'#B45309' }}
+            style={{ display:'flex', alignItems:'center', gap:5, padding:'5px 10px', borderRadius:10, textDecoration:'none', background: darkMode ? `rgba(${activeTheme.primaryAccentRgb || '180,83,9'},0.18)` : (activeTheme.primaryAccentLight || '#FEF3C7'), color: activeTheme.primaryAccent || '#B45309' }}
           >
-            <span className="material-symbols-outlined" style={{ fontSize:16, color:'#F59E0B', fontVariationSettings:"'FILL' 1" }}>toll</span>
+            <span className="material-symbols-outlined" style={{ fontSize:16, color: activeTheme.primaryAccent || '#F59E0B', fontVariationSettings:"'FILL' 1" }}>toll</span>
             <span style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontWeight:800, fontSize:13 }}>{coins}</span>
           </Link>
 
@@ -129,14 +178,14 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
           <Link to="/profile" style={{ width:34, height:34, borderRadius:10, overflow:'hidden', border:`2px solid ${bdr}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, textDecoration:'none' }}>
             {googleAvatar
               ? <img src={googleAvatar} style={{ width:'100%', height:'100%', objectFit:'cover' }} alt="" />
-              : <div style={{ width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', background:'linear-gradient(135deg,#B45309,#F59E0B)', color:'#fff', fontWeight:800, fontSize:14, fontFamily:'"Plus Jakarta Sans",sans-serif' }}>{initials}</div>
+              : <div style={{ width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', background: activeTheme.heroGradient || activeTheme.gradient, color:'#fff', fontWeight:800, fontSize:14, fontFamily:'"Plus Jakarta Sans",sans-serif' }}>{initials}</div>
             }
           </Link>
         </div>
       </header>
 
       {/* ══ MAIN CONTENT ═══════════════════════════════════════════ */}
-      <main style={{ paddingTop:'56px', maxWidth:'640px', margin:'0 auto', padding:'56px 16px 0' }}>
+      <main style={{ paddingTop: `calc(80px + ${safeTop})`, paddingLeft: '16px', paddingRight: '16px', paddingBottom: `calc(76px + ${safeBottom})`, maxWidth: '640px', margin: '0 auto' }}>
         {children}
       </main>
 
@@ -147,17 +196,32 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
           background: darkMode ? 'rgba(20,18,16,0.97)' : 'rgba(255,255,255,0.97)',
           backdropFilter: 'blur(20px)',
           borderTop: `1px solid ${bdr}`,
-          height:'60px',
+          height: `calc(60px + ${safeBottom})`,
+          paddingBottom: safeBottom,
           display:'flex', alignItems:'stretch',
         }}
       >
         <div style={{ display:'flex', flex:1, maxWidth:640, margin:'0 auto' }}>
-          {navItems.map(({ path, icon, label }) => {
+          {navItems.filter(item => {
+            const key = PATH_TO_FEATURE_KEY[item.path];
+            return !key || featureFlags[key] !== 'off';
+          }).map(({ path, icon, label }) => {
+            const key = PATH_TO_FEATURE_KEY[path];
+            const status = key ? featureFlags[key] : 'live';
             const isActive = location.pathname === path;
+
+            const handleNavClick = (e) => {
+              if (status === 'coming_soon') {
+                e.preventDefault();
+                setComingSoonFeature(label);
+              }
+            };
+
             return (
               <Link
                 key={path}
-                to={path}
+                to={status === 'coming_soon' ? '#' : path}
+                onClick={handleNavClick}
                 style={{
                   flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
                   gap:2, textDecoration:'none', position:'relative',
@@ -166,13 +230,13 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
               >
                 {/* Top indicator line */}
                 {isActive && (
-                  <span style={{ position:'absolute', top:0, left:'50%', transform:'translateX(-50%)', width:24, height:2, borderRadius:9999, background:'#B45309' }} />
+                  <span style={{ position:'absolute', top:0, left:'50%', transform:'translateX(-50%)', width:24, height:2, borderRadius:9999, background: activeTheme.primaryAccent || '#B45309' }} />
                 )}
                 <span
                   className="material-symbols-outlined"
                   style={{
                     fontSize: 24,
-                    color: isActive ? '#B45309' : muted,
+                    color: isActive ? (activeTheme.primaryAccent || '#B45309') : muted,
                     fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0",
                     transition: 'all 0.15s ease',
                   }}
@@ -183,7 +247,7 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
                   fontFamily: '"Noto Serif Gujarati",serif',
                   fontSize: 10,
                   fontWeight: 700,
-                  color: isActive ? '#B45309' : muted,
+                  color: isActive ? (activeTheme.primaryAccent || '#B45309') : muted,
                   lineHeight: 1,
                   transition: 'color 0.15s ease',
                 }}>
@@ -195,16 +259,15 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
         </div>
       </nav>
 
-      {/* ══ TOAST ═══════════════════════════════════════════════════ */}
+      {/* 🚀 TOAST 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 */}
       {toastMessage && (
         <div
-          className="animate-slide-up"
           style={{
-            position:'fixed', bottom:72, left:'50%', transform:'translateX(-50%)',
+            position:'fixed', bottom:120, left:'50%', transform:'translateX(-50%)',
             zIndex:9999, pointerEvents:'none', maxWidth:'calc(100% - 32px)', width:'max-content',
           }}
         >
-          <div style={{
+          <div className="animate-slide-up" style={{
             background: darkMode ? '#F2F0EE' : '#1A1614',
             color: darkMode ? '#1A1614' : '#F2F0EE',
             fontFamily:'"Noto Serif Gujarati",serif',
@@ -237,15 +300,18 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
               position:'relative', width:288, height:'100%', zIndex:10,
               background: surf, borderRight:`1px solid ${bdr}`,
               display:'flex', flexDirection:'column', overflowY:'auto',
+              paddingTop: 'env(safe-area-inset-top, 0px)',
+              paddingBottom: 'env(safe-area-inset-bottom, 0px)'
             }}
           >
             {/* Drawer header */}
             <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 16px 16px', borderBottom:`1px solid ${bdr}` }}>
-              <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                <div style={{ width:28, height:28, borderRadius:8, background:'linear-gradient(135deg,#B45309,#F59E0B)', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                  <span className="material-symbols-outlined" style={{ color:'#fff', fontSize:15, fontVariationSettings:"'FILL' 1" }}>temple_hindu</span>
-                </div>
-                <span style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontWeight:800, fontSize:15, color:'#B45309' }}>ગુજરાતી App</span>
+              <div style={{ display:'flex', alignItems:'center' }}>
+                <img 
+                  src={darkMode ? "/logo-light.png" : "/logo-dark.png"} 
+                  alt="Gujarati App" 
+                  style={{ height: '42px', objectFit: 'contain' }} 
+                />
               </div>
               <button onClick={() => setIsSidebarOpen(false)}
                 style={{ width:32, height:32, display:'flex', alignItems:'center', justifyContent:'center', borderRadius:8, border:'none', background: darkMode ? '#272220' : '#F4F4F2', color: muted, cursor:'pointer' }}>
@@ -255,18 +321,18 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
 
             {/* User card */}
             <Link to="/profile" onClick={() => setIsSidebarOpen(false)}
-              style={{ margin:'12px 12px 4px', padding:'12px', borderRadius:14, display:'flex', alignItems:'center', gap:10, textDecoration:'none', background: darkMode ? '#272220' : '#FFF8EF', border:`1px solid ${darkMode ? '#2E2825' : '#FDE68A'}` }}>
-              <div style={{ width:44, height:44, borderRadius:12, overflow:'hidden', flexShrink:0, border:`2px solid ${darkMode ? '#2E2825' : '#FCD34D'}` }}>
+              style={{ margin:'12px 12px 4px', padding:'12px', borderRadius:14, display:'flex', alignItems:'center', gap:10, textDecoration:'none', background: darkMode ? (activeTheme.surfDark || '#272220') : (activeTheme.primaryAccentLight || '#FFF8EF'), border:`1px solid ${darkMode ? (activeTheme.bdrDark || '#2E2825') : (activeTheme.primaryAccent || '#FDE68A')}` }}>
+              <div style={{ width:44, height:44, borderRadius:12, overflow:'hidden', flexShrink:0, border:`2px solid ${darkMode ? (activeTheme.bdrDark || '#2E2825') : (activeTheme.primaryAccent || '#FCD34D')}` }}>
                 {googleAvatar
                   ? <img src={googleAvatar} style={{ width:'100%', height:'100%', objectFit:'cover' }} alt="" />
-                  : <div style={{ width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', background:'linear-gradient(135deg,#B45309,#F59E0B)', color:'#fff', fontWeight:800, fontSize:16 }}>{initials}</div>
+                  : <div style={{ width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', background: activeTheme.heroGradient || activeTheme.gradient || 'linear-gradient(135deg,#B45309,#F59E0B)', color:'#fff', fontWeight:800, fontSize:16 }}>{initials}</div>
                 }
               </div>
               <div style={{ flex:1, minWidth:0 }}>
                 <p style={{ fontFamily:'"Noto Serif Gujarati",serif', fontWeight:700, fontSize:14, color: txt, margin:0, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
                   {googleName || 'ગુજરાતી યુઝર'}
                 </p>
-                <p style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontWeight:600, fontSize:11, color:'#B45309', margin:0 }}>પ્રોફાઇલ જુઓ →</p>
+                <p style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontWeight:600, fontSize:11, color: activeTheme.primaryAccent || '#B45309', margin:0 }}>પ્રોફાઇલ જુઓ →</p>
               </div>
             </Link>
 
@@ -288,9 +354,37 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
 
               </DrawerSection>
 
-              <DrawerSection label="એકાઉન્ટ" darkMode={darkMode}>
-                <DrawerLink to="/profile"  icon="person"   label="પ્રોફાઇલ"  onClick={() => setIsSidebarOpen(false)} loc={location.pathname} darkMode={darkMode} />
+              
+              <DrawerSection label="કલર થીમ (Color Theme)" darkMode={darkMode}>
+                <div style={{ padding: '8px 16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {Object.values(themes).map(t => (
+                    <button
+                      key={t.id}
+                      onClick={() => { changeTheme(t.id); setIsSidebarOpen(false); }}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px',
+                        borderRadius: '12px', border: activeTheme.id === t.id ? '1.5px solid ' + (t.primaryAccent || '#F59E0B') : '1px solid ' + (darkMode ? '#333' : '#E8E6E3'),
+                        background: activeTheme.id === t.id ? (darkMode ? `rgba(${t.primaryAccentRgb || '180,83,9'}, 0.15)` : (t.primaryAccentLight || '#FFF8EF')) : 'transparent',
+                        color: darkMode ? '#F2F0EE' : '#1A1614',
+                        cursor: 'pointer', textAlign: 'left'
+                      }}
+                    >
+                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: t.gradient, flexShrink: 0 }} />
+                      <span style={{ fontFamily: '"Plus Jakarta Sans",sans-serif', fontWeight: activeTheme.id === t.id ? 800 : 600, fontSize: '13px' }}>
+                        {t.name}
+                      </span>
+                      {activeTheme.id === t.id && (
+                        <span className="material-symbols-outlined" style={{ marginLeft: 'auto', fontSize: '18px', color: t.primaryAccent || '#F59E0B' }}>check_circle</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </DrawerSection>
+
+              <DrawerSection label="માય પ્રોફાઇલ" darkMode={darkMode}>
+                <DrawerLink to="/profile"  icon="person"   label="માય પ્રોફાઇલ"  onClick={() => setIsSidebarOpen(false)} loc={location.pathname} darkMode={darkMode} />
                 <DrawerLink to="/settings" icon="settings" label="સેટિંગ્સ" onClick={() => setIsSidebarOpen(false)} loc={location.pathname} darkMode={darkMode} />
+                <DrawerButton icon="logout" label="લોગ-આઉટ" onClick={handleLogout} darkMode={darkMode} />
               </DrawerSection>
             </div>
 
@@ -298,6 +392,81 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
           </div>
         </div>
       )}
+
+      {/* ══ EXIT APP MODAL ══════════════════════════════════════════════ */}
+      {showExitModal && (
+        <div style={{ position:'fixed', inset:0, zIndex:9999, display:'flex', alignItems:'center', justifyContent:'center', padding:'24px' }}>
+          {/* Backdrop */}
+          <div 
+            onClick={() => setShowExitModal(false)} 
+            style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.6)', backdropFilter:'blur(8px)', animation:'fadeIn 0.2s ease' }} 
+          />
+          
+          {/* Modal Content */}
+          <div style={{ position:'relative', background: surf, width:'100%', maxWidth:'340px', borderRadius:'32px', padding:'36px 24px', textAlign:'center', boxShadow:'0 24px 48px rgba(0,0,0,0.25)', animation:'slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }}>
+            
+            <div style={{ width:'80px', height:'80px', background:'linear-gradient(135deg, #EF4444, #DC2626)', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 24px', boxShadow:'0 12px 24px rgba(239,68,68,0.35)' }}>
+              <span className="material-symbols-outlined" style={{ fontSize:'40px', color:'#fff', transform:'translateX(2px)' }}>logout</span>
+            </div>
+            
+            <h2 style={{ fontSize:'24px', fontWeight:900, marginBottom:'12px', color: txt, fontFamily:'"Noto Serif Gujarati",serif' }}>એપ બંધ કરવી છે?</h2>
+            <p style={{ color: muted, fontSize:'16px', lineHeight:'1.5', marginBottom:'32px', fontFamily:'"Plus Jakarta Sans",sans-serif', fontWeight:500 }}>
+              શું તમે ખરેખર ગુજરાતી એપ માંથી બહાર નીકળવા માંગો છો?
+            </p>
+            
+            <div style={{ display:'flex', gap:'16px' }}>
+              <button 
+                onClick={() => setShowExitModal(false)}
+                style={{ flex:1, padding:'16px', borderRadius:'18px', border:`2px solid ${bdr}`, background:'transparent', color: txt, fontSize:'16px', fontWeight:800, fontFamily:'"Noto Serif Gujarati",serif', cursor:'pointer' }}
+              >
+                ના, ચાલુ રાખો
+              </button>
+              <button 
+                onClick={async () => {
+                  const { App: CapApp } = await import('@capacitor/app');
+                  CapApp.exitApp();
+                }}
+                style={{ flex:1, padding:'16px', borderRadius:'18px', border:'none', background:'linear-gradient(135deg, #EF4444, #DC2626)', color:'#fff', fontSize:'16px', fontWeight:800, boxShadow:'0 8px 20px rgba(239,68,68,0.3)', fontFamily:'"Noto Serif Gujarati",serif', cursor:'pointer' }}
+              >
+                હા, બહાર નીકળો
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ══ COMING SOON MODAL ══════════════════════════════════════════ */}
+      {comingSoonFeature && (
+        <div style={{ position:'fixed', inset:0, zIndex:9999, display:'flex', alignItems:'center', justifyContent:'center', padding:'24px' }}>
+          {/* Backdrop */}
+          <div 
+            onClick={() => setComingSoonFeature(null)} 
+            style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.6)', backdropFilter:'blur(8px)', animation:'fadeIn 0.2s ease' }} 
+          />
+          
+          {/* Modal Content */}
+          <div style={{ position:'relative', background: surf, width:'100%', maxWidth:'360px', borderRadius:'32px', padding:'36px 24px', textAlign:'center', border:`2px solid ${darkMode ? '#4A3E1A' : '#FDE68A'}`, boxShadow:'0 24px 48px rgba(0,0,0,0.25)', animation:'slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }}>
+            
+            {/* Animated Yellow Icon Box */}
+            <div style={{ width:'80px', height:'80px', background:'linear-gradient(135deg, #F59E0B, #D97706)', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 24px', boxShadow:'0 12px 24px rgba(245,158,11,0.35)' }}>
+              <span className="material-symbols-outlined text-white" style={{ fontSize:'40px' }}>construction</span>
+            </div>
+            
+            <h2 style={{ fontSize:'22px', fontWeight:900, marginBottom:'12px', color: txt, fontFamily:'"Noto Serif Gujarati",serif' }}>ટૂંક સમયમાં આવી રહ્યું છે!</h2>
+            <p style={{ color: muted, fontSize:'15px', lineHeight:'1.6', marginBottom:'32px', fontFamily:'"Plus Jakarta Sans",sans-serif', fontWeight:500 }}>
+              <b>{comingSoonFeature}</b> વિભાગ પર હજુ કામ ચાલુ છે. ખૂબ જ નજીકના સમયમાં આ સેવા શરૂ કરવામાં આવશે. કૃપા કરીને થોડી પ્રતીક્ષા કરો. 🙏
+            </p>
+            
+            <button 
+              onClick={() => setComingSoonFeature(null)}
+              style={{ width:'100%', padding:'16px', borderRadius:'18px', border:'none', background:'linear-gradient(135deg, #F59E0B, #D97706)', color:'#fff', fontSize:'16px', fontWeight:800, boxShadow:'0 8px 20px rgba(245,158,11,0.3)', fontFamily:'"Noto Serif Gujarati",serif', cursor:'pointer' }}
+            >
+              બરાબર છે
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
@@ -311,12 +480,29 @@ const DrawerSection = ({ label, children, darkMode }) => (
 
 const DrawerLink = ({ to, icon, label, onClick, loc, darkMode }) => {
   const isActive = loc === to;
+  const { activeTheme, featureFlags, setComingSoonFeature, PATH_TO_FEATURE_KEY } = useTheme();
+
+  const key = PATH_TO_FEATURE_KEY[to];
+  const status = key ? featureFlags[key] : 'live';
+
+  if (status === 'off') return null;
+
+  const handleClick = (e) => {
+    if (status === 'coming_soon') {
+      e.preventDefault();
+      setComingSoonFeature(label);
+      onClick(); // close sidebar
+      return;
+    }
+    onClick();
+  };
+
   return (
-    <Link to={to} onClick={onClick} style={{
+    <Link to={status === 'coming_soon' ? '#' : to} onClick={handleClick} style={{
       display:'flex', alignItems:'center', gap:10, padding:'9px 10px',
       borderRadius:10, textDecoration:'none',
-      background: isActive ? (darkMode ? 'rgba(180,83,9,0.2)' : '#FFF8EF') : 'transparent',
-      color: isActive ? '#B45309' : (darkMode ? '#A8A29E' : '#78716C'),
+      background: isActive ? (darkMode ? `rgba(${activeTheme.primaryAccentRgb || '180,83,9'},0.2)` : (activeTheme.primaryAccentLight || '#FFF8EF')) : 'transparent',
+      color: isActive ? (activeTheme.primaryAccent || '#B45309') : (darkMode ? '#A8A29E' : '#78716C'),
       fontFamily:'"Plus Jakarta Sans",sans-serif', fontWeight:600, fontSize:13,
       transition:'background 0.15s',
     }}>
@@ -326,4 +512,21 @@ const DrawerLink = ({ to, icon, label, onClick, loc, darkMode }) => {
   );
 };
 
+const DrawerButton = ({ icon, label, onClick, darkMode }) => {
+  return (
+    <div onClick={onClick} style={{
+      display:'flex', alignItems:'center', gap:10, padding:'9px 10px',
+      borderRadius:10, cursor:'pointer', textDecoration:'none',
+      background: 'transparent',
+      color: darkMode ? '#ef4444' : '#ef4444',
+      fontFamily:'"Plus Jakarta Sans",sans-serif', fontWeight:600, fontSize:13,
+      transition:'background 0.15s',
+    }}>
+      <span className="material-symbols-outlined" style={{ fontSize:18 }}>{icon}</span>
+      {label}
+    </div>
+  );
+};
+
 export default Layout;
+

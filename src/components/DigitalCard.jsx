@@ -1,3 +1,4 @@
+import { uploadToCloudinary } from '../utils/cloudinaryHelper';
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
@@ -148,6 +149,142 @@ const GALLERY_PRESETS = [
   { icon: "⚙️", label: "લાઈવ વર્કિંગ વિડીયો/ફોટો" }
 ];
 
+// Business type presets — auto-set layout + theme + category/tagline
+const BUSINESS_PRESETS = [
+  {
+    id: 'restaurant',
+    emoji: '🍽️',
+    label: 'રેસ્ટોરન્ટ / કેફે',
+    labelEn: 'Restaurant / Cafe',
+    layout: 'shop',
+    theme: 'wooden',
+    category: 'રેસ્ટોરન્ટ અને ફૂડ સર્વિસ',
+    tagline: 'સ્વાદ, સ્નેહ અને સ્વાસ્થ્ય — અમારી દરેક ડીશમાં.',
+    color: '#a16207',
+  },
+  {
+    id: 'realestate',
+    emoji: '🏠',
+    label: 'રિયલ એસ્ટેટ',
+    labelEn: 'Real Estate',
+    layout: 'split',
+    theme: 'royal',
+    category: 'રિયલ એસ્ટેટ કન્સલ્ટન્ટ',
+    tagline: 'ઘર ખરીદી અને વેચાણ — ઝડપ, વિશ્વાસ, ઉત્તમ ભાવ.',
+    color: '#b45309',
+  },
+  {
+    id: 'astrology',
+    emoji: '🔮',
+    label: 'જ્યોતિષ / વાસ્તુ',
+    labelEn: 'Astrologer / Vastu',
+    layout: 'classic',
+    theme: 'crimson',
+    category: 'જ્યોતિષ અને વાસ્તુ સલાહકાર',
+    tagline: 'ગ્રહ-નક્ષત્ર અને ઘરની ઊર્જા — જ્ઞાન, ઉકેલ, શ્રદ્ધા.',
+    color: '#be185d',
+  },
+  {
+    id: 'doctor',
+    emoji: '🩺',
+    label: 'ડૉક્ટર / ક્લિનિક',
+    labelEn: 'Doctor / Clinic',
+    layout: 'split',
+    theme: 'ocean',
+    category: 'મેડિકલ પ્રોફેશનલ',
+    tagline: 'આરોગ્ય, સ્વાસ્થ્ય અને સ્નેહ — અમારી પ્રાથમિકતા.',
+    color: '#0891b2',
+  },
+  {
+    id: 'ca_lawyer',
+    emoji: '⚖️',
+    label: 'CA / વકીલ',
+    labelEn: 'CA / Lawyer',
+    layout: 'split',
+    theme: 'carbon',
+    category: 'ચાર્ટર્ડ એકાઉન્ટન્ટ / એડ્વોકેટ',
+    tagline: 'કર, કાયદો, અને ન્યાય — ચોક્કસ, ઝડપ, ભરોસો.',
+    color: '#1c1917',
+  },
+  {
+    id: 'shop',
+    emoji: '🛒',
+    label: 'દુકાન / ફેક્ટરી',
+    labelEn: 'Shop / Factory',
+    layout: 'shop',
+    theme: 'forest',
+    category: 'રિટેઇલ અને મેન્યુફૅક્ચરિંગ',
+    tagline: 'ગુણવત્તા, ભાવ, અને સેવા — ૧ ક્લિકે ઓર્ડર કરો.',
+    color: '#166534',
+  },
+  {
+    id: 'beauty',
+    emoji: '💄',
+    label: 'બ્યૂટી / સૅલૂન',
+    labelEn: 'Beauty / Salon',
+    layout: 'glass',
+    theme: 'rose',
+    category: 'બ્યૂટી અને ગ્રૂમિંગ સ્ટુડિઓ',
+    tagline: 'સૌંદર્ય, ક્રિએટિવ સ્ટાઇલ અને ગ્લૅમ — ફક્ત તમારા માટે.',
+    color: '#e11d48',
+  },
+  {
+    id: 'transport',
+    emoji: '🚛',
+    label: 'ટ્રાન્સપોર્ટ / ટ્રૅવેલ',
+    labelEn: 'Transport / Travel',
+    layout: 'classic',
+    theme: 'teal',
+    category: 'ટ્રાન્સપોર્ટ અને ટ્રૅવેલ સર્વિસ',
+    tagline: 'સુરક્ષિત, ઝડપ, સસ્તા ભાવ — ૨૪/૭ ઉપલબ્ધ.',
+    color: '#0d9488',
+  },
+  {
+    id: 'ayurveda',
+    emoji: '🌿',
+    label: 'આયુર્વેદ / ઓર્ગેનિક',
+    labelEn: 'Ayurveda / Organic',
+    layout: 'classic',
+    theme: 'sanskari',
+    category: 'આયુર્વેદ પ્રૅક્ટિશ્નર',
+    tagline: 'પ્રકૃતિ, આરોગ્ય અને ઔષધ — પ્રાકૃતિક ઉકેલ.',
+    color: '#16a34a',
+  },
+  {
+    id: 'architect',
+    emoji: '🏗️',
+    label: 'ઇન્ટ...ડિઝાઇન / Civil',
+    labelEn: 'Interior / Civil Engineer',
+    layout: 'glass',
+    theme: 'minimal',
+    category: 'ઇન્ટિરિઅર ડિઝાઇનર અને Civil Engineer',
+    tagline: 'ઘર, ઑફિસ, ફ્લૅટ — ડ્રીમ ડિઝાઇન અમારા હાથમાં.',
+    color: '#374151',
+  },
+  {
+    id: 'it',
+    emoji: '💻',
+    label: 'IT / ડિઝિટલ સર્વિસ',
+    labelEn: 'IT / Digital Services',
+    layout: 'split',
+    theme: 'neon',
+    category: 'IT સોલ્યુશન અને ડિઝિટલ સર્વિસ',
+    tagline: 'વેબ, ઍપ, SEO — ટ‍ેક્નૉલૉજી વડે ઝડપ.',
+    color: '#7c3aed',
+  },
+  {
+    id: 'farmer',
+    emoji: '🌾',
+    label: 'ખેડૂત / ઍગ્રો',
+    labelEn: 'Farmer / Agro',
+    layout: 'shop',
+    theme: 'forest',
+    category: 'ખેડૂત અને ઍગ્રો બિઝનેસ',
+    tagline: 'સ્વચ્છ ઉત્પાદન, ઉચ્ચ ગુણ — ખેતરથી ઘર સુધી.',
+    color: '#15803d',
+  },
+];
+
 const LAYOUT_STYLES = [
   { id: 'classic', name: 'ક્લાસિક સેન્ટર્ડ (Classic)', icon: 'format_align_center', desc: 'પ્રોફાઇલ અને માહિતી બધું વચ્ચે આકર્ષક રીતે સેટ થાય છે.' },
   { id: 'split', name: 'પ્રોફેશનલ સ્પ્લિટ (Left Split)', icon: 'format_align_left', desc: 'ડાબી બાજુ લોગો અને જમણી બાજુ નામ સેટ થાય છે, જે ફોર્મલ લુક આપે છે.' },
@@ -156,17 +293,75 @@ const LAYOUT_STYLES = [
   { id: 'minimal', name: 'મિનિમલ બાયો લિન્ક (Minimal Bio)', icon: 'link', desc: 'લિંકટ્રી જેવું સાદું અને સુંદર કાર્ડ જેમાં મોટી બટન પટ્ટીઓ સેટ થાય છે.' }
 ];
 
+const CARD_LANG = {
+  gu: {
+    serviceProvider: "સેવા પ્રદાતા",
+    serviceVendor: "સેવા વિક્રેતા",
+    saveContact: "કોન્ટેક્ટ સેવ",
+    saveContactLong: "કોન્ટેક્ટ સેવ કરો",
+    saveContactWithSave: "કોન્ટેક્ટ સેવ કરો (Save)",
+    saveContactWithSaveLong: "કોન્ટેક્ટ સેવ કરો (Save Contact)",
+    ourProductsServices: "અમારી પ્રોડક્ટ્સ & સેવાઓ",
+    catalogList: "કેટલોગ લિસ્ટ",
+    gallery: "ગેલેરી",
+    photoGallery: "ફોટો ગેલેરી",
+    officeWorkGallery: "ઓફિસ / કામ પ્રદર્શન",
+    servicePrice: "સેવા અને કિંમત",
+    ourServicesCatalog: "અમારી સેવાઓ / કેટલોગ",
+    ourServices: "અમારી સેવાઓ",
+    quickPayment: "ઝડપી ચૂકવણી",
+    inquiry: "પૂછપરછ",
+    call: "કૉલ",
+    location: "લોકેશન",
+    mail: "મેઇલ",
+    website: "વેબસાઇટ",
+    whatsappText: "હું આપની મિની-વેબસાઇટ જોઈને પૂછપરછ માટે સંપર્ક કરી રહ્યો છું.",
+    whatsappCatalogText: "હું આપના ડિજિટલ કેટલોગમાંથી આના વિશે વિગત જાણવા માંગુ છું: "
+  },
+  en: {
+    serviceProvider: "Service Provider",
+    serviceVendor: "Service Provider",
+    saveContact: "Save Contact",
+    saveContactLong: "Save Contact",
+    saveContactWithSave: "Save Contact",
+    saveContactWithSaveLong: "Save Contact",
+    ourProductsServices: "Our Products & Services",
+    catalogList: "Catalog List",
+    gallery: "Gallery",
+    photoGallery: "Photo Gallery",
+    officeWorkGallery: "Office / Work Showcase",
+    servicePrice: "Service & Pricing",
+    ourServicesCatalog: "Our Services / Catalog",
+    ourServices: "Our Services",
+    quickPayment: "Quick Payment",
+    inquiry: "Inquire",
+    call: "Call",
+    location: "Location",
+    mail: "Mail",
+    website: "Website",
+    whatsappText: "Hi, I am contacting you after viewing your digital business card.",
+    whatsappCatalogText: "Hi, I am interested in this product/service from your catalog: "
+  }
+};
+
 const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) => {
+  const [lang, setLang] = useState(() => {
+    const hasEnglish = /[a-zA-Z]/.test(data.businessName || data.name || '');
+    return hasEnglish ? 'en' : 'gu';
+  });
+
   const customColor = data.customColor || '#f97316';
   const layout = data.layoutStyle || 'classic';
 
+  const labels = CARD_LANG[lang];
+
   // Common quick click buttons
   const quickActions = [
-    { icon: 'call', href: `tel:${data.phone}`, label: 'કૉલ', val: data.phone },
-    { icon: 'chat', href: `https://api.whatsapp.com/send?phone=91${data.whatsapp}&text=${encodeURIComponent('હું આપની મિની-વેબસાઇટ જોઈને પૂછપરછ માટે સંપર્ક કરી રહ્યો છું.')}`, label: 'WhatsApp', val: data.whatsapp },
-    { icon: 'pin_drop', href: data.locationLink, label: 'લોકેશન', val: data.locationLink },
-    { icon: 'mail', href: `mailto:${data.email}`, label: 'મેઇલ', val: data.email },
-    { icon: 'language', href: data.website, label: 'વેબસાઇટ', val: data.website }
+    { icon: 'call', href: `tel:${data.phone}`, label: labels.call, val: data.phone },
+    { icon: 'chat', href: `https://api.whatsapp.com/send?phone=91${data.whatsapp}&text=${encodeURIComponent(labels.whatsappText)}`, label: 'WhatsApp', val: data.whatsapp },
+    { icon: 'pin_drop', href: data.locationLink, label: labels.location, val: data.locationLink },
+    { icon: 'mail', href: `mailto:${data.email}`, label: labels.mail, val: data.email },
+    { icon: 'language', href: data.website, label: labels.website, val: data.website }
   ].filter(action => action.val && action.val !== '9825XXXXXX' && action.val !== 'sharma.fab@gmail.com');
 
   // If actions are empty during preview/fallback, show some defaults
@@ -187,17 +382,36 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
   ].filter(action => action.val && !action.val.includes('.com/example') && !action.val.includes('.com/@example') && !action.val.includes('.com/in/example'));
 
   const visibleActions = quickActions.length > 0 ? quickActions : [
-    { icon: 'call', href: `tel:${data.phone}`, label: 'કૉલ' },
+    { icon: 'call', href: `tel:${data.phone}`, label: labels.call },
     { icon: 'chat', href: `https://api.whatsapp.com/send?phone=91${data.whatsapp}`, label: 'WhatsApp' },
-    { icon: 'pin_drop', href: data.locationLink || 'https://maps.google.com', label: 'લોકેશન' },
-    { icon: 'mail', href: `mailto:${data.email}`, label: 'મેઇલ' },
-    { icon: 'language', href: data.website || 'https://google.com', label: 'વેબસાઇટ' }
+    { icon: 'pin_drop', href: data.locationLink || 'https://maps.google.com', label: labels.location },
+    { icon: 'mail', href: `mailto:${data.email}`, label: labels.mail },
+    { icon: 'language', href: data.website || 'https://google.com', label: labels.website }
   ];
+  const langToggle = (
+    <div className="absolute right-0 -top-2 z-40 flex items-center bg-black/10 dark:bg-white/10 backdrop-blur-md rounded-full p-0.5 border border-stone-250/20 dark:border-white/10 shadow-xs">
+      <button
+        onClick={(e) => { e.stopPropagation(); setLang('gu'); }}
+        className={`px-2.5 py-0.5 rounded-full text-[9px] font-gujarati font-black transition-all cursor-pointer ${lang === 'gu' ? 'text-white' : 'opacity-60 text-current'}`}
+        style={lang === 'gu' ? { backgroundColor: customColor } : {}}
+      >
+        ગુજ
+      </button>
+      <button
+        onClick={(e) => { e.stopPropagation(); setLang('en'); }}
+        className={`px-2.5 py-0.5 rounded-full text-[9px] font-gujarati font-black transition-all cursor-pointer ${lang === 'en' ? 'text-white' : 'opacity-60 text-current'}`}
+        style={lang === 'en' ? { backgroundColor: customColor } : {}}
+      >
+        EN
+      </button>
+    </div>
+  );
 
   switch (layout) {
     case 'split':
       return (
         <div className="space-y-5 text-left relative z-10 w-full">
+          {langToggle}
           {/* Split Header */}
           <div className="flex gap-4 items-center bg-white/5 border border-white/10 rounded-2.5xl p-4">
             <div className="h-16 w-16 rounded-2xl flex items-center justify-center text-3xl shadow-sm bg-white/10 border border-white/20 shrink-0">
@@ -267,13 +481,13 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
             style={{ backgroundColor: customColor }}
           >
             <span className="material-symbols-outlined text-xs font-bold">person_add</span>
-            કોન્ટેક્ટ સેવ કરો
+            {labels.saveContactLong}
           </button>
 
           {/* Catalog */}
           {data.products && data.products.length > 0 && (
             <div className="space-y-2">
-              <h3 className="font-gujarati font-black text-xs uppercase tracking-wider opacity-60">અમારી પ્રોડક્ટ્સ & સેવાઓ</h3>
+              <h3 className="font-gujarati font-black text-xs uppercase tracking-wider opacity-60">{labels.ourProductsServices}</h3>
               <div className="space-y-2">
                 {data.products.map((p, idx) => (
                   <div key={idx} className="bg-white/5 border border-white/10 rounded-2xl p-3 flex justify-between items-center text-xs gap-3">
@@ -283,7 +497,7 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
                       <h5 className="font-black font-headline text-xs mt-0.5" style={{ color: customColor }}>{p.price}</h5>
                     </div>
                     <a
-                      href={isPreview ? undefined : `https://api.whatsapp.com/send?phone=91${data.whatsapp}&text=${encodeURIComponent(`હું આપના કેટલોગમાંથી આના વિશે જાણવા માંગુ છું: ${p.name}`)}`}
+                      href={isPreview ? undefined : `https://api.whatsapp.com/send?phone=91${data.whatsapp}&text=${encodeURIComponent(labels.whatsappCatalogText + p.name)}`}
                       target="_blank"
                       rel="noreferrer"
                       className="bg-emerald-650 hover:bg-emerald-700 text-white h-8 w-8 rounded-lg flex items-center justify-center shrink-0 shadow-sm"
@@ -299,7 +513,7 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
           {/* Gallery */}
           {data.gallery && data.gallery.length > 0 && (
             <div className="space-y-2">
-              <h3 className="font-gujarati font-black text-xs uppercase tracking-wider opacity-60">ગેલેરી</h3>
+              <h3 className="font-gujarati font-black text-xs uppercase tracking-wider opacity-60">{labels.gallery}</h3>
               <div className="space-y-2">
                 {data.gallery.map((g, idx) => (
                   <div key={idx} className="bg-white/5 border border-white/10 rounded-xl p-2.5 flex items-center gap-3">
@@ -339,6 +553,7 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
     case 'glass':
       return (
         <div className="space-y-5 relative z-10 text-center w-full">
+          {langToggle}
           {/* Glass Cover & Banner */}
           <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-r from-white/10 to-transparent -mx-6 -mt-6 border-b border-white/5 pointer-events-none rounded-t-[2.5rem]"></div>
           
@@ -408,13 +623,13 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
             style={{ backgroundColor: customColor }}
           >
             <span className="material-symbols-outlined text-sm font-bold">person_add</span>
-            કોન્ટેક્ટ સેવ કરો (Save)
+            {labels.saveContactWithSave}
           </button>
 
           {/* Catalog Carousel-style grid */}
           {data.products && data.products.length > 0 && (
             <div className="space-y-2 text-left">
-              <h3 className="font-gujarati font-black text-[10px] uppercase tracking-wider opacity-60 text-center">અમારી સેવાઓ</h3>
+              <h3 className="font-gujarati font-black text-[10px] uppercase tracking-wider opacity-60 text-center">{labels.ourServices}</h3>
               <div className="grid grid-cols-1 gap-2">
                 {data.products.map((p, idx) => (
                   <div key={idx} className="bg-white/10 dark:bg-black/20 backdrop-blur-md border border-white/15 rounded-2.5xl p-3.5 flex items-center justify-between gap-3">
@@ -424,7 +639,7 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
                       <h5 className="font-headline font-black text-xs mt-0.5" style={{ color: customColor }}>{p.price}</h5>
                     </div>
                     <a
-                      href={isPreview ? undefined : `https://api.whatsapp.com/send?phone=91${data.whatsapp}&text=${encodeURIComponent(`હું આપના કેટલોગમાંથી આના વિશે જાણવા માંગુ છું: ${p.name}`)}`}
+                      href={isPreview ? undefined : `https://api.whatsapp.com/send?phone=91${data.whatsapp}&text=${encodeURIComponent(labels.whatsappCatalogText + p.name)}`}
                       target="_blank"
                       rel="noreferrer"
                       className="bg-emerald-650 hover:bg-emerald-700 text-white h-8 w-8 rounded-xl flex items-center justify-center shrink-0 shadow-md active:scale-90 transition-transform"
@@ -475,11 +690,12 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
     case 'shop':
       return (
         <div className="space-y-5 text-left relative z-10 w-full">
+          {langToggle}
           {/* Shopkeeper Fast Catalog Header */}
           <div className="space-y-1">
-            <span className="bg-emerald-550/15 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-wider">{data.category || 'સેવા વિક્રેતા'}</span>
+            <span className="bg-emerald-550/15 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-wider">{data.category || labels.serviceVendor}</span>
             <h2 className="font-gujarati font-black text-xl tracking-tight leading-none mt-1">{data.businessName}</h2>
-            <p className="font-gujarati text-[11px] opacity-75">સેવા પ્રદાતા: {data.name}</p>
+            <p className="font-gujarati text-[11px] opacity-75">{labels.serviceProvider}: {data.name}</p>
           </div>
 
           {/* Save Contact Card strip */}
@@ -490,7 +706,7 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
               style={{ backgroundColor: customColor }}
             >
               <span className="material-symbols-outlined text-xs font-bold">person_add</span>
-              કોન્ટેક્ટ સેવ
+              {labels.saveContact}
             </button>
             
             {/* Quick Actions (Call, WhatsApp, Maps) */}
@@ -542,7 +758,7 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
           {/* Product Catalog Grid (2 columns) */}
           {data.products && data.products.length > 0 && (
             <div className="space-y-2">
-              <h3 className="font-gujarati font-black text-xs border-b pb-1 opacity-60">કેટલોગ લિસ્ટ</h3>
+              <h3 className="font-gujarati font-black text-xs border-b pb-1 opacity-60">{labels.catalogList}</h3>
               <div className="grid grid-cols-2 gap-2">
                 {data.products.map((p, idx) => (
                   <div key={idx} className="bg-white/5 border border-white/10 rounded-xl p-2.5 flex flex-col justify-between h-28">
@@ -554,12 +770,12 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
                       <p className="font-headline font-black text-[9px] mt-1" style={{ color: customColor }}>{p.price}</p>
                     </div>
                     <a
-                      href={isPreview ? undefined : `https://api.whatsapp.com/send?phone=91${data.whatsapp}&text=${encodeURIComponent(`હું આપના કેટલોગમાંથી આના વિશે જાણવા માંગુ છું: ${p.name}`)}`}
+                      href={isPreview ? undefined : `https://api.whatsapp.com/send?phone=91${data.whatsapp}&text=${encodeURIComponent(labels.whatsappCatalogText + p.name)}`}
                       target="_blank"
                       rel="noreferrer"
                       className="w-full bg-emerald-650 hover:bg-emerald-700 text-white py-1 rounded-lg text-[8px] font-black text-center flex items-center justify-center gap-1 active:scale-95"
                     >
-                      <span className="material-symbols-outlined text-[8px]">chat</span> પૂછપરછ
+                      <span className="material-symbols-outlined text-[8px]">chat</span> {labels.inquiry}
                     </a>
                   </div>
                 ))}
@@ -570,7 +786,7 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
           {/* Gallery list */}
           {data.gallery && data.gallery.length > 0 && (
             <div className="space-y-1.5">
-              <h3 className="font-gujarati font-black text-xs opacity-60">ઓફિસ / કામ પ્રદર્શન</h3>
+              <h3 className="font-gujarati font-black text-xs opacity-60">{labels.officeWorkGallery}</h3>
               <div className="flex gap-2 overflow-x-auto pb-1 max-w-full scrollbar-hide">
                 {data.gallery.map((g, idx) => (
                   <div key={idx} className="bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 flex items-center gap-1.5 shrink-0">
@@ -606,6 +822,7 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
     case 'minimal':
       return (
         <div className="space-y-4 text-center relative z-10 w-full">
+          {langToggle}
           {/* Minimal Profile */}
           <div className="space-y-1.5">
             <div className="text-3xl">🏬</div>
@@ -655,7 +872,7 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
             style={{ backgroundColor: customColor, borderColor: customColor }}
           >
             <span className="material-symbols-outlined text-xs font-bold">person_add</span>
-            કોન્ટેક્ટ સેવ કરો
+            {labels.saveContactLong}
           </button>
 
           {/* Address Display Minimal */}
@@ -664,7 +881,6 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
               <span className="material-symbols-outlined text-xs shrink-0 mt-0.5" style={{ color: customColor }}>location_on</span>
               <div className="space-y-0.5 min-w-0 flex-1">
                 <p className="font-gujarati text-[8.5px] opacity-75 leading-relaxed break-words">{data.address}</p>
-
               </div>
             </div>
           )}
@@ -672,7 +888,7 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
           {/* Catalog simple list */}
           {data.products && data.products.length > 0 && (
             <div className="space-y-2 text-left">
-              <h3 className="font-gujarati font-black text-[10px] border-b pb-0.5 uppercase tracking-wider opacity-55">સેવા અને કિંમત</h3>
+              <h3 className="font-gujarati font-black text-[10px] border-b pb-0.5 uppercase tracking-wider opacity-55">{labels.servicePrice}</h3>
               <div className="space-y-1.5">
                 {data.products.map((p, idx) => (
                   <div key={idx} className="flex justify-between items-center text-[10px] py-2 border-b border-white/5 gap-2">
@@ -701,6 +917,7 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
     default: // classic
       return (
         <div className="space-y-5 text-center relative z-10 w-full">
+          {langToggle}
           {/* Header Info */}
           <div className="space-y-3 pt-2">
             <div className="h-16 w-16 mx-auto rounded-2xl flex items-center justify-center text-3xl shadow-sm bg-white/10 border border-white/20 overflow-hidden">
@@ -773,7 +990,7 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
             style={{ backgroundColor: customColor }}
           >
             <span className="material-symbols-outlined text-xs font-bold">person_add</span>
-            કોન્ટેક્ટ સેવ કરો (Save Contact)
+            {labels.saveContactWithSaveLong}
           </button>
 
 
@@ -781,7 +998,7 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
           {/* Product Catalog */}
           {data.products && data.products.length > 0 && (
             <div className="space-y-2 text-left">
-              <h3 className="font-gujarati font-black text-[10px] border-l-2 pl-2" style={{ borderColor: customColor }}>અમારી સેવાઓ / કેટલોગ</h3>
+              <h3 className="font-gujarati font-black text-[10px] border-l-2 pl-2" style={{ borderColor: customColor }}>{labels.ourServicesCatalog}</h3>
               <div className="grid grid-cols-2 gap-2">
                 {data.products.map((p, idx) => (
                   <div key={idx} className="bg-white/5 border border-white/10 rounded-xl p-2.5 flex flex-col gap-2 relative h-full">
@@ -792,7 +1009,7 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
                       <h5 className="font-headline font-black text-[10px] mt-1" style={{ color: customColor }}>{p.price}</h5>
                     </div>
                     <a
-                      href={isPreview ? undefined : `https://api.whatsapp.com/send?phone=91${data.whatsapp}&text=${encodeURIComponent(`હું આપના ડિજિટલ કેટલોગમાંથી આના વિશે વિગત જાણવા માંગુ છું: ${p.name}`)}`}
+                      href={isPreview ? undefined : `https://api.whatsapp.com/send?phone=91${data.whatsapp}&text=${encodeURIComponent(labels.whatsappCatalogText + p.name)}`}
                       target="_blank"
                       rel="noreferrer"
                       className="absolute bottom-2.5 right-2.5 bg-emerald-650 hover:bg-emerald-700 text-white h-6 w-6 rounded-md flex items-center justify-center shadow-xs transition-transform active:scale-90 z-10"
@@ -808,7 +1025,7 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
           {/* Slider Gallery */}
           {data.gallery && data.gallery.length > 0 && (
             <div className="space-y-2">
-              <h3 className="font-gujarati font-black text-[10px] border-l-2 pl-2 text-left" style={{ borderColor: customColor }}>ફોટો ગેલેરી</h3>
+              <h3 className="font-gujarati font-black text-[10px] border-l-2 pl-2 text-left" style={{ borderColor: customColor }}>{labels.photoGallery}</h3>
               <div className="grid grid-cols-2 gap-2">
                 {data.gallery.map((g, idx) => (
                   <div key={idx} className="bg-white/5 border border-white/10 rounded-xl p-2 text-center space-y-1">
@@ -830,7 +1047,7 @@ const CardContent = ({ data, activeTheme, isPreview, downloadVcf, navigate }) =>
           {/* UPI Payment Section */}
           {data.upiId && (
             <div className="space-y-2 text-left">
-              <h3 className="font-gujarati font-black text-[10px] border-l-2 pl-2" style={{ borderColor: customColor }}>ઝડપી ચૂકવણી</h3>
+              <h3 className="font-gujarati font-black text-[10px] border-l-2 pl-2" style={{ borderColor: customColor }}>{labels.quickPayment}</h3>
               <div className="bg-white/5 border border-white/10 rounded-2xl p-3 flex items-center justify-between gap-3">
                 <div className="space-y-0.5 overflow-hidden">
                   <h5 className="font-gujarati font-bold text-xs truncate">{data.upiName}</h5>
@@ -1091,7 +1308,16 @@ const DigitalCard = () => {
   const [bgPattern, setBgPattern] = useState('none');
   const [layoutStyle, setLayoutStyle] = useState('classic');
   const [profileImage, setProfileImage] = useState(null); // Layout Style State
+  const [selectedPreset, setSelectedPreset] = useState(null); // Business preset
   const [activeAccordion, setActiveAccordion] = useState('details'); // Creator Accordion State
+
+  const applyBusinessPreset = (preset) => {
+    setSelectedPreset(preset.id);
+    setLayoutStyle(preset.layout);
+    setThemeId(preset.theme);
+    setCategory(preset.category);
+    setTagline(preset.tagline);
+  };
   
   // Catalog items list
   const [products, setProducts] = useState([
@@ -1153,17 +1379,25 @@ const DigitalCard = () => {
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const compressed = await compressImage(file);
-      setTempGallImg(compressed);
+    if (!file) return;
+    try {
+      triggerLocalToast('📤 ગૅલેરી ફોટો અપલોડ...');
+      const url = await uploadToCloudinary(file);
+      setTempGallImg(url);
+    } catch (err) {
+      triggerLocalToast('❌ ફોટો અપલોડ નિષ્ફળ!');
     }
   };
 
   const handleProductFileChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const compressed = await compressImage(file);
-      setTempProdImg(compressed);
+    if (!file) return;
+    try {
+      triggerLocalToast('📤 પ્રોડક્ટ ફોટો અપલોડ...');
+      const url = await uploadToCloudinary(file);
+      setTempProdImg(url);
+    } catch (err) {
+      triggerLocalToast('❌ ફોટો અપલોડ નિષ્ફળ!');
     }
   };
 
@@ -1187,9 +1421,13 @@ const DigitalCard = () => {
 
   const handleProfileImageChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const compressed = await compressImage(file);
-      setProfileImage(compressed);
+    if (!file) return;
+    try {
+      triggerLocalToast('📤 પ્રોફાઇલ ફોટો અપલોડ...');
+      const url = await uploadToCloudinary(file);
+      setProfileImage(url);
+    } catch (err) {
+      triggerLocalToast('❌ ફોટો અપલોડ નિષ્ફળ!');
     }
   };
 
@@ -1392,14 +1630,14 @@ END:VCARD`;
   const generateShareLink = () => {
     const slug = localStorage.getItem('digitalCardSlug');
     if (slug) {
-      return `${window.location.origin}/card/${slug}`;
+      return `https://gujaratiapp.in/card/${slug}`;
     }
     
     const cardData = {
       name, businessName, category, tagline, phone, whatsapp, email, address, locationLink, website, upiId, upiName, themeId, customColor, bgPattern, products, gallery, layoutStyle, profileImage, facebook, instagram, linkedin, twitter, youtubeLinks
     };
     const b64 = encodeCardData(cardData);
-    return `${window.location.origin}/c#d=${b64}`;
+    return `https://gujaratiapp.in/c#d=${b64}`;
   };
 
   const copyShareLink = () => {
@@ -1765,11 +2003,56 @@ END:VCARD`;
             num="૨" 
             icon="dashboard"
           >
+            {/* ── Business Type Quick Presets ── */}
+            <div style={{ marginBottom: 20 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: '#78716c', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: '"Plus Jakarta Sans",sans-serif' }}>
+                ⚡ ધંધો / વ્યવસાય પ્રમાણે Ready Design
+              </p>
+              <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 6 }}>
+                {BUSINESS_PRESETS.map(p => (
+                  <button
+                    key={p.id}
+                    onClick={() => applyBusinessPreset(p)}
+                    style={{
+                      flexShrink: 0,
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
+                      padding: '10px 14px',
+                      borderRadius: 16,
+                      border: selectedPreset === p.id ? `2px solid ${p.color}` : '2px solid #e7e5e4',
+                      background: selectedPreset === p.id ? p.color + '15' : '#fff',
+                      cursor: 'pointer',
+                      transition: 'all 0.18s',
+                      minWidth: 72,
+                    }}
+                  >
+                    <span style={{ fontSize: 24 }}>{p.emoji}</span>
+                    <span style={{
+                      fontSize: 9.5, fontWeight: 800, fontFamily: '"Noto Serif Gujarati",serif',
+                      color: selectedPreset === p.id ? p.color : '#57534e',
+                      textAlign: 'center', lineHeight: 1.3, whiteSpace: 'nowrap'
+                    }}>{p.label}</span>
+                    {selectedPreset === p.id && (
+                      <span style={{ fontSize: 10, color: p.color, fontWeight: 900 }}>✓ સેટ</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+              {selectedPreset && (
+                <p style={{ fontSize: 11, color: '#16a34a', fontWeight: 700, marginTop: 8, fontFamily: '"Plus Jakarta Sans",sans-serif' }}>
+                  ✅ {BUSINESS_PRESETS.find(p => p.id === selectedPreset)?.labelEn} — Layout + Theme + Category auto-set!
+                </p>
+              )}
+            </div>
+
+            {/* ── Manual Layout Style ── */}
+            <p style={{ fontSize: 11, fontWeight: 700, color: '#78716c', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: '"Plus Jakarta Sans",sans-serif' }}>
+              🎨 અથવા Manual Layout પસંદ કરો
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               {LAYOUT_STYLES.map(l => (
                 <button
                   key={l.id}
-                  onClick={() => setLayoutStyle(l.id)}
+                  onClick={() => { setLayoutStyle(l.id); setSelectedPreset(null); }}
                   className={`p-4 rounded-[2rem] border-2 text-left transition-all hover:scale-[1.01] active:scale-98 cursor-pointer flex gap-4 items-center ${
                     layoutStyle === l.id 
                       ? 'border-primary bg-primary/5 text-primary shadow-xs' 

@@ -2217,7 +2217,7 @@ export default function HealthAssistant() {
                   setActiveChallenge(null);
                 }
               }}
-              className="text-[11px] text-rose-500 hover:underline font-gujarati font-bold"
+              className="text-[11px] text-emerald-500 hover:underline font-gujarati font-bold"
             >
               બંધ કરો ❌
             </button>
@@ -2251,8 +2251,8 @@ export default function HealthAssistant() {
 
           {/* Current Day Task Description */}
           {activeChallenge.currentDay <= 7 && !activeChallenge.completedDays.includes(activeChallenge.currentDay) ? (
-            <div className="bg-amber-50/50 dark:bg-stone-950/40 p-4 rounded-2xl border border-amber-200/50">
-              <span className="font-gujarati text-[10px] bg-amber-100 dark:bg-stone-900 text-[#8c6239] font-bold px-2 py-0.5 rounded-full">આજનું કાર્ય (Day {activeChallenge.currentDay})</span>
+            <div className="bg-yellow-50/50 dark:bg-stone-950/40 p-4 rounded-2xl border border-yellow-200/50">
+              <span className="font-gujarati text-[10px] bg-yellow-100 dark:bg-stone-900 text-[#8c6239] font-bold px-2 py-0.5 rounded-full">આજનું કાર્ય (Day {activeChallenge.currentDay})</span>
               <p className="font-gujarati text-sm text-stone-750 dark:text-stone-300 font-bold mt-2 leading-relaxed">
                 {activeChallenge.challengeList ? activeChallenge.challengeList[activeChallenge.currentDay - 1] : (PERSONALIZED_TOPICS[activeChallenge.topicKey]?.challenge[activeChallenge.currentDay - 1] || "આજે તમારા આહારમાં કાળજી રાખો.")}
               </p>
@@ -2265,7 +2265,7 @@ export default function HealthAssistant() {
                     <button
                       key={rating}
                       onClick={() => handleRatingAndComplete(rating)}
-                      className="shrink-0 h-7 w-7 rounded-lg bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-xs text-[#8c6239] font-bold hover:bg-amber-50 active:scale-95 transition-all"
+                      className="shrink-0 h-7 w-7 rounded-lg bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-xs text-[#8c6239] font-bold hover:bg-yellow-50 active:scale-95 transition-all"
                     >
                       {rating}
                     </button>
@@ -2315,7 +2315,7 @@ export default function HealthAssistant() {
                           <div 
                             style={{ height: `${heightPercentage}%` }} 
                             className={`w-full rounded-t-sm transition-all ${
-                              rating >= 7 ? 'bg-rose-500' : rating >= 4 ? 'bg-amber-500' : 'bg-emerald-500'
+                              rating >= 7 ? 'bg-emerald-500' : rating >= 4 ? 'bg-yellow-600' : 'bg-emerald-500'
                             }`}
                           />
                           <span className="absolute -top-3.5 text-[8px] font-bold text-stone-400">{rating}</span>
@@ -2382,12 +2382,12 @@ export default function HealthAssistant() {
                   <span className="material-symbols-outlined text-2xl font-bold">health_and_safety</span>
                   <h4 className="font-gujarati font-black text-xl">સલામત સ્તર અને સામાન્ય રીડીંગ્સ (Safe Levels)</h4>
                 </div>
-                <div className="bg-amber-500/10 dark:bg-stone-950 border border-amber-500/20 p-5 rounded-2xl flex items-center justify-between gap-4">
+                <div className="bg-yellow-600/10 dark:bg-stone-950 border border-yellow-600/20 p-5 rounded-2xl flex items-center justify-between gap-4">
                   <div>
                     <p className="font-gujarati text-xs text-stone-550 dark:text-stone-400 font-bold uppercase tracking-wider">તંદુરસ્ત રેન્જ (Ideal Value)</p>
                     <h5 className="font-headline font-black text-xl mt-1 text-primary">{currentCondition.safe_level}</h5>
                   </div>
-                  <span className="material-symbols-outlined text-4xl text-amber-500 animate-pulse">verified_user</span>
+                  <span className="material-symbols-outlined text-4xl text-yellow-600 animate-pulse">verified_user</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
@@ -2405,14 +2405,14 @@ export default function HealthAssistant() {
                 
                 {/* Symptoms card */}
                 <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-850 p-6 rounded-[2.5rem] shadow-sm space-y-3">
-                  <div className="flex items-center gap-2 text-rose-500">
+                  <div className="flex items-center gap-2 text-emerald-500">
                     <span className="material-symbols-outlined font-bold">warning</span>
                     <h4 className="font-gujarati font-black text-lg">મુખ્ય લક્ષણો (Symptoms)</h4>
                   </div>
                   <ul className="space-y-2.5 pl-1.5 mt-2">
                     {currentCondition.symptoms.map((s, idx) => (
                       <li key={idx} className="font-gujarati text-xs text-stone-700 dark:text-stone-300 flex items-start gap-2 leading-relaxed">
-                        <span className="h-2 w-2 rounded-full bg-rose-500 mt-1.5 shrink-0" />
+                        <span className="h-2 w-2 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
                         <span>{s}</span>
                       </li>
                     ))}
@@ -2421,14 +2421,14 @@ export default function HealthAssistant() {
 
                 {/* Causes card */}
                 <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-850 p-6 rounded-[2.5rem] shadow-sm space-y-3">
-                  <div className="flex items-center gap-2 text-amber-600">
+                  <div className="flex items-center gap-2 text-yellow-700">
                     <span className="material-symbols-outlined font-bold">psychology</span>
                     <h4 className="font-gujarati font-black text-lg">થવાના મુખ્ય કારણો (Causes)</h4>
                   </div>
                   <ul className="space-y-2.5 pl-1.5 mt-2">
                     {currentCondition.causes.map((c, idx) => (
                       <li key={idx} className="font-gujarati text-xs text-stone-700 dark:text-stone-300 flex items-start gap-2 leading-relaxed">
-                        <span className="h-2 w-2 rounded-full bg-amber-500 mt-1.5 shrink-0" />
+                        <span className="h-2 w-2 rounded-full bg-yellow-600 mt-1.5 shrink-0" />
                         <span>{c}</span>
                       </li>
                     ))}
@@ -2457,15 +2457,15 @@ export default function HealthAssistant() {
                 </div>
 
                 {/* Dont's card */}
-                <div className="bg-rose-500/5 dark:bg-stone-900 border-2 border-rose-500/10 p-6 rounded-[2.5rem] shadow-xs space-y-4">
-                  <div className="flex items-center gap-2 text-rose-600 dark:text-rose-450">
+                <div className="bg-emerald-500/5 dark:bg-stone-900 border-2 border-emerald-500/10 p-6 rounded-[2.5rem] shadow-xs space-y-4">
+                  <div className="flex items-center gap-2 text-emerald-600 dark:text-rose-450">
                     <span className="material-symbols-outlined font-bold text-2xl">cancel</span>
                     <h4 className="font-gujarati font-black text-xl">શું ન કરવું? (Don'ts)</h4>
                   </div>
                   <ul className="space-y-3">
                     {currentCondition.donts.map((item, idx) => (
                       <li key={idx} className="font-gujarati text-xs text-stone-700 dark:text-stone-300 flex items-start gap-2.5 leading-relaxed">
-                        <span className="material-symbols-outlined text-rose-500 text-sm mt-0.5 shrink-0">close</span>
+                        <span className="material-symbols-outlined text-emerald-500 text-sm mt-0.5 shrink-0">close</span>
                         <span>{item}</span>
                       </li>
                     ))}
@@ -2488,8 +2488,8 @@ export default function HealthAssistant() {
                       {currentCondition.foods_to_eat}
                     </p>
                   </div>
-                  <div className="bg-red-500/5 p-5 rounded-2xl border border-red-500/10 space-y-2">
-                    <h5 className="font-gujarati font-black text-sm text-red-700 dark:text-red-400">👎 શું ટાળવું? (Foods to Avoid)</h5>
+                  <div className="bg-emerald-600/5 p-5 rounded-2xl border border-emerald-600/10 space-y-2">
+                    <h5 className="font-gujarati font-black text-sm text-emerald-800 dark:text-red-400">👎 શું ટાળવું? (Foods to Avoid)</h5>
                     <p className="font-gujarati text-xs text-stone-700 dark:text-stone-300 leading-relaxed font-bold">
                       {currentCondition.foods_to_avoid}
                     </p>
@@ -2559,7 +2559,7 @@ export default function HealthAssistant() {
 
                   {/* Lack of Vitamin symptoms / diseases */}
                   <div className="flex gap-2 items-start text-xs">
-                    <span className="material-symbols-outlined text-rose-500 text-base shrink-0 mt-0.5">warning</span>
+                    <span className="material-symbols-outlined text-emerald-500 text-base shrink-0 mt-0.5">warning</span>
                     <div>
                       <span className="font-gujarati text-stone-400 font-bold uppercase tracking-wider text-[9px] block">ઉણપથી થતા રોગો / અસરો</span>
                       <p className="font-gujarati font-bold text-stone-750 dark:text-stone-200 mt-0.5">{vit.disease}</p>
@@ -2614,7 +2614,7 @@ export default function HealthAssistant() {
                     </div>
                     <button
                       onClick={() => handleSaveAnswer({ id: note.id })}
-                      className="text-stone-400 hover:text-rose-500 font-bold text-xs flex items-center gap-0.5 font-gujarati"
+                      className="text-stone-400 hover:text-emerald-500 font-bold text-xs flex items-center gap-0.5 font-gujarati"
                     >
                       <span className="material-symbols-outlined text-sm">delete</span> હટાવો
                     </button>
@@ -2648,9 +2648,9 @@ export default function HealthAssistant() {
       {/* Professional Medical Disclaimer Section */}
       <section 
         id="disclaimer-section" 
-        className="bg-rose-500/5 dark:bg-stone-900/20 border-2 border-rose-500/20 p-6 rounded-[2.5rem] space-y-3 relative overflow-hidden"
+        className="bg-emerald-500/5 dark:bg-stone-900/20 border-2 border-emerald-500/20 p-6 rounded-[2.5rem] space-y-3 relative overflow-hidden"
       >
-        <div className="flex items-center gap-2 text-rose-600 dark:text-rose-450">
+        <div className="flex items-center gap-2 text-emerald-600 dark:text-rose-450">
           <span className="material-symbols-outlined font-black text-2xl">gavel</span>
           <h4 className="font-gujarati font-black text-lg">સ્વાસ્થ્ય ડિસ્ક્લેમર (Disclaimer) ⚠️</h4>
         </div>
@@ -2760,7 +2760,7 @@ export default function HealthAssistant() {
                                 <button
                                   key={chipKey}
                                   onClick={() => handleSendMessage(relatedTopic.name)}
-                                  className="text-[10px] font-gujarati px-2.5 py-1 bg-amber-50 dark:bg-stone-950 border border-amber-250 dark:border-stone-850 rounded-lg text-[#8c6239] dark:text-amber-400 hover:bg-amber-105 transition-colors font-bold"
+                                  className="text-[10px] font-gujarati px-2.5 py-1 bg-yellow-50 dark:bg-stone-950 border border-amber-250 dark:border-stone-850 rounded-lg text-[#8c6239] dark:text-yellow-400 hover:bg-amber-105 transition-colors font-bold"
                                 >
                                   {relatedTopic.name} 🔗
                                 </button>
@@ -2770,7 +2770,7 @@ export default function HealthAssistant() {
                               <button
                                 key={chipKey}
                                 onClick={() => handleSendMessage(chipKey)}
-                                className="text-[10px] font-gujarati px-2.5 py-1 bg-amber-50 dark:bg-stone-950 border border-amber-250 dark:border-stone-850 rounded-lg text-[#8c6239] dark:text-amber-400 hover:bg-amber-105 transition-colors font-bold"
+                                className="text-[10px] font-gujarati px-2.5 py-1 bg-yellow-50 dark:bg-stone-950 border border-amber-250 dark:border-stone-850 rounded-lg text-[#8c6239] dark:text-yellow-400 hover:bg-amber-105 transition-colors font-bold"
                               >
                                 {chipKey} 🔗
                               </button>
@@ -2800,7 +2800,7 @@ export default function HealthAssistant() {
                         onClick={() => handleSaveAnswer(msg)}
                         className={`flex items-center gap-1 text-[10px] font-gujarati px-2 py-1 border rounded-lg transition-colors ${
                           isBookmarked(msg.id)
-                            ? 'bg-amber-100 dark:bg-stone-800 border-amber-300 text-amber-700 dark:text-amber-400 font-bold'
+                            ? 'bg-yellow-100 dark:bg-stone-800 border-yellow-300 text-yellow-800 dark:text-yellow-400 font-bold'
                             : 'bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-500 hover:text-[#8c6239]'
                         }`}
                       >
@@ -2844,7 +2844,7 @@ export default function HealthAssistant() {
           {questionnaire.active ? (
             <div className="px-4 pb-4 shrink-0 space-y-2">
               <div className="flex justify-between items-center">
-                <p className="font-gujarati text-[10px] text-[#8c6239] dark:text-amber-400 font-bold uppercase tracking-widest">
+                <p className="font-gujarati text-[10px] text-[#8c6239] dark:text-yellow-400 font-bold uppercase tracking-widest">
                   {questionnaire.isWomenPrelude || questionnaire.step === -1 ? "તમારી પસંદગી ટેપ કરો:" : `સવાલ ${questionnaire.step + 1} / ૬:`}
                 </p>
                 <button
@@ -2891,7 +2891,7 @@ export default function HealthAssistant() {
                     <button
                       onClick={() => handleQuestionnaireAnswer('no', 'ના, વિગતો બદલવી છે ❌')}
                       disabled={isTyping}
-                      className="text-[11px] font-gujarati px-4 py-2 bg-rose-50 dark:bg-stone-900 border border-rose-250 dark:border-stone-800 rounded-xl text-rose-700 dark:text-rose-450 hover:bg-rose-100 transition-all font-bold active:scale-95"
+                      className="text-[11px] font-gujarati px-4 py-2 bg-rose-50 dark:bg-stone-900 border border-rose-250 dark:border-stone-800 rounded-xl text-emerald-700 dark:text-rose-450 hover:bg-rose-100 transition-all font-bold active:scale-95"
                     >
                       ના, વિગતો બદલવી છે ❌
                     </button>
@@ -2921,7 +2921,7 @@ export default function HealthAssistant() {
                       key={i}
                       onClick={() => handleSendMessage(q)}
                       disabled={isTyping}
-                      className="shrink-0 text-[11px] font-gujarati px-3 py-2 bg-amber-50 dark:bg-stone-900 border border-amber-200 dark:border-stone-800 rounded-xl text-[#8c6239] dark:text-amber-400 hover:bg-amber-100 transition-all disabled:opacity-50 whitespace-nowrap active:scale-95"
+                      className="shrink-0 text-[11px] font-gujarati px-3 py-2 bg-yellow-50 dark:bg-stone-900 border border-yellow-200 dark:border-stone-800 rounded-xl text-[#8c6239] dark:text-yellow-400 hover:bg-yellow-100 transition-all disabled:opacity-50 whitespace-nowrap active:scale-95"
                     >
                       👵 {q}
                     </button>
@@ -2935,7 +2935,7 @@ export default function HealthAssistant() {
                   <button
                     onClick={startListening}
                     disabled={isTyping}
-                    className={`h-11 w-11 rounded-2xl flex items-center justify-center transition-all active:scale-95 shadow-sm shrink-0 ${isListening ? 'bg-red-500 animate-pulse text-white' : 'bg-amber-100 hover:bg-amber-200 text-[#8c6239] dark:bg-stone-800 dark:hover:bg-stone-750 dark:text-amber-450'}`}
+                    className={`h-11 w-11 rounded-2xl flex items-center justify-center transition-all active:scale-95 shadow-sm shrink-0 ${isListening ? 'bg-emerald-600 animate-pulse text-white' : 'bg-yellow-100 hover:bg-yellow-200 text-[#8c6239] dark:bg-stone-800 dark:hover:bg-stone-750 dark:text-amber-450'}`}
                     title="બોલીને પ્રશ્ન પૂછો"
                   >
                     <span className="material-symbols-outlined text-lg">{isListening ? 'mic' : 'mic_none'}</span>

@@ -287,7 +287,7 @@ export default function MysteryHub() {
             <div 
               key={m.id}
               onClick={() => handleOpenMystery(m)}
-              className="cursor-pointer bg-[#fbf5ee] dark:bg-stone-900 border-2 border-[#d5bdaf]/40 hover:border-amber-600/40 p-6 rounded-[2.5rem] shadow-sm flex flex-col justify-between gap-5 relative overflow-hidden transition-all duration-350 hover:scale-[1.02] group"
+              className="cursor-pointer bg-[#fbf5ee] dark:bg-stone-900 border-2 border-[#d5bdaf]/40 hover:border-yellow-700/40 p-6 rounded-[2.5rem] shadow-sm flex flex-col justify-between gap-5 relative overflow-hidden transition-all duration-350 hover:scale-[1.02] group"
             >
               {/* Parchment texture simulation overlay */}
               <div className="absolute inset-0 bg-[radial-gradient(#d5bdaf_1px,transparent_1px)] [background-size:16px_16px] opacity-10 pointer-events-none"></div>
@@ -297,7 +297,7 @@ export default function MysteryHub() {
                 <span className="bg-[#f0e6df] dark:bg-stone-850 px-3.5 py-1.5 rounded-full text-xs font-gujarati font-black text-stone-700 dark:text-stone-300">
                   📍 {m.place}
                 </span>
-                <span className={`text-xs font-gujarati font-black px-3 py-1 rounded-full ${isSolved ? 'bg-emerald-500/10 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-450' : 'bg-amber-500/10 text-amber-700 dark:bg-amber-950/20 dark:text-amber-450'}`}>
+                <span className={`text-xs font-gujarati font-black px-3 py-1 rounded-full ${isSolved ? 'bg-emerald-500/10 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-450' : 'bg-yellow-600/10 text-yellow-800 dark:bg-yellow-950/20 dark:text-amber-450'}`}>
                   {isSolved ? "ખોલેલ ✓" : "લોક થયેલ 🔒"}
                 </span>
               </div>
@@ -319,7 +319,7 @@ export default function MysteryHub() {
               </div>
 
               {/* Action Button at bottom */}
-              <button className={`w-full py-3.5 rounded-2xl font-gujarati font-black text-xs transition-all z-10 active:scale-95 ${isSolved ? 'bg-emerald-500 hover:bg-emerald-450 text-white shadow-md' : 'bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-md'}`}>
+              <button className={`w-full py-3.5 rounded-2xl font-gujarati font-black text-xs transition-all z-10 active:scale-95 ${isSolved ? 'bg-emerald-500 hover:bg-emerald-450 text-white shadow-md' : 'bg-gradient-to-r from-yellow-700 to-teal-700 text-white shadow-md'}`}>
                 {isSolved ? "સત્ય વાંચો 📖" : "કોયડો ઉકેલો / સ્ક્રેચ કરો 🔓"}
               </button>
             </div>
@@ -392,7 +392,7 @@ export default function MysteryHub() {
                           <button
                             key={idx}
                             onClick={() => handleAnswerSubmit(option)}
-                            className={`w-full py-4 px-5 rounded-2xl font-gujarati font-black text-sm text-left border-2 transition-all active:scale-[0.99] flex items-center justify-between ${selectedAnswer === option ? (option === selectedMystery.correctAnswer ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-rose-500 text-white border-rose-500') : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 hover:border-amber-600/40 text-stone-800 dark:text-stone-200'}`}
+                            className={`w-full py-4 px-5 rounded-2xl font-gujarati font-black text-sm text-left border-2 transition-all active:scale-[0.99] flex items-center justify-between ${selectedAnswer === option ? (option === selectedMystery.correctAnswer ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-emerald-500 text-white border-emerald-500') : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 hover:border-yellow-700/40 text-stone-800 dark:text-stone-200'}`}
                           >
                             <span>{option}</span>
                             {selectedAnswer === option && (
@@ -409,7 +409,7 @@ export default function MysteryHub() {
                     <div className="text-center pt-2">
                       <button
                         onClick={() => setIsScratching(true)}
-                        className="text-xs text-[#8c6239] hover:text-amber-600 font-gujarati font-black hover:underline flex items-center gap-1 mx-auto"
+                        className="text-xs text-[#8c6239] hover:text-yellow-700 font-gujarati font-black hover:underline flex items-center gap-1 mx-auto"
                       >
                         <span className="material-symbols-outlined text-sm">payments</span>
                         જવાબ નથી ખબર? કોઈન્સ ખર્ચ્યા વિના રહસ્ય ઘસીને જાણો!

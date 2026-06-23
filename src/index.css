@@ -18,34 +18,41 @@
   --font-mono:      "JetBrains Mono",       monospace;
 
   /* ── Brand Colors ── */
-  --color-brand-600:   #B45309;   /* deep saffron (primary action) */
-  --color-brand-500:   #D97706;   /* saffron                       */
-  --color-brand-400:   #F59E0B;   /* turmeric gold                 */
-  --color-brand-300:   #FCD34D;   /* light gold                    */
-  --color-brand-50:    #FFFBEB;   /* saffron tint bg               */
+  --color-brand-600:   var(--brand-600, #2D3748);   /* deep saffron (primary action) */
+  --color-brand-500:   var(--brand-500, #0F4C47);   /* saffron                       */
+  --color-brand-400:   var(--brand-400, #0D9488);   /* turmeric gold                 */
+  --color-brand-300:   var(--brand-300, #D5B581);   /* light gold                    */
+  --color-brand-5:    var(--brand-5, #FFFBEB);    /* saffron tint bg               */
+  --color-brand-50:    var(--brand-50, #FFFBEB);
 
   /* ── Semantic Grays (Light) ── */
-  --color-background:  #F9F9F7;   /* warm off-white                */
-  --color-surface:     #FFFFFF;
-  --color-surface-2:   #F4F4F2;   /* subtle card tint              */
-  --color-border:      #E8E6E3;
-  --color-border-2:    #D5D2CF;
-  --color-on-surface:  #1A1614;   /* near-black warm               */
-  --color-on-surface-2:#57534E;   /* muted body text               */
-  --color-on-surface-3:#A8A29E;   /* placeholder / caption         */
+  --color-background:  var(--bg-color, #F4F4F0);   /* warm off-white                */
+  --color-surface:     var(--surface-container-color, #FFFFFF);
+  --color-surface-2:   var(--surface-container-color, #F4F4F2);
+  --color-border:      var(--outline-color, #E8E6E3);
+  --color-border-2:    var(--outline-color, #D5D2CF);
+  --color-on-surface:  var(--on-surface-color, #1A1614);   /* near-black warm               */
+  --color-on-surface-2:var(--on-surface-color, #57534E);   /* muted body text               */
+  --color-on-surface-3:var(--on-surface-color, #A8A29E);   /* placeholder / caption         */
 
   /* ── Semantic Grays (Dark) ── */
-  --color-dark-bg:       #141210;
-  --color-dark-surface:  #1E1A18;
-  --color-dark-surface-2:#272220;
-  --color-dark-border:   #2E2825;
-  --color-dark-text:     #F2F0EE;
-  --color-dark-text-2:   #A8A29E;
+  --color-dark-bg:       var(--dark-bg, #141210);
+  --color-dark-surface:  var(--dark-surface, #1E1A18);
+  --color-dark-surface-2:var(--dark-surface, #272220);
+  --color-dark-border:   var(--outline-color, #2E2825);
+  --color-dark-text:     var(--on-surface-color, #F2F0EE);
+  --color-dark-text-2:   var(--on-surface-color, #A8A29E);
+
+  /* ── Overrides from tailwind.config.js ── */
+  --color-primary:             var(--primary-color, #0B3B36);
+  --color-primary-container:   var(--primary-container-color, #115E59);
+
+
 
   /* ── Status Colors ── */
   --color-success:  #16A34A;
   --color-error:    #DC2626;
-  --color-warning:  #D97706;
+  --color-warning:  #0F4C47;
   --color-info:     #2563EB;
 
   /* ── 8dp Spacing Grid ── */
@@ -76,11 +83,13 @@
     -webkit-tap-highlight-color: transparent;
     scroll-behavior: smooth;
     text-size-adjust: 100%;
+    overflow-x: hidden;
   }
 
   body {
+    overflow-x: hidden;
     font-family: "Plus Jakarta Sans", sans-serif;
-    background-color: #F9F9F7;
+    background-color: #F4F4F0;
     color: #1A1614;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -210,7 +219,7 @@
 
 /* Primary Button */
 .g-btn-primary {
-  background: linear-gradient(135deg, #D97706, #B45309);
+  background: linear-gradient(135deg, #0F4C47, #2D3748);
   color: #ffffff;
   font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 14px;
@@ -249,9 +258,9 @@
   outline: none;
   transition: border-color 0.2s ease;
 }
-.g-input:focus { border-color: #D97706; }
+.g-input:focus { border-color: #0F4C47; }
 .dark .g-input { background: #1E1A18; border-color: #2E2825; color: #F2F0EE; }
-.dark .g-input:focus { border-color: #F59E0B; }
+.dark .g-input:focus { border-color: #0D9488; }
 
 /* ── ANIMATIONS ────────────────────────────────────────────────── */
 .animate-fade-in  { animation: fadeIn  0.3s ease-out forwards; }
@@ -268,7 +277,7 @@
   bottom: 0; left: 0; right: 0;
   height: 2px;
   border-radius: 9999px;
-  background: #D97706;
+  background: #0F4C47;
   animation: scaleX 0.2s ease-out forwards;
   transform-origin: center;
 }
