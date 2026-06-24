@@ -36,6 +36,7 @@ const Profile = () => {
   const [avatar, setAvatar] = useState(profile.avatar || '');
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [error, setError] = useState('');
   const [googleUser, setGoogleUser] = useState(null);
@@ -131,11 +132,15 @@ const Profile = () => {
       // Sync with Supabase
       await syncUserProfile();
       
-      setIsModalOpen(false);
-      setShowSuccessMessage(true);
+      setSaveSuccess(true);
       setTimeout(() => {
-        setShowSuccessMessage(false);
-      }, 4000);
+        setIsModalOpen(false);
+        setSaveSuccess(false);
+        setShowSuccessMessage(true);
+        setTimeout(() => {
+          setShowSuccessMessage(false);
+        }, 4000);
+      }, 1200);
     } catch (err) {
       console.error("Profile save error:", err);
       setError('માહિતી સેવ કરવામાં કંઈક સમસ્યા આવી, કૃપા કરી ફરી પ્રયાસ કરો.');
@@ -223,6 +228,12 @@ const Profile = () => {
             >
               ✏️ પ્રોફાઇલ એડિટ કરો
             </button>
+            {showSuccessMessage && (
+              <p className="font-gujarati text-emerald-600 dark:text-emerald-400 text-xs font-bold animate-fade-in mt-2 flex items-center justify-center gap-1">
+                <span className="material-symbols-outlined text-sm font-bold animate-pulse">check_circle</span>
+                તમારા ફેરફારો સાચવવામાં આવ્યા છે! ✅
+              </p>
+            )}
         </div>
       </section>
 
@@ -414,12 +425,31 @@ const Profile = () => {
                     બંધ કરો
                   </button>
                 )}
+                {saveSuccess && (
+                  <div className="w-full text-center pb-2 animate-fade-in">
+                    <p className="font-gujarati text-emerald-600 dark:text-emerald-400 text-xs font-bold flex items-center justify-center gap-1">
+                      <span className="material-symbols-outlined text-sm">check_circle</span>
+                      તમારા ફેરફારો સાચવવામાં આવ્યા છે! ✅
+                    </p>
+                  </div>
+                )}
                 <button 
                   type="submit" 
-                  disabled={saving || uploading}
-                  className="flex-1 py-4 bg-teal-700 hover:bg-teal-800 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-gujarati font-black active:scale-95 transition-all text-center flex items-center justify-center gap-2"
+                  disabled={saving || uploading || saveSuccess}
+                  className={`flex-1 py-4 text-white rounded-xl font-gujarati font-black transition-all text-center flex items-center justify-center gap-2 ${
+                    saveSuccess
+                      ? 'bg-emerald-600 dark:bg-emerald-700 pointer-events-none'
+                      : (saving || uploading)
+                        ? 'bg-stone-300 dark:bg-stone-800 text-stone-500 cursor-not-allowed opacity-60 pointer-events-none'
+                        : 'bg-teal-700 hover:bg-teal-800 active:scale-95 cursor-pointer shadow-md hover:shadow-lg'
+                  }`}
                 >
-                  {saving ? (
+                  {saveSuccess ? (
+                    <>
+                      <span className="material-symbols-outlined text-sm">check_circle</span>
+                      સેવ થઈ ગયું!
+                    </>
+                  ) : saving ? (
                     <>
                       <span className="material-symbols-outlined text-sm animate-spin">sync</span>
                       સાચવવામાં આવે છે...
