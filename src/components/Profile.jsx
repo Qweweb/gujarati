@@ -35,6 +35,8 @@ const Profile = () => {
   const [city, setCity] = useState(profile.city || '');
   const [avatar, setAvatar] = useState(profile.avatar || '');
   const [uploading, setUploading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [error, setError] = useState('');
   const [googleUser, setGoogleUser] = useState(null);
 
@@ -107,30 +109,39 @@ const Profile = () => {
       return;
     }
     
-    const updatedProfile = {
-      ...profile,
-      name: trimmedName,
-      mobile: trimmedMobile,
-      gender,
-      dob,
-      city: trimmedCity,
-      email: profile.email || '',
-      avatar: avatar || '',
-    };
-    
-    localStorage.setItem('user_profile', JSON.stringify(updatedProfile));
-    localStorage.setItem('profile_completed', 'true');
-    setProfile(updatedProfile);
-    
-    // Sync with Supabase
     try {
+      setSaving(true);
+      setError('');
+      
+      const updatedProfile = {
+        ...profile,
+        name: trimmedName,
+        mobile: trimmedMobile,
+        gender,
+        dob,
+        city: trimmedCity,
+        email: profile.email || '',
+        avatar: avatar || '',
+      };
+      
+      localStorage.setItem('user_profile', JSON.stringify(updatedProfile));
+      localStorage.setItem('profile_completed', 'true');
+      setProfile(updatedProfile);
+      
+      // Sync with Supabase
       await syncUserProfile();
+      
+      setIsModalOpen(false);
+      setShowSuccessMessage(true);
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 4000);
     } catch (err) {
-      console.error("Profile sync error:", err);
+      console.error("Profile save error:", err);
+      setError('માહિતી સેવ કરવામાં કંઈક સમસ્યા આવી, કૃપા કરી ફરી પ્રયાસ કરો.');
+    } finally {
+      setSaving(false);
     }
-    
-    setIsModalOpen(false);
-    setError('');
   };
 
   const handleLogout = async () => {
@@ -163,7 +174,14 @@ const Profile = () => {
   const genderLabel = profile.gender === 'male' ? 'પુરુષ' : profile.gender === 'female' ? 'સ્ત્રી' : profile.gender === 'other' ? 'અન્ય' : '';
 
   return (
-    <div className="animate-fade-in space-y-8 pb-12">
+    <div className="animate-fade-in space-y-6 pb-12 relative">
+      {/* Success Banner Alert */}
+      {showSuccessMessage && (
+        <div className="bg-emerald-500/10 dark:bg-emerald-950/20 border border-emerald-500/20 rounded-2xl p-4 flex items-center gap-3 animate-fade-in shadow-sm">
+          <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-xl font-bold">check_circle</span>
+          <p className="font-gujarati text-xs font-bold text-emerald-800 dark:text-emerald-300">તમારી વિગતો સફળતાપૂર્વક સાચવવામાં આવી છે! ✅</p>
+        </div>
+      )}
       {/* Profile Header */}
       <section className="bg-white dark:bg-dark-surface rounded-[2.5rem] p-8 shadow-sm border border-primary/5 flex flex-col items-center text-center gap-4 relative overflow-hidden">
         {/* Google avatar */}
@@ -398,9 +416,17 @@ const Profile = () => {
                 )}
                 <button 
                   type="submit" 
-                  className="flex-1 py-4 bg-teal-700 hover:bg-teal-800 text-white rounded-xl font-gujarati font-black active:scale-95 transition-all text-center"
+                  disabled={saving || uploading}
+                  className="flex-1 py-4 bg-teal-700 hover:bg-teal-800 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-gujarati font-black active:scale-95 transition-all text-center flex items-center justify-center gap-2"
                 >
-                  {isFirstLogin ? '👌 ઓકે, સેવ કરો' : 'સેવ કરો'}
+                  {saving ? (
+                    <>
+                      <span className="material-symbols-outlined text-sm animate-spin">sync</span>
+                      સાચવવામાં આવે છે...
+                    </>
+                  ) : (
+                    isFirstLogin ? '👌 ઓકે, સેવ કરો' : 'સેવ કરો'
+                  )}
                 </button>
               </div>
             </form>
