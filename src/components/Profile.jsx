@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { syncUserProfile } from '../utils/otlo_helper';
 import { useTheme } from '../context/ThemeContext';
+import { uploadToCloudinary } from '../utils/cloudinaryHelper';
 
 const Profile = () => {
   const { activeTheme, changeTheme, themes } = useTheme();
@@ -32,6 +33,8 @@ const Profile = () => {
   const [gender, setGender] = useState(profile.gender || '');
   const [dob, setDob] = useState(profile.dob || '');
   const [city, setCity] = useState(profile.city || '');
+  const [avatar, setAvatar] = useState(profile.avatar || '');
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const [googleUser, setGoogleUser] = useState(null);
 
@@ -53,6 +56,7 @@ const Profile = () => {
 
           // Pre-fill form fields with Google info if not already set
           if (!name && googleName) setName(googleName);
+          if (!avatar && googleAvatar) setAvatar(googleAvatar);
 
           // Update profile state with Google info
           setProfile(prev => ({
@@ -74,6 +78,24 @@ const Profile = () => {
     fetchGoogleUser();
   }, []);
 
+  const handleAvatarUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      setUploading(true);
+      setError('');
+      const url = await uploadToCloudinary(file);
+      if (url) {
+        setAvatar(url);
+      }
+    } catch (err) {
+      console.error("Avatar upload error:", err);
+      setError('ફોટો અપલોડ કરવામાં ભૂલ આવી, ફરી પ્રયાસ કરો.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     const trimmedName = (name || '').trim();
@@ -93,7 +115,7 @@ const Profile = () => {
       dob,
       city: trimmedCity,
       email: profile.email || '',
-      avatar: profile.avatar || '',
+      avatar: avatar || '',
     };
     
     localStorage.setItem('user_profile', JSON.stringify(updatedProfile));
@@ -268,6 +290,40 @@ const Profile = () => {
             </div>
             
             <form onSubmit={handleSave} className="space-y-4">
+              {/* Avatar Picker UI */}
+              <div className="flex flex-col items-center gap-2 pb-2">
+                <div className="relative h-20 w-20">
+                  <div className="h-20 w-20 bg-teal-50 dark:bg-teal-950/20 rounded-full flex items-center justify-center p-0.5 border-4 border-teal-700/20 shadow-inner overflow-hidden relative group">
+                    <img 
+                      src={avatar || `https://i.pravatar.cc/100?u=${name || 'gujarati'}`} 
+                      className="w-full h-full object-cover rounded-full" 
+                      alt="Profile Preview"
+                      onError={(e) => { e.target.src = `https://i.pravatar.cc/100?u=${name}`; }}
+                    />
+                    {uploading && (
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                        <span className="material-symbols-outlined text-white text-lg animate-spin">sync</span>
+                      </div>
+                    )}
+                  </div>
+                  <label className="absolute bottom-0 right-0 bg-teal-700 hover:bg-teal-800 text-white p-1.5 rounded-full border-2 border-white dark:border-dark-surface shadow-md cursor-pointer transition-all active:scale-95 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-xs font-black">photo_camera</span>
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      onChange={handleAvatarUpload} 
+                      className="hidden" 
+                      disabled={uploading}
+                    />
+                  </label>
+                </div>
+                {uploading ? (
+                  <p className="font-gujarati text-[10px] text-teal-600 font-bold">ફોટો અપલોડ થઈ રહ્યો છે...</p>
+                ) : (
+                  <p className="font-gujarati text-[10px] text-stone-400">પ્રોફાઇલ ફોટો સેટ કરવા અહિંયા ક્લિક કરો</p>
+                )}
+              </div>
+
               <div className="space-y-1">
                 <label className="font-gujarati text-xs font-bold text-outline">પૂરું નામ *</label>
                 <input 
