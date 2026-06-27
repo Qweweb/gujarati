@@ -54,6 +54,7 @@ const TITHIS_MAP = {
   "Navami": "નોમ",
   "Dashami": "દશમ",
   "Ekadashi": "એકાદશી",
+  "Ekadasi": "એકાદશી",
   "Dwadashi": "બારસ",
   "Trayodashi": "તેરસ",
   "Chaturdashi": "ચૌદસ",
@@ -80,6 +81,7 @@ const NAKSHATRAS_MAP = {
   "Hasta": "હસ્ત",
   "Chitra": "ચિત્રા",
   "Svati": "સ્વાતિ",
+  "Swati": "સ્વાતિ",
   "Vishakha": "વિશાખા",
   "Anuradha": "અનુરાધા",
   "Jyeshtha": "જ્યેષ્ઠા",
@@ -191,6 +193,126 @@ const formatTimeToGujarati = (isoString, offsetMinutes = 330) => {
   return `${toGu(pad(h))}:${toGu(pad(m))} ${ampm}`;
 };
 
+// Local mathematical panchang engine (CommonJS version of src/utils/panchangEngine.js)
+const { EclipticLongitude, EclipticGeoMoon, MakeTime, Body, SearchMoonPhase } = require('astronomy-engine');
+
+const TITHI_NAMES_SUD_MATH = [
+  "સુદ એકમ", "સુદ બીજ", "સુદ ત્રીજ", "સુદ ચોથ", "સુદ પાંચમ",
+  "સુદ છઠ", "સુદ સાતમ", "સુદ આઠમ", "સુદ નોમ", "સુદ દશમ",
+  "સુદ એકાદશી", "સુદ બારસ", "સુદ તેરસ", "સુદ ચૌદશ", "સુદ પૂનમ"
+];
+
+const TITHI_NAMES_VAD_MATH = [
+  "વદ એકમ", "વદ બીજ", "વદ ત્રીજ", "વદ ચોથ", "વદ પાંચમ",
+  "વદ છઠ", "વદ સાતમ", "વદ આઠમ", "વદ નોમ", "વદ દશમ",
+  "વદ એકાદશી", "વદ બારસ", "વદ તેરસ", "વદ ચૌદશ", "વદ અમાસ"
+];
+
+const NAKSHATRA_NAMES_MATH = [
+  "અશ્વિની", "ભરણી", "કૃત્તિકા", "રોહિણી", "મૃગશીર્ષ", "આર્દ્રા", "પુનર્વસુ", "પુષ્ય", "આશ્લેષા",
+  "મઘા", "પૂર્વા ફાલ્ગુની", "ઉત્તરા ફાલ્ગુની", "હસ્ત", "ચિત્રા", "સ્વાતિ", "વિશાખા", "અનુરાધા", "જ્યેષ્ઠા",
+  "મૂળ", "પૂર્વાષાઢા", "ઉત્તરાષાઢા", "શ્રવણ", "ધનિષ્ઠા", "શતતારકા", "પૂર્વા ભાદ્રપદ", "ઉત્તરા ભાદ્રપદ", "રેવતી"
+];
+
+const RASHI_DETAILS_MATH = [
+  { name: "મેષ", letters: "અ, લ, ઈ" },
+  { name: "વૃષભ", letters: "બ, વ, ઉ" },
+  { name: "મિથુન", letters: "ક, છ, ઘ" },
+  { name: "કર્ક", letters: "ડ, હ" },
+  { name: "સિંહ", letters: "મ, ટ" },
+  { name: "કન્યા", letters: "પ, ઠ, ણ" },
+  { name: "તુલા", letters: "ર, ત" },
+  { name: "વૃશ્ચિક", letters: "ન, ય" },
+  { name: "ધન", letters: "ભ, ધ, ફ, ઢ" },
+  { name: "મકર", letters: "ખ, જ" },
+  { name: "કુંભ", letters: "ગ, શ, સ, ષ" },
+  { name: "મીન", letters: "દ, ચ, ઝ, થ" }
+];
+
+const MAAS_NAMES_MATH = [
+  "વૈશાખ", "જેઠ", "અષાઢ", "શ્રાવણ", "ભાદરવો", "આસો",
+  "કારતક", "માગશર", "પોષ", "મહા", "ફાગણ", "ચૈત્ર"
+];
+
+function getNirayanaCoords(date) {
+  const time = MakeTime(date);
+  const julianDate = (date.getTime() / 86400000) + 2440587.5;
+  const T = (julianDate - 2451545.0) / 36525.0;
+  const ayanamsa = 23.85708 + 1.396013 * T - 0.000301 * T * T;
+
+  const sunLon = (EclipticLongitude(Body.Earth, time) + 180) % 360;
+  const moonCoords = EclipticGeoMoon(time);
+  const moonLon = moonCoords.lon;
+
+  const nirayanaSunLon = (sunLon - ayanamsa + 360) % 360;
+  const nirayanaMoonLon = (moonLon - ayanamsa + 360) % 360;
+
+  return { sunLon, moonLon, nirayanaSunLon, nirayanaMoonLon, ayanamsa, time };
+}
+
+function getIndicesAt(date) {
+  const { sunLon, moonLon, nirayanaSunLon, nirayanaMoonLon } = getNirayanaCoords(date);
+
+  const diffTithi = (moonLon - sunLon + 360) % 360;
+  const tithiIndex = Math.floor(diffTithi / 12) % 30;
+  const nakshatraIndex = Math.floor(nirayanaMoonLon / (360 / 27)) % 27;
+
+  return { tithiIndex, nakshatraIndex };
+}
+
+function getDailyMathPanchang(date = new Date()) {
+  const indices = getIndicesAt(date);
+  
+  let tithiName, paksh;
+  if (indices.tithiIndex < 15) {
+    tithiName = TITHI_NAMES_SUD_MATH[indices.tithiIndex];
+    paksh = "સુદ";
+  } else {
+    tithiName = TITHI_NAMES_VAD_MATH[indices.tithiIndex - 15];
+    paksh = "વદ";
+  }
+
+  const nakshatraName = NAKSHATRA_NAMES_MATH[indices.nakshatraIndex];
+
+  const { nirayanaMoonLon } = getNirayanaCoords(date);
+  const rashiIndex = Math.floor(nirayanaMoonLon / 30) % 12;
+  const rashi = RASHI_DETAILS_MATH[rashiIndex];
+
+  const searchStart = new Date(date.getTime() - 35 * 24 * 3600 * 1000);
+  const prevNewMoonTime = SearchMoonPhase(0.0, searchStart, 40);
+  const nextNewMoonTime = SearchMoonPhase(0.0, date, 40);
+
+  function getSunRashiAt(timeObj) {
+    if (!timeObj) return 0;
+    const jd = (timeObj.date.getTime() / 86400000) + 2440587.5;
+    const tVal = (jd - 2451545.0) / 36525.0;
+    const ay = 23.85708 + 1.396013 * tVal - 0.000301 * tVal * tVal;
+    const sLon = (EclipticLongitude(Body.Earth, timeObj) + 180) % 360;
+    const nirayanaSLon = (sLon - ay + 360) % 360;
+    return Math.floor(nirayanaSLon / 30) % 12;
+  }
+
+  const prevRashi = prevNewMoonTime ? getSunRashiAt(prevNewMoonTime) : 0;
+  const nextRashi = nextNewMoonTime ? getSunRashiAt(nextNewMoonTime) : 0;
+
+  let maasName = "";
+  if (prevNewMoonTime && nextNewMoonTime && prevRashi === nextRashi) {
+    maasName = "અધિક " + MAAS_NAMES_MATH[prevRashi];
+  } else {
+    const rIndex = prevNewMoonTime ? getSunRashiAt(prevNewMoonTime) : 0;
+    maasName = MAAS_NAMES_MATH[rIndex];
+  }
+
+  return {
+    tithi: tithiName,
+    paksh: paksh,
+    maas: maasName,
+    rashi: rashi.name,
+    rashiLetters: rashi.letters,
+    nakshatra: nakshatraName
+  };
+}
+
 app.get('/panchang', (req, res) => {
   try {
     let targetDate = new Date();
@@ -202,39 +324,28 @@ app.get('/panchang', (req, res) => {
     const lat = 23.0225;
     const lon = 72.5714;
     
-    // 1. Calculate Astro details
-    const cal = panchang.calendar(targetDate, lat, lon);
+    // 1. Calculate using local mathematical engine
+    const mathPanchang = getDailyMathPanchang(targetDate);
     const sun = panchang.sunTimer(targetDate, lat, lon);
     
-    // 2. Parse raw details with fallbacks
-    const rawMasa = cal.MoonMasa ? cal.MoonMasa.name_en_IN : (cal.Masa ? cal.Masa.name_en_IN : "Jyestha");
-    const rawPaksha = cal.Paksha ? cal.Paksha.name_en_IN : "Shukla";
-    const rawTithi = cal.Tithi ? cal.Tithi.name_en_IN : "Dwitiya";
-    const rawNakshatra = cal.Nakshatra ? cal.Nakshatra.name_en_IN : "Rohini";
-    const rawRaasi = cal.Raasi ? cal.Raasi.name_en_UK : "Taurus";
-    const isLeapMonth = cal.MoonMasa ? cal.MoonMasa.isLeapMonth : false;
+    const maas = mathPanchang.maas;
+    const paksh = mathPanchang.paksh;
     
-    // 3. Map to Gujarati
-    const mappedMaas = MONTHS_MAP[rawMasa] || rawMasa;
-    const maasPrefix = isLeapMonth ? "અધિક " : "";
-    const maas = maasPrefix + mappedMaas;
+    // Note: mathPanchang.tithi already contains "સુદ" or "વદ" prefixed from TITHI_NAMES_SUD_MATH
+    // e.g., "સુદ એકાદશી". We want to construct "જેઠ સુદ એકાદશી".
+    // We split by space to get just the tithi name (e.g. "એકાદશી")
+    const tithiNameOnly = mathPanchang.tithi.split(" ")[1] || mathPanchang.tithi;
+    const tithiFull = `${maas} ${paksh} ${tithiNameOnly}`;
     
-    const paksh = PAKSH_MAP[rawPaksha] || rawPaksha;
-    const mappedTithi = TITHIS_MAP[rawTithi] || rawTithi;
-    
-    const tithi = `${maas} સુદ ${mappedTithi}`; // Shukla is always "સુદ" in Jyestha Sud phase, but let's use paksh variable:
-    const tithiFull = `${maas} ${paksh} ${mappedTithi}`;
-    
-    const rashi = RASHI_MAP[rawRaasi] || rawRaasi;
-    const rashiLetters = RASHI_LETTERS[rashi] || "બ, વ, ઉ";
-    const nakshatra = NAKSHATRAS_MAP[rawNakshatra] || rawNakshatra;
+    const rashi = mathPanchang.rashi;
+    const rashiLetters = mathPanchang.rashiLetters;
+    const nakshatra = mathPanchang.nakshatra;
     
     // Format sunrise / sunset
     const sunrise = formatTimeToGujarati(sun.sunRise);
     const sunset = formatTimeToGujarati(sun.sunSet);
     
     // 4. Select rotating content based on the day of the year
-    // Simple hash based on date to get stable daily rotation
     const dayOfYear = Math.floor((targetDate - new Date(targetDate.getFullYear(), 0, 0)) / (86400000));
     
     const suvichar = SUVICHARS[dayOfYear % SUVICHARS.length];

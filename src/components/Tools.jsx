@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ShareButton from './ShareButton';
 import { API_ENDPOINTS } from '../config/api';
 import { calculateMuhurts, toGujaratiDigits, toEnglishDigits } from '../utils/choghadiya_helper';
+import { getDailyPanchang } from '../utils/panchangEngine';
 
 const Tools = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const Tools = () => {
   // Panchang states
   const [panchangData, setPanchangData] = useState(() => {
     const cached = localStorage.getItem('panchang_cache_full') || localStorage.getItem('panchang_cache');
-    return cached ? JSON.parse(cached) : {
+    const initialData = cached ? JSON.parse(cached) : {
       tithi: "અધિક જેઠ સુદ બારસ",
       paksh: "સુદ",
       maas: "અધિક જેઠ",
@@ -28,10 +29,36 @@ const Tools = () => {
         rahuKaal: "૦૨:૧૮ PM - ૦૩:૫૬ PM"
       }
     };
+
+    try {
+      const p = getDailyPanchang();
+      initialData.tithi = `${p.maas} ${p.tithi}`;
+      initialData.paksh = p.paksh;
+      initialData.maas = p.maas;
+      initialData.rashi = p.rashi;
+      initialData.nakshatra = p.nakshatra;
+    } catch (e) {
+      console.error("Local panchang calculation failed on init in Tools", e);
+    }
+    return initialData;
   });
   const [currentTime, setCurrentTime] = useState(new Date());
 
   const fetchData = async () => {
+    let mathPanchang = {};
+    try {
+      const p = getDailyPanchang();
+      mathPanchang = {
+        tithi: `${p.maas} ${p.tithi}`,
+        paksh: p.paksh,
+        maas: p.maas,
+        rashi: p.rashi,
+        nakshatra: p.nakshatra
+      };
+    } catch (e) {
+      console.error("Local panchang calculation failed in Tools", e);
+    }
+
     try {
       const response = await fetch(API_ENDPOINTS.PANCHANG);
       if (!response.ok) throw new Error('API request failed');
@@ -40,6 +67,7 @@ const Tools = () => {
       const updatedData = {
         ...panchangData,
         ...apiData,
+        ...mathPanchang,
         loading: false
       };
       
@@ -47,6 +75,11 @@ const Tools = () => {
       localStorage.setItem('panchang_cache_full', JSON.stringify(updatedData));
     } catch (error) {
       console.error("Tools Panchang API Error:", error);
+      setPanchangData(prev => ({
+        ...prev,
+        ...mathPanchang,
+        loading: false
+      }));
     }
   };
 

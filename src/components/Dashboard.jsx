@@ -7,6 +7,7 @@ import { useTheme } from '../context/ThemeContext';
 import { supabase } from '../supabaseClient';
 import { SUVICHARS } from '../data/suvichars';
 import { HEALTH_TIPS } from '../data/healthTips';
+import { getDailyPanchang } from '../utils/panchangEngine';
 
 /* Daily rotation — changes automatically every day */
 const getDailyItem = (arr) => {
@@ -48,8 +49,17 @@ const Dashboard = () => {
   const [data, setData] = useState(() => {
     const c = localStorage.getItem('panchang_cache');
     const cached = c ? JSON.parse(c) : null;
+    
+    let localTithi = 'વૈશાખ સુદ બારસ';
+    try {
+      const p = getDailyPanchang();
+      localTithi = `${p.maas} ${p.tithi}`;
+    } catch (e) {
+      console.error("Local panchang calculation failed on init", e);
+    }
+
     return {
-      tithi:          cached?.tithi          || 'વૈશાખ સુદ બારસ',
+      tithi:          localTithi, // Always initialize with correct calculated tithi
       sunrise:        cached?.sunrise        || '૦૬:૧૦ AM',
       sunset:         cached?.sunset         || '૦૭:૦૮ PM',
       choghadiya:     cached?.choghadiya     || { name:'લાભ', isGood:true, endTime:'૧૧:૪૫ AM' },
@@ -70,18 +80,44 @@ const Dashboard = () => {
   }, []);
 
   const fetchData = async () => {
+    let localTithi = 'વૈશાખ સુદ બારસ';
+    try {
+      const p = getDailyPanchang();
+      localTithi = `${p.maas} ${p.tithi}`;
+    } catch (e) {
+      console.error("Local panchang calculation failed", e);
+    }
+
     try {
       const r = await fetch(API_ENDPOINTS.PANCHANG);
       if (!r.ok) throw new Error();
       const d = await r.json();
-      const u = { ...data, ...d, suvichar: getDailyItem(SUVICHARS), healthTip: getDailyItem(HEALTH_TIPS) };
+      const u = { 
+        ...data, 
+        ...d, 
+        tithi: localTithi, 
+        suvichar: getDailyItem(SUVICHARS), 
+        healthTip: getDailyItem(HEALTH_TIPS) 
+      };
       setData(u);
       localStorage.setItem('panchang_cache', JSON.stringify(u));
     } catch {
       const c = localStorage.getItem('panchang_cache');
       if (c) {
         const cached = JSON.parse(c);
-        setData({ ...cached, suvichar: getDailyItem(SUVICHARS), healthTip: getDailyItem(HEALTH_TIPS) });
+        setData({ 
+          ...cached, 
+          tithi: localTithi, 
+          suvichar: getDailyItem(SUVICHARS), 
+          healthTip: getDailyItem(HEALTH_TIPS) 
+        });
+      } else {
+        setData(prev => ({ 
+          ...prev, 
+          tithi: localTithi, 
+          suvichar: getDailyItem(SUVICHARS), 
+          healthTip: getDailyItem(HEALTH_TIPS) 
+        }));
       }
     } finally { setLoading(false); }
   };

@@ -30,9 +30,9 @@ def deploy():
         sftp.close()
         
         # 3. Initialize npm and install packages
-        print("Installing npm packages (express, mhah-panchang)...")
+        print("Installing npm packages (express, mhah-panchang, astronomy-engine)...")
         # Run inside remote_dir
-        cmd_install = f"cd {remote_dir} && [ -f package.json ] || npm init -y && npm install express mhah-panchang"
+        cmd_install = f"cd {remote_dir} && [ -f package.json ] || npm init -y && npm install express mhah-panchang astronomy-engine"
         stdin, stdout, stderr = ssh.exec_command(cmd_install)
         print(stdout.read().decode('utf-8'))
         print(stderr.read().decode('utf-8'))

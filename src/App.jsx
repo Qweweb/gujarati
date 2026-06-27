@@ -46,10 +46,13 @@ import SwipeCards from './components/SwipeCards';
 import MysteryHub from './components/MysteryHub';
 import TravelPassport from './components/TravelPassport';
 import ScratchRewards from './components/ScratchRewards';
+import LandingPage from './components/LandingPage';
 import './App.css';
 import { App as CapApp } from '@capacitor/app';
 import { PushNotifications } from '@capacitor/push-notifications';
+import { FCM } from '@capacitor-community/fcm';
 import { supabase } from './supabaseClient';
+import { Capacitor } from '@capacitor/core';
 
 // Route guard component to check feature flags
 const FeatureGuard = ({ children, featureKey, fallbackPath = "/" }) => {
@@ -253,11 +256,12 @@ function App() {
             return;
           }
           
-          await PushNotifications.register();
-          
           await PushNotifications.addListener('registration', (token) => {
             console.log('Push registration success, token: ' + token.value);
-            // Here you could send token to backend or supabase
+            // Subscribe to FCM topic for global push notifications
+            FCM.subscribeTo({ topic: 'all_users' })
+              .then(() => console.log('Subscribed to all_users topic successfully'))
+              .catch((err) => console.error('FCM topic subscription failed:', err));
           });
           
           await PushNotifications.addListener('registrationError', (error) => {
@@ -270,7 +274,17 @@ function App() {
           
           await PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
             console.log('Push action performed: ', JSON.stringify(action));
+            const data = action.notification.data;
+            if (data && data.url) {
+              if (data.url.startsWith('http')) {
+                window.open(data.url, '_system');
+              } else {
+                window.location.href = data.url;
+              }
+            }
           });
+
+          await PushNotifications.register();
         } catch(e) {
           console.warn('Push setup failed (might be running in web):', e);
         }
@@ -298,7 +312,10 @@ function App() {
     return (
       <div className="min-h-screen bg-[#F5EEDC] dark:bg-dark-bg flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <span className="material-symbols-outlined text-orange-600 text-6xl animate-spin">progress_activity</span>
+          <svg className="animate-spin h-14 w-14 text-orange-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
           <p className="font-gujarati text-orange-600 font-bold">Loading...</p>
         </div>
       </div>
@@ -308,8 +325,29 @@ function App() {
 
 
   const currentPath = window.location.pathname;
+
+  // Handle secret testing path for developers/admins to bypass browser landing page
+  if (currentPath === '/gjapp' || currentPath.startsWith('/gjapp/')) {
+    localStorage.setItem('sanskari_web_bypass', 'true');
+    window.location.href = '/';
+    return null;
+  }
+
   const isPublicCardRoute = currentPath === '/c' || currentPath.startsWith('/c/') || (currentPath.startsWith('/card/') && currentPath !== '/card') || currentPath.startsWith('/vcard/');
   const isAdminRoute = currentPath.startsWith('/gujarati-admin');
+
+  // Detect if accessing from a standard web browser (non-native platform)
+  const isBrowser = !Capacitor.isNativePlatform();
+  const hasBypass = localStorage.getItem('sanskari_web_bypass') === 'true';
+  const isAllowedWebRoute = isAdminRoute || isPublicCardRoute || currentPath.startsWith('/privacy-policy') || hasBypass;
+
+  if (isBrowser && !isAllowedWebRoute) {
+    return (
+      <ThemeProvider>
+        <LandingPage />
+      </ThemeProvider>
+    );
+  }
 
   if (!isLoggedIn && !isPublicCardRoute && !isAdminRoute) {
      return (

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { supabase } from '../supabaseClient';
 import { Capacitor } from '@capacitor/core';
+import { updateLastActive } from '../utils/userActivity';
 
 /* ─────────────────────────────────────────────────────────────────
    LAYOUT — Premium shell: 56dp header, bottom nav, sidebar drawer
@@ -47,6 +48,11 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
   const safeBottom = isAndroid ? 'env(safe-area-inset-bottom, 36px)' : 'env(safe-area-inset-bottom, 0px)';
 
   const [showExitModal, setShowExitModal] = useState(false);
+
+  useEffect(() => {
+    // Update user activity on route change (debounced via local storage)
+    updateLastActive();
+  }, [location.pathname]);
 
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;

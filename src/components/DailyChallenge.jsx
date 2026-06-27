@@ -4,17 +4,7 @@ import { ScratchCardModal, fetchMatchingCoupon } from './ScratchRewards';
 import { supabase } from '../supabaseClient';
 import { syncUserProfile } from '../utils/otlo_helper';
 import LeaderboardUnified from './LeaderboardUnified';
-
-// Pool of daily word puzzles (famous places in Gujarat)
-const PUZZLES = [
-  { word: "સોમનાથ", characters: ["સો", "મ", "ના", "થ"], hint: "બાર જ્યોતિર્લિંગમાં પ્રથમ સ્થાન ધરાવતું યાત્રાધામ 🛕" },
-  { word: "જામનગર", characters: ["જા", "મ", "ન", "ગ", "ર"], hint: "છોટી કાશી અને બાંધણી માટે જાણીતું શહેર 🏢" },
-  { word: "ગિરનાર", characters: ["ગિ", "ર", "ના", "ર"], hint: "ગુજરાતનો સૌથી ઊંચો પર્વત જ્યાં દત્ત શિખર આવેલું છે ⛰️" },
-  { word: "પાટણ", characters: ["પા", "ટ", "ણ"], hint: "પ્રખ્યાત સહસ્ત્રલિંગ તળાવ અને પટોળાનું ઘર 👗" },
-  { word: "સાપુતારા", characters: ["સા", "પુ", "તા", "રા"], hint: "ગુજરાતનું એકમાત્ર સુંદર હિલ સ્ટેશન 🌲" },
-  { word: "દ્વારકા", characters: ["દ્વા", "ર", "કા"], hint: "શ્રી કૃષ્ણની સુવર્ણ નગરી અને ચાર ધામ પૈકીનું એક 🚩" },
-  { word: "દભોઈ", characters: ["દ", "ભો", "ઈ"], hint: "પ્રખ્યાત મણિભદ્ર વીર જૈન તીર્થ અને ઐતિહાસિક કિલ્લો 🏰" }
-];
+import { PUZZLES } from '../data/dailyPuzzles';
 
 export default function DailyChallenge() {
   const [currentPuzzle, setCurrentPuzzle] = useState(null);
@@ -38,8 +28,17 @@ export default function DailyChallenge() {
       setAlreadyPlayed(true);
     }
 
-    // Select puzzle based on current day of the week
-    const dayIndex = new Date().getDay() % PUZZLES.length;
+    // Helper to calculate the day of the year (1-366) to ensure no repeats on day-by-day basis
+    const getDayOfYear = () => {
+      const now = new Date();
+      const start = new Date(now.getFullYear(), 0, 0);
+      const diff = now - start;
+      const oneDay = 1000 * 60 * 60 * 24;
+      return Math.floor(diff / oneDay);
+    };
+
+    // Select puzzle based on current day of the year
+    const dayIndex = (getDayOfYear() - 1) % PUZZLES.length;
     const puzzle = PUZZLES[dayIndex];
     setCurrentPuzzle(puzzle);
 

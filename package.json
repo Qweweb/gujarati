@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor-community/fcm": "^8.1.0",
+    "@capacitor-firebase/authentication": "^8.3.0",
     "@capacitor/android": "^8.3.4",
     "@capacitor/app": "^8.1.0",
     "@capacitor/camera": "^8.2.0",
@@ -26,6 +28,7 @@
     "@supabase/supabase-js": "^2.106.1",
     "astronomy-engine": "^2.1.19",
     "dotenv": "^17.4.2",
+    "firebase": "^12.15.0",
     "html-to-image": "^1.11.13",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.14.0",

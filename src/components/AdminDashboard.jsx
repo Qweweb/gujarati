@@ -122,6 +122,56 @@ const AdminDashboard = () => {
   const [userCityFilter, setUserCityFilter] = useState("");
   const [isSavingUser, setIsSavingUser] = useState(null);
 
+  // Custom Push Notification State
+  const [notifTitle, setNotifTitle] = useState("ગુજરાતી એપ");
+  const [notifBody, setNotifBody] = useState("");
+  const [notifImageUrl, setNotifImageUrl] = useState("");
+  const [notifImageFile, setNotifImageFile] = useState(null);
+  const [sendingNotif, setSendingNotif] = useState(false);
+  const [notifError, setNotifError] = useState("");
+  const [notifSuccess, setNotifSuccess] = useState(false);
+
+  const handleSendCustomNotification = async (e) => {
+    e.preventDefault();
+    if (!notifBody.trim()) {
+      setNotifError("કૃપા કરીને સંદેશો દાખલ કરો!");
+      return;
+    }
+    
+    setSendingNotif(true);
+    setNotifError("");
+    setNotifSuccess(false);
+
+    try {
+      let finalImageUrl = notifImageUrl;
+      if (notifImageFile) {
+        finalImageUrl = await uploadToCloudinary(notifImageFile);
+      }
+
+      // Invoke Supabase Edge Function directly using the supabase client
+      const { data, error } = await supabase.functions.invoke('send-post-notification', {
+        body: {
+          is_custom: true,
+          title: notifTitle,
+          body: notifBody,
+          image_url: finalImageUrl || null
+        }
+      });
+
+      if (error) throw error;
+
+      setNotifSuccess(true);
+      setNotifBody("");
+      setNotifImageUrl("");
+      setNotifImageFile(null);
+    } catch (err) {
+      console.error("Failed to send custom notification:", err);
+      setNotifError("નોટિફિકેશન મોકલવામાં ભૂલ આવી: " + (err.message || err));
+    } finally {
+      setSendingNotif(false);
+    }
+  };
+
   const fetchOffersAndAnalytics = async () => {
     setLoadingOffers(true);
     setDbError(false);
@@ -550,9 +600,11 @@ const AdminDashboard = () => {
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
       if (userFilter === "active") {
-        statusOk = user.last_active && new Date(user.last_active) >= thirtyDaysAgo;
+        const act = user.last_active_at || user.last_active;
+        statusOk = act && new Date(act) >= thirtyDaysAgo;
       } else if (userFilter === "inactive") {
-        statusOk = !user.last_active || new Date(user.last_active) < thirtyDaysAgo;
+        const act = user.last_active_at || user.last_active;
+        statusOk = !act || new Date(act) < thirtyDaysAgo;
       } else if (userFilter === "verified") {
         statusOk = !!user.verified_badge;
       }
@@ -736,15 +788,34 @@ const AdminDashboard = () => {
         });
       }
 
-      let userId = localStorage.getItem('supabase_user_id');
-      if (!userId) {
-        const { data: { user } } = await supabase.auth.getUser();
-        userId = user ? user.id : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-          const r = Math.random() * 16 | 0;
-          const v = c === 'x' ? r : (r & 0x3 | 0x8);
-          return v.toString(16);
-        });
-        localStorage.setItem('supabase_user_id', userId);
+      // Use the fixed Admin User ID
+      const userId = "36195ea3-0709-4fe5-aeea-b5ad6b36e483";
+      localStorage.setItem('supabase_user_id', userId);
+
+      // Ensure that the user exists in the 'users' table to satisfy the foreign key constraint posts_user_id_fkey
+      const { data: existingUser, error: checkError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('id', userId)
+        .maybeSingle();
+
+      if (checkError) {
+        console.error("Error checking user record for posting:", checkError);
+      }
+
+      if (!existingUser) {
+        const { error: userInsertError } = await supabase
+          .from('users')
+          .insert([{
+            id: userId,
+            name: "ગુજરાતી એપ એડમિન",
+            mobile: "9991009097",
+            photo_url: "/logo.jpg"
+          }]);
+        
+        if (userInsertError) {
+          console.error("Failed to insert admin user:", userInsertError);
+        }
       }
 
       const postData = {
@@ -990,6 +1061,17 @@ const AdminDashboard = () => {
               {aiConfig.enabled && aiConfig.provider && (
                 <span className="ml-auto h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
               )}
+            </button>
+            <button 
+              onClick={() => setActiveTab("notifications")}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-gujarati font-bold text-sm transition-all ${
+                activeTab === "notifications" 
+                  ? 'bg-orange-600 text-white shadow-md shadow-orange-500/20' 
+                  : 'text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900'
+              }`}
+            >
+              <span className="material-symbols-outlined text-lg">campaign</span>
+              📢 કસ્ટમ નોટિફિકેશન
             </button>
             <button 
               onClick={() => setActiveTab("marketing_offers")}
@@ -1770,7 +1852,10 @@ const AdminDashboard = () => {
                     <div className="bg-white dark:bg-stone-905 p-5 rounded-3xl border border-stone-200/50 dark:border-stone-850 shadow-sm flex flex-col justify-between">
                       <span className="text-stone-400 font-gujarati text-xs">આજે એક્ટિવ યુઝર્સ</span>
                       <span className="font-headline font-black text-2xl text-emerald-600 mt-2">
-                        {users.filter(u => u.last_active === new Date().toISOString().split('T')[0]).length}
+                        {users.filter(u => {
+                          const act = u.last_active_at || u.last_active;
+                          return act && act.startsWith(new Date().toISOString().split('T')[0]);
+                        }).length}
                       </span>
                       <span className="text-[10px] text-emerald-500 font-bold mt-1">છેલ્લા ૨૪ કલાકમાં</span>
                     </div>
@@ -1791,7 +1876,8 @@ const AdminDashboard = () => {
                         {users.filter(u => {
                           const thirtyDaysAgo = new Date();
                           thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-                          return !u.last_active || new Date(u.last_active) < thirtyDaysAgo;
+                          const act = u.last_active_at || u.last_active;
+                          return !act || new Date(act) < thirtyDaysAgo;
                         }).length}
                       </span>
                       <span className="text-[10px] text-rose-500 font-bold mt-1">૩૦+ દિવસથી નિષ્ક્રિય</span>
@@ -1863,7 +1949,8 @@ const AdminDashboard = () => {
                           ) : (
                             getFilteredUsers().map((user) => {
                               const initials = user.name ? user.name.split(' ').map(n => n[0]).join('').slice(0, 2) : "યુ";
-                              const isTodayActive = user.last_active === new Date().toISOString().split('T')[0];
+                              const actDate = user.last_active_at || user.last_active;
+                              const isTodayActive = actDate && actDate.startsWith(new Date().toISOString().split('T')[0]);
                               const isVerified = !!user.verified_badge;
                               const isRepresentative = !!user.is_representative;
                               const regDate = user.created_at ? new Date(user.created_at).toLocaleDateString('gu-IN', {
@@ -1955,7 +2042,7 @@ const AdminDashboard = () => {
                                       <div className="flex items-center gap-1.5 mt-1">
                                         <span className={`w-1.5 h-1.5 rounded-full ${isTodayActive ? 'bg-emerald-500 animate-pulse' : 'bg-stone-300 dark:bg-stone-700'}`}></span>
                                         <span className="text-[10px]">
-                                          <span className="font-bold">છેલ્લે સક્રિય:</span> {user.last_active || "નિષ્ક્રિય"}
+                                          <span className="font-bold">છેલ્લે સક્રિય:</span> {actDate ? new Date(actDate).toLocaleString('gu-IN') : "નિષ્ક્રિય"}
                                         </span>
                                       </div>
                                     </div>
@@ -2107,9 +2194,147 @@ const AdminDashboard = () => {
             </div>
           )}
 
-        </div>
+          {/* TAB: CUSTOM NOTIFICATIONS */}
+          {activeTab === "notifications" && (
+            <div className="space-y-6 animate-fade-in">
+              
+              {/* Header */}
+              <div>
+                <h3 className="font-headline font-black text-lg text-stone-900 dark:text-stone-100 flex items-center gap-2">
+                  📢 કસ્ટમ પુશ નોટિફિકેશન (Custom Broadcast)
+                </h3>
+                <p className="font-gujarati text-xs text-stone-500 mt-1">બધા જ સક્રિય યુઝર્સના ફોન પર સીધો સંદેશો (તમારા પોતાના ટાઇટલ, મેસેજ અને ફોટો સાથે) મોકલો.</p>
+              </div>
 
-      </div>
+              {/* Form */}
+              <div className="bg-white dark:bg-stone-900 p-6 rounded-3xl border border-stone-200/50 dark:border-stone-850 shadow-sm space-y-6">
+                
+                {notifSuccess && (
+                  <div className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/50 p-4 rounded-2xl flex items-start gap-3">
+                    <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400">check_circle</span>
+                    <div>
+                      <p className="font-headline font-bold text-sm text-emerald-800 dark:text-emerald-300">નોટિફિકેશન સફળતાપૂર્વક મોકલવામાં આવી છે!</p>
+                      <p className="font-gujarati text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">Firebase દ્વારા દરેક રજીસ્ટર્ડ ડિવાઇસ પર સંદેશો બ્રોડકાસ્ટ થઈ ગયો છે.</p>
+                    </div>
+                  </div>
+                )}
+
+                {notifError && (
+                  <div className="bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/50 p-4 rounded-2xl flex items-start gap-3">
+                    <span className="material-symbols-outlined text-rose-600 dark:text-rose-400">error</span>
+                    <div>
+                      <p className="font-headline font-bold text-sm text-rose-800 dark:text-rose-300">ભૂલ આવી!</p>
+                      <p className="font-gujarati text-xs text-rose-600 dark:text-rose-400 mt-0.5">{notifError}</p>
+                    </div>
+                  </div>
+                )}
+
+                <form onSubmit={handleSendCustomNotification} className="space-y-5">
+                  
+                  {/* Title Input */}
+                  <div className="space-y-2">
+                    <label className="font-gujarati font-bold text-xs text-stone-700 dark:text-stone-300">
+                      નોટિફિકેશન શીર્ષક (Title)
+                    </label>
+                    <input 
+                      type="text"
+                      value={notifTitle}
+                      onChange={(e) => setNotifTitle(e.target.value)}
+                      placeholder="દા.ત. ગુજરાતી એપ, સુપ્રભાત, વિશેષ માહિતી..."
+                      className="w-full px-4 py-3 rounded-2xl bg-stone-50 dark:bg-stone-950 border border-stone-250 dark:border-stone-800 text-stone-850 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:border-amber-500 font-gujarati text-sm transition-all"
+                      maxLength={50}
+                      required
+                    />
+                  </div>
+
+                  {/* Message Body Input */}
+                  <div className="space-y-2">
+                    <label className="font-gujarati font-bold text-xs text-stone-700 dark:text-stone-300">
+                      નોટિફિકેશન સંદેશો (Message Body)
+                    </label>
+                    <textarea 
+                      value={notifBody}
+                      onChange={(e) => setNotifBody(e.target.value)}
+                      placeholder="અહીં તમારો મેસેજ લખો જે યુઝર્સને બતાવવાનો છે..."
+                      rows={4}
+                      className="w-full px-4 py-3 rounded-2xl bg-stone-50 dark:bg-stone-950 border border-stone-250 dark:border-stone-800 text-stone-850 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:border-amber-500 font-gujarati text-sm transition-all leading-relaxed"
+                      maxLength={150}
+                      required
+                    />
+                    <p className="text-right font-gujarati text-[10px] text-stone-400">
+                      {150 - notifBody.length} અક્ષરો બાકી
+                    </p>
+                  </div>
+
+                  {/* Image Input Selection */}
+                  <div className="space-y-2">
+                    <label className="font-gujarati font-bold text-xs text-stone-700 dark:text-stone-300">
+                      ફોટો અપલોડ કરો અથવા લિંક પેસ્ટ કરો (Optional Image)
+                    </label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* File Upload */}
+                      <div className="border-2 border-dashed border-stone-300 dark:border-stone-850 rounded-2xl p-4 flex flex-col items-center justify-center bg-stone-50 dark:bg-stone-950 hover:bg-stone-100/50 dark:hover:bg-stone-900/30 transition-all relative">
+                        <input 
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            if(e.target.files && e.target.files[0]) {
+                              setNotifImageFile(e.target.files[0]);
+                              setNotifImageUrl(""); // Clear URL input if file is chosen
+                            }
+                          }}
+                          className="absolute inset-0 opacity-0 cursor-pointer"
+                        />
+                        <span className="material-symbols-outlined text-stone-400 text-2xl mb-1">add_photo_alternate</span>
+                        <p className="font-gujarati text-xs text-stone-500 text-center font-bold">
+                          {notifImageFile ? notifImageFile.name : "ફોટો પસંદ કરો"}
+                        </p>
+                        <p className="font-gujarati text-[9px] text-stone-400 mt-0.5">JPG, PNG, WebP format</p>
+                      </div>
+
+                      {/* URL Input */}
+                      <div className="flex flex-col justify-center">
+                        <input 
+                          type="url"
+                          value={notifImageUrl}
+                          onChange={(e) => {
+                            setNotifImageUrl(e.target.value);
+                            setNotifImageFile(null); // Clear file if URL is typed
+                          }}
+                          placeholder="અથવા ફોટોની લિંક પેસ્ટ કરો (https://...)"
+                          className="w-full px-4 py-3 rounded-2xl bg-stone-50 dark:bg-stone-950 border border-stone-250 dark:border-stone-800 text-stone-850 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:border-amber-500 font-gujarati text-xs transition-all"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      disabled={sendingNotif}
+                      className={`w-full py-4 rounded-2xl font-gujarati font-bold text-white shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                        sendingNotif 
+                          ? 'bg-stone-400 dark:bg-stone-700 cursor-not-allowed shadow-none' 
+                          : 'bg-orange-600 hover:bg-orange-700 shadow-orange-500/10'
+                      }`}
+                    >
+                      <span className="material-symbols-outlined">send</span>
+                      {sendingNotif ? "નોટિફિકેશન મોકલી રહ્યું છે..." : "📢 બ્રોડકાસ્ટ નોટિફિકેશન મોકલો"}
+                    </button>
+                  </div>
+
+                </form>
+              </div>
+
+              {/* Info Card */}
+              <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 p-4 rounded-2xl">
+                <p className="font-headline font-bold text-sm text-amber-700">⚠️ નોટિસ</p>
+                <p className="font-gujarati text-xs text-amber-600 mt-1">આ નોટિફિકેશન પ્લે સ્ટોર પરથી નવી અપડેટ (v1.3.1) કરનાર તમામ સક્રિય યુઝર્સને લાઈવ ડિલિવર થશે. મહેરબાની કરીને સાવચેતીપૂર્વક સાચો સંદેશો જ સેન્ડ કરો.</p>
+              </div>
+
+            </div>
+          )}
 
       {/* TAB 6: AI SETTINGS */}
       {/* TAB: MARKETING SCRATCH OFFERS */}
@@ -2998,6 +3223,9 @@ ALTER TABLE scratch_offers ADD COLUMN IF NOT EXISTS sponsor_logo_url TEXT DEFAUL
 
         </div>
       )}
+
+        </div>
+      </div>
 
     </div>
   );
