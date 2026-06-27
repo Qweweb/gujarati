@@ -1,24 +1,16 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { supabase } from '../supabaseClient';
 import { Capacitor } from '@capacitor/core';
 import { useTheme } from '../context/ThemeContext';
-import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
-import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
-import { app as firebaseApp } from '../firebase';
 
 const Login = ({ onLogin }) => {
   const { activeTheme } = useTheme();
   const [step, setStep] = useState('phone'); // phone, otp, profiles
   const [phone, setPhone] = useState("");
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", ""]);
   const [error, setError] = useState("");
   const [showReviewerLogin, setShowReviewerLogin] = useState(false);
-  const otpRefs = [useRef(), useRef(), useRef(), useRef(), useRef(), useRef()];
-  
-  const auth = getAuth(firebaseApp);
-  const [verificationId, setVerificationId] = useState("");
-  const [confirmationResult, setConfirmationResult] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const otpRefs = [useRef(), useRef(), useRef(), useRef()];
 
   const handleGoogleLogin = async () => {
     setError("");
@@ -48,40 +40,11 @@ const Login = ({ onLogin }) => {
     }
   };
 
-  const handlePhoneSubmit = async () => {
+  const handlePhoneSubmit = () => {
     if (phone === "9999999999") {
         setStep('otp');
-        return;
-    }
-    if (phone.length < 10) {
-        setError("કૃપા કરી સાચો 10 આંકડાનો નંબર દાખલ કરો.");
-        return;
-    }
-    
-    setIsLoading(true);
-    setError("");
-    try {
-      if (Capacitor.isNativePlatform()) {
-        const result = await FirebaseAuthentication.signInWithPhoneNumber({
-          phoneNumber: "+91" + phone,
-        });
-        setVerificationId(result.verificationId);
-      } else {
-        if (!window.recaptchaVerifier) {
-          window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-            'size': 'invisible'
-          });
-        }
-        const appVerifier = window.recaptchaVerifier;
-        const confirmation = await signInWithPhoneNumber(auth, "+91" + phone, appVerifier);
-        setConfirmationResult(confirmation);
-      }
-      setStep('otp');
-    } catch (err) {
-      console.error(err);
-      setError("OTP મોકલવામાં ભૂલ: " + err.message);
-    } finally {
-      setIsLoading(false);
+    } else {
+        setError("કૃપા કરી સાચો ટેસ્ટ નંબર (9999999999) દાખલ કરો.");
     }
   };
 
@@ -92,7 +55,7 @@ const Login = ({ onLogin }) => {
     newOtp[index] = value.substring(value.length - 1);
     setOtp(newOtp);
 
-    if (value && index < 5) {
+    if (value && index < 3) {
       otpRefs[index + 1].current.focus();
     }
   };
@@ -103,46 +66,12 @@ const Login = ({ onLogin }) => {
     }
   };
 
-  const handleVerifyOtp = async () => {
+  const handleVerifyOtp = () => {
     const enteredOtp = otp.join('');
-    setError("");
-    
-    if (phone === "9999999999" && enteredOtp === "000000") {
+    if (phone === "9999999999" && enteredOtp === "0000") {
         onLogin();
-        return;
-    }
-    
-    if (enteredOtp.length < 6) return;
-
-    setIsLoading(true);
-    try {
-      if (Capacitor.isNativePlatform()) {
-        await FirebaseAuthentication.signInWithPhoneNumber({
-          verificationId,
-          smsCode: enteredOtp,
-        });
-      } else {
-        if (confirmationResult) {
-          await confirmationResult.confirm(enteredOtp);
-        }
-      }
-      
-      // Upsert user in Supabase
-      const fullPhone = "+91" + phone;
-      const { data: existingUser } = await supabase.from('users').select('*').eq('mobile', fullPhone).maybeSingle();
-      
-      if (!existingUser) {
-        await supabase.from('users').insert([{ mobile: fullPhone }]);
-      } else {
-        await supabase.from('users').update({ last_active_at: new Date().toISOString() }).eq('id', existingUser.id);
-      }
-      
-      onLogin();
-    } catch (err) {
-      console.error(err);
-      setError("OTP ખોટો છે અથવા એક્સપાયર થઈ ગયો છે.");
-    } finally {
-      setIsLoading(false);
+    } else {
+        setError("OTP ખોટો છે. (Test OTP: 0000)");
     }
   };
 
@@ -220,12 +149,7 @@ const Login = ({ onLogin }) => {
                         <span className="font-headline font-black text-stone-400">+91</span>
                         <input type="tel" maxLength="10" placeholder="નંબર લખો" value={phone} onChange={handlePhoneChange} className="w-full bg-transparent border-none outline-none font-headline font-black text-xl text-stone-800 dark:text-stone-100 placeholder:text-stone-300" />
                     </div>
-                    <div id="recaptcha-container"></div>
-                    <button onClick={handlePhoneSubmit} disabled={phone.length < 10 || isLoading} style={{ background: (phone.length === 10 && !isLoading) ? activeTheme.gradient : undefined }} className={`w-full py-4 rounded-2xl font-gujarati font-black text-lg transition-all duration-300 ${(phone.length === 10 && !isLoading) ? 'text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5' : 'bg-stone-200 dark:bg-stone-800 text-stone-400'}`}>
-                        {isLoading ? (
-                          <span className="material-symbols-outlined animate-spin">sync</span>
-                        ) : "OTP મેળવો"}
-                    </button>
+                    <button onClick={handlePhoneSubmit} disabled={phone.length < 10} style={{ background: phone.length === 10 ? activeTheme.gradient : undefined }} className={`w-full py-4 rounded-2xl font-gujarati font-black text-lg transition-all duration-300 ${phone.length === 10 ? 'text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5' : 'bg-stone-200 dark:bg-stone-800 text-stone-400'}`}>OTP મેળવો</button>
                   </div>
                 )}
             </div>
@@ -255,22 +179,18 @@ const Login = ({ onLogin }) => {
 
             <div className="text-center space-y-1 mb-8">
                 <h2 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-3xl text-brand-600 dark:text-primary">OTP વેરિફિકેશન</h2>
-                <p className="font-gujarati text-on-surface dark:text-[#E8E6E3]">તમારા નંબર પર 6-આંકડાનો કોડ મોકલેલ છે.</p>
+                <p className="font-gujarati text-on-surface dark:text-[#E8E6E3]">મોકલેલ કોડ: <span className="font-headline font-bold text-primary">0000</span></p>
             </div>
 
             <div className="w-full bg-surface dark:bg-stone-900 rounded-[2rem] p-8 shadow-sm border border-outline dark:border-stone-800 space-y-8">
-                <div className="flex justify-center gap-2">
+                <div className="flex justify-center gap-4">
                     {otp.map((digit, idx) => (
-                        <input key={idx} ref={otpRefs[idx]} type="text" maxLength="1" value={digit} onChange={(e) => handleOtpChange(idx, e.target.value)} onKeyDown={(e) => handleOtpKeyDown(idx, e)} className="w-12 h-14 bg-background dark:bg-stone-800 rounded-xl text-center font-headline font-black text-2xl border border-primary/30 focus:border-brand-600 focus:ring-1 focus:ring-brand-600 outline-none text-brand-600 shadow-sm transition-all" />
+                        <input key={idx} ref={otpRefs[idx]} type="text" maxLength="1" value={digit} onChange={(e) => handleOtpChange(idx, e.target.value)} onKeyDown={(e) => handleOtpKeyDown(idx, e)} className="w-14 h-16 bg-background dark:bg-stone-800 rounded-xl text-center font-headline font-black text-3xl border border-primary/30 focus:border-brand-600 focus:ring-1 focus:ring-brand-600 outline-none text-brand-600 shadow-sm transition-all" />
                     ))}
                 </div>
                 {error && <p className="text-error font-gujarati text-sm font-bold text-center py-2">{error}</p>}
                 
-                <button onClick={handleVerifyOtp} disabled={otp.some(d => !d) || isLoading} style={{ background: (!otp.some(d => !d) && !isLoading) ? activeTheme.gradient : undefined }} className={`w-full py-4 rounded-xl font-gujarati font-bold text-lg transition-all duration-300 border ${(!otp.some(d => !d) && !isLoading) ? 'text-white border-transparent shadow-md hover:-translate-y-0.5' : 'bg-stone-200 dark:bg-stone-800 text-stone-500 border-transparent'}`}>
-                    {isLoading ? (
-                      <span className="material-symbols-outlined animate-spin">sync</span>
-                    ) : "ખાતરી કરો"}
-                </button>
+                <button onClick={handleVerifyOtp} disabled={otp.some(d => !d)} style={{ background: !otp.some(d => !d) ? activeTheme.gradient : undefined }} className={`w-full py-4 rounded-xl font-gujarati font-bold text-lg transition-all duration-300 border ${!otp.some(d => !d) ? 'text-white border-transparent shadow-md hover:-translate-y-0.5' : 'bg-stone-200 dark:bg-stone-800 text-stone-500 border-transparent'}`}>ખાતરી કરો</button>
             </div>
         </div>
       </div>
