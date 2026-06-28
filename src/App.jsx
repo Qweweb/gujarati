@@ -102,6 +102,7 @@ function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+  const [authError, setAuthError] = useState("");
 
   // Initialize Speech Synthesis Voices globally
   useEffect(() => {
@@ -137,21 +138,31 @@ function App() {
 
   // Supabase Auth and Deep Linking handler
   useEffect(() => {
-    // 1. Initial check of active session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        setIsLoggedIn(true);
-        localStorage.setItem('sanskari_token', 'true');
-        // Save Google user info to localStorage for Profile page
-        if (session.user) {
-          const meta = session.user.user_metadata || {};
-          if (meta.full_name) localStorage.setItem('google_name', meta.full_name);
-          if (meta.email || session.user.email) localStorage.setItem('google_email', meta.email || session.user.email);
-          if (meta.avatar_url) localStorage.setItem('google_avatar', meta.avatar_url);
+    // 1. Initial check of active session with timeout for poor connections
+    const authTimeout = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error("ઇન્ટરનેટ કનેક્શન તપાસો.")), 8000)
+    );
+
+    Promise.race([supabase.auth.getSession(), authTimeout])
+      .then(({ data: { session } }) => {
+        if (session) {
+          setIsLoggedIn(true);
+          localStorage.setItem('sanskari_token', 'true');
+          // Save Google user info to localStorage for Profile page
+          if (session.user) {
+            const meta = session.user.user_metadata || {};
+            if (meta.full_name) localStorage.setItem('google_name', meta.full_name);
+            if (meta.email || session.user.email) localStorage.setItem('google_email', meta.email || session.user.email);
+            if (meta.avatar_url) localStorage.setItem('google_avatar', meta.avatar_url);
+          }
         }
-      }
-      setIsLoadingAuth(false);
-    });
+        setIsLoadingAuth(false);
+      })
+      .catch((err) => {
+        console.error("Auth initialization error:", err);
+        setAuthError(err.message || "ઇન્ટરનેટ કનેક્શન ધીમું છે અથવા બંધ છે.");
+        setIsLoadingAuth(false);
+      });
 
     // 2. Auth state change listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -317,6 +328,26 @@ function App() {
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
           <p className="font-gujarati text-orange-600 font-bold">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show network error if auth check fails/times out
+  if (authError) {
+    return (
+      <div className="min-h-screen bg-[#F5EEDC] dark:bg-stone-900 flex items-center justify-center p-6 text-center">
+        <div className="bg-white dark:bg-stone-800 rounded-3xl p-8 shadow-xl max-w-sm w-full border border-stone-100 dark:border-stone-700">
+          <div className="w-20 h-20 mx-auto bg-red-50 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-6">
+            <span className="material-symbols-outlined text-red-500 text-4xl">wifi_off</span>
+          </div>
+          <h2 className="font-gujarati font-black text-2xl text-stone-800 dark:text-stone-100 mb-2">ઇન્ટરનેટ કનેક્શન નથી</h2>
+          <p className="font-gujarati text-stone-600 dark:text-stone-400 mb-8">{authError}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="w-full py-4 rounded-xl font-gujarati font-bold text-lg text-white bg-gradient-to-r from-orange-500 to-red-500 shadow-md hover:-translate-y-0.5 transition-all">
+            ફરી પ્રયાસ કરો (Retry)
+          </button>
         </div>
       </div>
     );
