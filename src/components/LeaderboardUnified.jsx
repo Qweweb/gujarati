@@ -55,7 +55,8 @@ export default function LeaderboardUnified({
   scoreLabel = "XP",
   showStreak = true,
   showScore = true,
-  theme = "default"
+  theme = "default",
+  onClose = null
 }) {
   const t = THEMES[theme];
 
@@ -69,6 +70,15 @@ export default function LeaderboardUnified({
             <span className="material-symbols-outlined" style={{ color: t.iconColor, fontWeight: 700, fontSize: '22px' }}>{icon}</span>
             {title}
           </h3>
+          {onClose && (
+            <button onClick={onClose} style={{
+              background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%',
+              width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: t.nameColor, cursor: 'pointer', padding: 0
+            }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '20px', fontWeight: 'bold' }}>close</span>
+            </button>
+          )}
         </div>
 
         {/* List */}
@@ -90,7 +100,7 @@ export default function LeaderboardUnified({
                   alt=""
                 />
                 <div>
-                  <h4 style={{ margin: 0, fontWeight: 900, fontSize: '13px', color: t.nameColor, fontFamily: '"Noto Serif Gujarati", serif' }}>{user.name}</h4>
+                  <h4 style={{ margin: 0, fontWeight: 900, fontSize: '13px', color: t.nameColor, fontFamily: '"Noto Serif Gujarati", serif' }}>{user.name || 'ખેલાડી'}</h4>
                   {user.city && (
                     <span style={{ fontSize: '10px', color: t.cityColor, fontWeight: 700, display: 'flex', alignItems: 'center', gap: '2px', marginTop: '2px' }}>
                       <span className="material-symbols-outlined" style={{ fontSize: '11px' }}>location_on</span>
@@ -133,15 +143,25 @@ export default function LeaderboardUnified({
           <span className="material-symbols-outlined text-teal-600 font-bold">{icon}</span> 
           {title}
         </h3>
-        {onUserClick && data.find(u => u.isUser) && (
-          <button
-            onClick={() => onUserClick(data.find(u => u.isUser))}
-            className="h-9 w-9 bg-primary/10 hover:bg-primary/20 text-primary rounded-full flex items-center justify-center transition active:scale-95"
-            title="તમારા આંકડા અને સ્કોર વિગત"
-          >
-            <span className="material-symbols-outlined text-xl font-bold">info</span>
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {onUserClick && data.find(u => u.isUser) && (
+            <button
+              onClick={() => onUserClick(data.find(u => u.isUser))}
+              className="h-9 w-9 bg-primary/10 hover:bg-primary/20 text-primary rounded-full flex items-center justify-center transition active:scale-95"
+              title="તમારા આંકડા અને સ્કોર વિગત"
+            >
+              <span className="material-symbols-outlined text-xl font-bold">info</span>
+            </button>
+          )}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="h-9 w-9 bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-300 rounded-full flex items-center justify-center transition active:scale-95"
+            >
+              <span className="material-symbols-outlined text-xl font-bold">close</span>
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="space-y-3 font-gujarati">
@@ -151,9 +171,9 @@ export default function LeaderboardUnified({
               <span className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-sm ${idx === 0 ? 'bg-amber-500 text-white' : idx === 1 ? 'bg-stone-400 text-white' : idx === 2 ? 'bg-amber-700 text-white' : 'bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300'}`}>
                 {toGujaratiNum(idx + 1)}
               </span>
-              <img src={user.avatar || `https://i.pravatar.cc/150?u=${user.name}`} className="w-10 h-10 rounded-full border border-stone-300 dark:border-stone-700 object-cover" alt="Avatar" />
+              <img src={user.avatar || `https://i.pravatar.cc/150?u=${user.name || 'default'}`} className="w-10 h-10 rounded-full border border-stone-300 dark:border-stone-700 object-cover" alt="Avatar" />
               <div>
-                <h4 className="font-black text-sm text-stone-800 dark:text-stone-100">{user.name}</h4>
+                <h4 className="font-black text-sm text-stone-800 dark:text-stone-100">{user.name || 'ખેલાડી'}</h4>
                 <div className="flex flex-col gap-0.5 mt-0.5">
                   {user.city && (
                     <span className="text-[10px] text-teal-700 dark:text-teal-400 font-bold flex items-center gap-0.5">

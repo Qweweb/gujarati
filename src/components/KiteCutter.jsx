@@ -314,10 +314,10 @@ export default function KiteCutter() {
             position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', 
             background: 'radial-gradient(circle at 50% 30%, rgba(14, 165, 233, 0.18) 0%, rgba(15, 23, 42, 0.97) 75%)', 
             backdropFilter: 'blur(8px)', display: 'flex', flexDirection: 'column', 
-            alignItems: 'center', justifyContent: 'center', zIndex: 10, padding: '20px', boxSizing: 'border-box',
+            alignItems: 'center', justifyContent: 'flex-start', zIndex: 10, padding: 'calc(env(safe-area-inset-top, 40px) + 20px) 20px 40px', boxSizing: 'border-box',
             overflowY: 'auto', WebkitOverflowScrolling: 'touch'
           }}>
-            <div style={{ width: '100%', maxWidth: '400px', pointerEvents: 'auto', textAlign: 'left' }}>
+            <div style={{ width: '100%', maxWidth: '400px', pointerEvents: 'auto', textAlign: 'left', marginTop: '20px' }}>
               <LeaderboardUnified 
                 title="પતંગ કાપો લીડરબોર્ડ"
                 icon="social_leaderboard"
@@ -325,33 +325,9 @@ export default function KiteCutter() {
                 scoreLabel="સ્કોર"
                 showStreak={false}
                 theme="kite"
+                onClose={() => setGameState('PLAYING')}
               />
             </div>
-
-            <button 
-              onClick={() => setGameState('PLAYING')}
-              style={{
-                pointerEvents: 'auto', padding: '12px 30px', fontSize: '16px',
-                background: '#E2E8F0', color: '#0F172A', border: '4px solid #0C0F19',
-                borderRadius: '18px', marginTop: '25px', cursor: 'pointer',
-                fontWeight: 900, boxShadow: 'inset 0 -6px 0 #94A3B8, 0 6px 0 #0C0F19',
-                transition: 'transform 0.1s ease, box-shadow 0.1s ease', outline: 'none'
-              }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.transform = 'translateY(4px)';
-                e.currentTarget.style.boxShadow = 'inset 0 -2px 0 #94A3B8, 0 2px 0 #0C0F19';
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.transform = 'none';
-                e.currentTarget.style.boxShadow = 'inset 0 -6px 0 #94A3B8, 0 6px 0 #0C0F19';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'none';
-                e.currentTarget.style.boxShadow = 'inset 0 -6px 0 #94A3B8, 0 6px 0 #0C0F19';
-              }}
-            >
-              ← પાછા જાઓ
-            </button>
           </div>
         )}
       </div>

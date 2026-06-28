@@ -261,31 +261,21 @@ export default function TrafficTod() {
       {gameState === 'LEADERBOARD' && (
         <div style={{
           position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start',
           background: 'rgba(15, 23, 42, 0.95)', color: 'white', zIndex: 10000,
-          padding: '20px', boxSizing: 'border-box', backdropFilter: 'blur(10px)'
+          padding: 'calc(env(safe-area-inset-top, 40px) + 20px) 20px 40px', boxSizing: 'border-box', backdropFilter: 'blur(10px)',
+          overflowY: 'auto', WebkitOverflowScrolling: 'touch'
         }}>
-          <div className="w-full max-w-md px-4 pointer-events-auto text-left">
+          <div className="w-full max-w-md px-4 pointer-events-auto text-left" style={{ marginTop: '20px' }}>
             <LeaderboardUnified 
               title="ટ્રાફિક તોડ લીડરબોર્ડ"
               icon="social_leaderboard"
               data={leaderboard}
               scoreLabel="m"
               showStreak={false}
+              onClose={() => setGameState('PLAYING')}
             />
           </div>
-
-          <button 
-            onClick={() => setGameState('PLAYING')}
-            style={{
-              padding: '12px 30px', fontSize: '16px', fontWeight: 'bold', pointerEvents: 'auto',
-              background: 'linear-gradient(135deg, #3B82F6, #1D4ED8)', color: 'white',
-              border: 'none', borderRadius: '20px', marginTop: '25px', cursor: 'pointer',
-              boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)', textTransform: 'uppercase'
-            }}
-          >
-            ← પાછા જાઓ
-          </button>
         </div>
       )}
     </div>

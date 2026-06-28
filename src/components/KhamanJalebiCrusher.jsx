@@ -929,17 +929,18 @@ export default function SwipeBrickBreaker() {
 
         {/* ── LEADERBOARD ── */}
         {screen === 'leaderboard' && (
-          <Overlay>
-            <div className="w-full max-w-sm pointer-events-auto">
+          <Overlay justify="flex-start">
+            <div className="w-full max-w-sm pointer-events-auto" style={{ marginTop: '20px' }}>
               <LeaderboardUnified 
                 title="ખમણ જલેબી ક્રશર લીડરબોર્ડ"
                 icon="social_leaderboard"
                 data={leaderboard}
                 scoreLabel="સ્કોર"
                 showStreak={false}
+                onClose={() => setScreen('start')}
               />
             </div>
-            <Btn onClick={() => setScreen('start')} c1="#3B82F6" c2="#1E3A8A">← પાછા જાવ</Btn>
+            <div style={{ marginBottom: '40px' }}></div>
           </Overlay>
         )}
       </div>
@@ -1177,9 +1178,9 @@ function LevelCompletePopup({ level, stars, time, score, particles, onNext, onHo
   );
 }
 
-function Overlay({ children }) {
+function Overlay({ children, justify = 'center' }) {
   return (
-    <div style={{ position: 'absolute', inset: 0, background: 'rgba(15,23,42,0.92)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: '0 24px' }}>
+    <div style={{ position: 'absolute', inset: 0, background: 'rgba(15,23,42,0.92)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: justify, gap: 12, padding: 'calc(env(safe-area-inset-top, 40px) + 20px) 24px 40px', overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
       {children}
     </div>
   );

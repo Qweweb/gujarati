@@ -314,44 +314,20 @@ export default function FarasanSlicer() {
             position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', 
             background: 'radial-gradient(circle at 50% 30%, rgba(115, 50, 43, 0.96) 0%, rgba(43, 24, 20, 0.98) 75%)', 
             backdropFilter: 'blur(8px)', display: 'flex', flexDirection: 'column', 
-            alignItems: 'center', justifyContent: 'center', zIndex: 10, padding: '20px', boxSizing: 'border-box',
+            alignItems: 'center', justifyContent: 'flex-start', zIndex: 10, padding: 'calc(env(safe-area-inset-top, 40px) + 20px) 20px 40px', boxSizing: 'border-box',
             overflowY: 'auto', WebkitOverflowScrolling: 'touch'
           }}>
-            <div style={{ width: '100%', maxWidth: '400px', pointerEvents: 'auto', textAlign: 'left' }}>
+            <div style={{ width: '100%', maxWidth: '400px', pointerEvents: 'auto', textAlign: 'left', marginTop: '20px' }}>
               <LeaderboardUnified 
-                title="ફરસાણ સ્લાઈસર લીડરબોર્ડ"
+                title="ફરસાણ સ્લાઇસર લીડરબોર્ડ"
                 icon="social_leaderboard"
                 data={leaderboard}
-                scoreLabel="સ્કોર"
+                scoreLabel="m"
                 showStreak={false}
                 theme="kathiawar"
+                onClose={() => setGameState('PLAYING')}
               />
             </div>
-
-            <button 
-              onClick={() => setGameState('PLAYING')}
-              style={{
-                pointerEvents: 'auto', padding: '12px 30px', fontSize: '16px',
-                background: '#FAE8D7', color: '#2B1814', border: '4px solid #0C0F19',
-                borderRadius: '18px', marginTop: '25px', cursor: 'pointer',
-                fontWeight: 900, boxShadow: 'inset 0 -6px 0 #D1C0B0, 0 6px 0 #0C0F19',
-                transition: 'transform 0.1s ease, box-shadow 0.1s ease', outline: 'none'
-              }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.transform = 'translateY(4px)';
-                e.currentTarget.style.boxShadow = 'inset 0 -2px 0 #D1C0B0, 0 2px 0 #0C0F19';
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.transform = 'none';
-                e.currentTarget.style.boxShadow = 'inset 0 -6px 0 #D1C0B0, 0 6px 0 #0C0F19';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'none';
-                e.currentTarget.style.boxShadow = 'inset 0 -6px 0 #D1C0B0, 0 6px 0 #0C0F19';
-              }}
-            >
-              ← પાછા જાઓ
-            </button>
           </div>
         )}
       </div>
