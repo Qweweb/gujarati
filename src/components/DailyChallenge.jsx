@@ -300,10 +300,20 @@ export default function DailyChallenge() {
                 તમે સાચો શબ્દ **{currentPuzzle.word}** શોધી લીધો છે. તમને મળ્યા છે **+૧૫ ગુજરાત સિક્કા**!
               </p>
             </div>
-            
-            <Link to="/games" className="inline-block bg-[#0D9488] hover:bg-[#0D9488]/80 text-[#2D3748] px-8 py-3.5 rounded-2xl font-headline font-black text-sm shadow-md transition active:scale-95 border border-[#0D9488]/50">
-              વધુ રમતો રમો 🎮
-            </Link>
+            <div className="flex flex-col gap-3 w-full max-w-sm mt-4">
+              <Link to="/games" className="w-full bg-[#F59E0B] hover:bg-[#D97706] text-white px-6 py-3.5 rounded-2xl font-headline font-black text-sm shadow-md transition active:scale-95 text-center flex items-center justify-center gap-2">
+                <span>ગુજરાતી ક્વિઝ અને રમતો</span>
+                <span className="text-lg">🎮</span>
+              </Link>
+              <Link to="/english" className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED] text-white px-6 py-3.5 rounded-2xl font-headline font-black text-sm shadow-md transition active:scale-95 text-center flex items-center justify-center gap-2">
+                <span>ઇંગ્લિશ શીખો</span>
+                <span className="text-lg">🎓</span>
+              </Link>
+              <Link to="/action-games" className="w-full bg-[#10B981] hover:bg-[#059669] text-white px-6 py-3.5 rounded-2xl font-headline font-black text-sm shadow-md transition active:scale-95 text-center flex items-center justify-center gap-2">
+                <span>મજેદાર ગેમ્સ</span>
+                <span className="text-lg">🕹️</span>
+              </Link>
+            </div>
           </div>
         )}
       </section>

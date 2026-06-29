@@ -41,6 +41,7 @@ import KhamanJalebiCrusher from './components/KhamanJalebiCrusher';
 import TrafficTod from './components/TrafficTod';
 import FarasanSlicer from './components/FarasanSlicer';
 import KiteCutter from './components/KiteCutter';
+import ActionGamesMenu from './components/ActionGamesMenu';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import SwipeCards from './components/SwipeCards';
 import MysteryHub from './components/MysteryHub';
@@ -443,6 +444,7 @@ function App() {
                 <Route path="/traffic-tod" element={<FeatureGuard featureKey="games"><TrafficTod /></FeatureGuard>} />
                 <Route path="/farasan-slicer" element={<FeatureGuard featureKey="games"><FarasanSlicer /></FeatureGuard>} />
                 <Route path="/kite-cutter" element={<FeatureGuard featureKey="games"><KiteCutter /></FeatureGuard>} />
+                <Route path="/action-games" element={<FeatureGuard featureKey="games"><ActionGamesMenu /></FeatureGuard>} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               </Routes>
             </Layout>
