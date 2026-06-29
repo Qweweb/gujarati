@@ -929,8 +929,8 @@ export default function SwipeBrickBreaker() {
 
         {/* ── LEADERBOARD ── */}
         {screen === 'leaderboard' && (
-          <Overlay justify="flex-start">
-            <div className="w-full max-w-sm pointer-events-auto" style={{ marginTop: '20px' }}>
+          <Overlay justify="center">
+            <div className="w-full max-w-sm pointer-events-auto" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
               <LeaderboardUnified 
                 title="ખમણ જલેબી ક્રશર લીડરબોર્ડ"
                 icon="social_leaderboard"
@@ -1180,7 +1180,7 @@ function LevelCompletePopup({ level, stars, time, score, particles, onNext, onHo
 
 function Overlay({ children, justify = 'center' }) {
   return (
-    <div style={{ position: 'absolute', inset: 0, background: 'rgba(15,23,42,0.92)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: justify, gap: 12, padding: 'calc(env(safe-area-inset-top, 40px) + 20px) 24px 40px', overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
+    <div style={{ position: 'absolute', inset: 0, background: 'rgba(15,23,42,0.92)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: justify, gap: 12, padding: 'calc(env(safe-area-inset-top, 40px) + 20px) 24px 40px', overflow: 'hidden' }}>
       {children}
     </div>
   );

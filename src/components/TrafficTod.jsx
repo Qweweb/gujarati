@@ -261,12 +261,12 @@ export default function TrafficTod() {
       {gameState === 'LEADERBOARD' && (
         <div style={{
           position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start',
+          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           background: 'rgba(15, 23, 42, 0.95)', color: 'white', zIndex: 10000,
           padding: 'calc(env(safe-area-inset-top, 40px) + 20px) 20px 40px', boxSizing: 'border-box', backdropFilter: 'blur(10px)',
-          overflowY: 'auto', WebkitOverflowScrolling: 'touch'
+          overflow: 'hidden'
         }}>
-          <div className="w-full max-w-md px-4 pointer-events-auto text-left" style={{ marginTop: '20px' }}>
+          <div className="w-full max-w-md px-4 pointer-events-auto text-left" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
             <LeaderboardUnified 
               title="ટ્રાફિક તોડ લીડરબોર્ડ"
               icon="social_leaderboard"

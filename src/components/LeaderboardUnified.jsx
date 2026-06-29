@@ -63,7 +63,7 @@ export default function LeaderboardUnified({
   /* ── Themed variant (kathiawar / kite) ─────────────────────────── */
   if (t) {
     return (
-      <div style={t.container}>
+      <div style={{ ...t.container, display: 'flex', flexDirection: 'column', height: '100%', maxHeight: '100%' }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', ...t.headerBorder }}>
           <h3 style={{ ...t.title, margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -82,7 +82,7 @@ export default function LeaderboardUnified({
         </div>
 
         {/* List */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', overflowY: 'auto', flex: 1, paddingRight: '4px' }}>
           {data.map((user, idx) => (
             <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', ...(user.isUser ? t.itemUser : t.itemBase) }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -137,8 +137,8 @@ export default function LeaderboardUnified({
 
   /* ── Default variant (Tailwind classes — unchanged) ────────────── */
   return (
-    <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-6 rounded-3xl shadow-sm space-y-6">
-      <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-4">
+    <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 p-5 md:p-6 rounded-3xl shadow-sm flex flex-col h-full max-h-full">
+      <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-4 mb-4 shrink-0">
         <h3 className="font-gujarati font-black text-xl text-stone-900 dark:text-stone-100 flex items-center gap-2">
           <span className="material-symbols-outlined text-teal-600 font-bold">{icon}</span> 
           {title}
@@ -164,7 +164,7 @@ export default function LeaderboardUnified({
         </div>
       </div>
 
-      <div className="space-y-3 font-gujarati">
+      <div className="space-y-3 font-gujarati overflow-y-auto flex-1 pr-1 pb-2">
         {data.map((user, idx) => (
           <div key={idx} className={`flex items-center justify-between p-4 rounded-2xl border ${user.isUser ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-300 shadow-sm' : 'border-stone-100 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-950/20'}`}>
             <div className="flex items-center gap-4">
@@ -213,7 +213,7 @@ export default function LeaderboardUnified({
       </div>
 
       {userRank > 0 && (
-        <div className="flex justify-between items-center text-xs text-stone-500 font-bold px-2">
+        <div className="flex justify-between items-center text-xs text-stone-500 font-bold px-2 shrink-0 pt-3 mt-1 border-t border-stone-100 dark:border-stone-800">
           <span>તમારો ક્રમ: #{toGujaratiNum(userRank)}</span>
           {onUserClick && data.find(u => u.isUser) && (
             <button 

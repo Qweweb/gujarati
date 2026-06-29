@@ -314,10 +314,10 @@ export default function FarasanSlicer() {
             position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', 
             background: 'radial-gradient(circle at 50% 30%, rgba(115, 50, 43, 0.96) 0%, rgba(43, 24, 20, 0.98) 75%)', 
             backdropFilter: 'blur(8px)', display: 'flex', flexDirection: 'column', 
-            alignItems: 'center', justifyContent: 'flex-start', zIndex: 10, padding: 'calc(env(safe-area-inset-top, 40px) + 20px) 20px 40px', boxSizing: 'border-box',
-            overflowY: 'auto', WebkitOverflowScrolling: 'touch'
+            alignItems: 'center', justifyContent: 'center', zIndex: 10, padding: 'calc(env(safe-area-inset-top, 40px) + 20px) 20px 40px', boxSizing: 'border-box',
+            overflow: 'hidden'
           }}>
-            <div style={{ width: '100%', maxWidth: '400px', pointerEvents: 'auto', textAlign: 'left', marginTop: '20px' }}>
+            <div style={{ width: '100%', maxWidth: '400px', flex: 1, pointerEvents: 'auto', textAlign: 'left', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
               <LeaderboardUnified 
                 title="ફરસાણ સ્લાઇસર લીડરબોર્ડ"
                 icon="social_leaderboard"

@@ -314,10 +314,10 @@ export default function KiteCutter() {
             position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', 
             background: 'radial-gradient(circle at 50% 30%, rgba(14, 165, 233, 0.18) 0%, rgba(15, 23, 42, 0.97) 75%)', 
             backdropFilter: 'blur(8px)', display: 'flex', flexDirection: 'column', 
-            alignItems: 'center', justifyContent: 'flex-start', zIndex: 10, padding: 'calc(env(safe-area-inset-top, 40px) + 20px) 20px 40px', boxSizing: 'border-box',
-            overflowY: 'auto', WebkitOverflowScrolling: 'touch'
+            alignItems: 'center', justifyContent: 'center', zIndex: 10, padding: 'calc(env(safe-area-inset-top, 40px) + 20px) 20px 40px', boxSizing: 'border-box',
+            overflow: 'hidden'
           }}>
-            <div style={{ width: '100%', maxWidth: '400px', pointerEvents: 'auto', textAlign: 'left', marginTop: '20px' }}>
+            <div style={{ width: '100%', maxWidth: '400px', flex: 1, pointerEvents: 'auto', textAlign: 'left', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
               <LeaderboardUnified 
                 title="પતંગ કાપો લીડરબોર્ડ"
                 icon="social_leaderboard"
