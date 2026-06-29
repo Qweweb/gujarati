@@ -11,6 +11,7 @@ import {
 import { playSound } from '../utils/audio';
 import EnglishZone from './EnglishZone';
 import KbcQuizGame from './KbcQuizGame';
+import GamesBanners from './GamesBanners';
 
 // Load or initialize coins
 const getCoins = () => parseInt(localStorage.getItem('sanskar_coins') || '100');
@@ -63,7 +64,7 @@ const updateStreak = () => {
 };
 
 export default function RamatoHub({ userLocation, onBack }) {
-  const [currentMode, setCurrentMode] = useState('gujarati'); // 'gujarati', 'english', or null (landing screen)
+  const [currentMode, setCurrentMode] = useState(null); // 'gujarati', 'english', or null (landing screen)
   const [activeGame, setActiveGame] = useState(null);
   const [coins, setCoins] = useState(getCoins());
   const [streak, setStreak] = useState(getStreak());
@@ -91,18 +92,38 @@ export default function RamatoHub({ userLocation, onBack }) {
     return null; // Handled outside now
   }
 
+  if (currentMode === null) {
+    return (
+      <div className="space-y-6 pb-12 animate-fade-in relative min-h-screen">
+        <div className="absolute inset-0 bg-[radial-gradient(#fcd34d_1px,transparent_1px)] dark:bg-[radial-gradient(#78350f_1px,transparent_1px)] [background-size:20px_20px] opacity-30 pointer-events-none rounded-[3rem] z-0 mix-blend-multiply dark:mix-blend-overlay"></div>
+        <div className="relative z-10 space-y-6 pt-4">
+          {onBack && (
+            <button 
+              onClick={onBack}
+              className="flex items-center gap-2 bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-300 px-4 py-2 rounded-xl font-bold active:scale-95 transition-all w-fit border border-stone-200 dark:border-stone-700 shadow-sm"
+            >
+              <span className="material-symbols-outlined text-sm">arrow_back</span>
+              પાછા જાવ
+            </button>
+          )}
+          <GamesBanners onGujaratiClick={() => setCurrentMode('gujarati')} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 pb-12 animate-fade-in relative min-h-screen">
       <div className="absolute inset-0 bg-[radial-gradient(#fcd34d_1px,transparent_1px)] dark:bg-[radial-gradient(#78350f_1px,transparent_1px)] [background-size:20px_20px] opacity-30 pointer-events-none rounded-[3rem] z-0 mix-blend-multiply dark:mix-blend-overlay"></div>
       <div className="relative z-10 space-y-6">
       
-        {onBack && (
+        {(!activeGame) && (
           <button 
-            onClick={onBack}
+            onClick={() => setCurrentMode(null)}
             className="flex items-center gap-2 bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-300 px-4 py-2 rounded-xl font-bold active:scale-95 transition-all w-fit border border-stone-200 dark:border-stone-700 shadow-sm"
           >
             <span className="material-symbols-outlined text-sm">arrow_back</span>
-            પાછા જાવ
+            રમતો મેનુ
           </button>
         )}
       {/* Top Banner Stats */}

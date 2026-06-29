@@ -617,6 +617,30 @@ const TEMPLES = [
   }
 ];
 
+const getFestivalEmoji = (title) => {
+    if (title.includes('ઉત્તરાયણ')) return '🪁';
+    if (title.includes('શિવરાત્રિ')) return '🕉️';
+    if (title.includes('હોળી') || title.includes('ધુળેટી')) return '🎨';
+    if (title.includes('રામ નવમી') || title.includes('દશેરા')) return '🏹';
+    if (title.includes('રથયાત્રા')) return '🛕';
+    if (title.includes('જન્માષ્ટમી')) return '🦚';
+    if (title.includes('ગણેશ')) return '🐘';
+    if (title.includes('નવરાત્રી')) return '💃';
+    if (title.includes('દિવાળી') || title.includes('ધનતેરસ')) return '🪔';
+    if (title.includes('નૂતન વર્ષ')) return '🙏';
+    if (title.includes('ભાઈબીજ')) return '👫';
+    if (title.includes('રક્ષાબંધન')) return '🎀';
+    if (title.includes('હનુમાન')) return '🐒';
+    if (title.includes('વસંત')) return '📚';
+    if (title.includes('અખાત્રીજ')) return '🪙';
+    if (title.includes('ગુરુ પૂર્ણિમા')) return '🕉️';
+    if (title.includes('નાગ પંચમી')) return '🐍';
+    if (title.includes('શીતળા સાતમ')) return '🌿';
+    if (title.includes('વટ સાવિત્રી')) return '🌳';
+    if (title.includes('કરવા ચોથ')) return '🌙';
+    return '✨';
+};
+
 const DevotionalHub = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -1089,33 +1113,10 @@ const DevotionalHub = () => {
                     </div>
                 ) : (
                     festivals.map((fest, idx) => {
-                        const getEmoji = (title) => {
-                            if (title.includes('ઉત્તરાયણ')) return '🪁';
-                            if (title.includes('શિવરાત્રિ')) return '🕉️';
-                            if (title.includes('હોળી') || title.includes('ધુળેટી')) return '🎨';
-                            if (title.includes('રામ નવમી') || title.includes('દશેરા')) return '🏹';
-                            if (title.includes('રથયાત્રા')) return '🛕';
-                            if (title.includes('જન્માષ્ટમી')) return '🦚';
-                            if (title.includes('ગણેશ')) return '🐘';
-                            if (title.includes('નવરાત્રી')) return '💃';
-                            if (title.includes('દિવાળી') || title.includes('ધનતેરસ')) return '🪔';
-                            if (title.includes('નૂતન વર્ષ')) return '🙏';
-                            if (title.includes('ભાઈબીજ')) return '👫';
-                            if (title.includes('રક્ષાબંધન')) return '🎀';
-                            if (title.includes('હનુમાન')) return '🐒';
-                            if (title.includes('વસંત')) return '📚';
-                            if (title.includes('અખાત્રીજ')) return '🪙';
-                            if (title.includes('ગુરુ પૂર્ણિમા')) return '🕉️';
-                            if (title.includes('નાગ પંચમી')) return '🐍';
-                            if (title.includes('શીતળા સાતમ')) return '🌿';
-                            if (title.includes('વટ સાવિત્રી')) return '🌳';
-                            if (title.includes('કરવા ચોથ')) return '🌙';
-                            return '✨';
-                        };
                         return (
                             <div key={idx} className="flex gap-4 p-5 bg-[#FFFFFF] rounded-2xl shadow-sm border border-[#E8E6E3] group border-l-8 border-l-[#0D9488] hover:shadow-md transition-shadow">
                                 <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-inner flex-shrink-0 bg-stone-100 flex items-center justify-center relative">
-                                    <span className="text-4xl absolute">{getEmoji(fest.title)}</span>
+                                    <span className="text-4xl absolute">{getFestivalEmoji(fest.title)}</span>
                                     <img 
                                         src={fest.image} 
                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform relative z-10" 
@@ -1421,7 +1422,7 @@ const DevotionalHub = () => {
 
         <div className="bg-white dark:bg-dark-surface rounded-[2.5rem] p-6 sm:p-8 shadow-xl border border-stone-100 dark:border-stone-800/80 space-y-6">
             {/* 1. SHRI RAM SHALAKA VIEW */}
-                !showResult ? (
+            {!showResult ? (
                     <div className="space-y-6 text-center">
                         <div className="max-w-md mx-auto space-y-2">
                             <p className="font-gujarati font-black text-lg text-yellow-900 dark:text-yellow-400">
@@ -1500,8 +1501,7 @@ const DevotionalHub = () => {
                             </button>
                         </div>
                     </div>
-                )
-
+                )}
         </div>
       </section>
 
@@ -2017,19 +2017,24 @@ const DevotionalHub = () => {
 
       {/* FESTIVAL DETAILS MODAL OVERLAY */}
       {selectedFestival && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/75 backdrop-blur-md animate-fade-in">
-          <div className="relative w-full max-w-2xl bg-[#fdfaf6] dark:bg-stone-950 rounded-[2.5rem] shadow-2xl border border-teal/20 overflow-hidden flex flex-col max-h-[85vh] animate-scale-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-20 sm:p-10 bg-black/75 backdrop-blur-md animate-fade-in">
+          <div className="relative w-full max-w-2xl bg-[#fdfaf6] dark:bg-stone-950 rounded-[2.5rem] shadow-2xl border border-teal/20 overflow-hidden flex flex-col max-h-full animate-scale-in">
             {/* Top Teal/Maroon accent stripes */}
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-maroon"></div>
             
             {/* Header Image section */}
-            <div className="relative h-48 sm:h-56 w-full overflow-hidden shrink-0">
+            <div className="relative h-48 sm:h-56 w-full overflow-hidden shrink-0 flex items-center justify-center bg-stone-200 dark:bg-stone-800">
+              <span className="text-8xl absolute opacity-30">{getFestivalEmoji(selectedFestival.title)}</span>
               <img 
                 src={selectedFestival.image} 
-                className="w-full h-full object-cover" 
+                className="w-full h-full object-cover relative z-10" 
                 alt={selectedFestival.title} 
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.style.display = 'none';
+                }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-20 pointer-events-none"></div>
               
               {/* Close Button */}
               <button 
@@ -2046,65 +2051,65 @@ const DevotionalHub = () => {
               </button>
 
               {/* Title Overlay */}
-              <div className="absolute bottom-4 left-6 right-6">
-                <span className="bg-maroon text-white text-[10px] font-gujarati font-black uppercase tracking-wider px-3 py-1 rounded-full border border-maroon/20 inline-block mb-1.5">
+              <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 sm:right-8">
+                <span className="bg-maroon text-white text-[10px] sm:text-xs font-gujarati font-black uppercase tracking-wider px-3 py-1.5 rounded-full border border-maroon/20 inline-block mb-2">
                   🌺 તહેવાર અને વ્રત વિશેષ
                 </span>
-                <h3 className="font-gujarati font-black text-2xl sm:text-3xl text-white drop-shadow-sm leading-tight">
+                <h3 className="font-gujarati font-black text-2xl sm:text-3xl md:text-4xl text-white drop-shadow-md leading-tight mt-1">
                   {selectedFestival.title}
                 </h3>
               </div>
             </div>
 
             {/* Scrollable Modal Content */}
-            <div className="flex-1 overflow-y-auto no-scrollbar p-6 sm:p-8 space-y-6">
+            <div className="flex-1 overflow-y-auto no-scrollbar p-6 sm:p-8 md:p-10 space-y-7 sm:space-y-9">
               {/* Badges Info Grid */}
-              <div className="grid grid-cols-3 gap-2 bg-teal/5 dark:bg-teal/10 p-4 rounded-2xl border border-teal/10">
+              <div className="grid grid-cols-3 gap-3 sm:gap-4 bg-teal/5 dark:bg-teal/10 p-5 rounded-3xl border border-teal/10">
                 <div className="text-center">
-                  <p className="text-[10px] text-teal/70 dark:text-teal/40 font-gujarati font-bold">તારીખ</p>
-                  <p className="font-gujarati text-xs sm:text-sm font-black text-teal mt-0.5">{selectedFestival.date.split(' ૨૦')[0]}</p>
+                  <p className="text-[10px] sm:text-xs text-teal/70 dark:text-teal/40 font-gujarati font-bold mb-1">તારીખ</p>
+                  <p className="font-gujarati text-xs sm:text-sm md:text-base font-black text-teal">{selectedFestival.date.split(' ૨૦')[0]}</p>
                 </div>
                 <div className="text-center border-x border-teal/10">
-                  <p className="text-[10px] text-teal/70 dark:text-teal/40 font-gujarati font-bold">તિથિ</p>
-                  <p className="font-gujarati text-xs sm:text-sm font-black text-teal mt-0.5">{selectedFestival.tithi}</p>
+                  <p className="text-[10px] sm:text-xs text-teal/70 dark:text-teal/40 font-gujarati font-bold mb-1">તિથિ</p>
+                  <p className="font-gujarati text-xs sm:text-sm md:text-base font-black text-teal">{selectedFestival.tithi}</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-[10px] text-teal/70 dark:text-teal/40 font-gujarati font-bold">વાર</p>
-                  <p className="font-gujarati text-xs sm:text-sm font-black text-teal mt-0.5">{selectedFestival.weekday}</p>
+                  <p className="text-[10px] sm:text-xs text-teal/70 dark:text-teal/40 font-gujarati font-bold mb-1">વાર</p>
+                  <p className="font-gujarati text-xs sm:text-sm md:text-base font-black text-teal">{selectedFestival.weekday}</p>
                 </div>
               </div>
 
               {/* Sections details */}
-              <div className="space-y-5">
+              <div className="space-y-6 sm:space-y-8">
                 {/* 1. Significance */}
-                <div className="space-y-2">
-                  <h4 className="font-gujarati font-black text-lg text-maroon flex items-center gap-1.5 border-b border-maroon/10 pb-1">
-                    <span className="material-symbols-outlined text-xl">stars</span>
+                <div className="space-y-3">
+                  <h4 className="font-gujarati font-black text-lg sm:text-xl text-maroon flex items-center gap-2 border-b border-maroon/10 pb-2">
+                    <span className="material-symbols-outlined text-xl sm:text-2xl">stars</span>
                     પર્વનું મહત્વ (Significance)
                   </h4>
-                  <p className="font-gujarati text-sm text-charcoal/90 dark:text-stone-300 leading-relaxed font-medium">
+                  <p className="font-gujarati text-sm sm:text-base text-charcoal/90 dark:text-stone-300 leading-relaxed font-medium">
                     {selectedFestival.significance}
                   </p>
                 </div>
 
                 {/* 2. History / Mythology */}
-                <div className="space-y-2">
-                  <h4 className="font-gujarati font-black text-lg text-maroon flex items-center gap-1.5 border-b border-maroon/10 pb-1">
-                    <span className="material-symbols-outlined text-xl">history_edu</span>
+                <div className="space-y-3">
+                  <h4 className="font-gujarati font-black text-lg sm:text-xl text-maroon flex items-center gap-2 border-b border-maroon/10 pb-2">
+                    <span className="material-symbols-outlined text-xl sm:text-2xl">history_edu</span>
                     પૌરાણિક કથા / ઇતિહાસ (History & Myth)
                   </h4>
-                  <p className="font-gujarati text-sm text-charcoal/90 dark:text-stone-300 leading-relaxed">
+                  <p className="font-gujarati text-sm sm:text-base text-charcoal/90 dark:text-stone-300 leading-relaxed">
                     {selectedFestival.history}
                   </p>
                 </div>
 
                 {/* 3. Celebration Method */}
-                <div className="space-y-2">
-                  <h4 className="font-gujarati font-black text-lg text-maroon flex items-center gap-1.5 border-b border-maroon/10 pb-1">
-                    <span className="material-symbols-outlined text-xl">celebration</span>
+                <div className="space-y-3">
+                  <h4 className="font-gujarati font-black text-lg sm:text-xl text-maroon flex items-center gap-2 border-b border-maroon/10 pb-2">
+                    <span className="material-symbols-outlined text-xl sm:text-2xl">celebration</span>
                     ઉજવણીની વિધિ અને રીત (How to Celebrate)
                   </h4>
-                  <p className="font-gujarati text-sm text-charcoal/90 dark:text-stone-300 leading-relaxed">
+                  <p className="font-gujarati text-sm sm:text-base text-charcoal/90 dark:text-stone-300 leading-relaxed">
                     {selectedFestival.howToCelebrate}
                   </p>
                 </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ScratchCardModal, fetchMatchingCoupon } from './ScratchRewards';
+import GamesBanners from './GamesBanners';
 import { supabase } from '../supabaseClient';
 import { syncUserProfile } from '../utils/otlo_helper';
 import LeaderboardUnified from './LeaderboardUnified';
@@ -301,18 +302,7 @@ export default function DailyChallenge() {
               </p>
             </div>
             <div className="flex flex-col gap-3 w-full max-w-sm mt-4">
-              <Link to="/games" className="w-full bg-[#F59E0B] hover:bg-[#D97706] text-white px-6 py-3.5 rounded-2xl font-headline font-black text-sm shadow-md transition active:scale-95 text-center flex items-center justify-center gap-2">
-                <span>ગુજરાતી ક્વિઝ અને રમતો</span>
-                <span className="text-lg">🎮</span>
-              </Link>
-              <Link to="/english" className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED] text-white px-6 py-3.5 rounded-2xl font-headline font-black text-sm shadow-md transition active:scale-95 text-center flex items-center justify-center gap-2">
-                <span>ઇંગ્લિશ શીખો</span>
-                <span className="text-lg">🎓</span>
-              </Link>
-              <Link to="/action-games" className="w-full bg-[#10B981] hover:bg-[#059669] text-white px-6 py-3.5 rounded-2xl font-headline font-black text-sm shadow-md transition active:scale-95 text-center flex items-center justify-center gap-2">
-                <span>મજેદાર ગેમ્સ</span>
-                <span className="text-lg">🕹️</span>
-              </Link>
+              <GamesBanners />
             </div>
           </div>
         )}

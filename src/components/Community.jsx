@@ -84,7 +84,8 @@ const Community = () => {
   const [detectedLocation, setDetectedLocation] = useState(null);
   
   // Navigation & Filter States
-  const [activeTab, setActiveTab] = useState("hub");
+  const [activeTab, setActiveTab] = useState("feed");
+  const [isOtloExpanded, setIsOtloExpanded] = useState(false);
   const [feedFilter, setFeedFilter] = useState("all");
   const [followedLocations, setFollowedLocations] = useState(() => getFollowedLocations());
   
@@ -96,7 +97,10 @@ const Community = () => {
   const [repData, setRepData] = useState({});
   
   // Modal / Sheet States
+  const [showComingSoon, setShowComingSoon] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
+  
+  const isMobileUser = !!(localStorage.getItem('user_phone') || localStorage.getItem('supabase_user_mobile'));
   const [showCommentsPostId, setShowCommentsPostId] = useState(null);
   const [newCommentText, setNewCommentText] = useState("");
   const [activeMenuPostId, setActiveMenuPostId] = useState(null);
@@ -817,16 +821,18 @@ const Community = () => {
       {/* Otalo Inner Sections (Feed, Directory, etc) */}
       {['feed', 'directory', 'leaderboard', 'sabha'].includes(activeTab) && (
         <div className="space-y-4 animate-fade-in">
-          <button 
-            onClick={() => setActiveTab('hub')}
-            className="flex items-center gap-2 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 px-4 py-2 rounded-xl font-bold active:scale-95 transition-all w-fit"
-          >
-            <span className="material-symbols-outlined text-sm">arrow_back</span>
-            પાછા જાવ
-          </button>
           
           {/* Top Banner Card */}
-      <section className="bg-[#2D3748] p-6 rounded-[2.5rem] text-[#F4F4F0] shadow-sm relative overflow-hidden border border-[#0D9488]/30">
+      <section 
+        className="bg-[#2D3748] p-6 rounded-[2.5rem] text-[#F4F4F0] shadow-sm relative overflow-hidden border border-[#0D9488]/30 cursor-pointer active:scale-[0.99] transition-transform"
+        onClick={() => {
+          if (isMobileUser) {
+            setIsOtloExpanded(!isOtloExpanded);
+          } else {
+            setShowComingSoon(true);
+          }
+        }}
+      >
         <div className="absolute right-[-20px] top-[-20px] opacity-10 select-none pointer-events-none text-9xl">
           groups
         </div>
@@ -880,134 +886,32 @@ const Community = () => {
         </div>
       </section>
           {/* Main Tab bar - 2 columns */}
-          <div className="grid grid-cols-2 gap-3 mt-4">
-            {[
-              { id: "feed", label: "ચર્ચાઓ", icon: "forum" },
-              { id: "directory", label: "ડિરેક્ટરી", icon: "contact_phone" },
-              { id: "leaderboard", label: "લીડરબોર્ડ", icon: "emoji_events" },
-              { id: "sabha", label: "ગામ સભા", icon: "campaign" }
-            ].map((tab, idx) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-3 p-4 rounded-2xl transition-all active:scale-95 border ${
-                  activeTab === tab.id
-                    ? 'bg-[#2D3748] text-[#F4F4F0] shadow-md border-[#0D9488]/30'
-                    : 'bg-[#F4F4F0] dark:bg-[#1E1A18] text-[#2D3748] dark:text-[#F4F4F0] border-[#0D9488]/30 shadow-sm hover:border-[#2D3748]'
-                } `}
-              >
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === tab.id ? 'bg-[#0D9488]/20' : 'bg-[#0D9488]/10'}`}>
-                  <span className={`material-symbols-outlined text-xl font-bold ${activeTab === tab.id ? 'text-[#0D9488]' : 'text-[#2D3748] dark:text-[#0D9488]'}`}>{tab.icon}</span>
-                </div>
-                <span className="font-gujarati font-bold text-sm">{tab.label}</span>
-              </button>
-            ))}
-          </div>
+          {isOtloExpanded && (
+            <div className="grid grid-cols-2 gap-3 mt-4 animate-fade-in">
+              {[
+                { id: "feed", label: "ચર્ચાઓ", icon: "forum" },
+                { id: "directory", label: "ડિરેક્ટરી", icon: "contact_phone" },
+                { id: "leaderboard", label: "લીડરબોર્ડ", icon: "emoji_events" },
+                { id: "sabha", label: "ગામ સભા", icon: "campaign" }
+              ].map((tab, idx) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-3 p-4 rounded-2xl transition-all active:scale-95 border ${
+                    activeTab === tab.id
+                      ? 'bg-[#2D3748] text-[#F4F4F0] shadow-md border-[#0D9488]/30'
+                      : 'bg-[#F4F4F0] dark:bg-[#1E1A18] text-[#2D3748] dark:text-[#F4F4F0] border-[#0D9488]/30 shadow-sm hover:border-[#2D3748]'
+                  } `}
+                >
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${activeTab === tab.id ? 'bg-[#0D9488]/20' : 'bg-[#0D9488]/10'}`}>
+                    <span className={`material-symbols-outlined text-xl font-bold ${activeTab === tab.id ? 'text-[#0D9488]' : 'text-[#2D3748] dark:text-[#0D9488]'}`}>{tab.icon}</span>
+                  </div>
+                  <span className="font-gujarati font-bold text-sm">{tab.label}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
-      )}
-
-      {activeTab === "hub" && (
-      <div className="space-y-4 pt-2">
-      
-        {/* ROW 1: 2 Cards (Digital Bethak & My Society) */}
-        <div className="grid grid-cols-2 gap-4">
-          <section 
-            onClick={() => setActiveTab("feed")}
-            className="bg-[#2D3748] p-5 rounded-3xl text-center flex flex-col items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform border border-[#0D9488]/30 relative overflow-hidden cursor-pointer min-h-[140px]"
-          >
-            <div className="absolute right-[-10px] top-[-10px] opacity-10 select-none pointer-events-none text-7xl">
-              groups
-            </div>
-            <div className="h-12 w-12 bg-[#0D9488]/20 rounded-2xl flex items-center justify-center relative z-10 shrink-0">
-              <span className="material-symbols-outlined text-[#0D9488] text-2xl font-bold">groups</span>
-            </div>
-            <div className="relative z-10 mt-1">
-              <h2 className="font-gujarati font-black text-base text-[#F4F4F0]">ડિજિટલ બેઠક</h2>
-              <p className="font-gujarati text-[10px] text-teal-200 mt-1">ગામના સમાચાર ને ચર્ચા</p>
-            </div>
-          </section>
-
-          <section 
-            onClick={() => navigate("/society")}
-            className="bg-[#F4F4F0] dark:bg-[#1E1A18] p-5 rounded-3xl text-center flex flex-col items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform border border-[#0D9488]/30 relative overflow-hidden cursor-pointer min-h-[140px]"
-          >
-            <div className="absolute right-[-10px] top-[-10px] opacity-[0.03] dark:opacity-5 select-none pointer-events-none text-7xl">
-              holiday_village
-            </div>
-            <div className="h-12 w-12 bg-teal-50 dark:bg-teal-900/30 rounded-2xl flex items-center justify-center relative z-10 shrink-0">
-              <span className="material-symbols-outlined text-[#0D9488] text-2xl font-bold">holiday_village</span>
-            </div>
-            <div className="relative z-10 mt-1">
-              <h2 className="font-gujarati font-black text-base text-[#2D3748] dark:text-[#F4F4F0]">મારી સોસાયટી</h2>
-              <p className="font-gujarati text-[10px] text-[#0D9488] font-bold mt-1">મેનેજમેન્ટ અને સુવિધા</p>
-            </div>
-          </section>
-        </div>
-
-        {/* ROW 2: 1 Card (Bhakti Cards Maker) */}
-        <section 
-          id="cards-banner"
-          onClick={() => navigate("/devotional-cards")}
-          className="bg-[#F4F4F0] dark:bg-[#1E1A18] p-6 rounded-[2rem] shadow-sm relative overflow-hidden flex flex-row items-center justify-between gap-4 border border-[#0D9488]/30 cursor-pointer active:scale-95 transition-transform"
-        >
-          <div className="absolute right-0 top-0 opacity-[0.03] dark:opacity-5 select-none pointer-events-none text-8xl translate-x-4 -translate-y-4">
-            🕉️
-          </div>
-          <div className="flex-1 space-y-1 relative z-10 text-left pr-8">
-            <span className="bg-[#2D3748]/10 text-[#2D3748] dark:bg-[#0D9488]/10 dark:text-[#0D9488] border border-[#2D3748]/20 dark:border-[#0D9488]/20 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest inline-block mb-1">
-              નવું ફિચર 🌟
-            </span>
-            <h3 className="font-headline font-black text-2xl text-[#2D3748] dark:text-[#F4F4F0] tracking-wide">
-              ભક્તિ Cards મેકર
-            </h3>
-            <p className="font-gujarati text-[#0D9488] font-bold text-xs max-w-[200px] mt-1">
-              તમારું નામ અને ફોટો લગાવી સુંદર ભગવાનના સુવિચાર બનાવો.
-            </p>
-          </div>
-          <div className="h-10 w-10 bg-[#2D3748] rounded-full flex items-center justify-center relative z-10 shrink-0 shadow-md text-[#F4F4F0]">
-            <span className="material-symbols-outlined font-bold text-lg">arrow_forward</span>
-          </div>
-        </section>
-
-        {/* ROW 3: 2 Cards (Quiz & English) */}
-        <div className="grid grid-cols-2 gap-4">
-          <section 
-            id="quiz-banner"
-            onClick={() => navigate("/games")}
-            className="bg-[#F4F4F0] dark:bg-[#1E1A18] p-5 rounded-3xl text-center flex flex-col items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform border border-[#0D9488]/30 relative overflow-hidden cursor-pointer min-h-[140px]"
-          >
-            <div className="absolute right-[-10px] top-[-10px] opacity-[0.03] dark:opacity-5 select-none pointer-events-none text-7xl">
-              👑
-            </div>
-            <div className="h-12 w-12 bg-amber-50 dark:bg-amber-900/20 rounded-2xl flex items-center justify-center relative z-10 shrink-0">
-              <span className="material-symbols-outlined text-amber-600 dark:text-amber-500 text-2xl font-bold">sports_esports</span>
-            </div>
-            <div className="relative z-10 mt-1">
-              <h2 className="font-gujarati font-black text-base text-[#2D3748] dark:text-[#F4F4F0] leading-tight">ક્વિઝ અને રમતો</h2>
-              <p className="font-gujarati text-[10px] text-[#0D9488] font-bold mt-1">જ્ઞાન વધારો ને રમો</p>
-            </div>
-          </section>
-
-          <section 
-            id="english-banner"
-            onClick={() => navigate("/english")}
-            className="bg-[#2D3748] p-5 rounded-3xl text-center flex flex-col items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform border border-[#0D9488]/30 relative overflow-hidden cursor-pointer min-h-[140px]"
-          >
-            <div className="absolute right-[-10px] top-[-10px] opacity-10 select-none pointer-events-none text-7xl">
-              📝
-            </div>
-            <div className="h-12 w-12 bg-[#0D9488]/20 rounded-2xl flex items-center justify-center relative z-10 shrink-0">
-              <span className="material-symbols-outlined text-[#0D9488] text-2xl font-bold">school</span>
-            </div>
-            <div className="relative z-10 mt-1">
-              <h2 className="font-gujarati font-black text-base text-[#F4F4F0] leading-tight">અંગ્રેજી પાઠશાળા</h2>
-              <p className="font-gujarati text-[10px] text-teal-200 mt-1">સરળતાથી ઇંગ્લિશ શીખો</p>
-            </div>
-          </section>
-        </div>
-        
-        <CommunityFeed />
-      </div>
       )}
 
       {!['games', 'english'].includes(activeTab) && (
@@ -1086,7 +990,8 @@ const Community = () => {
       )}
 
       {/* SUB-TAB CONTENTS */}
-      
+      {isOtloExpanded && (
+      <>
       {/* 1. DISCUSSIONS TAB */}
       {activeTab === "feed" && (
         !userLocation ? (
@@ -1595,6 +1500,27 @@ const Community = () => {
 
       {/* 5. DRAWERS & MODALS */}
 
+      {/* A0. Coming Soon Modal */}
+      {showComingSoon && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-dark-surface rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center animate-fade-in border border-primary/10">
+            <div className="w-16 h-16 bg-[#0D9488]/10 rounded-full flex items-center justify-center mx-auto mb-4 text-[#0D9488]">
+              <span className="material-symbols-outlined text-3xl">hourglass_empty</span>
+            </div>
+            <h3 className="font-gujarati font-black text-xl text-on-surface mb-2">કમિંગ સૂન (Coming Soon)</h3>
+            <p className="font-gujarati text-sm text-stone-500 dark:text-stone-400 mb-6">
+              આ ફિચર ટૂંક સમયમાં પબ્લિક માટે ઉપલબ્ધ થશે.
+            </p>
+            <button
+              onClick={() => setShowComingSoon(false)}
+              className="w-full bg-[#2D3748] hover:bg-[#2D3748]/90 text-[#F4F4F0] py-3 rounded-2xl font-gujarati font-black text-sm transition-transform active:scale-95"
+            >
+              બરાબર
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* A. Post Creation Bottom Sheet */}
       {showCreatePost && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end justify-center">
@@ -1885,6 +1811,13 @@ const Community = () => {
           </div>
         </div>
       )}
+      </>
+      )}
+      
+      {/* Global Community Feed at the bottom */}
+      <div className="mt-8 border-t border-stone-200/20 pt-8">
+        <CommunityFeed />
+      </div>
     </div>
   );
 };

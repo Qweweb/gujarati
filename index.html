@@ -15,6 +15,31 @@
     <!-- Material Symbols -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet" />
 
+    <!-- Font Loading Script to prevent FOUT (Flash of Unstyled Text) -->
+    <style>
+      /* Hide Material Symbols text until font is completely loaded */
+      html:not(.fonts-loaded) .material-symbols-outlined {
+        color: transparent !important;
+        font-size: 0px !important;
+        overflow: hidden;
+      }
+    </style>
+    <script>
+      (function() {
+        if ("fonts" in document) {
+          document.fonts.ready.then(function() {
+            document.documentElement.classList.add("fonts-loaded");
+          });
+          // Fallback after 3 seconds
+          setTimeout(function() {
+            document.documentElement.classList.add("fonts-loaded");
+          }, 3000);
+        } else {
+          document.documentElement.classList.add("fonts-loaded");
+        }
+      })();
+    </script>
+
     <!-- Microsoft Clarity -->
     <script type="text/javascript">
       (function(c,l,a,r,i,t,y){

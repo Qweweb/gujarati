@@ -1,5 +1,5 @@
 import { uploadToCloudinary } from '../utils/cloudinaryHelper';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import LZString from 'lz-string';
@@ -1252,37 +1252,6 @@ const LayoutPreview = ({ type }) => {
   }
 };
 
-const AccordionItem = ({ id, activeId, setActiveId, title, num, icon, children }) => {
-  const isOpen = activeId === id;
-  return (
-    <div className="bg-white dark:bg-dark-surface rounded-[2rem] border border-primary/10 dark:border-primary/5 overflow-hidden shadow-xs hover:shadow-sm transition-all duration-300">
-      <button
-        onClick={() => setActiveId(isOpen ? null : id)}
-        className="w-full flex items-center justify-between p-5 text-left cursor-pointer focus:outline-none"
-      >
-        <div className="flex items-center gap-3.5 min-w-0">
-          <div className={`h-9 w-9 rounded-xl flex items-center justify-center font-bold text-xs shrink-0 ${isOpen ? 'bg-primary text-white' : 'bg-primary/15 text-primary'}`}>
-            {num}
-          </div>
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="material-symbols-outlined text-primary text-lg shrink-0">{icon}</span>
-            <h3 className="font-gujarati font-black text-base text-primary dark:text-amber-450 truncate">{title}</h3>
-          </div>
-        </div>
-        <span className={`material-symbols-outlined text-stone-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
-          expand_more
-        </span>
-      </button>
-      
-      {isOpen && (
-        <div className="p-6 border-t border-primary/10 dark:border-primary/5 space-y-5 animate-fade-in">
-          {children}
-        </div>
-      )}
-    </div>
-  );
-};
-
 const DigitalCard = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -1322,7 +1291,7 @@ const DigitalCard = () => {
   const [layoutStyle, setLayoutStyle] = useState('classic');
   const [profileImage, setProfileImage] = useState(null); // Layout Style State
   const [selectedPreset, setSelectedPreset] = useState(null); // Business preset
-  const [activeAccordion, setActiveAccordion] = useState('details'); // Creator Accordion State
+  const [currentStep, setCurrentStep] = useState(1); // Creator Wizard State
 
   const applyBusinessPreset = (preset) => {
     setSelectedPreset(preset.id);
@@ -1354,6 +1323,9 @@ const DigitalCard = () => {
   const [tempGallLabel, setTempGallLabel] = useState('');
   const [tempGallIcon, setTempGallIcon] = useState('📸');
   const [tempGallImg, setTempGallImg] = useState(null);
+
+  const [editProductId, setEditProductId] = useState(null);
+  const [editGalleryId, setEditGalleryId] = useState(null);
 
   const compressImage = (file) => {
     return new Promise((resolve) => {
@@ -1452,6 +1424,8 @@ const DigitalCard = () => {
   };
 
 
+  const hasLoadedDraft = useRef(false);
+
   // Auto-save logic
   useEffect(() => {
     if (!isViewer) {
@@ -1484,17 +1458,22 @@ const DigitalCard = () => {
           if (d.gallery) setGallery(d.gallery);
           if (d.layoutStyle) setLayoutStyle(d.layoutStyle);
           if (d.profileImage) setProfileImage(d.profileImage);
+          if (d.currentStep) setCurrentStep(d.currentStep);
         } catch(e) {}
       }
+      // Give state updates a moment to queue before allowing auto-saves
+      setTimeout(() => {
+        hasLoadedDraft.current = true;
+      }, 500);
     }
   }, [isViewer]);
 
   useEffect(() => {
-    if (!isViewer) {
-      const data = { name, businessName, category, tagline, phone, whatsapp, email, address, locationLink, website, upiId, upiName, facebook, instagram, linkedin, twitter, youtubeLinks, themeId, customColor, bgPattern, products, gallery, layoutStyle, profileImage, customSlug };
+    if (!isViewer && hasLoadedDraft.current) {
+      const data = { name, businessName, category, tagline, phone, whatsapp, email, address, locationLink, website, upiId, upiName, facebook, instagram, linkedin, twitter, youtubeLinks, themeId, customColor, bgPattern, products, gallery, layoutStyle, profileImage, customSlug, currentStep };
       localStorage.setItem('digitalCardDraft', JSON.stringify(data));
     }
-  }, [name, businessName, category, tagline, phone, whatsapp, email, address, locationLink, website, upiId, upiName, facebook, instagram, linkedin, twitter, youtubeLinks, themeId, customColor, bgPattern, products, gallery, layoutStyle, profileImage, isViewer]);
+  }, [name, businessName, category, tagline, phone, whatsapp, email, address, locationLink, website, upiId, upiName, facebook, instagram, linkedin, twitter, youtubeLinks, themeId, customColor, bgPattern, products, gallery, layoutStyle, profileImage, customSlug, currentStep, isViewer]);
 
   const saveDraft = async () => {
     const data = { name, businessName, category, tagline, phone, whatsapp, email, address, locationLink, website, upiId, upiName, facebook, instagram, linkedin, twitter, youtubeLinks, themeId, customColor, bgPattern, products, gallery, layoutStyle, profileImage, customSlug };
@@ -1551,6 +1530,69 @@ const DigitalCard = () => {
        triggerLocalToast("❌ પબ્લિશ કરવામાં ભૂલ થઈ!");
        console.error(error);
     }
+  };
+
+  // Add items handler
+  const handleAddProduct = () => {
+    if (!tempProdName) return;
+    const np = {
+      id: editProductId || Date.now(),
+      name: tempProdName,
+      price: tempProdPrice || '₹ ૧૦૦',
+      desc: tempProdDesc,
+      image: tempProdImg
+    };
+    
+    if (editProductId) {
+      setProducts(products.map(p => p.id === editProductId ? np : p));
+      triggerLocalToast("✅ પ્રોડક્ટ અપડેટ થઈ ગઈ!");
+      setEditProductId(null);
+    } else {
+      setProducts([...products, np]);
+      triggerLocalToast("➕ નવી પ્રોડક્ટ ઉમેરાઈ ગઈ!");
+    }
+    
+    setTempProdName('');
+    setTempProdPrice('');
+    setTempProdDesc('');
+    setTempProdImg(null);
+  };
+
+  const handleEditProduct = (p) => {
+    setEditProductId(p.id);
+    setTempProdName(p.name);
+    setTempProdPrice(p.price === '₹ ૧૦૦' ? '' : p.price);
+    setTempProdDesc(p.desc || '');
+    setTempProdImg(p.image || null);
+  };
+
+  const handleAddGallery = () => {
+    if (!tempGallLabel && !tempGallImg) return;
+    const ng = {
+      id: editGalleryId || Date.now(),
+      label: tempGallLabel,
+      image: tempGallImg,
+      icon: tempGallIcon
+    };
+    
+    if (editGalleryId) {
+      setGallery(gallery.map(g => g.id === editGalleryId ? ng : g));
+      triggerLocalToast("✅ ગેલેરી અપડેટ થઈ ગઈ!");
+      setEditGalleryId(null);
+    } else {
+      setGallery([...gallery, ng]);
+      triggerLocalToast("📸 ગેલેરી આઇટમ ઉમેરાઈ ગઈ!");
+    }
+    
+    setTempGallLabel('');
+    setTempGallImg(null);
+  };
+
+  const handleEditGallery = (g) => {
+    setEditGalleryId(g.id);
+    setTempGallLabel(g.label);
+    setTempGallImg(g.image || null);
+    if(g.icon) setTempGallIcon(g.icon);
   };
 
   // On mount: If Viewer Mode, read URL hash parameters and load
@@ -1680,37 +1722,6 @@ END:VCARD`;
     window.open(`https://api.whatsapp.com/send?text=${text}`);
   };
 
-  // Add items handler
-  const handleAddProduct = () => {
-    if (!tempProdName) return;
-    const np = {
-      id: Date.now(),
-      name: tempProdName,
-      price: tempProdPrice || '₹ ૧૦૦',
-      desc: tempProdDesc,
-      image: tempProdImg
-    };
-    setProducts([...products, np]);
-    setTempProdName('');
-    setTempProdPrice('');
-    setTempProdDesc('');
-    setTempProdImg(null);
-    triggerLocalToast("➕ નવી પ્રોડક્ટ ઉમેરાઈ ગઈ!");
-  };
-
-  const handleAddGallery = () => {
-    if (!tempGallLabel && !tempGallImg) return;
-    const ng = {
-      id: Date.now(),
-      label: tempGallLabel,
-      image: tempGallImg,
-      icon: tempGallIcon
-    };
-    setGallery([...gallery, ng]);
-    setTempGallLabel('');
-    setTempGallImg(null);
-    triggerLocalToast("📸 ગેલેરી આઇટમ ઉમેરાઈ ગઈ!");
-  };
 
   // Theme configuration locator
   const activeTheme = THEMES.find(t => t.id === (isViewer ? viewerData?.themeId : themeId)) || THEMES[0];
@@ -1808,19 +1819,183 @@ END:VCARD`;
       {/* Main Grid: Config Form + Live Preview Mock */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        {/* Left Side Config Form (Accordions) */}
-        <div className="lg:col-span-7 space-y-4">
+        {/* Left Side Config Form (Wizard Steps) */}
+        <div className="lg:col-span-7 space-y-6">
           
-          {/* Section 1: Details */}
-          <AccordionItem 
-            id="details" 
-            activeId={activeAccordion} 
-            setActiveId={setActiveAccordion} 
-            title="વેપારી અને ધંધાની વિગતો (Owner & Business Details)" 
-            num="૧" 
-            icon="store"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Stepper Header */}
+          <div className="bg-white dark:bg-dark-surface p-3 sm:p-4 rounded-[2rem] shadow-sm border border-primary/10 flex justify-between items-center overflow-x-auto hide-scrollbar gap-2">
+            {[
+              { num: 1, label: 'ડિઝાઇન', icon: 'palette' },
+              { num: 2, label: 'પ્રોફાઇલ', icon: 'person' },
+              { num: 3, label: 'કેટલોગ', icon: 'storefront' },
+              { num: 4, label: 'પબ્લિશ', icon: 'rocket_launch' }
+            ].map(step => (
+              <button 
+                key={step.num}
+                onClick={() => setCurrentStep(step.num)}
+                className={`flex flex-col items-center gap-1 min-w-[70px] p-2 rounded-2xl transition-all ${currentStep === step.num ? 'bg-primary/10 text-primary' : 'text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900/50'}`}
+              >
+                <span className={`material-symbols-outlined text-xl ${currentStep === step.num ? 'fill-1' : ''}`}>{step.icon}</span>
+                <span className={`font-gujarati text-[10px] font-black ${currentStep === step.num ? 'text-primary' : 'text-stone-500'}`}>{step.label}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="bg-white dark:bg-dark-surface rounded-[2rem] border border-primary/10 dark:border-primary/5 overflow-hidden shadow-xs p-5 sm:p-6 space-y-5 min-h-[500px]">
+          
+          {currentStep === 1 && (
+            <div className="space-y-6 animate-fade-in">
+              <h3 className="font-gujarati font-black text-lg text-primary flex items-center gap-2 border-b border-primary/10 pb-3">
+                <span className="material-symbols-outlined">palette</span> ડિઝાઇન અને લેઆઉટ
+              </h3>
+              
+{/* ── Business Type Quick Presets ── */}
+            <div style={{ marginBottom: 20 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: '#78716c', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: '"Plus Jakarta Sans",sans-serif' }}>
+                ⚡ ધંધો / વ્યવસાય પ્રમાણે Ready Design
+              </p>
+              <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 6 }}>
+                {BUSINESS_PRESETS.map(p => (
+                  <button
+                    key={p.id}
+                    onClick={() => applyBusinessPreset(p)}
+                    style={{
+                      flexShrink: 0,
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
+                      padding: '10px 14px',
+                      borderRadius: 16,
+                      border: selectedPreset === p.id ? `2px solid ${p.color}` : '2px solid #e7e5e4',
+                      background: selectedPreset === p.id ? p.color + '15' : '#fff',
+                      cursor: 'pointer',
+                      transition: 'all 0.18s',
+                      minWidth: 72,
+                    }}
+                  >
+                    <span style={{ fontSize: 24 }}>{p.emoji}</span>
+                    <span style={{
+                      fontSize: 9.5, fontWeight: 800, fontFamily: '"Noto Serif Gujarati",serif',
+                      color: selectedPreset === p.id ? p.color : '#57534e',
+                      textAlign: 'center', lineHeight: 1.3, whiteSpace: 'nowrap'
+                    }}>{p.label}</span>
+                    {selectedPreset === p.id && (
+                      <span style={{ fontSize: 10, color: p.color, fontWeight: 900 }}>✓ સેટ</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+              {selectedPreset && (
+                <p style={{ fontSize: 11, color: '#16a34a', fontWeight: 700, marginTop: 8, fontFamily: '"Plus Jakarta Sans",sans-serif' }}>
+                  ✅ {BUSINESS_PRESETS.find(p => p.id === selectedPreset)?.labelEn} — Layout + Theme + Category auto-set!
+                </p>
+              )}
+            </div>
+
+            {/* ── Manual Layout Style ── */}
+            <p style={{ fontSize: 11, fontWeight: 700, color: '#78716c', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: '"Plus Jakarta Sans",sans-serif' }}>
+              🎨 અથવા Manual Layout પસંદ કરો
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              {LAYOUT_STYLES.map(l => (
+                <button
+                  key={l.id}
+                  onClick={() => { setLayoutStyle(l.id); setSelectedPreset(null); }}
+                  className={`p-4 rounded-[2rem] border-2 text-left transition-all hover:scale-[1.01] active:scale-98 cursor-pointer flex gap-4 items-center ${
+                    layoutStyle === l.id 
+                      ? 'border-primary bg-primary/5 text-primary shadow-xs' 
+                      : 'border-stone-200 dark:border-stone-850 hover:bg-stone-50 dark:hover:bg-stone-900/50'
+                  }`}
+                >
+                  <LayoutPreview type={l.id} />
+                  <div className="min-w-0 space-y-0.5">
+                    <h4 className="font-gujarati font-black text-sm text-on-surface dark:text-stone-100">{l.name}</h4>
+                    <p className="font-gujarati text-[10px] text-stone-555 dark:text-stone-400 leading-tight">{l.desc}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+              <div className="border-t-2 border-dashed border-stone-200 dark:border-stone-800 my-6"></div>
+              
+<div className="space-y-4">
+              <p className="text-xs text-stone-555 dark:text-stone-450">કાર્ડને વ્યાવસાયિક લુક આપવા માટે તૈયાર ૧૫ પ્રીમિયમ થીમ્સમાંથી કોઈપણ એક પસંદ કરો:</p>
+              
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {THEMES.map(t => {
+                  const isActive = themeId === t.id;
+                  return (
+                    <button
+                      key={t.id}
+                      onClick={() => setThemeId(t.id)}
+                      className={`relative p-3.5 rounded-2.5xl border-2 text-left transition-all hover:scale-[1.02] active:scale-95 cursor-pointer flex flex-col justify-between h-24 overflow-hidden ${t.bg} ${t.text} ${
+                        isActive ? 'border-amber-500 ring-2 ring-amber-500/20' : 'border-white/10 dark:border-black/25'
+                      }`}
+                    >
+                      <div className="w-full flex items-center justify-between gap-1">
+                        <span className="text-[10px] font-bold truncate max-w-[80%] font-gujarati">{t.name.split(' (')[0]}</span>
+                        <div className={`h-2.5 w-2.5 rounded-full shrink-0 bg-current ${t.accent}`}></div>
+                      </div>
+                      
+                      <div className="w-full space-y-1">
+                        <div className="h-1 w-full bg-white/20 rounded-full"></div>
+                        <div className="h-1 w-2/3 bg-white/10 rounded-full"></div>
+                      </div>
+                      
+                      <div className="w-full flex items-center justify-between mt-1 text-[8px] opacity-75">
+                        <span className="font-label">Theme</span>
+                        {isActive && (
+                          <span className="material-symbols-outlined text-xs text-amber-400 font-bold">check_circle</span>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Custom Color Selector */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-stone-100 dark:border-stone-850">
+                <div className="space-y-0.5">
+                  <label className="font-bold text-xs text-stone-600 dark:text-stone-300">મુખ્ય કલર સેટ કરો (Accent Brand Color)</label>
+                  <p className="text-[10px] text-stone-400 dark:text-stone-500">બટન અને હાઇલાઇટ્સ માટે તમારો કસ્ટમ બ્રાન્ડ કલર સેટ કરો.</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={customColor}
+                    onChange={e => setCustomColor(e.target.value)}
+                    className="h-9 w-16 rounded-xl border border-stone-200 dark:border-stone-800 cursor-pointer p-1 bg-stone-50 dark:bg-stone-900"
+                  />
+                  <span className="font-headline font-bold text-xs bg-stone-100 dark:bg-stone-900 px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 text-on-surface dark:text-stone-200">{customColor}</span>
+                </div>
+              </div>
+            </div>
+            <div className="pt-4 mt-4 border-t border-stone-200 dark:border-stone-850 space-y-4">
+              <div className="space-y-0.5">
+                <label className="font-bold text-xs text-stone-600 dark:text-stone-300">બેકગ્રાઉન્ડ પેટર્ન (Background Pattern)</label>
+                <p className="text-[10px] text-stone-400 dark:text-stone-500">કાર્ડના બેકગ્રાઉન્ડ માટે દેશી પેટર્ન પસંદ કરો.</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {PATTERNS.map(p => (
+                  <button
+                    key={p.id}
+                    onClick={() => setBgPattern(p.id)}
+                    className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all ${bgPattern === p.id ? 'bg-primary text-white shadow-md' : 'bg-stone-100 dark:bg-stone-800 text-stone-500 hover:bg-stone-200 dark:hover:bg-stone-700'}`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            </div>
+          )}
+
+          {currentStep === 2 && (
+            <div className="space-y-6 animate-fade-in">
+              <h3 className="font-gujarati font-black text-lg text-primary flex items-center gap-2 border-b border-primary/10 pb-3">
+                <span className="material-symbols-outlined">person</span> પ્રોફાઇલ અને સંપર્ક
+              </h3>
+              
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormInput 
                 label="માલિકનું નામ *" 
                 value={name} 
@@ -2024,174 +2199,17 @@ END:VCARD`;
                 )}
               </div>
             </div>
-          </AccordionItem>
 
-          {/* Section 2: Layout Style */}
-          <AccordionItem 
-            id="layout" 
-            activeId={activeAccordion} 
-            setActiveId={setActiveAccordion} 
-            title="લેઆઉટ સ્ટાઇલ પસંદ કરો (Template Layout)" 
-            num="૨" 
-            icon="dashboard"
-          >
-            {/* ── Business Type Quick Presets ── */}
-            <div style={{ marginBottom: 20 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: '#78716c', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: '"Plus Jakarta Sans",sans-serif' }}>
-                ⚡ ધંધો / વ્યવસાય પ્રમાણે Ready Design
-              </p>
-              <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 6 }}>
-                {BUSINESS_PRESETS.map(p => (
-                  <button
-                    key={p.id}
-                    onClick={() => applyBusinessPreset(p)}
-                    style={{
-                      flexShrink: 0,
-                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
-                      padding: '10px 14px',
-                      borderRadius: 16,
-                      border: selectedPreset === p.id ? `2px solid ${p.color}` : '2px solid #e7e5e4',
-                      background: selectedPreset === p.id ? p.color + '15' : '#fff',
-                      cursor: 'pointer',
-                      transition: 'all 0.18s',
-                      minWidth: 72,
-                    }}
-                  >
-                    <span style={{ fontSize: 24 }}>{p.emoji}</span>
-                    <span style={{
-                      fontSize: 9.5, fontWeight: 800, fontFamily: '"Noto Serif Gujarati",serif',
-                      color: selectedPreset === p.id ? p.color : '#57534e',
-                      textAlign: 'center', lineHeight: 1.3, whiteSpace: 'nowrap'
-                    }}>{p.label}</span>
-                    {selectedPreset === p.id && (
-                      <span style={{ fontSize: 10, color: p.color, fontWeight: 900 }}>✓ સેટ</span>
-                    )}
-                  </button>
-                ))}
-              </div>
-              {selectedPreset && (
-                <p style={{ fontSize: 11, color: '#16a34a', fontWeight: 700, marginTop: 8, fontFamily: '"Plus Jakarta Sans",sans-serif' }}>
-                  ✅ {BUSINESS_PRESETS.find(p => p.id === selectedPreset)?.labelEn} — Layout + Theme + Category auto-set!
-                </p>
-              )}
             </div>
+          )}
 
-            {/* ── Manual Layout Style ── */}
-            <p style={{ fontSize: 11, fontWeight: 700, color: '#78716c', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: '"Plus Jakarta Sans",sans-serif' }}>
-              🎨 અથવા Manual Layout પસંદ કરો
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              {LAYOUT_STYLES.map(l => (
-                <button
-                  key={l.id}
-                  onClick={() => { setLayoutStyle(l.id); setSelectedPreset(null); }}
-                  className={`p-4 rounded-[2rem] border-2 text-left transition-all hover:scale-[1.01] active:scale-98 cursor-pointer flex gap-4 items-center ${
-                    layoutStyle === l.id 
-                      ? 'border-primary bg-primary/5 text-primary shadow-xs' 
-                      : 'border-stone-200 dark:border-stone-850 hover:bg-stone-50 dark:hover:bg-stone-900/50'
-                  }`}
-                >
-                  <LayoutPreview type={l.id} />
-                  <div className="min-w-0 space-y-0.5">
-                    <h4 className="font-gujarati font-black text-sm text-on-surface dark:text-stone-100">{l.name}</h4>
-                    <p className="font-gujarati text-[10px] text-stone-555 dark:text-stone-400 leading-tight">{l.desc}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </AccordionItem>
-
-          {/* Section 3: Themes */}
-          <AccordionItem 
-            id="themes" 
-            activeId={activeAccordion} 
-            setActiveId={setActiveAccordion} 
-            title="થીમ અને બ્રાન્ડ કલર્સ (Themes & Accent Colors)" 
-            num="૩" 
-            icon="palette"
-          >
-            <div className="space-y-4">
-              <p className="text-xs text-stone-555 dark:text-stone-450">કાર્ડને વ્યાવસાયિક લુક આપવા માટે તૈયાર ૧૫ પ્રીમિયમ થીમ્સમાંથી કોઈપણ એક પસંદ કરો:</p>
+          {currentStep === 3 && (
+            <div className="space-y-6 animate-fade-in">
+              <h3 className="font-gujarati font-black text-lg text-primary flex items-center gap-2 border-b border-primary/10 pb-3">
+                <span className="material-symbols-outlined">storefront</span> કેટલોગ અને ગેલેરી
+              </h3>
               
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {THEMES.map(t => {
-                  const isActive = themeId === t.id;
-                  return (
-                    <button
-                      key={t.id}
-                      onClick={() => setThemeId(t.id)}
-                      className={`relative p-3.5 rounded-2.5xl border-2 text-left transition-all hover:scale-[1.02] active:scale-95 cursor-pointer flex flex-col justify-between h-24 overflow-hidden ${t.bg} ${t.text} ${
-                        isActive ? 'border-amber-500 ring-2 ring-amber-500/20' : 'border-white/10 dark:border-black/25'
-                      }`}
-                    >
-                      <div className="w-full flex items-center justify-between gap-1">
-                        <span className="text-[10px] font-bold truncate max-w-[80%] font-gujarati">{t.name.split(' (')[0]}</span>
-                        <div className={`h-2.5 w-2.5 rounded-full shrink-0 bg-current ${t.accent}`}></div>
-                      </div>
-                      
-                      <div className="w-full space-y-1">
-                        <div className="h-1 w-full bg-white/20 rounded-full"></div>
-                        <div className="h-1 w-2/3 bg-white/10 rounded-full"></div>
-                      </div>
-                      
-                      <div className="w-full flex items-center justify-between mt-1 text-[8px] opacity-75">
-                        <span className="font-label">Theme</span>
-                        {isActive && (
-                          <span className="material-symbols-outlined text-xs text-amber-400 font-bold">check_circle</span>
-                        )}
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Custom Color Selector */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-stone-100 dark:border-stone-850">
-                <div className="space-y-0.5">
-                  <label className="font-bold text-xs text-stone-600 dark:text-stone-300">મુખ્ય કલર સેટ કરો (Accent Brand Color)</label>
-                  <p className="text-[10px] text-stone-400 dark:text-stone-500">બટન અને હાઇલાઇટ્સ માટે તમારો કસ્ટમ બ્રાન્ડ કલર સેટ કરો.</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <input
-                    type="color"
-                    value={customColor}
-                    onChange={e => setCustomColor(e.target.value)}
-                    className="h-9 w-16 rounded-xl border border-stone-200 dark:border-stone-800 cursor-pointer p-1 bg-stone-50 dark:bg-stone-900"
-                  />
-                  <span className="font-headline font-bold text-xs bg-stone-100 dark:bg-stone-900 px-3 py-1.5 rounded-lg border border-stone-200 dark:border-stone-800 text-on-surface dark:text-stone-200">{customColor}</span>
-                </div>
-              </div>
-            </div>
-            <div className="pt-4 mt-4 border-t border-stone-200 dark:border-stone-850 space-y-4">
-              <div className="space-y-0.5">
-                <label className="font-bold text-xs text-stone-600 dark:text-stone-300">બેકગ્રાઉન્ડ પેટર્ન (Background Pattern)</label>
-                <p className="text-[10px] text-stone-400 dark:text-stone-500">કાર્ડના બેકગ્રાઉન્ડ માટે દેશી પેટર્ન પસંદ કરો.</p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {PATTERNS.map(p => (
-                  <button
-                    key={p.id}
-                    onClick={() => setBgPattern(p.id)}
-                    className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all ${bgPattern === p.id ? 'bg-primary text-white shadow-md' : 'bg-stone-100 dark:bg-stone-800 text-stone-500 hover:bg-stone-200 dark:hover:bg-stone-700'}`}
-                  >
-                    {p.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-          </AccordionItem>
-
-          {/* Section 4: Catalog */}
-          <AccordionItem 
-            id="products" 
-            activeId={activeAccordion} 
-            setActiveId={setActiveAccordion} 
-            title="કેટલોગ / પ્રોડક્ટ્સ અને સેવાઓ (Catalog & Services)" 
-            num="૪" 
-            icon="shopping_bag"
-          >
-            <div className="space-y-4">
+<div className="space-y-4">
               <div className="flex justify-between items-center">
                 <p className="text-xs text-stone-555 dark:text-stone-450">તમારા વ્યવસાયની સેવાઓ કે પ્રોડક્ટ્સની કિંમત સાથે વિગત લખો (મહત્તમ ૫):</p>
                 <span className="text-[10px] font-bold bg-primary/10 text-primary px-2.5 py-1 rounded-full">{products.length} / ૫ ઉમેરેલ</span>
@@ -2270,25 +2288,17 @@ END:VCARD`;
                         onClick={handleAddProduct} 
                         className="bg-primary text-white text-xs font-black px-4 py-2.5 rounded-xl cursor-pointer active:scale-95 hover:bg-primary/95 transition-all flex items-center gap-1"
                       >
-                        <span className="material-symbols-outlined text-sm font-bold">add</span> ઉમેરો
+                        {editProductId ? <><span className="material-symbols-outlined text-sm font-bold">save</span> અપડેટ</> : <>{editGalleryId ? <><span className="material-symbols-outlined text-sm font-bold">save</span> અપડેટ</> : <><span className="material-symbols-outlined text-sm font-bold">add</span> ઉમેરો</>}</>}
                       </button>
                     </div>
                   </div>
                 </div>
               )}
             </div>
-          </AccordionItem>
 
-          {/* Section 5: Gallery */}
-          <AccordionItem 
-            id="gallery" 
-            activeId={activeAccordion} 
-            setActiveId={setActiveAccordion} 
-            title="ફોટો અને પ્રદર્શન ગેલેરી (Photo Gallery)" 
-            num="૫" 
-            icon="photo_library"
-          >
-            <div className="space-y-4">
+              <div className="border-t-2 border-dashed border-stone-200 dark:border-stone-800 my-6"></div>
+              
+<div className="space-y-4">
               <div className="flex justify-between items-center">
                 <p className="text-xs text-stone-555 dark:text-stone-450">તમારા ઉત્તમ કામના ફોટા કે આલ્બમ પ્રદર્શન વિગત લખો (મહત્તમ ૧૦):</p>
                 <span className="text-[10px] font-bold bg-primary/10 text-primary px-2.5 py-1 rounded-full">{gallery.length} / ૧૦ ઉમેરેલ</span>
@@ -2351,18 +2361,17 @@ END:VCARD`;
                 </div>
               )}
             </div>
-          </AccordionItem>
 
-          {/* Section 6: Publish */}
-          <AccordionItem 
-            id="share" 
-            activeId={activeAccordion} 
-            setActiveId={setActiveAccordion} 
-            title="પબ્લિશ કરો અને શેર કરો (Publish & Share Links)" 
-            num="૬" 
-            icon="rocket_launch"
-          >
-            <div className="space-y-4">
+            </div>
+          )}
+
+          {currentStep === 4 && (
+            <div className="space-y-6 animate-fade-in">
+              <h3 className="font-gujarati font-black text-lg text-primary flex items-center gap-2 border-b border-primary/10 pb-3">
+                <span className="material-symbols-outlined">rocket_launch</span> પબ્લિશ કરો
+              </h3>
+              
+<div className="space-y-4">
               <p className="text-xs text-stone-600 dark:text-stone-450 leading-relaxed font-gujarati">
                 આ લિંક તદ્દન મફત છે! નીચેના બટનથી લિંક કોપી કરી તમારા ગ્રાહકો, WhatsApp Status, કે વ્યવસાયિક ગ્રુપોમાં સહેલાઈથી મોકલી શકો છો.
               </p>
@@ -2411,8 +2420,32 @@ END:VCARD`;
                 </button>
               </div>
             </div>
-          </AccordionItem>
+
+            </div>
+          )}
           
+          </div>
+
+          {/* Next/Prev Navigation */}
+          <div className="flex items-center justify-between gap-4 pt-2">
+            <button 
+              onClick={() => setCurrentStep(prev => Math.max(1, prev - 1))}
+              disabled={currentStep === 1}
+              className={`flex-1 py-3.5 rounded-2xl font-gujarati font-black text-sm flex items-center justify-center gap-2 transition-all ${currentStep === 1 ? 'bg-stone-100 dark:bg-stone-800 text-stone-400 opacity-50 cursor-not-allowed' : 'bg-stone-200 hover:bg-stone-300 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 active:scale-95 cursor-pointer'}`}
+            >
+              <span className="material-symbols-outlined text-sm">arrow_back</span>
+              પાછળ જાઓ
+            </button>
+            <button 
+              onClick={() => setCurrentStep(prev => Math.min(4, prev + 1))}
+              disabled={currentStep === 4}
+              className={`flex-1 py-3.5 rounded-2xl font-gujarati font-black text-sm flex items-center justify-center gap-2 transition-all ${currentStep === 4 ? 'bg-stone-100 dark:bg-stone-800 text-stone-400 opacity-50 cursor-not-allowed' : 'bg-primary hover:bg-[#0D9488] text-white active:scale-95 cursor-pointer shadow-md hover:shadow-lg'}`}
+            >
+              આગળ વધો
+              <span className="material-symbols-outlined text-sm">arrow_forward</span>
+            </button>
+          </div>
+
         </div>
 
         {/* Right Side Live Preview Mockup */}

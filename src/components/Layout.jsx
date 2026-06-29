@@ -158,7 +158,7 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
   const navItems = [
     { path: '/',           icon: 'home',         label: 'હોમ'      },
     { path: '/devotional', icon: 'auto_stories',  label: 'ભક્તિ'    },
-    { path: '/health',     icon: 'favorite',      label: 'સ્વાસ્થ્ય' },
+    { path: '/games',      icon: 'sports_esports',label: 'રમતો'    },
     { path: '/tools',      icon: 'construction',  label: 'સાધનો'    },
     { path: '/community',  icon: 'groups',        label: 'બેઠક'     },
   ];

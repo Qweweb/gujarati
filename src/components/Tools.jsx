@@ -443,6 +443,89 @@ const Tools = () => {
             </button>
           </section>
         )}
+    </div>
+      
+      {/* HEALTH BANNER */}
+      <button 
+        onClick={() => navigate('/health')}
+        className="w-full relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-500 rounded-[2rem] p-5 sm:p-6 shadow-lg shadow-teal-500/20 active:scale-95 transition-all text-left flex items-center gap-4 group border border-emerald-400/30"
+      >
+        <div className="absolute right-0 top-0 opacity-10 pointer-events-none transform translate-x-4 -translate-y-4">
+          <span className="material-symbols-outlined text-[100px]">health_and_safety</span>
+        </div>
+        <div className="h-14 w-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0 border border-white/20 group-hover:scale-110 transition-transform shadow-inner">
+          <span className="material-symbols-outlined text-white text-3xl">favorite</span>
+        </div>
+        <div className="space-y-1 relative z-10 flex-1">
+          <h3 className="font-gujarati font-black text-xl text-white">સ્વાસ્થ્ય અને આયુર્વેદ</h3>
+          <p className="font-gujarati text-teal-50 text-[10px] sm:text-xs">દાદીમાના નુસખા અને ડેઇલી હેલ્થ ટિપ્સ</p>
+        </div>
+        <div className="shrink-0 bg-white/20 p-2 rounded-full backdrop-blur-sm">
+          <span className="material-symbols-outlined text-white text-sm">chevron_right</span>
+        </div>
+      </button>
+
+      {/* COMMUNITY AND CARDS SECTION */}
+      <div className="space-y-4 pt-2">
+        {/* ROW 1: 2 Cards (Digital Bethak & My Society) */}
+        <div className="grid grid-cols-2 gap-4">
+          <section 
+            onClick={() => navigate("/community")}
+            className="bg-[#2D3748] p-5 rounded-3xl text-center flex flex-col items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform border border-[#0D9488]/30 relative overflow-hidden cursor-pointer min-h-[140px]"
+          >
+            <div className="absolute right-[-10px] top-[-10px] opacity-10 select-none pointer-events-none text-7xl">
+              groups
+            </div>
+            <div className="h-12 w-12 bg-[#0D9488]/20 rounded-2xl flex items-center justify-center relative z-10 shrink-0">
+              <span className="material-symbols-outlined text-[#0D9488] text-2xl font-bold">groups</span>
+            </div>
+            <div className="relative z-10 mt-1">
+              <h2 className="font-gujarati font-black text-base text-[#F4F4F0]">ડિજિટલ બેઠક</h2>
+              <p className="font-gujarati text-[10px] text-teal-200 mt-1">ગામના સમાચાર ને ચર્ચા</p>
+            </div>
+          </section>
+
+          <section 
+            onClick={() => navigate("/society")}
+            className="bg-[#F4F4F0] dark:bg-[#1E1A18] p-5 rounded-3xl text-center flex flex-col items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform border border-[#0D9488]/30 relative overflow-hidden cursor-pointer min-h-[140px]"
+          >
+            <div className="absolute right-[-10px] top-[-10px] opacity-[0.03] dark:opacity-5 select-none pointer-events-none text-7xl">
+              holiday_village
+            </div>
+            <div className="h-12 w-12 bg-teal-50 dark:bg-teal-900/30 rounded-2xl flex items-center justify-center relative z-10 shrink-0">
+              <span className="material-symbols-outlined text-[#0D9488] text-2xl font-bold">holiday_village</span>
+            </div>
+            <div className="relative z-10 mt-1">
+              <h2 className="font-gujarati font-black text-base text-[#2D3748] dark:text-[#F4F4F0]">મારી સોસાયટી</h2>
+              <p className="font-gujarati text-[10px] text-[#0D9488] font-bold mt-1">મેનેજમેન્ટ અને સુવિધા</p>
+            </div>
+          </section>
+        </div>
+
+        {/* ROW 2: 1 Card (Bhakti Cards Maker) */}
+        <section 
+          id="cards-banner"
+          onClick={() => navigate("/devotional-cards")}
+          className="bg-[#F4F4F0] dark:bg-[#1E1A18] p-6 rounded-[2rem] shadow-sm relative overflow-hidden flex flex-row items-center justify-between gap-4 border border-[#0D9488]/30 cursor-pointer active:scale-95 transition-transform mt-4"
+        >
+          <div className="absolute right-0 top-0 opacity-[0.03] dark:opacity-5 select-none pointer-events-none text-8xl translate-x-4 -translate-y-4">
+            🕉️
+          </div>
+          <div className="flex-1 space-y-1 relative z-10 text-left pr-8">
+            <span className="bg-[#2D3748]/10 text-[#2D3748] dark:bg-[#0D9488]/10 dark:text-[#0D9488] border border-[#2D3748]/20 dark:border-[#0D9488]/20 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest inline-block mb-1">
+              નવું ફિચર 🌟
+            </span>
+            <h3 className="font-headline font-black text-2xl text-[#2D3748] dark:text-[#F4F4F0] tracking-wide">
+              ભક્તિ Cards મેકર
+            </h3>
+            <p className="font-gujarati text-[#0D9488] font-bold text-xs max-w-[200px] mt-1">
+              તમારું નામ અને ફોટો લગાવી સુંદર ભગવાનના સુવિચાર બનાવો.
+            </p>
+          </div>
+          <div className="h-10 w-10 bg-[#2D3748] rounded-full flex items-center justify-center relative z-10 shrink-0 shadow-md text-[#F4F4F0]">
+            <span className="material-symbols-outlined font-bold text-lg">arrow_forward</span>
+          </div>
+        </section>
       </div>
 
       {/* QUICK SHORTCUT LINKS SECTION */}

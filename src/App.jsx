@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard';
 import HealthAssistant from './components/HealthAssistant';
 import DevotionalHub from './components/DevotionalHub';
 import StatusGenerator from './components/StatusGenerator';
+import PostMaker from './components/PostMaker';
 import BiodataMaker from './components/BiodataMaker';
 import Community from './components/Community';
 import Tools from './components/Tools';
@@ -409,6 +410,7 @@ function App() {
                 <Route path="/community" element={<FeatureGuard featureKey="community"><Community /></FeatureGuard>} />
                 <Route path="/tools" element={<FeatureGuard featureKey="tools"><Tools /></FeatureGuard>} />
                 <Route path="/status" element={<StatusGenerator />} />
+                <Route path="/post-maker" element={<FeatureGuard featureKey="post_maker"><PostMaker /></FeatureGuard>} />
                 <Route path="/biodata" element={<FeatureGuard featureKey="biodata"><BiodataMaker /></FeatureGuard>} />
                 <Route path="/offline" element={<OfflineSettings />} />
                 <Route path="/settings" element={<Settings darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
