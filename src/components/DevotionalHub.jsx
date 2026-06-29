@@ -1088,34 +1088,59 @@ const DevotionalHub = () => {
                         આ સમયગાળા માટે કોઈ તહેવાર કે વિશેષ દિવસો ઉપલબ્ધ નથી.
                     </div>
                 ) : (
-                    festivals.map((fest, idx) => (
-                        <div key={idx} className="flex gap-4 p-5 bg-[#FFFFFF] rounded-2xl shadow-sm border border-[#E8E6E3] group border-l-8 border-l-[#0D9488] hover:shadow-md transition-shadow">
-                            <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-inner flex-shrink-0 bg-stone-100 flex items-center justify-center relative">
-                                <span className="material-symbols-outlined text-stone-300 text-4xl absolute">festival</span>
-                                <img 
-                                    src={fest.image} 
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform relative z-10" 
-                                    alt={fest.title}
-                                    onError={(e) => {
-                                        e.target.onerror = null;
-                                        e.target.style.display = 'none';
-                                    }}
-                                />
+                    festivals.map((fest, idx) => {
+                        const getEmoji = (title) => {
+                            if (title.includes('ઉત્તરાયણ')) return '🪁';
+                            if (title.includes('શિવરાત્રિ')) return '🕉️';
+                            if (title.includes('હોળી') || title.includes('ધુળેટી')) return '🎨';
+                            if (title.includes('રામ નવમી') || title.includes('દશેરા')) return '🏹';
+                            if (title.includes('રથયાત્રા')) return '🛕';
+                            if (title.includes('જન્માષ્ટમી')) return '🦚';
+                            if (title.includes('ગણેશ')) return '🐘';
+                            if (title.includes('નવરાત્રી')) return '💃';
+                            if (title.includes('દિવાળી') || title.includes('ધનતેરસ')) return '🪔';
+                            if (title.includes('નૂતન વર્ષ')) return '🙏';
+                            if (title.includes('ભાઈબીજ')) return '👫';
+                            if (title.includes('રક્ષાબંધન')) return '🎀';
+                            if (title.includes('હનુમાન')) return '🐒';
+                            if (title.includes('વસંત')) return '📚';
+                            if (title.includes('અખાત્રીજ')) return '🪙';
+                            if (title.includes('ગુરુ પૂર્ણિમા')) return '🕉️';
+                            if (title.includes('નાગ પંચમી')) return '🐍';
+                            if (title.includes('શીતળા સાતમ')) return '🌿';
+                            if (title.includes('વટ સાવિત્રી')) return '🌳';
+                            if (title.includes('કરવા ચોથ')) return '🌙';
+                            return '✨';
+                        };
+                        return (
+                            <div key={idx} className="flex gap-4 p-5 bg-[#FFFFFF] rounded-2xl shadow-sm border border-[#E8E6E3] group border-l-8 border-l-[#0D9488] hover:shadow-md transition-shadow">
+                                <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-inner flex-shrink-0 bg-stone-100 flex items-center justify-center relative">
+                                    <span className="text-4xl absolute">{getEmoji(fest.title)}</span>
+                                    <img 
+                                        src={fest.image} 
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform relative z-10" 
+                                        alt={fest.title}
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.style.display = 'none';
+                                        }}
+                                    />
+                                </div>
+                                <div className="flex-1 flex flex-col justify-center">
+                                    <p className="font-gujarati text-[#0D9488] text-[11px] font-bold uppercase tracking-wider">{fest.date} • {fest.tithi} • {fest.weekday}</p>
+                                    <h4 className="font-gujarati font-black text-xl sm:text-2xl text-[#2D3748] mt-1">{fest.title}</h4>
+                                    <p className="font-gujarati text-[#1A1614]/80 text-xs sm:text-sm mt-1 line-clamp-1">{fest.significance}</p>
+                                    <button 
+                                        onClick={() => setSelectedFestival(fest)}
+                                        className="mt-2.5 flex items-center gap-1.5 font-gujarati text-xs sm:text-sm font-bold text-[#78716C] hover:text-[#0D9488] transition-colors w-fit"
+                                    >
+                                        <span className="material-symbols-outlined text-base sm:text-lg">menu_book</span>
+                                        વિશેષ મહત્વ અને કથા જુઓ
+                                    </button>
+                                </div>
                             </div>
-                            <div className="flex-1 flex flex-col justify-center">
-                                <p className="font-gujarati text-[#0D9488] text-[11px] font-bold uppercase tracking-wider">{fest.date} • {fest.tithi} • {fest.weekday}</p>
-                                <h4 className="font-gujarati font-black text-xl sm:text-2xl text-[#2D3748] mt-1">{fest.title}</h4>
-                                <p className="font-gujarati text-[#1A1614]/80 text-xs sm:text-sm mt-1 line-clamp-1">{fest.significance}</p>
-                                <button 
-                                    onClick={() => setSelectedFestival(fest)}
-                                    className="mt-2.5 flex items-center gap-1.5 font-gujarati text-xs sm:text-sm font-bold text-[#78716C] hover:text-[#0D9488] transition-colors w-fit"
-                                >
-                                    <span className="material-symbols-outlined text-base sm:text-lg">menu_book</span>
-                                    વિશેષ મહત્વ અને કથા જુઓ
-                                </button>
-                            </div>
-                        </div>
-                    ))
+                        );
+                    })
                 )}
             </div>
         </div>
