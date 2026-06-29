@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { calculateChoghadiyas } from '../utils/choghadiya_helper';
 import { API_ENDPOINTS } from '../config/api';
-import ShareButton from './ShareButton';
 import { useTheme } from '../context/ThemeContext';
 import { supabase } from '../supabaseClient';
 import { SUVICHARS } from '../data/suvichars';
@@ -386,7 +385,6 @@ const Dashboard = () => {
           <p style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:11, fontWeight:700, letterSpacing:'0.06em', textTransform:'uppercase', color:'rgba(199,210,254,0.8)', margin:0 }}>
             🔔 આજનો સુવિચાર
           </p>
-          <ShareButton sectionId="daily-suvichar" successMessage="✨ સુવિચાર શેર!" />
         </div>
         <div style={{ position:'relative', padding:'4px 16px' }}>
           <span style={{ fontFamily:'"Noto Serif Gujarati",serif', fontSize:44, lineHeight:1, color:'#818CF8', opacity:0.4, position:'absolute', top:-4, left:0 }}>"</span>
@@ -594,7 +592,6 @@ const Dashboard = () => {
             <p className="type-overline" style={{ color:'#166534', marginBottom:4 }}>સ્વાસ્થ્ય ટિપ</p>
             <p className="type-gu-body" style={{ color:'#166534', fontWeight:600, margin:0 }}>{data.healthTip}</p>
           </div>
-          <ShareButton sectionId="health-tip" successMessage="🍀 ટિપ શેર!" />
         </div>
       )}
 
