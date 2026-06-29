@@ -1067,49 +1067,57 @@ const DevotionalHub = () => {
 
       {/* Featured Festivals Section - KEPT AS TEAL/MAROON AS REQUESTED Header */}
 
-      <section id="festivals-section" className="space-y-6">
-        <div className="relative bg-[#F8FAFC] p-8 rounded-[2.5rem] text-[#2D3748] shadow-sm overflow-hidden group border border-[#E8E6E3]">
-            <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#2D3748_1px,transparent_1px)] [background-size:20px_20px]"></div>
-            <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#0D9488]"></div>
-            <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[#0D9488]"></div>
-            
-            <div className="relative flex justify-between items-center z-10">
+      <section id="festivals-section" className="relative bg-[#F8FAFC] rounded-[2.5rem] shadow-sm overflow-hidden border border-[#E8E6E3] p-6 sm:p-8">
+        <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#2D3748_1px,transparent_1px)] [background-size:20px_20px]"></div>
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#0D9488]"></div>
+        
+        <div className="relative z-10 space-y-6">
+            <div className="flex justify-between items-center pb-4 border-b border-stone-200/50">
                 <div className="space-y-1">
                     <div className="flex items-center gap-3">
-                        <h2 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-3xl">તહેવાર-વ્રતો</h2>
+                        <h2 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-3xl text-[#2D3748]">તહેવાર-વ્રતો</h2>
                     </div>
                     <p className="font-gujarati text-[#78716C] text-sm">{festivalSectionTitle}</p>
                 </div>
                 <span className="material-symbols-outlined text-4xl text-[#0D9488]">event_available</span>
             </div>
-        </div>
-        
-        <div className="space-y-4">
-            {festivals.length === 0 ? (
-                <div className="p-6 bg-[#FFFFFF] rounded-3xl shadow-sm border border-[#E8E6E3] text-center font-gujarati text-[#1A1614]">
-                    આ સમયગાળા માટે કોઈ તહેવાર કે વિશેષ દિવસો ઉપલબ્ધ નથી.
-                </div>
-            ) : (
-                festivals.map((fest, idx) => (
-                    <div key={idx} className="flex gap-4 p-5 bg-[#FFFFFF] rounded-3xl shadow-sm border border-[#E8E6E3] group border-l-8 border-l-[#0D9488]">
-                        <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-inner flex-shrink-0">
-                            <img src={fest.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform" alt={fest.title} />
-                        </div>
-                        <div className="flex-1 flex flex-col justify-center">
-                            <p className="font-gujarati text-[#0D9488] text-xs font-bold uppercase tracking-wider">{fest.date} • {fest.tithi} • {fest.weekday}</p>
-                            <h4 className="font-gujarati font-black text-2xl text-[#2D3748] mt-1">{fest.title}</h4>
-                            <p className="font-gujarati text-[#1A1614]/80 text-sm mt-1 line-clamp-1">{fest.significance}</p>
-                            <button 
-                                onClick={() => setSelectedFestival(fest)}
-                                className="mt-2.5 flex items-center gap-1.5 font-gujarati text-sm font-bold text-[#78716C] hover:text-[#0D9488] transition-colors w-fit"
-                            >
-                                <span className="material-symbols-outlined text-lg">menu_book</span>
-                                વિશેષ મહત્વ અને કથા જુઓ
-                            </button>
-                        </div>
+            
+            <div className="space-y-4">
+                {festivals.length === 0 ? (
+                    <div className="p-6 bg-[#FFFFFF] rounded-3xl shadow-sm border border-[#E8E6E3] text-center font-gujarati text-[#1A1614]">
+                        આ સમયગાળા માટે કોઈ તહેવાર કે વિશેષ દિવસો ઉપલબ્ધ નથી.
                     </div>
-                ))
-            )}
+                ) : (
+                    festivals.map((fest, idx) => (
+                        <div key={idx} className="flex gap-4 p-5 bg-[#FFFFFF] rounded-2xl shadow-sm border border-[#E8E6E3] group border-l-8 border-l-[#0D9488] hover:shadow-md transition-shadow">
+                            <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-inner flex-shrink-0 bg-stone-100 flex items-center justify-center relative">
+                                <span className="material-symbols-outlined text-stone-300 text-4xl absolute">festival</span>
+                                <img 
+                                    src={fest.image} 
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform relative z-10" 
+                                    alt={fest.title}
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.style.display = 'none';
+                                    }}
+                                />
+                            </div>
+                            <div className="flex-1 flex flex-col justify-center">
+                                <p className="font-gujarati text-[#0D9488] text-[11px] font-bold uppercase tracking-wider">{fest.date} • {fest.tithi} • {fest.weekday}</p>
+                                <h4 className="font-gujarati font-black text-xl sm:text-2xl text-[#2D3748] mt-1">{fest.title}</h4>
+                                <p className="font-gujarati text-[#1A1614]/80 text-xs sm:text-sm mt-1 line-clamp-1">{fest.significance}</p>
+                                <button 
+                                    onClick={() => setSelectedFestival(fest)}
+                                    className="mt-2.5 flex items-center gap-1.5 font-gujarati text-xs sm:text-sm font-bold text-[#78716C] hover:text-[#0D9488] transition-colors w-fit"
+                                >
+                                    <span className="material-symbols-outlined text-base sm:text-lg">menu_book</span>
+                                    વિશેષ મહત્વ અને કથા જુઓ
+                                </button>
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
         </div>
       </section>
 
