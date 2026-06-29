@@ -1860,12 +1860,12 @@ const AdminDashboard = () => {
                       <span className="text-[10px] text-emerald-500 font-bold mt-1">છેલ્લા ૨૪ કલાકમાં</span>
                     </div>
                     <div className="bg-white dark:bg-stone-905 p-5 rounded-3xl border border-stone-200/50 dark:border-stone-850 shadow-sm flex flex-col justify-between">
-                      <span className="text-stone-400 font-gujarati text-xs">નવા યુઝર્સ (છેલ્લા ૭ દિવસ)</span>
+                      <span className="text-stone-400 font-gujarati text-xs">નવા યુઝર્સ (છેલ્લા ૨૪ કલાક)</span>
                       <span className="font-headline font-black text-2xl text-blue-600 mt-2">
                         {users.filter(u => {
-                          const sevenDaysAgo = new Date();
-                          sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-                          return new Date(u.created_at) >= sevenDaysAgo;
+                          const oneDayAgo = new Date();
+                          oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+                          return new Date(u.created_at) >= oneDayAgo;
                         }).length}
                       </span>
                       <span className="text-[10px] text-blue-500 font-bold mt-1">નવા ઇન્સ્ટોલેશન્સ</span>
