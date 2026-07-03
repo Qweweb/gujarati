@@ -60,6 +60,33 @@ export default function LeaderboardUnified({
 }) {
   const t = THEMES[theme];
 
+  // Live profile overrides so any user-specific row instantly matches their local settings
+  const localProfile = JSON.parse(localStorage.getItem('user_profile') || '{}');
+  const liveUserName = localProfile.name || localStorage.getItem('google_name') || "તમે";
+  const liveAvatar = localProfile.avatar || localStorage.getItem('google_avatar') || null;
+  const liveCity = localProfile.city || null;
+
+  const enrichedData = data.map(user => {
+    // Determine if this row represents the active user
+    const isMe = user.isUser || 
+                 (user.name && (
+                   user.name.includes(liveUserName) || 
+                   user.name.includes("(તમે)") || 
+                   user.name.includes("તમે") ||
+                   user.name === "તમે (User)"
+                 ));
+    if (isMe) {
+      return {
+        ...user,
+        name: liveUserName + " (તમે)",
+        avatar: liveAvatar || user.avatar,
+        city: liveCity || user.city || "અમદાવાદ",
+        isUser: true
+      };
+    }
+    return user;
+  });
+
   /* ── Themed variant (kathiawar / kite) ─────────────────────────── */
   if (t) {
     return (
@@ -83,7 +110,7 @@ export default function LeaderboardUnified({
 
         {/* List */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', overflowY: 'auto', flex: 1, paddingRight: '4px' }}>
-          {data.map((user, idx) => (
+          {enrichedData.map((user, idx) => (
             <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', ...(user.isUser ? t.itemUser : t.itemBase) }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{
@@ -121,7 +148,7 @@ export default function LeaderboardUnified({
               </div>
             </div>
           ))}
-          {data.length === 0 && (
+          {enrichedData.length === 0 && (
             <div style={{ textAlign: 'center', padding: '20px', color: t.emptyColor, fontWeight: 700, fontSize: '13px' }}>કોઈ ડેટા મળ્યો નથી.</div>
           )}
         </div>
@@ -144,9 +171,9 @@ export default function LeaderboardUnified({
           {title}
         </h3>
         <div className="flex items-center gap-2">
-          {onUserClick && data.find(u => u.isUser) && (
+          {onUserClick && enrichedData.find(u => u.isUser) && (
             <button
-              onClick={() => onUserClick(data.find(u => u.isUser))}
+              onClick={() => onUserClick(enrichedData.find(u => u.isUser))}
               className="h-9 w-9 bg-primary/10 hover:bg-primary/20 text-primary rounded-full flex items-center justify-center transition active:scale-95"
               title="તમારા આંકડા અને સ્કોર વિગત"
             >
@@ -156,7 +183,7 @@ export default function LeaderboardUnified({
           {onClose && (
             <button
               onClick={onClose}
-              className="h-9 w-9 bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-300 rounded-full flex items-center justify-center transition active:scale-95"
+              className="h-9 w-9 bg-stone-100 hover:bg-stone-200 dark:bg-stone-850 dark:hover:bg-stone-700 text-stone-600 dark:text-stone-300 rounded-full flex items-center justify-center transition active:scale-95"
             >
               <span className="material-symbols-outlined text-xl font-bold">close</span>
             </button>
@@ -165,8 +192,8 @@ export default function LeaderboardUnified({
       </div>
 
       <div className="space-y-3 font-gujarati overflow-y-auto flex-1 pr-1 pb-2">
-        {data.map((user, idx) => (
-          <div key={idx} className={`flex items-center justify-between p-4 rounded-2xl border ${user.isUser ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-300 shadow-sm' : 'border-stone-100 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-950/20'}`}>
+        {enrichedData.map((user, idx) => (
+          <div key={idx} className={`flex items-center justify-between p-4 rounded-2xl border ${user.isUser ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-300 shadow-sm' : 'border-stone-100 dark:border-stone-850 bg-stone-50/50 dark:bg-stone-950/20'}`}>
             <div className="flex items-center gap-4">
               <span className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-sm ${idx === 0 ? 'bg-amber-500 text-white' : idx === 1 ? 'bg-stone-400 text-white' : idx === 2 ? 'bg-amber-700 text-white' : 'bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300'}`}>
                 {toGujaratiNum(idx + 1)}
@@ -207,7 +234,7 @@ export default function LeaderboardUnified({
             </div>
           </div>
         ))}
-        {data.length === 0 && (
+        {enrichedData.length === 0 && (
           <div className="text-center p-6 text-stone-400 font-bold text-sm">કોઈ ડેટા મળ્યો નથી.</div>
         )}
       </div>
@@ -215,9 +242,9 @@ export default function LeaderboardUnified({
       {userRank > 0 && (
         <div className="flex justify-between items-center text-xs text-stone-500 font-bold px-2 shrink-0 pt-3 mt-1 border-t border-stone-100 dark:border-stone-800">
           <span>તમારો ક્રમ: #{toGujaratiNum(userRank)}</span>
-          {onUserClick && data.find(u => u.isUser) && (
+          {onUserClick && enrichedData.find(u => u.isUser) && (
             <button 
-              onClick={() => onUserClick(data.find(u => u.isUser))} 
+              onClick={() => onUserClick(enrichedData.find(u => u.isUser))} 
               className="text-primary font-black hover:underline flex items-center gap-1"
             >
               તમારો સ્કોર વિગત 📊

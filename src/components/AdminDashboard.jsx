@@ -4,6 +4,7 @@ import { uploadToCloudinary } from '../utils/cloudinaryHelper';
 import { supabase } from '../supabaseClient';
 import { DISTRICTS, TALUKAS, getDistrictName, getTalukaName } from '../utils/location_database';
 import { AI_PROVIDERS, getAIConfig, saveAIConfig, testAIConnection } from '../utils/aiService';
+import { defaultPostMakerConfig } from './PostMaker';
 
 const DEFAULT_PIN = "1008";
 
@@ -84,6 +85,16 @@ const AdminDashboard = () => {
   ]);
   const [newPromoCode, setNewPromoCode] = useState("");
   const [newPromoDiscount, setNewPromoDiscount] = useState("50%");
+
+  // Post Maker Layout & Theme Configurator States
+  const [postMakerConfig, setPostMakerConfig] = useState(null);
+  const [pmActiveCategory, setPmActiveCategory] = useState("suvichar");
+  const [previewBgIndex, setPreviewBgIndex] = useState(0);
+  const [isLoadingPmConfig, setIsLoadingPmConfig] = useState(true);
+  const [isSavingPmConfig, setIsSavingPmConfig] = useState(false);
+  const [uploadingPmBg, setUploadingPmBg] = useState(false);
+  const [pmNewBgUrl, setPmNewBgUrl] = useState("");
+  const [pmNewBgText, setPmNewBgText] = useState("");
 
   // ========================================================
   // MARKETING OFFERS STATE & LOGIC
@@ -381,6 +392,127 @@ const AdminDashboard = () => {
 
   const handleBackspace = () => {
     setPin(pin.slice(0, -1));
+  };
+
+  // Fetch configuration on activeTab change
+  useEffect(() => {
+    const fetchPmConfig = async () => {
+      setIsLoadingPmConfig(true);
+      try {
+        const { data, error } = await supabase
+          .from('app_settings')
+          .select('value')
+          .eq('key', 'post_maker_config')
+          .single();
+        if (!error && data) {
+          setPostMakerConfig(JSON.parse(data.value));
+        } else {
+          setPostMakerConfig(JSON.parse(JSON.stringify(defaultPostMakerConfig)));
+        }
+      } catch (err) {
+        console.error(err);
+        setPostMakerConfig(JSON.parse(JSON.stringify(defaultPostMakerConfig)));
+      } finally {
+        setIsLoadingPmConfig(false);
+      }
+    };
+    
+    if (activeTab === "quotes") {
+      fetchPmConfig();
+    }
+  }, [activeTab]);
+
+  const handleResetPmLayout = () => {
+    const updated = { ...postMakerConfig };
+    const defaultLayout = defaultPostMakerConfig[pmActiveCategory]?.layout || defaultPostMakerConfig.good_morning.layout;
+    if (!updated[pmActiveCategory]) {
+      updated[pmActiveCategory] = { bgs: [], enabled: true };
+    }
+    updated[pmActiveCategory].layout = { ...defaultLayout };
+    setPostMakerConfig(updated);
+  };
+
+  const savePostMakerConfig = async () => {
+    setIsSavingPmConfig(true);
+    try {
+      const { error } = await supabase
+        .from('app_settings')
+        .upsert(
+          { key: 'post_maker_config', value: JSON.stringify(postMakerConfig) },
+          { onConflict: 'key' }
+        );
+      if (error) throw error;
+      alert("પોસ્ટ મેકર કસ્ટમાઇઝેશન સફળતાપૂર્વક સેવ થઈ ગયું છે!");
+    } catch (e) {
+      console.error(e);
+      alert("સેવ કરવામાં ભૂલ આવી: " + e.message);
+    } finally {
+      setIsSavingPmConfig(false);
+    }
+  };
+
+  const handleDeletePmBackground = (index) => {
+    const updated = { ...postMakerConfig };
+    if (updated[pmActiveCategory]?.bgs) {
+      updated[pmActiveCategory].bgs = updated[pmActiveCategory].bgs.filter((_, i) => i !== index);
+      if (previewBgIndex >= updated[pmActiveCategory].bgs.length) {
+        setPreviewBgIndex(Math.max(0, updated[pmActiveCategory].bgs.length - 1));
+      }
+      setPostMakerConfig(updated);
+    }
+  };
+
+  const handleAddPmBackgroundUrl = () => {
+    if (!pmNewBgUrl.trim()) return;
+    const updated = { ...postMakerConfig };
+    if (!updated[pmActiveCategory]) {
+      updated[pmActiveCategory] = { bgs: [], layout: { ...defaultPostMakerConfig[pmActiveCategory].layout }, enabled: true };
+    }
+    if (!updated[pmActiveCategory].bgs) {
+      updated[pmActiveCategory].bgs = [];
+    }
+    updated[pmActiveCategory].bgs.push({ url: pmNewBgUrl, text: pmNewBgText });
+    setPostMakerConfig(updated);
+    setPmNewBgUrl("");
+    setPmNewBgText("");
+  };
+
+  const handleAddPmBackground = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingPmBg(true);
+    try {
+      const url = await uploadToCloudinary(file);
+      if (url) {
+        const updated = { ...postMakerConfig };
+        if (!updated[pmActiveCategory]) {
+          updated[pmActiveCategory] = { bgs: [], layout: { ...defaultPostMakerConfig[pmActiveCategory].layout }, enabled: true };
+        }
+        if (!updated[pmActiveCategory].bgs) {
+          updated[pmActiveCategory].bgs = [];
+        }
+        updated[pmActiveCategory].bgs.push({ url, text: pmNewBgText });
+        setPostMakerConfig(updated);
+        setPmNewBgText("");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("અપલોડ નિષ્ફળ ગયું.");
+    } finally {
+      setUploadingPmBg(false);
+    }
+  };
+
+  const updatePmLayoutParam = (param, val) => {
+    const updated = { ...postMakerConfig };
+    if (!updated[pmActiveCategory]) {
+      updated[pmActiveCategory] = { bgs: [], layout: { ...defaultPostMakerConfig[pmActiveCategory].layout }, enabled: true };
+    }
+    if (!updated[pmActiveCategory].layout) {
+      updated[pmActiveCategory].layout = { ...defaultPostMakerConfig[pmActiveCategory].layout };
+    }
+    updated[pmActiveCategory].layout[param] = parseFloat(val);
+    setPostMakerConfig(updated);
   };
 
   // Add Custom Quote
@@ -1244,7 +1376,7 @@ const AdminDashboard = () => {
 
           {/* TAB 3: CUSTOM QUOTES */}
           {activeTab === "quotes" && (
-            <div className="space-y-8">
+            <div className="space-y-8 animate-fade-in">
               
               {/* Add Quote Form */}
               <div className="bg-white dark:bg-stone-900 rounded-[2rem] p-6 border border-stone-200/50 dark:border-stone-850 shadow-sm">
@@ -1258,7 +1390,7 @@ const AdminDashboard = () => {
                         onChange={(e) => setNewQuoteCategory(e.target.value)}
                         className="w-full px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 font-gujarati text-sm"
                       >
-                        <option value="bhakti">ભક્તિ (Devotional)</option>
+                        <option value="bhakti">ધાર્મિક (Devotional)</option>
                         <option value="morning">સવાર (Morning)</option>
                         <option value="night">રાત (Night)</option>
                         <option value="festival">તહેવાર (Festival)</option>
@@ -1271,7 +1403,7 @@ const AdminDashboard = () => {
                     <div className="md:col-span-2">
                       <label className="block text-xs font-gujarati font-bold text-stone-500 mb-1">સંદર્ભ (Source)</label>
                       <input 
-                        type="text"
+                        type="text" 
                         placeholder="દા.ત. શ્રીમદ્ ભગવદ્ ગીતા, કબીરજી કે લેખક"
                         value={newQuoteSource}
                         onChange={(e) => setNewQuoteSource(e.target.value)}
@@ -1302,9 +1434,428 @@ const AdminDashboard = () => {
                 </form>
               </div>
 
+              {/* POST MAKER TEMPLATES AND POSITIONS */}
+              <div className="bg-white dark:bg-stone-900 rounded-[2rem] p-6 border border-stone-200/50 dark:border-stone-850 shadow-sm space-y-6">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-stone-100 dark:border-stone-800">
+                  <div>
+                    <h3 className="font-headline font-black text-base text-stone-900 dark:text-stone-100">૨. પોસ્ટ મેકર લેઆઉટ અને બેકગ્રાઉન્ડ સેટિંગ્સ</h3>
+                    <p className="text-stone-400 font-gujarati text-[11px] mt-0.5">કેટેગરી મુજબ બેકગ્રાઉન્ડ ઈમેજ અપલોડ કરો અને બધા તત્વોની સાઇઝ અને સ્થાન નક્કી કરો.</p>
+                  </div>
+                  
+                  {/* Category dropdown & hide/show switch selector */}
+                  <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex items-center gap-2 bg-stone-50 dark:bg-stone-950 px-3 py-1.5 rounded-xl border border-stone-200 dark:border-stone-850">
+                      <input 
+                        type="checkbox" 
+                        id="catEnabledToggle"
+                        checked={(postMakerConfig?.[pmActiveCategory] || defaultPostMakerConfig[pmActiveCategory])?.enabled !== false}
+                        onChange={(e) => {
+                          const updated = { ...postMakerConfig };
+                          if (!updated[pmActiveCategory]) {
+                            updated[pmActiveCategory] = { bgs: [], layout: { ...defaultPostMakerConfig.good_morning.layout } };
+                          }
+                          updated[pmActiveCategory].enabled = e.target.checked;
+                          setPostMakerConfig(updated);
+                        }}
+                        className="accent-amber-500 w-4 h-4 cursor-pointer"
+                      />
+                      <label htmlFor="catEnabledToggle" className="font-gujarati font-bold text-xs text-stone-700 dark:text-stone-300 cursor-pointer select-none">
+                        આ કેટેગરી ચાલુ રાખો (Show)
+                      </label>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className="font-gujarati font-bold text-xs text-stone-500">કેટેગરી પસંદ કરો:</span>
+                      <select
+                        value={pmActiveCategory}
+                        onChange={(e) => {
+                          setPmActiveCategory(e.target.value);
+                          setPreviewBgIndex(0);
+                        }}
+                        className="px-3 py-1.5 rounded-xl border border-stone-200 dark:border-stone-850 bg-stone-50 dark:bg-stone-950 font-gujarati text-xs font-bold"
+                      >
+                        <option value="good_morning">સુપ્રભાત</option>
+                        <option value="dharmik">ધાર્મિક</option>
+                        <option value="prernadayak">પ્રેરણાદાયક</option>
+                        <option value="suvichar">સુવિચાર</option>
+                        <option value="tehvar">તહેવાર</option>
+                        <option value="anya">અન્ય</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {isLoadingPmConfig ? (
+                  <div className="py-12 text-center text-stone-400 font-gujarati text-xs">લોડ થઈ રહ્યું છે...</div>
+                ) : (
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    
+                    {/* Live Preview Column - Sticky on Desktop */}
+                    <div className="lg:col-span-5 lg:sticky lg:top-8 h-fit flex flex-col items-center gap-4 bg-stone-50 dark:bg-stone-950/40 p-6 rounded-[2rem] border border-stone-100/50 dark:border-stone-850/50 shadow-inner">
+                      <div className="text-center font-gujarati text-xs font-bold text-stone-400 mb-1">લાઇવ પ્રિવ્યૂ (1080x1350)</div>
+                      
+                      {/* Scaled Preview Div */}
+                      {(() => {
+                        const s = 280 / 1080;
+                        const config = postMakerConfig[pmActiveCategory] || defaultPostMakerConfig[pmActiveCategory];
+                        const layout = config.layout;
+                        const currentBgs = config.bgs || [];
+                        const previewBg = currentBgs[previewBgIndex]?.url || '/quote_template_green.jpg';
+                        return (
+                          <div 
+                            className="relative rounded-3xl overflow-hidden shadow-2xl border border-stone-200 bg-stone-900"
+                            style={{ width: '280px', height: '350px', position: 'relative' }}
+                          >
+                            <img src={previewBg} alt="Preview BG" className="w-full h-full object-cover absolute inset-0" crossOrigin="anonymous" />
+                            
+                            {/* Branding Text overlay */}
+                            <div 
+                              style={{
+                                position: 'absolute',
+                                left: `${layout.brandingX * s}px`,
+                                top: `${layout.brandingY * s}px`,
+                                display: 'flex',
+                                alignItems: 'center',
+                                zIndex: 11
+                              }}
+                            >
+                              <span 
+                                style={{
+                                  display: 'inline-block',
+                                  width: `${2.5 * s}px`,
+                                  height: `${layout.brandingLineHeight * s}px`,
+                                  backgroundColor: '#C5A059',
+                                  marginRight: `${12 * s}px`
+                                }}
+                              />
+                              <span 
+                                style={{
+                                  fontFamily: 'Noto Sans Gujarati, sans-serif',
+                                  fontWeight: 500,
+                                  fontSize: `${layout.brandingSize * s}px`,
+                                  background: 'linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%)',
+                                  WebkitBackgroundClip: 'text',
+                                  WebkitTextFillColor: 'transparent',
+                                  lineHeight: 1,
+                                  display: 'inline-block'
+                                }}
+                              >
+                                Gujarati App
+                              </span>
+                            </div>
+
+                            {/* Quote Text overlay */}
+                            <div 
+                              style={{
+                                position: 'absolute',
+                                left: `${100 * s}px`,
+                                right: `${100 * s}px`,
+                                top: `${310 * s}px`,
+                                textAlign: 'center',
+                                zIndex: 10
+                              }}
+                            >
+                              <p 
+                                style={{
+                                  fontFamily: 'Noto Serif Gujarati, serif',
+                                  fontWeight: 'bold',
+                                  fontSize: `${layout.quoteFontSize * s}px`,
+                                  lineHeight: layout.quoteLineHeight,
+                                  color: '#ffffff',
+                                  margin: 0,
+                                  whiteSpace: 'pre-wrap',
+                                  textShadow: '0 2px 4px rgba(0,0,0,0.6)'
+                                }}
+                              >
+                                {pmActiveCategory === 'good_morning' ? 'સવારનો સૂર્ય નવી આશા લઈને આવે છે.\n\nતમારો દિવસ શુભ રહે!' : 'સફળતાનો રસ્તો મહેનત કરનાર માટે ક્યારેય દૂર નથી હોતી.'}
+                              </p>
+                            </div>
+
+                            {/* Profile avatar frame overlay */}
+                            <div 
+                              style={{
+                                position: 'absolute',
+                                left: `${layout.avatarX * s}px`,
+                                top: `${layout.avatarY * s}px`,
+                                width: `${layout.avatarSize * s}px`,
+                                height: `${layout.avatarSize * s}px`,
+                                borderRadius: '50%',
+                                background: 'linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%)',
+                                padding: `${3.5 * s}px`,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                zIndex: 12
+                              }}
+                            >
+                              <div style={{ width: '100%', height: '100%', borderRadius: '50%', backgroundColor: '#efefef', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <span className="material-symbols-outlined" style={{ fontSize: `${20}px`, color: '#aaaaaa' }}>person</span>
+                              </div>
+                            </div>
+
+                            {/* Vertical separator line overlay */}
+                            <div 
+                              style={{
+                                position: 'absolute',
+                                left: `${layout.separatorX * s}px`,
+                                top: `${layout.separatorY * s}px`,
+                                width: `${2.5 * s}px`,
+                                height: `${layout.separatorHeight * s}px`,
+                                background: 'linear-gradient(to bottom, #BF953F, #FCF6BA, #B38728)',
+                                zIndex: 11
+                              }}
+                            />
+
+                            {/* User Name text overlay */}
+                            <div 
+                              style={{
+                                position: 'absolute',
+                                left: `${layout.nameX * s}px`,
+                                top: `${layout.nameY * s}px`,
+                                width: `${(1080 - layout.nameX - 40) * s}px`,
+                                height: `${layout.avatarSize * s}px`,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'flex-start',
+                                zIndex: 12
+                              }}
+                            >
+                              <span 
+                                style={{
+                                  fontFamily: 'Noto Sans Gujarati, sans-serif',
+                                  fontWeight: 600,
+                                  fontSize: `${layout.nameFontSize * s}px`,
+                                  color: '#ffffff',
+                                  textShadow: '0 2px 4px rgba(0,0,0,0.4)'
+                                }}
+                              >
+                                તમારું નામ
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })()}
+                      
+                      {/* Background navigation */}
+                      {(postMakerConfig[pmActiveCategory]?.bgs?.length > 1) && (
+                        <div className="flex gap-2">
+                          {postMakerConfig[pmActiveCategory].bgs.map((_, i) => (
+                            <button
+                              key={i}
+                              onClick={() => setPreviewBgIndex(i)}
+                              className={`w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center border transition ${previewBgIndex === i ? 'bg-amber-500 border-amber-500 text-white' : 'bg-stone-100 dark:bg-stone-850 text-stone-500 hover:bg-stone-200'}`}
+                            >
+                              {i + 1}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Controls Column */}
+                    <div className="lg:col-span-7 space-y-6">
+                      
+                      {/* Section A: Background Image Manager */}
+                      <div className="bg-stone-50 dark:bg-stone-950 p-4 rounded-2xl border border-stone-200/50 dark:border-stone-850 space-y-4">
+                        <h4 className="font-gujarati font-bold text-xs text-amber-500 uppercase tracking-widest">૧. બેકગ્રાઉન્ડ ઈમેજીસ</h4>
+                        
+                        {/* List of current backgrounds */}
+                        <div className="flex gap-3 overflow-x-auto py-2">
+                          {(postMakerConfig[pmActiveCategory]?.bgs || []).map((bg, idx) => (
+                            <div key={idx} className="relative w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-stone-200">
+                              <img src={bg.url} alt={`Bg ${idx}`} className="w-full h-full object-cover" crossOrigin="anonymous" />
+                              <button
+                                onClick={() => handleDeletePmBackground(idx)}
+                                className="absolute top-1 right-1 bg-rose-600 hover:bg-rose-700 text-white rounded-full p-1 shadow active:scale-95 transition"
+                              >
+                                <span className="material-symbols-outlined text-[12px] block">close</span>
+                              </button>
+                            </div>
+                          ))}
+                          {(postMakerConfig[pmActiveCategory]?.bgs || []).length === 0 && (
+                            <p className="text-stone-400 font-gujarati text-[11px] py-4">કોઈ બેકગ્રાઉન્ડ ઉમેરેલ નથી.</p>
+                          )}
+                        </div>
+
+                        {/* Upload Background Uploader */}
+                        <div className="pt-2 border-t border-stone-100 dark:border-stone-900 space-y-3">
+                          <div>
+                            <label className="block text-[10px] font-gujarati font-bold text-stone-500 mb-1">આ બેકગ્રાઉન્ડ માટે ડિફોલ્ટ સુવિચાર લખાણ (વૈકલ્પિક)</label>
+                            <input 
+                              type="text"
+                              placeholder="દા.ત. સવારનો સૂર્ય નવી આશા લઈને આવે છે..."
+                              value={pmNewBgText}
+                              onChange={(e) => setPmNewBgText(e.target.value)}
+                              className="w-full px-3 py-1.5 rounded-xl border border-stone-200 dark:border-stone-850 bg-white dark:bg-stone-900 font-gujarati text-xs outline-none"
+                            />
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-[10px] font-gujarati font-bold text-stone-500 mb-1">કમ્પ્યુટર/મોબાઈલ માંથી અપલોડ કરો</label>
+                              <input 
+                                type="file"
+                                accept="image/*"
+                                disabled={uploadingPmBg}
+                                onChange={handleAddPmBackground}
+                                className="w-full text-xs font-gujarati text-stone-500 file:mr-2 file:py-1 file:px-3 file:rounded-xl file:border-0 file:text-[10px] file:font-bold file:bg-amber-100 file:text-amber-700 hover:file:bg-amber-200 cursor-pointer"
+                              />
+                              {uploadingPmBg && <span className="text-[10px] text-amber-500 font-bold font-gujarati animate-pulse">અપલોડ થઈ રહ્યું છે...</span>}
+                            </div>
+                            <div>
+                              <label className="block text-[10px] font-gujarati font-bold text-stone-500 mb-1">અથવા ઈમેજ લિંક ઉમેરો (URL)</label>
+                              <div className="flex gap-1">
+                                <input 
+                                  type="url"
+                                  placeholder="https://..."
+                                  value={pmNewBgUrl}
+                                  onChange={(e) => setPmNewBgUrl(e.target.value)}
+                                  className="flex-1 px-3 py-1 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-850 rounded-xl font-sans text-xs outline-none"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={handleAddPmBackgroundUrl}
+                                  className="bg-amber-500 hover:bg-amber-600 text-white rounded-xl px-3 font-gujarati text-xs font-bold py-1"
+                                >
+                                  ઉમેરો
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Section B: Coordinate Position Sliders */}
+                      {(() => {
+                        const config = postMakerConfig[pmActiveCategory] || defaultPostMakerConfig[pmActiveCategory];
+                        const layout = config.layout;
+                        return (
+                          <div className="bg-stone-50 dark:bg-stone-950 p-4 rounded-2xl border border-stone-200/50 dark:border-stone-850 space-y-4">
+                            <h4 className="font-gujarati font-bold text-xs text-amber-500 uppercase tracking-widest">૨. તત્વોની લાઈવ પોઝિશન (X/Y axis sliders)</h4>
+                            
+                            {/* Sliders Container */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-gujarati font-bold text-stone-600 dark:text-stone-300">
+                              
+                              {/* Group 1: Logo branding */}
+                              <div className="space-y-3 p-3 bg-white dark:bg-stone-900 rounded-xl border border-stone-100 dark:border-stone-850">
+                                <div className="text-amber-500 border-b border-stone-50 pb-1 mb-2 font-black">બ્રાન્ડિંગ લોગો (logo)</div>
+                                <div>
+                                  <div className="flex justify-between mb-1"><span>ડાબી બાજુ (X):</span> <span className="font-sans text-[10px] text-stone-400">{layout.brandingX}px</span></div>
+                                  <input type="range" min="0" max="1000" step="5" value={layout.brandingX} onChange={(e) => updatePmLayoutParam('brandingX', e.target.value)} className="w-full accent-amber-500" />
+                                </div>
+                                <div>
+                                  <div className="flex justify-between mb-1"><span>ઊંચાઈ (Y):</span> <span className="font-sans text-[10px] text-stone-400">{layout.brandingY}px</span></div>
+                                  <input type="range" min="0" max="1300" step="5" value={layout.brandingY} onChange={(e) => updatePmLayoutParam('brandingY', e.target.value)} className="w-full accent-amber-500" />
+                                </div>
+                                <div>
+                                  <div className="flex justify-between mb-1"><span>ફોન્ટ સાઇઝ:</span> <span className="font-sans text-[10px] text-stone-400">{layout.brandingSize}px</span></div>
+                                  <input type="range" min="12" max="80" step="1" value={layout.brandingSize} onChange={(e) => updatePmLayoutParam('brandingSize', e.target.value)} className="w-full accent-amber-500" />
+                                </div>
+                                <div>
+                                  <div className="flex justify-between mb-1"><span>સેપરેટર ઊંચાઈ:</span> <span className="font-sans text-[10px] text-stone-400">{layout.brandingLineHeight}px</span></div>
+                                  <input type="range" min="12" max="100" step="1" value={layout.brandingLineHeight} onChange={(e) => updatePmLayoutParam('brandingLineHeight', e.target.value)} className="w-full accent-amber-500" />
+                                </div>
+                              </div>
+
+                              {/* Group 2: Avatar circle */}
+                              <div className="space-y-3 p-3 bg-white dark:bg-stone-900 rounded-xl border border-stone-100 dark:border-stone-850">
+                                <div className="text-amber-500 border-b border-stone-50 pb-1 mb-2 font-black">પ્રોફાઇલ ફોટો સર્કલ</div>
+                                <div>
+                                  <div className="flex justify-between mb-1"><span>ડાબી બાજુ (X):</span> <span className="font-sans text-[10px] text-stone-400">{layout.avatarX}px</span></div>
+                                  <input type="range" min="0" max="1000" step="5" value={layout.avatarX} onChange={(e) => updatePmLayoutParam('avatarX', e.target.value)} className="w-full accent-amber-500" />
+                                </div>
+                                <div>
+                                  <div className="flex justify-between mb-1"><span>ઊંચાઈ (Y):</span> <span className="font-sans text-[10px] text-stone-400">{layout.avatarY}px</span></div>
+                                  <input type="range" min="0" max="1300" step="5" value={layout.avatarY} onChange={(e) => updatePmLayoutParam('avatarY', e.target.value)} className="w-full accent-amber-500" />
+                                </div>
+                                <div>
+                                  <div className="flex justify-between mb-1"><span>સર્કલ સાઇઝ:</span> <span className="font-sans text-[10px] text-stone-400">{layout.avatarSize}px</span></div>
+                                  <input type="range" min="80" max="500" step="5" value={layout.avatarSize} onChange={(e) => updatePmLayoutParam('avatarSize', e.target.value)} className="w-full accent-amber-500" />
+                                </div>
+                              </div>
+
+                              {/* Group 3: Separator line */}
+                              <div className="space-y-3 p-3 bg-white dark:bg-stone-900 rounded-xl border border-stone-100 dark:border-stone-850">
+                                <div className="text-amber-500 border-b border-stone-50 pb-1 mb-2 font-black">વર્ટીકલ સેપરેટર લાઇન</div>
+                                <div>
+                                  <div className="flex justify-between mb-1"><span>ડાબી બાજુ (X):</span> <span className="font-sans text-[10px] text-stone-400">{layout.separatorX}px</span></div>
+                                  <input type="range" min="0" max="1000" step="5" value={layout.separatorX} onChange={(e) => updatePmLayoutParam('separatorX', e.target.value)} className="w-full accent-amber-500" />
+                                </div>
+                                <div>
+                                  <div className="flex justify-between mb-1"><span>ઊંચાઈ (Y):</span> <span className="font-sans text-[10px] text-stone-400">{layout.separatorY}px</span></div>
+                                  <input type="range" min="0" max="1300" step="5" value={layout.separatorY} onChange={(e) => updatePmLayoutParam('separatorY', e.target.value)} className="w-full accent-amber-500" />
+                                </div>
+                                <div>
+                                  <div className="flex justify-between mb-1"><span>લાઇન લંબાઈ:</span> <span className="font-sans text-[10px] text-stone-400">{layout.separatorHeight}px</span></div>
+                                  <input type="range" min="20" max="500" step="5" value={layout.separatorHeight} onChange={(e) => updatePmLayoutParam('separatorHeight', e.target.value)} className="w-full accent-amber-500" />
+                                </div>
+                              </div>
+
+                              {/* Group 4: User Name */}
+                              <div className="space-y-3 p-3 bg-white dark:bg-stone-900 rounded-xl border border-stone-100 dark:border-stone-850">
+                                <div className="text-amber-500 border-b border-stone-50 pb-1 mb-2 font-black">યુઝર નામ ટેક્સ્ટ</div>
+                                <div>
+                                  <div className="flex justify-between mb-1"><span>ડાબી બાજુ (X):</span> <span className="font-sans text-[10px] text-stone-400">{layout.nameX}px</span></div>
+                                  <input type="range" min="0" max="1000" step="5" value={layout.nameX} onChange={(e) => updatePmLayoutParam('nameX', e.target.value)} className="w-full accent-amber-500" />
+                                </div>
+                                <div>
+                                  <div className="flex justify-between mb-1"><span>ઊંચાઈ (Y):</span> <span className="font-sans text-[10px] text-stone-400">{layout.nameY}px</span></div>
+                                  <input type="range" min="0" max="1300" step="5" value={layout.nameY} onChange={(e) => updatePmLayoutParam('nameY', e.target.value)} className="w-full accent-amber-500" />
+                                </div>
+                                <div>
+                                  <div className="flex justify-between mb-1"><span>ફોન્ટ સાઇઝ:</span> <span className="font-sans text-[10px] text-stone-400">{layout.nameFontSize}px</span></div>
+                                  <input type="range" min="12" max="80" step="1" value={layout.nameFontSize} onChange={(e) => updatePmLayoutParam('nameFontSize', e.target.value)} className="w-full accent-amber-500" />
+                                </div>
+                              </div>
+
+                              {/* Group 5: Quote details */}
+                              <div className="space-y-3 p-3 bg-white dark:bg-stone-900 rounded-xl border border-stone-100 dark:border-stone-850 md:col-span-2">
+                                <div className="text-amber-500 border-b border-stone-50 pb-1 mb-2 font-black">સુવિચાર ફોન્ટ સેટિંગ્સ</div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div>
+                                    <div className="flex justify-between mb-1"><span>ફોન્ટ સાઇઝ:</span> <span className="font-sans text-[10px] text-stone-400">{layout.quoteFontSize}px</span></div>
+                                    <input type="range" min="16" max="100" step="1" value={layout.quoteFontSize} onChange={(e) => updatePmLayoutParam('quoteFontSize', e.target.value)} className="w-full accent-amber-500" />
+                                  </div>
+                                  <div>
+                                    <div className="flex justify-between mb-1"><span>લાઇન સ્પેસિંગ:</span> <span className="font-sans text-[10px] text-stone-400">{layout.quoteLineHeight}</span></div>
+                                    <input type="range" min="1.0" max="2.5" step="0.1" value={layout.quoteLineHeight} onChange={(e) => updatePmLayoutParam('quoteLineHeight', e.target.value)} className="w-full accent-amber-500" />
+                                  </div>
+                                </div>
+                              </div>
+
+                            </div>
+
+                            {/* Save & Reset Layout configuration buttons */}
+                            <div className="flex justify-between items-center pt-2 gap-4">
+                              <button
+                                type="button"
+                                onClick={handleResetPmLayout}
+                                className="border border-stone-200 dark:border-stone-850 hover:bg-stone-100 dark:hover:bg-stone-900 text-stone-600 dark:text-stone-400 font-gujarati font-bold text-xs px-4 py-2.5 rounded-xl transition active:scale-95 flex items-center gap-1.5"
+                              >
+                                <span className="material-symbols-outlined text-sm">restart_alt</span> મૂળભૂત રીસેટ
+                              </button>
+                              
+                              <button
+                                type="button"
+                                onClick={() => savePostMakerConfig()}
+                                disabled={isSavingPmConfig}
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white font-gujarati font-bold text-xs px-6 py-2.5 rounded-xl transition active:scale-95 shadow shadow-emerald-500/10 flex items-center gap-1.5"
+                              >
+                                {isSavingPmConfig ? "સેવ થાય છે..." : <><span className="material-symbols-outlined text-sm">save</span> સેવ લેઆઉટ અને બેકગ્રાઉન્ડ્સ</>}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })()}
+
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* View Custom Quotes List */}
               <div className="bg-white dark:bg-stone-900 rounded-[2rem] p-6 border border-stone-200/50 dark:border-stone-850 shadow-sm">
-                <h3 className="font-headline font-black text-base text-stone-900 dark:text-stone-100 mb-4">૨. તમારા ઉમેરેલા કસ્ટમ સુવિચારો</h3>
+                <h3 className="font-headline font-black text-base text-stone-900 dark:text-stone-100 mb-4">૩. તમારા ઉમેરેલા કસ્ટમ સુવિચારો</h3>
                 
                 {Object.values(customQuotes).every(arr => arr.length === 0) ? (
                   <p className="text-stone-400 font-gujarati text-xs text-center py-6">હજુ સુધી કોઈ કસ્ટમ સુવિચાર ઉમેરેલ નથી.</p>
@@ -1313,9 +1864,21 @@ const AdminDashboard = () => {
                     {Object.keys(customQuotes).map(catKey => {
                       const list = customQuotes[catKey] || [];
                       if (list.length === 0) return null;
+                      
+                      // Map key name for display
+                      let catDisplay = catKey;
+                      if (catKey === 'bhakti') catDisplay = 'ધાર્મિક (Devotional)';
+                      else if (catKey === 'morning') catDisplay = 'સવાર (Morning)';
+                      else if (catKey === 'night') catDisplay = 'રાત (Night)';
+                      else if (catKey === 'festival') catDisplay = 'તહેવાર (Festival)';
+                      else if (catKey === 'prerna') catDisplay = 'પ્રેરણા (Inspirational)';
+                      else if (catKey === 'health') catDisplay = 'આરોગ્ય (Health)';
+                      else if (catKey === 'jyotish') catDisplay = 'જ્યોતિષ';
+                      else if (catKey === 'sahitya') catDisplay = 'સાહિત્ય';
+
                       return (
                         <div key={catKey} className="border-b border-stone-100 dark:border-stone-800 pb-4 last:border-0 last:pb-0">
-                          <h4 className="font-gujarati font-bold text-xs text-amber-600 dark:text-amber-500 uppercase tracking-widest mb-3">{catKey} કેટેગરી</h4>
+                          <h4 className="font-gujarati font-bold text-xs text-amber-600 dark:text-amber-500 uppercase tracking-widest mb-3">{catDisplay} કેટેગરી</h4>
                           <div className="space-y-3">
                             {list.map((item, idx) => (
                               <div key={idx} className="flex justify-between items-center gap-4 bg-stone-50 dark:bg-stone-950 p-3 rounded-xl border border-stone-100 dark:border-stone-900">

@@ -36,6 +36,7 @@ const TOOLS = [
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const isDev = localStorage.getItem('user_phone') === '9999999999';
   const [dbCommunityAlert, setDbCommunityAlert] = useState('');
   const [hasCard, setHasCard] = useState(() => {
     try {
@@ -215,6 +216,19 @@ const Dashboard = () => {
 
   return (
     <div style={{ paddingTop:16, paddingBottom:32, display:'flex', flexDirection:'column', gap:16 }} className="animate-fade-in">
+      <style>{`
+        @keyframes pulseZoom {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.08); }
+          100% { transform: scale(1); }
+        }
+        .pulse-btn {
+          animation: pulseZoom 1.5s infinite ease-in-out;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+        }
+      `}</style>
 
       {/* ══════════════════════════════════════════════════════════
           1. PANCHANG HERO — Big orange single card
@@ -376,16 +390,25 @@ const Dashboard = () => {
       {/* ══════════════════════════════════════════════════════════
           2. SUVICHAR — Dark navy card
           ══════════════════════════════════════════════════════════ */}
-      <Link to="/post-maker" id="daily-suvichar" className="press" style={{
+      <Link to="/post-maker" state={{ quoteText: data.suvichar }} id="daily-suvichar" className="press" style={{
         borderRadius:16, padding:'18px 20px', textDecoration: 'none', display: 'block',
         background:'linear-gradient(135deg,#1E1B4B,#312E81)',
         boxShadow:'0 4px 16px rgba(30,27,75,0.3)',
       }}>
-        <div style={{ position: 'absolute', right: 20, marginTop: -5, background: 'rgba(255,255,255,0.2)', padding: '2px 8px', borderRadius: 10, fontSize: 10, color: 'white', fontWeight: 'bold' }}>પોસ્ટ બનાવો</div>
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
           <p style={{ fontFamily:'"Plus Jakarta Sans",sans-serif', fontSize:11, fontWeight:700, letterSpacing:'0.06em', textTransform:'uppercase', color:'rgba(199,210,254,0.8)', margin:0 }}>
             🔔 આજનો સુવિચાર
           </p>
+          <div className="pulse-btn" style={{
+            background: 'linear-gradient(135deg, #FF8E1F, #FF5E36)',
+            padding: '4px 10px',
+            borderRadius: 12,
+            fontSize: 10,
+            color: 'white',
+            fontWeight: '900',
+            boxShadow: '0 4px 12px rgba(255, 142, 31, 0.4)',
+            border: '1px solid rgba(255,255,255,0.2)'
+          }}>✨ પોસ્ટ બનાવો</div>
         </div>
         <div style={{ position:'relative', padding:'4px 16px' }}>
           <span style={{ fontFamily:'"Noto Serif Gujarati",serif', fontSize:44, lineHeight:1, color:'#818CF8', opacity:0.4, position:'absolute', top:-4, left:0 }}>"</span>
@@ -428,7 +451,7 @@ const Dashboard = () => {
         )}
 
         {/* ગુજરાતી રમતો */}
-        {getFeatureState('/community') !== 'off' && (
+        {getFeatureState('/community') !== 'off' && isDev && (
           <Link
             to={getFeatureState('/community') === 'coming_soon' ? '#' : '/community'}
             onClick={(e) => handleFeatureClick('/community', 'ગુજરાતી રમતો', e)}
@@ -559,7 +582,7 @@ const Dashboard = () => {
           ══════════════════════════════════════════════════════════ */}
       <div style={{ background:'#FFFFFF', border:'1px solid #E8E6E3', borderRadius:16, padding:'16px 12px' }}>
         <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'16px 8px' }}>
-          {TOOLS.filter(t => getFeatureState(t.path) !== 'off').map(({ icon, label, path, bg, iconBg, iconClr }, i) => {
+          {TOOLS.filter(t => (t.path !== '/community' || isDev) && getFeatureState(t.path) !== 'off').map(({ icon, label, path, bg, iconBg, iconClr }, i) => {
             const state = getFeatureState(path);
             return (
               <Link key={`${path}-${i}`} to={state === 'coming_soon' ? '#' : path} className="press"

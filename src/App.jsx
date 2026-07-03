@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import Layout from './components/Layout';
 import Dashboard from './components/Dashboard';
@@ -24,6 +24,23 @@ import Panchang from './components/Panchang';
 import KundaliGenerator from './components/KundaliGenerator';
 import VastuCalculator from './components/VastuCalculator';
 import NamkaranTool from './components/NamkaranTool';
+import GunMilan from './components/GunMilan';
+
+const PanotiRedirect = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate('/panchang#panoti', { replace: true });
+  }, [navigate]);
+  return null;
+};
+
+const CommunityRoute = () => {
+  const isDev = localStorage.getItem('user_phone') === '9999999999';
+  if (!isDev) {
+    return <Navigate to="/" replace />;
+  }
+  return <FeatureGuard featureKey="community"><Community /></FeatureGuard>;
+};
 
 import InterestCalculator from './components/InterestCalculator';
 import DevotionalCards from './components/DevotionalCards';
@@ -407,7 +424,7 @@ function App() {
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/devotional" element={<FeatureGuard featureKey="devotional"><DevotionalHub /></FeatureGuard>} />
                 <Route path="/health" element={<FeatureGuard featureKey="health"><HealthAssistant /></FeatureGuard>} />
-                <Route path="/community" element={<FeatureGuard featureKey="community"><Community /></FeatureGuard>} />
+                <Route path="/community" element={<CommunityRoute />} />
                 <Route path="/tools" element={<FeatureGuard featureKey="tools"><Tools /></FeatureGuard>} />
                 <Route path="/status" element={<StatusGenerator />} />
                 <Route path="/post-maker" element={<FeatureGuard featureKey="post_maker"><PostMaker /></FeatureGuard>} />
@@ -416,6 +433,8 @@ function App() {
                 <Route path="/settings" element={<Settings darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
                 <Route path="/panchang" element={<FeatureGuard featureKey="panchang"><Panchang /></FeatureGuard>} />
                 <Route path="/kundali" element={<FeatureGuard featureKey="kundali"><KundaliGenerator /></FeatureGuard>} />
+                <Route path="/gun-milan" element={<FeatureGuard featureKey="kundali"><KundaliGenerator defaultTab="milan" /></FeatureGuard>} />
+                <Route path="/panoti-checker" element={<PanotiRedirect />} />
                 <Route path="/vastu" element={<FeatureGuard featureKey="vastu"><VastuCalculator /></FeatureGuard>} />
                 <Route path="/namkaran" element={<FeatureGuard featureKey="namkaran"><NamkaranTool /></FeatureGuard>} />
                 <Route path="/profile" element={<Profile />} />

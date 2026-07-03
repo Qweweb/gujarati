@@ -1,4 +1,4 @@
-﻿import { uploadToCloudinary } from '../utils/cloudinaryHelper';
+import { uploadToCloudinary } from '../utils/cloudinaryHelper';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toPng, toBlob } from 'html-to-image';
@@ -13,7 +13,7 @@ const THEMES = [
 ];
 
 const CATEGORIES = [
-  { id: 'bhakti', name: 'ભક્તિ', icon: 'volunteer_activism' },
+  { id: 'bhakti', name: 'ધાર્મિક', icon: 'volunteer_activism' },
   { id: 'morning', name: 'સવાર', icon: 'light_mode' },
   { id: 'night', name: 'રાત', icon: 'dark_mode' },
   { id: 'festival', name: 'તહેવાર', icon: 'celebration' },

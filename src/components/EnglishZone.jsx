@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import NewEnglishZone from './NewEnglishZone';
 import { playSound } from '../utils/audio';
 import { supabase } from '../supabaseClient';
 import { syncLiveEnglishStats, getOrCreateUserId } from '../utils/otlo_helper';
@@ -285,6 +286,10 @@ export default function EnglishZone({ onBack }) {
     setActiveSubGame('daily_challenge');
   };
 
+  if (activeSubGame === 'duolingo_path') {
+    return <NewEnglishZone onBack={() => setActiveSubGame(null)} />;
+  }
+
   return (
     <div className="space-y-6 pb-12 animate-fade-in relative min-h-screen">
       <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none rounded-[3rem] z-0 mix-blend-multiply dark:mix-blend-overlay"></div>
@@ -378,6 +383,13 @@ export default function EnglishZone({ onBack }) {
           <div className="space-y-3">
             <h3 className="font-gujarati font-black text-base text-stone-700 dark:text-stone-200">અંગ્રેજી રમતો 🎮</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
+              <GameCard 
+                id="duolingo_path" 
+                title="🦁 ન્યૂ ઇંગ્લિશ યાત્રા" 
+                desc="સિંહ માસ્કોટ સાથે ડ્યુઓલિંગો શૈલીમાં અંગ્રેજી શીખો (નવું)" 
+                color="from-amber-500 to-red-500 border border-amber-300 shadow-lg animate-pulse"
+                onClick={() => setActiveSubGame('duolingo_path')} 
+              />
               <GameCard 
                 id="word_emoji" 
                 title="🃏 શબ્દ-ઇમોજી જોડી" 

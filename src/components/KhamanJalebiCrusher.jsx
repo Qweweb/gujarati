@@ -137,6 +137,17 @@ export default function SwipeBrickBreaker() {
     return () => clearInterval(iv);
   }, [screen]);
 
+  const userNameRef = useRef('');
+  const highScoreRef = useRef(0);
+
+  useEffect(() => {
+    userNameRef.current = userName;
+  }, [userName]);
+
+  useEffect(() => {
+    highScoreRef.current = highScore;
+  }, [highScore]);
+
   useEffect(() => {
     const name = JSON.parse(localStorage.getItem('user_profile') || '{}').name ||
       localStorage.getItem('google_name') ||
@@ -144,11 +155,22 @@ export default function SwipeBrickBreaker() {
       (() => { try { return JSON.parse(localStorage.getItem('sanskari_kbc_profile') || '{}').name || ''; } catch { return ''; } })() ||
       'ખેલાડી';
     setUserName(name);
+    userNameRef.current = name;
+
     const uid = getOrCreateUserId();
     (async () => {
       try {
-        const { data } = await supabase.from('game_progress').select('current_level,high_score').eq('user_id', uid).single();
-        if (data) { setSavedLevel(data.current_level || 1); setHighScore(data.high_score || 0); setUiLevel(data.current_level || 1); }
+        const { data } = await supabase.from('game_progress').select('current_level,high_score,player_name').eq('user_id', uid).single();
+        if (data) {
+          setSavedLevel(data.current_level || 1);
+          setHighScore(data.high_score || 0);
+          highScoreRef.current = data.high_score || 0;
+          setUiLevel(data.current_level || 1);
+          
+          if (data.player_name !== name) {
+            await supabase.from('game_progress').update({ player_name: name }).eq('user_id', uid);
+          }
+        }
       } catch {}
     })();
     loadBoard();
@@ -188,7 +210,7 @@ export default function SwipeBrickBreaker() {
         const mapped = top10.map((item, idx) => {
           const isUser = item.player_name === userName || item.user_id === uid;
           return {
-            name: item.player_name,
+            name: item.player_name || (isUser ? userName : 'ખેલાડી'),
             score: item.high_score,
             isUser,
             city: isUser ? (profile.city || cityMap[item.user_id]) : (cityMap[item.user_id] || null)
@@ -201,11 +223,12 @@ export default function SwipeBrickBreaker() {
 
   const saveProgress = async (sc, lv) => {
     const uid = getOrCreateUserId();
-    const hs = Math.max(sc, highScore);
+    const hs = Math.max(sc, highScoreRef.current);
     setHighScore(hs);
+    highScoreRef.current = hs;
     try {
       await supabase.from('game_progress').upsert({
-        user_id: uid, player_name: userName,
+        user_id: uid, player_name: userNameRef.current,
         current_level: lv, high_score: hs, total_score: sc,
         updated_at: new Date().toISOString()
       }, { onConflict: 'user_id' });

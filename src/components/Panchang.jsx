@@ -3,6 +3,113 @@ import { calculateChoghadiyas, calculateMuhurts } from '../utils/choghadiya_help
 import { getDailyPanchang } from '../utils/panchangEngine';
 import { RASHI_DATA, generateDailyRashifal } from '../data/rashifalDatabase';
 
+const calculateAstroForMilan = (dob, tob, noTime, coords) => {
+  const finalTob = noTime ? "12:00" : tob;
+  const [year, month, day] = dob.split("-").map(Number);
+  const [hours, minutes] = finalTob.split(":").map(Number);
+
+  const lat = coords ? parseFloat(coords.lat) : 23.0225; // default Ahmedabad
+  const lon = coords ? parseFloat(coords.lon) : 72.5714; // default Ahmedabad
+
+  const timezoneOffset = 5.5; // IST
+  let utcHours = hours - timezoneOffset;
+  let utcDay = day;
+  let utcMonth = month;
+  let utcYear = year;
+
+  if (utcHours < 0) {
+    utcHours += 24;
+    utcDay -= 1;
+    if (utcDay < 1) {
+      utcMonth -= 1;
+      if (utcMonth < 1) {
+        utcMonth = 12;
+        utcYear -= 1;
+      }
+      const daysInMonth = new Date(utcYear, utcMonth, 0).getDate();
+      utcDay = daysInMonth;
+    }
+  }
+
+  const Y = utcMonth <= 2 ? utcYear - 1 : utcYear;
+  const M = utcMonth <= 2 ? utcMonth + 12 : utcMonth;
+  const D = utcDay + (utcHours + minutes / 60) / 24;
+
+  const A = Math.floor(Y / 100);
+  const B = 2 - A + Math.floor(A / 4);
+
+  const jd = Math.floor(365.25 * (Y + 4716)) + Math.floor(30.6001 * (M + 1)) + D + B - 1524.5;
+  const t = jd - 2451545.0;
+
+  const ayanamsa = 23.85 + (t / 365.25) * 0.0139696;
+
+  let gmst = (280.46061837 + 360.98564736629 * t) % 360;
+  if (gmst < 0) gmst += 360;
+  let lst = (gmst + lon) % 360;
+  if (lst < 0) lst += 360;
+
+  const obliquity = 23.4393 - (t / 365.25) * 0.000013;
+  const lstRad = (lst * Math.PI) / 180;
+  const latRad = (lat * Math.PI) / 180;
+  const oblRad = (obliquity * Math.PI) / 180;
+
+  const yVal = -Math.cos(lstRad);
+  const xVal = Math.sin(lstRad) * Math.cos(oblRad) + Math.tan(latRad) * Math.sin(oblRad);
+
+  let tropicalAsc = Math.atan2(yVal, xVal) * (180 / Math.PI);
+  if (tropicalAsc < 0) tropicalAsc += 360;
+
+  let siderealAsc = (tropicalAsc - ayanamsa) % 360;
+  if (siderealAsc < 0) siderealAsc += 360;
+
+  const lagnaSignNum = Math.floor(siderealAsc / 30) + 1;
+
+  const orbitalParams = {
+    "સૂ": { L0: 280.466, n: 0.98564736 },
+    "ચ": { L0: 218.316, n: 13.17639648 },
+    "મં": { L0: 355.453, n: 0.52402078 },
+    "બુ": { L0: 252.251, n: 4.092334436 },
+    "ગુ": { L0: 34.404,  n: 0.0830853 },
+    "શુ": { L0: 181.979, n: 1.60213022 },
+    "શનિ": { L0: 50.077,  n: 0.03345963 },
+    "રા": { L0: 125.122, n: -0.05295376 },
+  };
+
+  const Mm = (134.963 + 13.064993 * t) * Math.PI / 180;
+  const Ms = (357.529 + 0.9856 * t) * Math.PI / 180;
+  const moonPerturbation = 6.289 * Math.sin(Mm) + 1.274 * Math.sin(2 * Mm - Ms) + 0.658 * Math.sin(2 * Ms);
+  let moonLong = orbitalParams["ચ"].L0 + orbitalParams["ચ"].n * t + moonPerturbation;
+
+  const planetSiderealLongs = {};
+  Object.keys(orbitalParams).forEach(p => {
+    let long = orbitalParams[p].L0 + orbitalParams[p].n * t;
+    if (p === "ચ") long = moonLong;
+    let sidReal = (long - ayanamsa) % 360;
+    if (sidReal < 0) sidReal += 360;
+    planetSiderealLongs[p] = sidReal;
+  });
+
+  const planetsInHouses = {};
+  Object.keys(planetSiderealLongs).forEach(p => {
+    const long = planetSiderealLongs[p];
+    const rashiNum = Math.floor(long / 30) + 1;
+    planetsInHouses[p] = (rashiNum - lagnaSignNum + 12) % 12 + 1;
+  });
+
+  const moonDeg = planetSiderealLongs["ચ"];
+  const nakshatraIdx = Math.floor(moonDeg / 13.33333) % 27;
+  const moonRashiNum = Math.floor(moonDeg / 30) % 12 + 1;
+
+  const marsHouse = planetsInHouses["મં"];
+  const isManglik = [1, 4, 7, 8, 12].includes(marsHouse);
+
+  return {
+    rashiId: moonRashiNum,
+    nakshatraIdx,
+    isManglik: isManglik ? "yes" : "no"
+  };
+};
+
 const Panchang = () => {
   const [panchangData, setPanchangData] = useState(() => {
     const cached = localStorage.getItem('panchang_cache_full');
@@ -89,6 +196,151 @@ const Panchang = () => {
 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedRashifalId, setSelectedRashifalId] = useState('mesh');
+
+  // --- SHANI PANOTI CHECKER STATES ---
+  const [panotiMode, setPanotiMode] = useState(true); // true = direct rashi, false = birth details
+  const [panotiSelectedRashi, setPanotiSelectedRashi] = useState(null);
+  const [panotiResult, setPanotiResult] = useState(null);
+
+  // Birth Details States
+  const [panotiName, setPanotiName] = useState("");
+  const [panotiDob, setPanotiDob] = useState("");
+  const [panotiTob, setPanotiTob] = useState("");
+  const [panotiNoTime, setPanotiNoTime] = useState(false);
+  const [panotiBirthPlace, setPanotiBirthPlace] = useState("");
+  const [panotiSuggestions, setPanotiSuggestions] = useState([]);
+  const [panotiSelectedCoords, setPanotiSelectedCoords] = useState(null);
+  const [panotiLoadingCoords, setPanotiLoadingCoords] = useState(false);
+
+  // Suggestions search effect for Panoti
+  useEffect(() => {
+    if (panotiBirthPlace.trim().length < 3) {
+      setPanotiSuggestions([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      try {
+        setPanotiLoadingCoords(true);
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(panotiBirthPlace)}&limit=4`);
+        const data = await res.json();
+        setPanotiSuggestions(data);
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setPanotiLoadingCoords(false);
+      }
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [panotiBirthPlace]);
+
+  // Scroll to panoti-section if hash matches
+  useEffect(() => {
+    if (window.location.hash === '#panoti') {
+      setTimeout(() => {
+        const el = document.getElementById('panoti-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 500);
+    }
+  }, []);
+
+  const handleCheckPanoti = (rashiId) => {
+    const matchedRashi = RASHI_DATA.find(r => r.id === rashiId) || RASHI_DATA[0];
+    setPanotiSelectedRashi(matchedRashi);
+
+    let status = "";
+    let severity = ""; // success, warning, danger
+    let phase = "";
+    let description = "";
+    let remedies = [];
+
+    // Makar, Kumbh, Meen, Kark, Vrischika
+    if (matchedRashi.id === "makar") {
+      status = "સાડાસાતી (Sade Sati) - અંતિમ તબક્કો";
+      severity = "warning";
+      phase = "ત્રીજું ચરણ (Setting Phase)";
+      description = "તમારી રાશિ પર શનિની સાડાસાતીનો છેલ્લો અઢી વર્ષનો તબક્કો ચાલી રહ્યો છે. માનસિક ચિંતાઓમાં ધીરે ધીરે રાહત મળશે અને પ્રગતિના નવા દ્વાર ખુલશે. નાણાકીય રોકાણોમાં સાવધાની રાખવી.";
+      remedies = [
+        "શનિવારે પીપળાના વૃક્ષ નીચે સરસિયાના તેલનો દીવો કરવો.",
+        "પીડિતો અથવા સફાઈ કામદારોને કાળા કપડા કે અડદનું દાન કરવું.",
+        "દરરોજ સૂર્યાસ્ત પછી 'ॐ शं शनैश्चराय नमः' મંત્રના ૧૦૮ જાપ કરવા."
+      ];
+    } else if (matchedRashi.id === "kumbh") {
+      status = "સાડાસાતી (Sade Sati) - શિખર તબક્કો";
+      severity = "danger";
+      phase = "બીજું ચરણ (Peak Phase)";
+      description = "તમારી રાશિ પર શનિની સાડાસાતીનો સૌથી પ્રભાવશાળી બીજો તબક્કો ચાલી રહ્યો છે. માનસિક તણાવ, વાહન ચલાવતી વખતે સાવધાની અને વાદ-વિવાદથી બચવું જરૂરી છે. ધીરજ અને સદાચારથી શનિદેવ પ્રસન્ન થાય છે.";
+      remedies = [
+        "શનિવારે હનુમાનજીના મંદિરે જઈ હનુમાન ચાલીસા અથવા સુંદરકાંડના પાઠ કરવા.",
+        "શનિ મહારાજને વાદળી અથવા કાળા રંગના પુષ્પો અને કાળા તલ અર્પણ કરવા.",
+        "શનિ બીજ મંત્ર: 'ॐ प्रां प्रीं प्रौं सः शनैश्चराय नमः' નો જાપ કરવો."
+      ];
+    } else if (matchedRashi.id === "meen") {
+      status = "સાડાસાતી (Sade Sati) - પ્રારંભિક તબક્કો";
+      severity = "warning";
+      phase = "પ્રથમ ચરણ (Rising Phase)";
+      description = "તમારી રાશિ પર શનિની સાડાસાતીનો પ્રથમ અઢી વર્ષનો પ્રારંભિક તબક્કો ચાલી રહ્યો છે. આ સમયગાળામાં ખર્ચ વધવાની સંભાવના છે અને વિદેશ મુસાફરી અથવા કાર્યક્ષેત્રમાં ફેરબદલ આવી શકે છે. કાયદાકીય કામોમાં સાવધાની રાખો.";
+      remedies = [
+        "ગરીબ લોકોને ભોજન કરાવવું અને કાળા શ્વાન (ડોગ) ને તેલવાળી રોટલી ખવડાવવી.",
+        "શનિવારે તાંબાના લોટામાં પાણી ભરી કાળા તલ નાખી સૂર્ય અને શનિદેવને અર્ધ્ય આપવું.",
+        "શનિ સ્તોત્ર અથવા શનિ ચાલીસાના પાઠ કરવા."
+      ];
+    } else if (matchedRashi.id === "karka") {
+      status = "શનિની ઢય્યા (Ashtama Dhayya)";
+      severity = "danger";
+      phase = "અષ્ટમ શનિ (૮મી ઢય્યા)";
+      description = "તમારી રાશિ પર શનિની અષ્ટમ ઢય્યા ચાલી રહી છે. આ અઢી વર્ષના સમયગાળા દરમિયાન શારીરિક સ્વાસ્થ્યનું વિશેષ ધ્યાન રાખવું. નકામી વાતોમાં સમય ન બગાડવો અને નોકરી/વ્યવસાયમાં મહેનત વધારવી.";
+      remedies = [
+        "શનિવારે તેલ દાન (તામ્રપાત્રમાં તેલ ભરી તમારો ચહેરો જોઈને દાન કરવું - છાયા દાન).",
+        "હનુમાન મંદિરમાં કાળા ચણા અને ગોળનો પ્રસાદ ચડાવવો.",
+        "પશુ-પક્ષીઓ અને કીડીઓને દાણા નાખવા."
+      ];
+    } else if (matchedRashi.id === "vrischika") {
+      status = "શનિની ઢય્યા (Kantaka Dhayya)";
+      severity = "warning";
+      phase = "ચતુર્થ શનિ (૪થી ઢય્યા)";
+      description = "તમારી રાશિ પર શનિની ચતુર્થ ઢય્યા ચાલી રહી છે. કૌટુંબિક બાબતો અને મિલકત સંબંધિત નિર્ણયોમાં ધીરજ રાખવી. આ સમયે વ્યવસાયિક ભાગીદારીમાં સાવધાની રાખવી. તમારા કામમાં ઈમાનદારી રાખવાથી શનિદેવ શુભ ફળ આપશે.";
+      remedies = [
+        "શનિવારે શનિ મંદિરમાં સરસિયાના તેલનો દીવો કરી લોખંડની વસ્તુનું દાન કરવું.",
+        "દરરોજ સવારે શનિ ચાલીસાના પાઠ કરવા.",
+        "શનિ ગાયત્રી મંત્ર: 'ॐ भगभवाय વિદ્મહે મૃગરૂપાય ધીમહિ તન્નો શનિઃ પ્રચોદયાત।' નો જાપ કરવો."
+      ];
+    } else {
+      status = "શનિ પનૌતી મુક્ત (શુભ સમય)";
+      severity = "success";
+      phase = "કોઈ સાડાસાતી કે ઢય્યા નથી";
+      description = "ખૂબ સરસ! અત્યારે તમારી રાશિ પર શનિદેવની કોઈ સાડાસાતી કે ઢય્યા ચાલુ નથી. શનિ મહારાજની આપના પર શુભ દ્રષ્ટિ છે. સત્કર્મ કરતા રહો અને ઈશ્વર ભક્તિમાં લીન રહો.";
+      remedies = [
+        "શનિવારે કીડીઓને ગળ્યું અન્ન (લોટ અને ખાંડ) નાખવું.",
+        "હનુમાન ચાલીસાના પાઠ કરવા અને જરૂરિયાતમંદોને મદદ કરવી."
+      ];
+    }
+
+    setPanotiResult({ status, severity, phase, description, remedies });
+  };
+
+  const handleBirthPanotiSubmit = (e) => {
+    e.preventDefault();
+    if (!panotiDob) {
+      alert("કૃપા કરી જન્મ તારીખ દાખલ કરો 🙏");
+      return;
+    }
+
+    try {
+      const astro = calculateAstroForMilan(
+        panotiDob,
+        panotiNoTime ? "12:00" : panotiTob || "12:00",
+        panotiNoTime,
+        panotiSelectedCoords
+      );
+      
+      const rashiMap = ["mesh", "vrishabh", "mithun", "karka", "simha", "kanya", "tula", "vrischika", "dhanu", "makar", "kumbh", "meen"];
+      const rashiId = rashiMap[astro.rashiId - 1];
+      
+      handleCheckPanoti(rashiId);
+    } catch (err) {
+      alert("ગણતરી કરવામાં ભૂલ આવી, કૃપા કરી વિગતો ચકાસો.");
+    }
+  };
 
   // Set default rashi based on panchang transit rashi
   useEffect(() => {
@@ -485,6 +737,182 @@ const Panchang = () => {
                   </div>
               );
           })()}
+      </div>
+
+      {/* 7. Shani Panoti (Sade Sati & Dhayya) Checker Section */}
+      <div id="panoti-section" className="bg-[#FFFFFF] dark:bg-dark-surface rounded-[2.5rem] p-6 sm:p-8 shadow-sm space-y-6 border border-[#E8E6E3]">
+          <div className="flex items-center gap-2 text-[#2D3748]">
+              <span className="material-symbols-outlined text-[#0D9488] text-3xl font-black">dark_mode</span>
+              <h3 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-2xl">શનિ પનૌતી ચેકર (સાડાસાતી / ઢય્યા)</h3>
+          </div>
+          <p className="font-gujarati text-xs text-[#78716C]">શનિ મહારાજના વર્તમાન ગોચર ભ્રમણના આધારે તમારી રાશિ પર પનૌતી ચેક કરો.</p>
+
+          {/* Selector Tabs */}
+          <div className="flex justify-center border-b border-black/5 pb-4">
+            <div className="flex bg-stone-100 dark:bg-stone-850 p-1 rounded-xl">
+              <button
+                type="button"
+                onClick={() => { setPanotiMode(true); setPanotiResult(null); }}
+                className={`px-4 py-2 rounded-lg font-gujarati text-xs font-bold transition-all ${panotiMode ? 'bg-white dark:bg-stone-700 text-primary shadow-xs' : 'text-stone-500'}`}
+              >
+                📝 રાશિ પસંદ કરો (જનરલ)
+              </button>
+              <button
+                type="button"
+                onClick={() => { setPanotiMode(false); setPanotiResult(null); }}
+                className={`px-4 py-2 rounded-lg font-gujarati text-xs font-bold transition-all ${!panotiMode ? 'bg-white dark:bg-stone-700 text-primary shadow-xs' : 'text-stone-500'}`}
+              >
+                🕉️ જન્મ વિગતોથી ચેક કરો (પર્સનલ)
+              </button>
+            </div>
+          </div>
+
+          {panotiMode ? (
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+              {RASHI_DATA.map((r) => (
+                <button
+                  key={r.id}
+                  onClick={() => handleCheckPanoti(r.id)}
+                  className={`p-4 rounded-2xl border text-center transition-all flex flex-col items-center justify-center gap-1.5 active:scale-95
+                    ${panotiSelectedRashi?.id === r.id 
+                      ? 'bg-[#2D3748] border-[#2D3748] text-white shadow-md font-black scale-105' 
+                      : 'bg-[#F4F4F0] dark:bg-stone-850 border-[#E8E6E3] text-[#1A1614] dark:text-white hover:bg-[#FFFFFF]'}`}
+                >
+                  <span className="text-3xl">{r.emoji}</span>
+                  <span className="font-gujarati font-black text-xs truncate max-w-full">{r.name}</span>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <form onSubmit={handleBirthPanotiSubmit} className="max-w-md mx-auto space-y-4 bg-[#F4F4F0] dark:bg-stone-850 p-6 rounded-3xl border border-[#0D9488]/20">
+              <div className="space-y-1">
+                <label className="font-gujarati font-bold text-xs text-stone-600 dark:text-stone-300">જન્મ તારીખ</label>
+                <input 
+                  type="date"
+                  value={panotiDob}
+                  onChange={(e) => setPanotiDob(e.target.value)}
+                  className="w-full p-3 rounded-xl border border-black/10 focus:border-[#0D9488] focus:outline-none bg-white dark:bg-stone-900 dark:text-white font-sans text-sm"
+                  required
+                />
+              </div>
+
+              <div className="space-y-1 relative">
+                <div className="flex justify-between items-center">
+                  <label className="font-gujarati font-bold text-xs text-stone-600 dark:text-stone-300">જન્મ સમય</label>
+                  <label className="flex items-center gap-1 cursor-pointer text-[10px] font-gujarati text-outline">
+                    <input type="checkbox" checked={panotiNoTime} onChange={(e) => setPanotiNoTime(e.target.checked)} />
+                    સમય ખબર નથી
+                  </label>
+                </div>
+                <input 
+                  type="time"
+                  value={panotiTob}
+                  disabled={panotiNoTime}
+                  onChange={(e) => setPanotiTob(e.target.value)}
+                  className="w-full p-3 rounded-xl border border-black/10 focus:border-[#0D9488] focus:outline-none bg-white dark:bg-stone-900 dark:text-white font-sans text-sm disabled:opacity-40"
+                />
+              </div>
+
+              <div className="space-y-1 relative">
+                <label className="font-gujarati font-bold text-xs text-stone-600 dark:text-stone-300">જન્મ સ્થળ</label>
+                <input 
+                  type="text"
+                  value={panotiBirthPlace}
+                  onChange={(e) => setPanotiBirthPlace(e.target.value)}
+                  placeholder="શહેર/ગામનું નામ..."
+                  className="w-full p-3 rounded-xl border border-black/10 focus:border-[#0D9488] focus:outline-none bg-white dark:bg-stone-900 dark:text-white font-gujarati text-sm"
+                />
+                {panotiLoadingCoords && <span className="absolute right-3 bottom-3 text-xs text-stone-400 animate-spin">sync</span>}
+                
+                {panotiSuggestions.length > 0 && (
+                  <div className="absolute left-0 right-0 top-full bg-white dark:bg-stone-850 border border-black/5 rounded-xl shadow-xl z-55 max-h-40 overflow-y-auto divide-y divide-black/5">
+                    {panotiSuggestions.map((s, idx) => (
+                      <div 
+                        key={idx}
+                        onClick={() => {
+                          setPanotiBirthPlace(s.display_name.split(',')[0]);
+                          setPanotiSelectedCoords({ lat: s.lat, lon: s.lon });
+                          setPanotiSuggestions([]);
+                        }}
+                        className="p-3 text-xs font-gujarati cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-950 truncate dark:text-white"
+                      >
+                        {s.display_name}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <button 
+                type="submit"
+                className="w-full bg-[#2D3748] hover:bg-[#1A1614] text-white font-gujarati font-black py-3 px-4 rounded-xl shadow-xs transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-xs"
+              >
+                <span className="material-symbols-outlined text-sm font-black">dark_mode</span>
+                શનિ પનૌતી ગણતરી કરો
+              </button>
+            </form>
+          )}
+
+          {/* Results Area */}
+          {panotiResult && panotiSelectedRashi && (
+            <div className="bg-gradient-to-br from-indigo-50/40 to-indigo-100/10 dark:from-stone-900 dark:to-stone-850 p-5 rounded-3xl border border-indigo-200/50 space-y-4 animate-fade-in">
+              <div className="text-center space-y-1">
+                <span className="text-4xl">{panotiSelectedRashi.emoji}</span>
+                <h4 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-xl text-stone-850 dark:text-white">{panotiSelectedRashi.name} રાશિ શનિ પનૌતી અહેવાલ</h4>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="bg-white dark:bg-stone-800 p-4 rounded-2xl border border-black/5 text-center">
+                  <span className="text-[10px] font-bold text-outline font-gujarati uppercase block">શનિ સ્થિતિ</span>
+                  <span className={`font-gujarati font-black text-sm block mt-1 ${panotiResult.severity === 'danger' ? 'text-red-600' : panotiResult.severity === 'warning' ? 'text-amber-600' : 'text-green-600'}`}>{panotiResult.status}</span>
+                </div>
+                <div className="bg-white dark:bg-stone-800 p-4 rounded-2xl border border-black/5 text-center">
+                  <span className="text-[10px] font-bold text-outline font-gujarati uppercase block">તબક્કો (Phase)</span>
+                  <span className="font-gujarati font-black text-sm block mt-1 text-[#2D3748] dark:text-indigo-400">{panotiResult.phase}</span>
+                </div>
+              </div>
+
+              <div className="bg-white dark:bg-stone-800 p-4 rounded-2xl border border-black/5 space-y-1.5">
+                <h5 className="font-gujarati font-black text-xs text-[#2D3748] dark:text-indigo-400 flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-sm">analytics</span>
+                  જ્યોતિષીય વિશ્લેષણ
+                </h5>
+                <p className="font-gujarati text-xs text-stone-600 dark:text-stone-300 leading-relaxed">{panotiResult.description}</p>
+              </div>
+
+              <div className="bg-amber-50/50 dark:bg-amber-950/20 p-4 rounded-2xl border border-amber-200/50 space-y-3">
+                <h5 className="font-gujarati font-black text-xs text-amber-900 dark:text-amber-400 flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-sm text-amber-600">temple_hindu</span>
+                  નિવારણ ઉપાયો (Remedies)
+                </h5>
+                <ul className="space-y-2">
+                  {panotiResult.remedies.map((rem, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-xs text-stone-800 dark:text-stone-200 font-gujarati leading-relaxed">
+                      <span className="h-4 w-4 bg-amber-100 dark:bg-amber-900 rounded-full flex items-center justify-center font-bold text-amber-700 text-[10px] shrink-0 mt-0.5">{idx + 1}</span>
+                      <span>{rem}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="p-3 bg-white dark:bg-stone-900 rounded-xl border border-amber-200/40 flex justify-between items-center text-xs">
+                  <div className="space-y-0.5">
+                    <span className="text-[9px] font-bold text-outline font-gujarati">શનિ બીજ મંત્ર</span>
+                    <p className="font-gujarati font-black text-xs text-amber-950 dark:text-amber-400">ॐ प्रां प्रीं प्रौं सः शनैश्चराय नमः</p>
+                  </div>
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText("ॐ प्रां प्रीं प्रौं सः शनैश्चराय नमः");
+                      window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: "મંત્ર કોપી થઈ ગયો છે! 🙏" } }));
+                    }}
+                    className="h-8 px-3 rounded-lg bg-amber-100 dark:bg-amber-900 text-amber-950 dark:text-amber-400 hover:bg-amber-200 text-[10px] font-gujarati font-bold active:scale-95 transition-all shrink-0"
+                  >
+                    કોપી
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
       </div>
     </div>
   );

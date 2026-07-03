@@ -29,6 +29,445 @@ export const syncLiveEnglishStats = async (streakVal, xpVal) => {
   }
 };
 
+export const syncLiveEnglishProgress = async (lessonId, status, starsOrScore, unitId) => {
+  try {
+    const userId = getOrCreateUserId();
+    if (!userId) return;
+    await supabase.from('user_progress').upsert({
+      user_id: userId,
+      unit_id: unitId,
+      lesson_id: lessonId,
+      status: status,
+      stars_or_score: starsOrScore,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'user_id,lesson_id' });
+  } catch (e) {
+    console.error("Live English progress sync failed:", e);
+  }
+};
+
+const LESSON_METADATA = {
+  u1_l1: { unit: 1, sessions: 1 },
+  u1_l2: { unit: 1, sessions: 2 },
+  u1_l3: { unit: 1, sessions: 2 },
+  u2_l1: { unit: 2, sessions: 2 },
+  u2_l2: { unit: 2, sessions: 2 },
+  u2_l3: { unit: 2, sessions: 2 },
+  u3_l1: { unit: 3, sessions: 3 },
+  u3_l2: { unit: 3, sessions: 3 },
+  u4_l1: { unit: 4, sessions: 3 },
+  u4_l2: { unit: 4, sessions: 3 },
+  u5_l1: { unit: 5, sessions: 3 },
+  u5_l2: { unit: 5, sessions: 3 },
+  u6_l1: { unit: 6, sessions: 3 },
+  u6_l2: { unit: 6, sessions: 3 },
+  u6_l3: { unit: 6, sessions: 3 },
+  u7_l1: { unit: 7, sessions: 3 },
+  u7_l2: { unit: 7, sessions: 3 },
+  u7_l3: { unit: 7, sessions: 3 },
+  u8_l1: { unit: 8, sessions: 3 },
+  u8_l2: { unit: 8, sessions: 3 },
+  u8_l3: { unit: 8, sessions: 3 },
+  u9_l1: { unit: 9, sessions: 3 },
+  u9_l2: { unit: 9, sessions: 3 },
+  u10_l1: { unit: 10, sessions: 3 },
+  u10_l2: { unit: 10, sessions: 3 },
+  u10_l3: { unit: 10, sessions: 3 }
+};
+
+export const findUnitOfLesson = (lessonId) => {
+  if (lessonId.startsWith('chest_')) {
+    return parseInt(lessonId.split('_')[1], 10);
+  }
+  return LESSON_METADATA[lessonId]?.unit || 1;
+};
+
+export const findLessonSessionsById = (lessonId) => {
+  return LESSON_METADATA[lessonId]?.sessions || 2;
+};
+
+export const syncAndFetchEnglishProgress = async () => {
+  const userId = getOrCreateUserId();
+  if (!userId) return null;
+
+  // 1. Read local data
+  let localCompleted = [];
+  try {
+    localCompleted = JSON.parse(localStorage.getItem('sanskar_english_completed_lessons') || '[]');
+  } catch (e) { localCompleted = []; }
+
+  let localProgress = {};
+  try {
+    localProgress = JSON.parse(localStorage.getItem('sanskar_english_lesson_progress') || '{}');
+  } catch (e) { localProgress = {}; }
+
+  let localChests = {};
+  for (let i = 1; i <= 10; i++) {
+    if (localStorage.getItem(`sanskar_chest_claimed_${i}`) === 'true') {
+      localChests[i] = true;
+    }
+  }
+
+  try {
+    // 2. Fetch cloud data
+    const { data: cloudData, error } = await supabase
+      .from('user_progress')
+      .select('*')
+      .eq('user_id', userId);
+
+    if (error) {
+      console.warn("Failed to fetch cloud progress, returning local:", error);
+      return { completedLessons: localCompleted, lessonProgress: localProgress, claimedChests: localChests };
+    }
+
+    const cloudMap = {};
+    (cloudData || []).forEach(row => {
+      cloudMap[row.lesson_id] = row;
+    });
+
+    let mergedCompleted = [...localCompleted];
+    let mergedProgress = { ...localProgress };
+    let mergedChests = { ...localChests };
+    let needsCloudUpdate = [];
+
+    // --- Process Cloud Data -> Local ---
+    (cloudData || []).forEach(row => {
+      const lid = row.lesson_id;
+      
+      // If it is a chest claim
+      if (lid.startsWith('chest_')) {
+        const unitId = parseInt(lid.split('_')[1], 10);
+        if (row.status === 'completed') {
+          mergedChests[unitId] = true;
+          localStorage.setItem(`sanskar_chest_claimed_${unitId}`, 'true');
+        }
+      } else {
+        // It is a lesson progress
+        if (row.status === 'completed') {
+          if (!mergedCompleted.includes(lid)) {
+            mergedCompleted.push(lid);
+          }
+          // Make sure session count is set to max
+          const totalSessions = findLessonSessionsById(lid);
+          mergedProgress[lid] = Math.max(mergedProgress[lid] || 0, row.stars_or_score, totalSessions);
+        } else {
+          // In progress
+          mergedProgress[lid] = Math.max(mergedProgress[lid] || 0, row.stars_or_score);
+        }
+      }
+    });
+
+    // --- Process Local Data -> Cloud (Migration / Offline Sync) ---
+    // A. Check completed lessons
+    localCompleted.forEach(lid => {
+      const cloudRow = cloudMap[lid];
+      const totalSessions = findLessonSessionsById(lid);
+      if (!cloudRow || cloudRow.status !== 'completed') {
+        const unitId = findUnitOfLesson(lid);
+        needsCloudUpdate.push({
+          user_id: userId,
+          unit_id: unitId,
+          lesson_id: lid,
+          status: 'completed',
+          stars_or_score: Math.max(localProgress[lid] || 0, totalSessions),
+          updated_at: new Date().toISOString()
+        });
+      }
+    });
+
+    // B. Check in-progress lessons
+    Object.keys(localProgress).forEach(lid => {
+      if (localCompleted.includes(lid)) return; // Already handled
+      const cloudRow = cloudMap[lid];
+      const localVal = localProgress[lid] || 0;
+      if (localVal > 0) {
+        if (!cloudRow || cloudRow.stars_or_score < localVal) {
+          const unitId = findUnitOfLesson(lid);
+          needsCloudUpdate.push({
+            user_id: userId,
+            unit_id: unitId,
+            lesson_id: lid,
+            status: 'unlocked',
+            stars_or_score: localVal,
+            updated_at: new Date().toISOString()
+          });
+        }
+      }
+    });
+
+    // C. Check claimed chests
+    Object.keys(localChests).forEach(unitId => {
+      const chestKey = `chest_${unitId}`;
+      const cloudRow = cloudMap[chestKey];
+      if (!cloudRow || cloudRow.status !== 'completed') {
+        needsCloudUpdate.push({
+          user_id: userId,
+          unit_id: parseInt(unitId, 10),
+          lesson_id: chestKey,
+          status: 'completed',
+          stars_or_score: 1,
+          updated_at: new Date().toISOString()
+        });
+      }
+    });
+
+    // Write updates back to localStorage cache
+    localStorage.setItem('sanskar_english_completed_lessons', JSON.stringify(mergedCompleted));
+    localStorage.setItem('sanskar_english_lesson_progress', JSON.stringify(mergedProgress));
+
+    // 3. Push local changes to cloud if needed (Batch upsert)
+    if (needsCloudUpdate.length > 0) {
+      console.log(`Syncing ${needsCloudUpdate.length} progress items to cloud...`);
+      const { error: upsertError } = await supabase
+        .from('user_progress')
+        .upsert(needsCloudUpdate, { onConflict: 'user_id,lesson_id' });
+
+      if (upsertError) {
+        console.error("Batch progress upsert failed:", upsertError);
+      }
+    }
+
+    return { completedLessons: mergedCompleted, lessonProgress: mergedProgress, claimedChests: mergedChests };
+  } catch (err) {
+    console.error("syncAndFetchEnglishProgress error:", err);
+    return { completedLessons: localCompleted, lessonProgress: localProgress, claimedChests: localChests };
+  }
+};
+
+export const getCurrentMonday = () => {
+  const d = new Date();
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  const monday = new Date(d.setDate(diff));
+  const yyyy = monday.getFullYear();
+  const mm = String(monday.getMonth() + 1).padStart(2, '0');
+  const dd = String(monday.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+export const getDaysLeftInLeague = () => {
+  const d = new Date();
+  const day = d.getDay(); // 0 (Sun), 1 (Mon), ..., 6 (Sat)
+  const daysLeft = day === 0 ? 0 : 7 - day;
+  if (daysLeft === 0) {
+    const hoursLeft = 24 - d.getHours();
+    return `${hoursLeft} કલાક બાકી`;
+  }
+  return `${daysLeft} દિવસ બાકી`;
+};
+
+export const syncLiveLeagueXP = async (weeklyXPAmount) => {
+  try {
+    const userId = getOrCreateUserId();
+    if (!userId) return;
+    const currentMonday = getCurrentMonday();
+
+    const { data: memberRows, error: memberError } = await supabase
+      .from('league_memberships')
+      .select('id, weekly_xp, league_group_id, league_groups!inner(week_start_date)')
+      .eq('user_id', userId)
+      .eq('league_groups.week_start_date', currentMonday);
+
+    if (memberError) {
+      console.error("Error checking league membership:", memberError);
+      return;
+    }
+
+    if (memberRows && memberRows.length > 0) {
+      const membership = memberRows[0];
+      if (weeklyXPAmount > (membership.weekly_xp || 0)) {
+        await supabase
+          .from('league_memberships')
+          .update({ 
+            weekly_xp: weeklyXPAmount,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', membership.id);
+      }
+    }
+  } catch (e) {
+    console.error("Failed to sync live league XP:", e);
+  }
+};
+
+export const checkAndJoinWeeklyLeague = async () => {
+  const userId = getOrCreateUserId();
+  if (!userId) return null;
+  const currentMonday = getCurrentMonday();
+
+  try {
+    const { data: userRow, error: userError } = await supabase
+      .from('users')
+      .select('league_tier, last_league_week')
+      .eq('id', userId)
+      .single();
+
+    if (userError || !userRow) {
+      console.warn("Failed to fetch user profile for league:", userError);
+      return null;
+    }
+
+    let currentTier = userRow.league_tier || 'Bronze';
+    let lastLeagueWeek = userRow.last_league_week || null;
+
+    if (!lastLeagueWeek || lastLeagueWeek < currentMonday) {
+      console.log("New week detected for user. Processing promotions and grouping...");
+
+      if (lastLeagueWeek) {
+        const { data: oldMemberships, error: oldError } = await supabase
+          .from('league_memberships')
+          .select('user_id, weekly_xp, league_group_id, league_groups!inner(week_start_date)')
+          .eq('league_groups.week_start_date', lastLeagueWeek);
+
+        if (!oldError && oldMemberships && oldMemberships.length > 0) {
+          const userOldMem = oldMemberships.find(m => m.user_id === userId);
+          if (userOldMem) {
+            const groupId = userOldMem.league_group_id;
+            const groupMembers = oldMemberships.filter(m => m.league_group_id === groupId);
+            groupMembers.sort((a, b) => (b.weekly_xp || 0) - (a.weekly_xp || 0));
+            const rank = groupMembers.findIndex(m => m.user_id === userId) + 1;
+            const total = groupMembers.length;
+
+            console.log(`User finished at rank ${rank}/${total} in previous week's group.`);
+
+            const tiers = ['Bronze', 'Silver', 'Gold', 'Diamond'];
+            let tierIdx = tiers.indexOf(currentTier);
+            if (tierIdx === -1) tierIdx = 0;
+
+            if (rank <= 7 && rank > 0) {
+              if (tierIdx < tiers.length - 1) {
+                currentTier = tiers[tierIdx + 1];
+                console.log(`Promoted to ${currentTier}!`);
+              }
+            } else if (total >= 10 && rank > total - 5) {
+              if (tierIdx > 0) {
+                currentTier = tiers[tierIdx - 1];
+                console.log(`Demoted to ${currentTier}.`);
+              }
+            }
+          }
+        }
+      }
+
+      const { data: groups, error: groupsError } = await supabase
+        .from('league_groups')
+        .select(`
+          id,
+          league_memberships (
+            id
+          )
+        `)
+        .eq('week_start_date', currentMonday)
+        .eq('tier', currentTier);
+
+      let targetGroupId = null;
+      if (!groupsError && groups && groups.length > 0) {
+        const availableGroup = groups.find(g => (g.league_memberships?.length || 0) < 30);
+        if (availableGroup) {
+          targetGroupId = availableGroup.id;
+        }
+      }
+
+      if (!targetGroupId) {
+        const { data: newGroup, error: createError } = await supabase
+          .from('league_groups')
+          .insert({
+            week_start_date: currentMonday,
+            tier: currentTier
+          })
+          .select()
+          .single();
+
+        if (createError) {
+          console.error("Failed to create new league group:", createError);
+          return null;
+        }
+        targetGroupId = newGroup.id;
+      }
+
+      const { error: joinError } = await supabase
+        .from('league_memberships')
+        .insert({
+          user_id: userId,
+          league_group_id: targetGroupId,
+          weekly_xp: 0
+        });
+
+      if (joinError) {
+        console.error("Failed to join league group:", joinError);
+        return null;
+      }
+
+      await supabase
+        .from('users')
+        .update({
+          league_tier: currentTier,
+          last_league_week: currentMonday
+        })
+        .eq('id', userId);
+
+      localStorage.setItem('sanskar_weekly_xp_week', currentMonday);
+      localStorage.setItem('sanskar_weekly_xp', '0');
+    }
+
+    const { data: currentMem, error: currentMemError } = await supabase
+      .from('league_memberships')
+      .select('league_group_id')
+      .eq('user_id', userId)
+      .eq('league_groups.week_start_date', currentMonday)
+      .maybeSingle();
+
+    if (currentMemError || !currentMem) {
+      console.warn("Failed to find user membership for current week:", currentMemError);
+      return null;
+    }
+
+    const currentGroupId = currentMem.league_group_id;
+
+    const { data: groupMembers, error: fetchError } = await supabase
+      .from('league_memberships')
+      .select(`
+        user_id,
+        weekly_xp,
+        users!inner (
+          name,
+          photo_url,
+          city
+        )
+      `)
+      .eq('league_group_id', currentGroupId);
+
+    if (fetchError) {
+      console.error("Failed to fetch group members:", fetchError);
+      return null;
+    }
+
+    const list = (groupMembers || []).map(m => ({
+      userId: m.user_id,
+      name: m.users?.name || "અજ્ઞાત સાધક",
+      photoUrl: m.users?.photo_url,
+      weeklyXP: m.weekly_xp || 0,
+      isCurrentUser: m.user_id === userId
+    }));
+
+    list.sort((a, b) => b.weeklyXP - a.weeklyXP);
+    
+    const rankedList = list.map((item, idx) => ({
+      ...item,
+      rank: idx + 1
+    }));
+
+    return {
+      tier: currentTier,
+      weekStartDate: currentMonday,
+      members: rankedList
+    };
+  } catch (err) {
+    console.error("checkAndJoinWeeklyLeague error:", err);
+    return null;
+  }
+};
+
 
 // 1. Post categories and visibilities
 export const POST_TYPES = [
@@ -286,11 +725,11 @@ export const syncUserProfile = async () => {
   
   const localProfile = JSON.parse(localStorage.getItem('user_profile') || '{}');
   const name = localProfile.name || user?.user_metadata?.full_name || localStorage.getItem('user_full_name') || "અજ્ઞાત સાધક";
-  let userMobile = user?.phone || localStorage.getItem('supabase_user_mobile');
+  let userMobile = user?.phone || localProfile.mobile || localStorage.getItem('supabase_user_mobile');
   if (!userMobile) {
     userMobile = '99' + Math.floor(10000000 + Math.random() * 90000000);
-    localStorage.setItem('supabase_user_mobile', userMobile);
   }
+  localStorage.setItem('supabase_user_mobile', userMobile);
 
   if (user) {
     localStorage.setItem('supabase_user_id', user.id);
@@ -706,11 +1145,13 @@ export const addReferral = () => {
 export const getLeaderboard = () => {
   const userLoc = getOtloLocation();
   const vName = userLoc ? (userLoc.villageNameGu || getVillageName(userLoc.talukaId, userLoc.villageId)) : "દભોઈ";
+  const profile = JSON.parse(localStorage.getItem('user_profile') || '{}');
+  const liveUserName = (profile.name || "તમે") + " (તમે)";
   
   return [
     { rank: 1, name: "દિનેશ પટેલ", village: vName, score: 320, isRep: true, repLevel: "village" },
     { rank: 2, name: "ગૌરાંગ ચૌધરી", village: vName, score: 280 },
-    { rank: 3, name: "નરેન્દ્રભાઈ પટેલ (તમે)", village: vName, score: parseInt(localStorage.getItem('user_rep_score') || '45', 10) },
+    { rank: 3, name: liveUserName, village: vName, score: parseInt(localStorage.getItem('user_rep_score') || '45', 10) },
     { rank: 4, name: "હિતેશ અમીન", village: vName, score: 195 },
     { rank: 5, name: "કલ્પેશ મહેતા", village: vName, score: 140 }
   ].sort((a, b) => b.score - a.score).map((item, idx) => ({ ...item, rank: idx + 1 }));

@@ -60,7 +60,7 @@ export const DEFAULT_FEATURE_FLAGS = {
 export const THEMES = {
   default: {
     id: 'default',
-    name: 'ગઈકાલના કલર્સ (Default)',
+    name: 'મૂળભૂત (Default)',
     primaryAccent: '#B45309',
     primaryAccentLight: '#FFF8EF',
     primaryAccentRgb: '180, 83, 9',

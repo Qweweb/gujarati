@@ -126,6 +126,7 @@ const Profile = () => {
       };
       
       localStorage.setItem('user_profile', JSON.stringify(updatedProfile));
+      localStorage.setItem('supabase_user_mobile', trimmedMobile);
       localStorage.setItem('profile_completed', 'true');
       setProfile(updatedProfile);
       

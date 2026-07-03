@@ -106,6 +106,19 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
 
   useEffect(() => {
     const handleTouchStart = (e) => {
+      // Disable pull-to-refresh on games and interactive pages to prevent accidental reload/reset
+      const disabledRoutes = [
+        '/brick-breaker', 
+        '/farasan-slicer', 
+        '/kite-cutter', 
+        '/traffic-tod', 
+        '/kbc-quiz',
+        '/daily-challenge',
+        '/swipe-cards',
+        '/rewards'
+      ];
+      if (disabledRoutes.includes(location.pathname)) return;
+
       // Pull to refresh only when scrolled to top
       if (window.scrollY <= 5) {
         setPullStart(e.touches[0].clientY);
@@ -155,13 +168,14 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
     };
   }, [pullStart, pullDistance]);
 
+  const isDev = localStorage.getItem('user_phone') === '9999999999';
   const navItems = [
     { path: '/',           icon: 'home',         label: 'હોમ'      },
     { path: '/devotional', icon: 'auto_stories',  label: 'ભક્તિ'    },
     { path: '/games',      icon: 'sports_esports',label: 'રમતો'    },
     { path: '/tools',      icon: 'construction',  label: 'સાધનો'    },
     { path: '/community',  icon: 'groups',        label: 'બેઠક'     },
-  ];
+  ].filter(item => item.path !== '/community' || isDev);
 
   const isCardViewer = location.pathname === '/c' || location.pathname.startsWith('/c/') || (location.pathname.startsWith('/card/') && location.pathname !== '/card');
 
@@ -466,7 +480,9 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
                 <DrawerLink to="/devotional"  icon="auto_stories"    label="ભક્તિ સાહિત્ય"         onClick={() => setIsSidebarOpen(false)} loc={location.pathname} darkMode={darkMode} />
                 <DrawerLink to="/health"      icon="favorite"        label="સ્વાસ્થ્ય"             onClick={() => setIsSidebarOpen(false)} loc={location.pathname} darkMode={darkMode} />
                 <DrawerLink to="/tools"       icon="construction"    label="સાધનો"                 onClick={() => setIsSidebarOpen(false)} loc={location.pathname} darkMode={darkMode} />
-                <DrawerLink to="/community"   icon="groups"          label="ડિજિટલ બેઠક"           onClick={() => setIsSidebarOpen(false)} loc={location.pathname} darkMode={darkMode} />
+                {isDev && (
+                  <DrawerLink to="/community"   icon="groups"          label="ડિજિટલ બેઠક"           onClick={() => setIsSidebarOpen(false)} loc={location.pathname} darkMode={darkMode} />
+                )}
               </DrawerSection>
 
               <DrawerSection label="ઇનામ અને રમતો" darkMode={darkMode}>
