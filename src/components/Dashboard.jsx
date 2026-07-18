@@ -36,7 +36,7 @@ const TOOLS = [
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const isDev = localStorage.getItem('user_phone') === '9999999999';
+  const isDev = localStorage.getItem('user_phone') === '9999999999' || localStorage.getItem('supabase_user_mobile') === '9999999999';
   const [dbCommunityAlert, setDbCommunityAlert] = useState('');
   const [hasCard, setHasCard] = useState(() => {
     try {
@@ -451,10 +451,10 @@ const Dashboard = () => {
         )}
 
         {/* ગુજરાતી રમતો */}
-        {getFeatureState('/community') !== 'off' && isDev && (
+        {getFeatureState('/games') !== 'off' && (
           <Link
-            to={getFeatureState('/community') === 'coming_soon' ? '#' : '/community'}
-            onClick={(e) => handleFeatureClick('/community', 'ગુજરાતી રમતો', e)}
+            to={getFeatureState('/games') === 'coming_soon' ? '#' : '/gujarati-games'}
+            onClick={(e) => handleFeatureClick('/games', 'ગુજરાતી રમતો', e)}
             className="press"
             style={{
               borderRadius:20, padding:'20px 14px', textDecoration:'none', position:'relative', overflow:'hidden',
@@ -522,7 +522,7 @@ const Dashboard = () => {
           <div style={{ position:'absolute', top:10, right:10, background:khamanTheme.badge, padding:'4px 10px', borderRadius:12, fontSize:11, fontWeight:800, color:khamanTheme.badgeText, boxShadow:'0 2px 6px rgba(0,0,0,0.2)', zIndex:1 }}>NEW 🎮</div>
           <div style={{ width:64, height:64, borderRadius:20, background:khamanTheme.iconBg, display:'flex', alignItems:'center', justifyContent:'center', fontSize:32, boxShadow:'0 8px 16px rgba(0,0,0,0.25)', border:'1px solid rgba(255,255,255,0.2)', zIndex:1, position:'relative' }}>🍡</div>
           <div style={{ position:'relative', zIndex:1 }}>
-            <p className="type-gu-title" style={{ color:khamanTheme.titleColor, margin:0, fontSize:'16px', fontWeight:900 }}>ખમણ-જલેબી</p>
+            <p className="type-gu-title" style={{ color:khamanTheme.titleColor, margin:0, fontSize:'16px', fontWeight:900 }}>ગુજરાતી બ્રિક સ્મેશ</p>
             <p className="type-caption" style={{ color:khamanTheme.subtitleColor, margin:'4px 0 0', fontWeight:700, fontSize:'11px' }}>બ્રિક્સ તોડો</p>
           </div>
         </Link>
@@ -559,19 +559,19 @@ const Dashboard = () => {
           </div>
         </Link>
 
-        {/* પતંગ કાપો */}
-        <Link to="/kite-cutter" className="press" style={{
+        {/* તીરંદાજી */}
+        <Link to="/tirandaji" className="press" style={{
           borderRadius:24, padding:'24px 12px', textDecoration:'none',
           background:patangTheme.bg, border:patangTheme.border,
           boxShadow:'0 8px 24px rgba(0,0,0,0.3)', position:'relative', overflow:'hidden',
           display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', gap:14,
         }}>
-          <span style={{ position:'absolute', right:'-10px', top:'50%', transform:'translateY(-50%)', fontSize:'90px', opacity:0.05, pointerEvents:'none', zIndex:0 }}>🪁</span>
+          <span style={{ position:'absolute', right:'-10px', top:'50%', transform:'translateY(-50%)', fontSize:'90px', opacity:0.05, pointerEvents:'none', zIndex:0 }}>🏹</span>
           <div style={{ position:'absolute', top:10, right:10, background:patangTheme.badge, padding:'4px 10px', borderRadius:12, fontSize:11, fontWeight:800, color:patangTheme.badgeText, boxShadow:'0 2px 6px rgba(0,0,0,0.2)', zIndex:1 }}>HOT 🔥</div>
-          <div style={{ width:64, height:64, borderRadius:20, background:patangTheme.iconBg, display:'flex', alignItems:'center', justifyContent:'center', fontSize:32, boxShadow:'0 8px 16px rgba(0,0,0,0.25)', border:'1px solid rgba(255,255,255,0.2)', zIndex:1, position:'relative' }}>🪁</div>
+          <div style={{ width:64, height:64, borderRadius:20, background:patangTheme.iconBg, display:'flex', alignItems:'center', justifyContent:'center', fontSize:32, boxShadow:'0 8px 16px rgba(0,0,0,0.25)', border:'1px solid rgba(255,255,255,0.2)', zIndex:1, position:'relative' }}>🏹</div>
           <div style={{ position:'relative', zIndex:1 }}>
-            <p className="type-gu-title" style={{ color:patangTheme.titleColor, margin:0, fontSize:'16px', fontWeight:900 }}>પતંગ કાપો</p>
-            <p className="type-caption" style={{ color:patangTheme.subtitleColor, margin:'4px 0 0', fontWeight:700, fontSize:'11px' }}>કાઈ પો છે</p>
+            <p className="type-gu-title" style={{ color:patangTheme.titleColor, margin:0, fontSize:'16px', fontWeight:900 }}>તીરંદાજી</p>
+            <p className="type-caption" style={{ color:patangTheme.subtitleColor, margin:'4px 0 0', fontWeight:700, fontSize:'11px' }}>તીર કાઢો</p>
           </div>
         </Link>
 
@@ -582,7 +582,7 @@ const Dashboard = () => {
           ══════════════════════════════════════════════════════════ */}
       <div style={{ background:'#FFFFFF', border:'1px solid #E8E6E3', borderRadius:16, padding:'16px 12px' }}>
         <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:'16px 8px' }}>
-          {TOOLS.filter(t => (t.path !== '/community' || isDev) && getFeatureState(t.path) !== 'off').map(({ icon, label, path, bg, iconBg, iconClr }, i) => {
+          {TOOLS.filter(t => getFeatureState(t.path) !== 'off').map(({ icon, label, path, bg, iconBg, iconClr }, i) => {
             const state = getFeatureState(path);
             return (
               <Link key={`${path}-${i}`} to={state === 'coming_soon' ? '#' : path} className="press"

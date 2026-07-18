@@ -351,8 +351,8 @@
         // Assets
         const assets = {};
         const imagesToLoad = mode === 'farasan' 
-            ? ['khaman', 'dabeli', 'fafda', 'sutli_bomb', 'farasan_bg']
-            : ['red_kite', 'blue_kite', 'pigeon', 'sutli_bomb']; 
+            ? ['khaman', 'dabeli', 'fafda', 'sutli_bomb', 'farasan_bg', 'marchu', 'ladoo', 'golden_jalebi']
+            : ['red_kite', 'blue_kite', 'pigeon', 'sutli_bomb', 'kago', 'firki', 'golden_kite']; 
 
         imagesToLoad.forEach(name => {
             const img = new Image();
@@ -403,6 +403,7 @@
         let level = 1;
         let levelScoreTarget = 150;
         let frenzyTimer = 0;
+        let slowMoTimer = 0;
         let levelUpBannerTimer = 0;
         let fruits = [];
         let particles = [];
@@ -474,7 +475,7 @@
         }
         
         // Settings
-        const GRAVITY = 0.15;
+        let GRAVITY = 0.15;
         
         class Particle {
             constructor(x, y, color) {
@@ -487,9 +488,10 @@
                 this.size = Math.random() * 8 + 4;
             }
             update() {
-                this.x += this.vx; this.y += this.vy;
-                this.vy += 0.1; // gravity
-                this.life -= 0.02;
+                const ts = slowMoTimer > 0 ? 0.3 : 1.0;
+                this.x += this.vx * ts; this.y += this.vy * ts;
+                this.vy += 0.1 * ts; // gravity
+                this.life -= 0.02 * ts;
             }
             draw() {
                 ctx.globalAlpha = Math.max(0, this.life);
@@ -508,9 +510,10 @@
                 this.isLeft = isLeft;
             }
             update() {
-                this.x += this.vx; this.y += this.vy;
-                this.vy += GRAVITY;
-                this.rot += this.dRot;
+                const ts = slowMoTimer > 0 ? 0.3 : 1.0;
+                this.x += this.vx * ts; this.y += this.vy * ts;
+                this.vy += GRAVITY * ts;
+                this.rot += this.dRot * ts;
             }
             draw() {
                 if(!this.img.complete) return;
@@ -546,33 +549,34 @@
                 this.dRot = (Math.random() - 0.5) * 0.1;
                 
                 this.sliced = false;
-                this.isGolden = Math.random() < 0.05 + (level * 0.01);
                 
                 const rand = Math.random();
                 if (mode === 'farasan') {
-                    if (rand < 0.15) { this.type = 'bomb'; this.name = 'sutli_bomb'; this.color = '#7F7F7F'; }
-                    else if (rand < 0.4) { this.type = 'fruit'; this.name = 'khaman'; this.color = '#FFD700'; }
-                    else if (rand < 0.6) { this.type = 'fruit'; this.name = 'fafda'; this.color = '#FFA500'; }
+                    if (rand < 0.15) { this.type = 'bomb'; this.name = 'marchu'; this.color = '#00FF00'; }
+                    else if (rand < 0.25) { this.type = 'frenzy'; this.name = 'ladoo'; this.color = '#FFA500'; }
+                    else if (rand < 0.30) { this.type = 'slowmo'; this.name = 'golden_jalebi'; this.color = '#FFD700'; }
+                    else if (rand < 0.5) { this.type = 'fruit'; this.name = 'khaman'; this.color = '#FFD700'; }
+                    else if (rand < 0.75) { this.type = 'fruit'; this.name = 'fafda'; this.color = '#FFA500'; }
                     else { this.type = 'fruit'; this.name = 'dabeli'; this.color = '#FF4500'; }
                 } else {
-                    if (rand < 0.15) { this.type = 'bomb'; this.name = 'sutli_bomb'; this.color = '#7F7F7F'; }
-                    else if (rand < 0.3) { this.type = 'bomb'; this.name = 'pigeon'; this.color = '#E5E7EB'; } 
-                    else if (rand < 0.6) { this.type = 'fruit'; this.name = 'red_kite'; this.color = '#FF0000'; }
+                    if (rand < 0.15) { this.type = 'bomb'; this.name = 'kago'; this.color = '#333333'; }
+                    else if (rand < 0.25) { this.type = 'frenzy'; this.name = 'firki'; this.color = '#FF4500'; } 
+                    else if (rand < 0.30) { this.type = 'slowmo'; this.name = 'golden_kite'; this.color = '#FFD700'; }
+                    else if (rand < 0.65) { this.type = 'fruit'; this.name = 'red_kite'; this.color = '#FF0000'; }
                     else { this.type = 'fruit'; this.name = 'blue_kite'; this.color = '#0000FF'; }
                 }
                 
-                if (this.isGolden && this.type !== 'bomb') {
-                    this.color = '#FFD700';
-                }
+                this.isGolden = (this.type === 'slowmo');
                 
                 this.img = assets[this.name];
                 this.halves = [];
             }
             update() {
+                const ts = slowMoTimer > 0 ? 0.3 : 1.0;
                 if(!this.sliced) {
-                    this.x += this.vx; this.y += this.vy;
-                    this.vy += GRAVITY;
-                    this.rot += this.dRot;
+                    this.x += this.vx * ts; this.y += this.vy * ts;
+                    this.vy += GRAVITY * ts;
+                    this.rot += this.dRot * ts;
                 } else {
                     this.halves.forEach(h => h.update());
                 }
@@ -602,7 +606,7 @@
                 if (this.type === 'bomb') {
                     playBombSound();
                     loseLife(3); 
-                    for(let i=0; i<30; i++) particles.push(new Particle(this.x, this.y, '#FF0000'));
+                    for(let i=0; i<80; i++) particles.push(new Particle(this.x, this.y, '#FF0000'));
                 } else {
                     playSliceSound();
                     score += 10;
@@ -626,7 +630,11 @@
                         const avgX = recentSlices.reduce((sum, s) => sum + s.x, 0) / count;
                         const avgY = recentSlices.reduce((sum, s) => sum + s.y, 0) / count;
                         
-                        floatingTexts.push(new FloatingText(avgX, avgY - 30, `${toGujaratiNum(count)}x Combo! +${toGujaratiNum(comboBonus)}`, '#FFD700', 26));
+                        let comboWords = mode === 'farasan' 
+                            ? ['જોરદાર કોમ્બો!', 'વાહ મોજ!', 'સુપર કટ!'] 
+                            : ['કાપોડ્યો!', 'લપેટ!', 'પેચ લાગ્યો!'];
+                        let word = comboWords[Math.floor(Math.random()*comboWords.length)];
+                        floatingTexts.push(new FloatingText(avgX, avgY - 30, `${word} +${toGujaratiNum(comboBonus)}`, '#FFD700', 26));
                         playComboSound();
                         recentSlices = [];
                     }
@@ -640,9 +648,16 @@
                     }
 
                     // Trigger Frenzy Mode
-                    if (this.isGolden && this.type !== 'bomb') {
-                        frenzyTimer = 300;
-                        floatingTexts.push(new FloatingText(this.x, this.y - 70, `✨ FRENZY MODE! ✨`, '#FFD700', 26));
+                    if (this.type === 'frenzy') {
+                        frenzyTimer = 600;
+                        floatingTexts.push(new FloatingText(this.x, this.y - 70, mode === 'farasan' ? `✨ ફાફડા ફ્રેન્ઝી! ✨` : `✨ પતંગ ફ્રેન્ઝી! ✨`, '#FFD700', 26));
+                        playLevelUpSound();
+                    }
+                    
+                    // Trigger Slow Mo Mode
+                    if (this.type === 'slowmo') {
+                        slowMoTimer = 300;
+                        floatingTexts.push(new FloatingText(this.x, this.y - 70, `⏳ સ્લો-મોશન! ⏳`, '#00FFFF', 26));
                         playLevelUpSound();
                     }
 
@@ -1049,7 +1064,7 @@
 
         let spawnTimer = 0;
         function spawnFruit() {
-            spawnTimer++;
+            spawnTimer += slowMoTimer > 0 ? 0.3 : 1;
             
             // Frenzy mode: spawn very fast!
             if (frenzyTimer > 0) {
@@ -1096,6 +1111,7 @@
             emblemRotation += 0.003;
             
             if (frenzyTimer > 0) frenzyTimer--;
+            if (slowMoTimer > 0) slowMoTimer--;
             if (levelUpBannerTimer > 0) levelUpBannerTimer--;
             
             if (recentSlices.length > 0 && Date.now() - recentSlices[recentSlices.length - 1].time > 400) {
@@ -1107,6 +1123,11 @@
                 if (fruits[i].y > height + 200 || fruits[i].x < -200 || fruits[i].x > width + 200) {
                     if (!fruits[i].sliced && fruits[i].type === 'fruit' && frenzyTimer === 0) {
                         loseLife();
+                        let missWords = mode === 'farasan' 
+                            ? ['અરે લોચો પડ્યો!', 'હાલી નીકળ્યા!'] 
+                            : ['પતંગ ગયો!', 'ઢીલ મુક!'];
+                        let mWord = missWords[Math.floor(Math.random()*missWords.length)];
+                        floatingTexts.push(new FloatingText(Math.max(100, Math.min(width-100, fruits[i].x)), height - 100, mWord, '#FF3366', 22));
                     }
                     fruits.splice(i, 1);
                 }

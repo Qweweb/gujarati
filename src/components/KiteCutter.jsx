@@ -66,19 +66,21 @@ export default function KiteCutter() {
         
         const userIds = top10.map(x => x.user_id).filter(Boolean);
         
-        let cityMap = {};
+        let profileMap = {};
         if (userIds.length > 0) {
-          const { fetchCitiesForUserIds } = await import('../utils/otlo_helper');
-          cityMap = await fetchCitiesForUserIds(userIds);
+          const { fetchProfilesForUserIds } = await import('../utils/otlo_helper');
+          profileMap = await fetchProfilesForUserIds(userIds);
         }
 
         const mapped = top10.map((item) => {
           const isUser = item.player_name === userName || item.user_id === uid;
+          const uProf = profileMap[item.user_id] || {};
           return {
             name: item.player_name,
             score: item.high_score,
             isUser,
-            city: isUser ? (profile.city || cityMap[item.user_id]) : (cityMap[item.user_id] || null)
+            city: isUser ? (profile.city || uProf.city) : (uProf.city || null),
+            avatar: isUser ? (profile.avatar || uProf.photo_url) : (uProf.photo_url || null)
           };
         });
         setLeaderboard(mapped);
@@ -140,19 +142,21 @@ export default function KiteCutter() {
         
         const userIds = top10.map(x => x.user_id).filter(Boolean);
         
-        let cityMap = {};
+        let profileMap = {};
         if (userIds.length > 0) {
-          const { fetchCitiesForUserIds } = await import('../utils/otlo_helper');
-          cityMap = await fetchCitiesForUserIds(userIds);
+          const { fetchProfilesForUserIds } = await import('../utils/otlo_helper');
+          profileMap = await fetchProfilesForUserIds(userIds);
         }
 
         const mapped = top10.map((item, idx) => {
           const isUser = item.player_name === userName || item.user_id === uid;
+          const uProf = profileMap[item.user_id] || {};
           return {
             name: item.player_name,
             score: item.high_score,
             isUser,
-            city: isUser ? (profile.city || cityMap[item.user_id]) : (cityMap[item.user_id] || null)
+            city: isUser ? (profile.city || uProf.city) : (uProf.city || null),
+            avatar: isUser ? (profile.avatar || uProf.photo_url) : (uProf.photo_url || null)
           };
         });
         setLeaderboard(mapped);

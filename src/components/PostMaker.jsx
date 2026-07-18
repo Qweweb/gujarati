@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import { supabase } from '../supabaseClient';
+import { downloadFile } from '../utils/downloadHelper';
 
 // --- Configuration Data ---
 const CATEGORIES = [
@@ -298,18 +299,18 @@ const PostMaker = () => {
     if (!exportRef.current) return;
     setIsDownloading(true);
     try {
+      // Small delay to ensure any fonts/images are fully rendered
+      await new Promise(r => setTimeout(r, 500));
+      
       const canvas = await html2canvas(exportRef.current, {
-        scale: 1, // Already at 1080x1350
+        scale: 2, // Capture at 2x resolution (2160x2700) for extremely sharp text rendering
         useCORS: true,
-        allowTaint: true,
         backgroundColor: null
       });
       
       const image = canvas.toDataURL("image/png");
-      const link = document.createElement('a');
-      link.href = image;
-      link.download = `Gujarati_Quote_${Date.now()}.png`;
-      link.click();
+      const filename = `Gujarati_Quote_${Date.now()}.png`;
+      await downloadFile(image, filename);
     } catch (error) {
       console.error("Error generating image:", error);
       alert("ઈમેજ ડાઉનલોડ કરવામાં ભૂલ થઈ. કૃપા કરીને ફરી પ્રયાસ કરો.");
@@ -470,15 +471,13 @@ const PostMaker = () => {
                 marginRight: `${12 * s}px`
               }}
             />
-            {/* Branding text with shiny metallic gold gradient */}
+            {/* Branding text with shiny metallic gold color */}
             <span 
               style={{
                 fontFamily: 'Noto Sans Gujarati, sans-serif',
                 fontWeight: 500, // Medium weight
                 fontSize: `${layout.brandingSize * s}px`,
-                background: 'linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%)', // Metallic gold gradient
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+                color: '#DFB15B', // Clean solid gold color compatible with all canvas export engines
                 letterSpacing: `${0.5 * s}px`,
                 lineHeight: 1,
                 display: 'inline-block'

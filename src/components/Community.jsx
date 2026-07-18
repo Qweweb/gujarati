@@ -46,7 +46,7 @@ const SIMULATED_IMAGES = [
 const Community = () => {
   const navigate = useNavigate();
 
-  const [isDev] = useState(() => localStorage.getItem('user_phone') === '9999999999');
+  const [isDev] = useState(() => localStorage.getItem('user_phone') === '9999999999' || localStorage.getItem('supabase_user_mobile') === '9999999999');
 
   // Global isDev check removed so users can access other sections
 

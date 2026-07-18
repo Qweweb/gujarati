@@ -1533,9 +1533,7 @@ const AdminDashboard = () => {
                                   fontFamily: 'Noto Sans Gujarati, sans-serif',
                                   fontWeight: 500,
                                   fontSize: `${layout.brandingSize * s}px`,
-                                  background: 'linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%)',
-                                  WebkitBackgroundClip: 'text',
-                                  WebkitTextFillColor: 'transparent',
+                                  color: '#DFB15B',
                                   lineHeight: 1,
                                   display: 'inline-block'
                                 }}

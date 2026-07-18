@@ -168,18 +168,18 @@ const Layout = ({ children, darkMode, toggleDarkMode }) => {
     };
   }, [pullStart, pullDistance]);
 
-  const isDev = localStorage.getItem('user_phone') === '9999999999';
+  const isDev = localStorage.getItem('user_phone') === '9999999999' || localStorage.getItem('supabase_user_mobile') === '9999999999';
   const navItems = [
     { path: '/',           icon: 'home',         label: 'હોમ'      },
     { path: '/devotional', icon: 'auto_stories',  label: 'ભક્તિ'    },
     { path: '/games',      icon: 'sports_esports',label: 'રમતો'    },
     { path: '/tools',      icon: 'construction',  label: 'સાધનો'    },
     { path: '/community',  icon: 'groups',        label: 'બેઠક'     },
-  ].filter(item => item.path !== '/community' || isDev);
+  ];
 
   const isCardViewer = location.pathname === '/c' || location.pathname.startsWith('/c/') || (location.pathname.startsWith('/card/') && location.pathname !== '/card');
 
-  const fullScreenRoutes = ['/traffic-tod', '/brick-breaker', '/farasan-slicer', '/kite-cutter', '/kbc-quiz'];
+  const fullScreenRoutes = ['/traffic-tod', '/brick-breaker', '/farasan-slicer', '/kite-cutter', '/kbc-quiz', '/tirandaji', '/traffic-jam'];
   const isFullScreen = fullScreenRoutes.includes(location.pathname);
 
   if (isCardViewer || isFullScreen) return <div style={{ background: bg, color: txt, minHeight: '100svh' }}>{children}</div>;

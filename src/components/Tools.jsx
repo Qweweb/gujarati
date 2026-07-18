@@ -8,7 +8,7 @@ import { getDailyPanchang } from '../utils/panchangEngine';
 const Tools = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('all');
-  const isDev = localStorage.getItem('user_phone') === '9999999999';
+  const isDev = localStorage.getItem('user_phone') === '9999999999' || localStorage.getItem('supabase_user_mobile') === '9999999999';
 
   // Calendar states
   const [calendarDate, setCalendarDate] = useState(new Date());
@@ -447,6 +447,26 @@ const Tools = () => {
         )}
     </div>
       
+      {/* GUJARAT NEWS MAP BANNER */}
+      <button 
+        onClick={() => navigate('/gujarati-news')}
+        className="w-full relative overflow-hidden bg-gradient-to-r from-amber-600 to-orange-500 rounded-[2rem] p-5 sm:p-6 shadow-lg shadow-orange-500/20 active:scale-95 transition-all text-left flex items-center gap-4 group border border-amber-400/30"
+      >
+        <div className="absolute right-0 top-0 opacity-10 pointer-events-none transform translate-x-4 -translate-y-4">
+          <span className="material-symbols-outlined text-[100px]">map</span>
+        </div>
+        <div className="h-14 w-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0 border border-white/20 group-hover:scale-110 transition-transform shadow-inner">
+          <span className="material-symbols-outlined text-white text-3xl">map</span>
+        </div>
+        <div className="space-y-1 relative z-10 flex-1">
+          <h3 className="font-gujarati font-black text-xl text-white">ગુજરાત સમાચાર નકશો 🗺️</h3>
+          <p className="font-gujarati text-amber-50 text-[10px] sm:text-xs">જીપીએસ આધારિત ૩૩ જિલ્લાના સ્થાનિક લાઈવ સમાચાર</p>
+        </div>
+        <div className="shrink-0 bg-white/20 p-2 rounded-full backdrop-blur-sm">
+          <span className="material-symbols-outlined text-white text-sm">chevron_right</span>
+        </div>
+      </button>
+
       {/* HEALTH BANNER */}
       <button 
         onClick={() => navigate('/health')}
@@ -470,24 +490,22 @@ const Tools = () => {
       {/* COMMUNITY AND CARDS SECTION */}
       <div className="space-y-4 pt-2">
         {/* ROW 1: 2 Cards (Digital Bethak & My Society) */}
-        <div className={isDev ? "grid grid-cols-2 gap-4" : "grid grid-cols-1 gap-4"}>
-          {isDev && (
-            <section 
-              onClick={() => navigate("/community")}
-              className="bg-[#2D3748] p-5 rounded-3xl text-center flex flex-col items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform border border-[#0D9488]/30 relative overflow-hidden cursor-pointer min-h-[140px]"
-            >
-              <div className="absolute right-[-10px] top-[-10px] opacity-10 select-none pointer-events-none text-7xl">
-                groups
-              </div>
-              <div className="h-12 w-12 bg-[#0D9488]/20 rounded-2xl flex items-center justify-center relative z-10 shrink-0">
-                <span className="material-symbols-outlined text-[#0D9488] text-2xl font-bold">groups</span>
-              </div>
-              <div className="relative z-10 mt-1">
-                <h2 className="font-gujarati font-black text-base text-[#F4F4F0]">ડિજિટલ બેઠક</h2>
-                <p className="font-gujarati text-[10px] text-teal-200 mt-1">ગામના સમાચાર ને ચર્ચા</p>
-              </div>
-            </section>
-          )}
+        <div className="grid grid-cols-2 gap-4">
+          <section 
+            onClick={() => navigate("/community")}
+            className="bg-[#2D3748] p-5 rounded-3xl text-center flex flex-col items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform border border-[#0D9488]/30 relative overflow-hidden cursor-pointer min-h-[140px]"
+          >
+            <div className="absolute right-[-10px] top-[-10px] opacity-10 select-none pointer-events-none text-7xl">
+              groups
+            </div>
+            <div className="h-12 w-12 bg-[#0D9488]/20 rounded-2xl flex items-center justify-center relative z-10 shrink-0">
+              <span className="material-symbols-outlined text-[#0D9488] text-2xl font-bold">groups</span>
+            </div>
+            <div className="relative z-10 mt-1">
+              <h2 className="font-gujarati font-black text-base text-[#F4F4F0]">ડિજિટલ બેઠક</h2>
+              <p className="font-gujarati text-[10px] text-teal-200 mt-1">ગામના સમાચાર ને ચર્ચા</p>
+            </div>
+          </section>
 
           <section 
             onClick={() => navigate("/society")}

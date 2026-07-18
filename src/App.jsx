@@ -35,10 +35,6 @@ const PanotiRedirect = () => {
 };
 
 const CommunityRoute = () => {
-  const isDev = localStorage.getItem('user_phone') === '9999999999';
-  if (!isDev) {
-    return <Navigate to="/" replace />;
-  }
   return <FeatureGuard featureKey="community"><Community /></FeatureGuard>;
 };
 
@@ -59,13 +55,16 @@ import KhamanJalebiCrusher from './components/KhamanJalebiCrusher';
 import TrafficTod from './components/TrafficTod';
 import FarasanSlicer from './components/FarasanSlicer';
 import KiteCutter from './components/KiteCutter';
+import TrafficJamHome from './components/TrafficJam/TrafficJamHome';
 import ActionGamesMenu from './components/ActionGamesMenu';
+import TirandajiHome from './components/Tirandaji/TirandajiHome';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import SwipeCards from './components/SwipeCards';
 import MysteryHub from './components/MysteryHub';
 import TravelPassport from './components/TravelPassport';
 import ScratchRewards from './components/ScratchRewards';
 import LandingPage from './components/LandingPage';
+import GujaratNewsMap from './components/GujaratNewsMap';
 import './App.css';
 import { App as CapApp } from '@capacitor/app';
 import { PushNotifications } from '@capacitor/push-notifications';
@@ -332,8 +331,18 @@ function App() {
 
 
 
-  const handleLogin = () => {
+  const handleLogin = (phoneNum) => {
     localStorage.setItem('sanskari_token', 'true');
+    if (phoneNum) {
+      localStorage.setItem('user_phone', phoneNum);
+      localStorage.setItem('supabase_user_mobile', phoneNum);
+      // Also update the profile object if empty
+      const existingProfile = JSON.parse(localStorage.getItem('user_profile') || '{}');
+      if (!existingProfile.mobile) {
+        existingProfile.mobile = phoneNum;
+        localStorage.setItem('user_profile', JSON.stringify(existingProfile));
+      }
+    }
     setIsLoggedIn(true);
   };
 
@@ -459,13 +468,17 @@ function App() {
                 
                 <Route path="/society" element={<FeatureGuard featureKey="society"><MariSociety /></FeatureGuard>} />
                 <Route path="/games" element={<FeatureGuard featureKey="games"><RamatoHub /></FeatureGuard>} />
+                <Route path="/gujarati-games" element={<FeatureGuard featureKey="games"><RamatoHub defaultMode="gujarati" /></FeatureGuard>} />
                 <Route path="/english" element={<FeatureGuard featureKey="english"><EnglishZone /></FeatureGuard>} />
                 <Route path="/kbc-quiz" element={<FeatureGuard featureKey="games"><KbcQuizGame /></FeatureGuard>} />
                 <Route path="/brick-breaker" element={<FeatureGuard featureKey="games"><KhamanJalebiCrusher /></FeatureGuard>} />
                 <Route path="/traffic-tod" element={<FeatureGuard featureKey="games"><TrafficTod /></FeatureGuard>} />
+                <Route path="/traffic-jam" element={<FeatureGuard featureKey="games"><TrafficJamHome /></FeatureGuard>} />
                 <Route path="/farasan-slicer" element={<FeatureGuard featureKey="games"><FarasanSlicer /></FeatureGuard>} />
                 <Route path="/kite-cutter" element={<FeatureGuard featureKey="games"><KiteCutter /></FeatureGuard>} />
+                <Route path="/tirandaji" element={<FeatureGuard featureKey="games"><TirandajiHome /></FeatureGuard>} />
                 <Route path="/action-games" element={<FeatureGuard featureKey="games"><ActionGamesMenu /></FeatureGuard>} />
+                <Route path="/gujarati-news" element={<GujaratNewsMap />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               </Routes>
             </Layout>

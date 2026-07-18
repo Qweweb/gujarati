@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   WORDS_DB, 
   KAHEVAT_DB, 
@@ -63,8 +64,14 @@ const updateStreak = () => {
   return currentStreak;
 };
 
-export default function RamatoHub({ userLocation, onBack }) {
-  const [currentMode, setCurrentMode] = useState(null); // 'gujarati', 'english', or null (landing screen)
+export default function RamatoHub({ userLocation, onBack, defaultMode }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const stateDefaultMode = location.state?.defaultMode;
+
+  const [currentMode, setCurrentMode] = useState(() => {
+    return defaultMode || stateDefaultMode || null;
+  }); // 'gujarati', 'english', or null (landing screen)
   const [activeGame, setActiveGame] = useState(null);
   const [coins, setCoins] = useState(getCoins());
   const [streak, setStreak] = useState(getStreak());
@@ -155,9 +162,13 @@ export default function RamatoHub({ userLocation, onBack }) {
             <button
               key={game.id}
               onClick={() => {
-                setActiveGame(game.id);
-                updateStreak();
-                setStreak(getStreak());
+                if (game.route) {
+                  navigate(game.route);
+                } else {
+                  setActiveGame(game.id);
+                  updateStreak();
+                  setStreak(getStreak());
+                }
               }}
               className="bg-white/90 dark:bg-stone-900/90 backdrop-blur-md border border-stone-200 dark:border-stone-850 p-4 rounded-[1.5rem] md:rounded-[2rem] hover:border-orange-400 hover:shadow-lg transition-all active:scale-[0.95] text-center flex flex-col gap-3 items-center group relative overflow-hidden"
             >

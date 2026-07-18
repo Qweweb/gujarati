@@ -1301,4 +1301,28 @@ export const fetchCitiesForUserIds = async (userIds) => {
   return cityMap;
 };
 
+// Helper to fetch profile cities and photo_urls for user IDs
+export const fetchProfilesForUserIds = async (userIds) => {
+  if (!userIds || userIds.length === 0) return {};
+  const profileMap = {};
+  try {
+    const { data } = await supabase
+      .from('users')
+      .select('id, city, photo_url')
+      .in('id', userIds);
+    
+    if (data) {
+      data.forEach(u => {
+        profileMap[u.id] = {
+          city: u.city || null,
+          photo_url: u.photo_url || null
+        };
+      });
+    }
+  } catch (e) {
+    console.error("Error fetching profiles for user IDs:", e);
+  }
+  return profileMap;
+};
+
 

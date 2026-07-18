@@ -46,6 +46,81 @@ const THEMES = {
   },
 };
 
+const UserAvatar = ({ avatar, name, style, className }) => {
+  const isValidImg = avatar && 
+                     typeof avatar === 'string' && 
+                     avatar.trim() !== '' && 
+                     avatar !== 'Avatar' && 
+                     (avatar.startsWith('http') || avatar.startsWith('/') || avatar.startsWith('data:')) &&
+                     !avatar.includes('pravatar.cc');
+
+  if (isValidImg) {
+    return (
+      <img 
+        src={avatar} 
+        style={{ ...style, objectFit: 'cover' }} 
+        className={className} 
+        alt="" 
+      />
+    );
+  }
+
+  // Fallback: Initials bubble
+  const cleanName = name && typeof name === 'string' ? name.replace(/\(તમે\)/g, '').trim() : '';
+  const firstChar = cleanName ? cleanName.charAt(0).toUpperCase() : 'સા';
+  
+  const colors = [
+    '#0D9488', // Teal
+    '#0284C7', // Sky
+    '#4F46E5', // Indigo
+    '#7C3AED', // Violet
+    '#D97706', // Amber
+    '#DB2777', // Pink
+    '#E11D48', // Rose
+    '#059669', // Emerald
+  ];
+  
+  const charCode = firstChar.charCodeAt(0) || 0;
+  const bgColor = colors[charCode % colors.length];
+
+  // Try to find width/height in className if not in style
+  let size = '36px';
+  if (style?.width) {
+    size = style.width;
+  } else if (className && className.includes('w-10')) {
+    size = '40px';
+  } else if (className && className.includes('w-8')) {
+    size = '32px';
+  }
+
+  const numericSize = parseInt(size);
+  const fontSize = `${numericSize * 0.4}px`;
+
+  return (
+    <div 
+      className={className}
+      style={{
+        width: size,
+        height: size,
+        borderRadius: '50%',
+        ...style,
+        backgroundColor: bgColor,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#FFFFFF',
+        fontWeight: '900',
+        fontSize: fontSize,
+        textTransform: 'uppercase',
+        userSelect: 'none',
+        fontFamily: '"Plus Jakarta Sans", sans-serif',
+      }}
+    >
+      {firstChar}
+    </div>
+  );
+};
+
 export default function LeaderboardUnified({ 
   title = "લીડરબોર્ડ", 
   icon = "social_leaderboard", 
@@ -121,10 +196,10 @@ export default function LeaderboardUnified({
                 }}>
                   {toGujaratiNum(idx + 1)}
                 </span>
-                <img
-                  src={user.avatar || `https://i.pravatar.cc/150?u=${user.name}`}
-                  style={{ width: '36px', height: '36px', borderRadius: '50%', border: t.avatarBorder, objectFit: 'cover' }}
-                  alt=""
+                <UserAvatar
+                  avatar={user.avatar}
+                  name={user.name}
+                  style={{ width: '36px', height: '36px', borderRadius: '50%', border: t.avatarBorder }}
                 />
                 <div>
                   <h4 style={{ margin: 0, fontWeight: 900, fontSize: '13px', color: t.nameColor, fontFamily: '"Noto Serif Gujarati", serif' }}>{user.name || 'ખેલાડી'}</h4>
@@ -198,7 +273,7 @@ export default function LeaderboardUnified({
               <span className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-sm ${idx === 0 ? 'bg-amber-500 text-white' : idx === 1 ? 'bg-stone-400 text-white' : idx === 2 ? 'bg-amber-700 text-white' : 'bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300'}`}>
                 {toGujaratiNum(idx + 1)}
               </span>
-              <img src={user.avatar || `https://i.pravatar.cc/150?u=${user.name || 'default'}`} className="w-10 h-10 rounded-full border border-stone-300 dark:border-stone-700 object-cover" alt="Avatar" />
+              <UserAvatar avatar={user.avatar} name={user.name} className="w-10 h-10 rounded-full border border-stone-300 dark:border-stone-700" />
               <div>
                 <h4 className="font-black text-sm text-stone-800 dark:text-stone-100">{user.name || 'ખેલાડી'}</h4>
                 <div className="flex flex-col gap-0.5 mt-0.5">

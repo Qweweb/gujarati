@@ -201,19 +201,21 @@ export default function SwipeBrickBreaker() {
         
         const userIds = top10.map(x => x.user_id).filter(Boolean);
         
-        let cityMap = {};
+        let profileMap = {};
         if (userIds.length > 0) {
-          const { fetchCitiesForUserIds } = await import('../utils/otlo_helper');
-          cityMap = await fetchCitiesForUserIds(userIds);
+          const { fetchProfilesForUserIds } = await import('../utils/otlo_helper');
+          profileMap = await fetchProfilesForUserIds(userIds);
         }
 
         const mapped = top10.map((item, idx) => {
           const isUser = item.player_name === userName || item.user_id === uid;
+          const uProf = profileMap[item.user_id] || {};
           return {
             name: item.player_name || (isUser ? userName : 'ખેલાડી'),
             score: item.high_score,
             isUser,
-            city: isUser ? (profile.city || cityMap[item.user_id]) : (cityMap[item.user_id] || null)
+            city: isUser ? (profile.city || uProf.city) : (uProf.city || null),
+            avatar: isUser ? (profile.avatar || uProf.photo_url) : (uProf.photo_url || null)
           };
         });
         setLeaderboard(mapped);
@@ -238,6 +240,25 @@ export default function SwipeBrickBreaker() {
   // ─── Generate Row ──────────────────────────────────────────────────────────
   const generateRow = (g) => {
     const cfg = getLevelConfig(g.gameLevel);
+
+    // Check for boss spawn (every 5 waves)
+    if (g.rowsCleared > 0 && g.rowsCleared % 5 === 0 && g.bricks.filter(b => b.type === 'boss').length === 0) {
+      const bossHp = Math.floor(cfg.maxHp * 8);
+      g.bricks.push({
+        x: g.W / 2 - g.bW * 1.5,
+        y: g.brickOffY,
+        w: g.bW * 3,
+        h: g.bH * 3,
+        val: bossHp,
+        type: 'boss',
+        hitScale: 1.0, hitShake: 0, hitGlow: 0
+      });
+      return;
+    }
+
+    const bossNearTop = g.bricks.some(b => b.type === 'boss' && Math.abs(b.y - g.brickOffY) < (g.bH + GAP) * 2.5);
+    if (bossNearTop) return;
+
     const allCols = Array.from({ length: COLS }, (_, i) => i).sort(() => Math.random() - 0.5);
 
     // 1-2 item orbs per row
@@ -285,8 +306,9 @@ export default function SwipeBrickBreaker() {
         else                  hp = Math.floor(cfg.maxHp * 0.6 + Math.random() * cfg.maxHp * 0.5);
         hp = Math.max(1, hp);
 
-        const brickType = triCols.has(c) ? 'triangle' : 'normal';
-        g.bricks.push({ x, y, w: g.bW, h: g.bH, val: hp, type: brickType, dir: brickType === 'triangle' ? rowTriDir : null });
+        const isMoving = Math.random() < 0.15 && !emptyCols.has(c);
+        const brickType = triCols.has(c) ? 'triangle' : (isMoving ? 'moving' : 'normal');
+        g.bricks.push({ x, y, w: g.bW, h: g.bH, val: hp, type: brickType, dir: brickType === 'triangle' ? rowTriDir : null, moveDir: isMoving ? (Math.random() > 0.5 ? 1 : -1) : 0, startX: x });
       }
     }
   };
@@ -301,7 +323,7 @@ export default function SwipeBrickBreaker() {
     cv.height = Math.floor(r.height * dpr);
     if (G.current) {
       G.current.W = r.width; G.current.H = r.height;
-      G.current.dpr = dpr; G.current.playerY = r.height - 40;
+      G.current.dpr = dpr; G.current.playerY = r.height - 90;
       for (let b of G.current.balls) { if (!b.active) b.y = G.current.playerY; }
     }
     return { w: r.width, h: r.height, dpr };
@@ -318,8 +340,8 @@ export default function SwipeBrickBreaker() {
     const bH = bW;
 
     const cfg = getLevelConfig(gameLevel);
-    const topPad = 8;
-    const startRows = Math.min(Math.floor((H * 0.5) / (bH + GAP)), 6);
+    const topPad = 60;
+    const startRows = Math.min(Math.floor((H * 0.45) / (bH + GAP)), 5);
 
     const stateObj = {
       W, H, dpr, bW, bH,
@@ -329,7 +351,7 @@ export default function SwipeBrickBreaker() {
       ballCount: 10 + gameLevel * 3,
       balls: [],
       playerX: W / 2,
-      playerY: H - 40,
+      playerY: H - 90,
       bricks: [], items: [], particles: [],
       brickOffY: topPad,
       firstReturnX: null,
@@ -414,7 +436,7 @@ export default function SwipeBrickBreaker() {
       let angle = (p / 20) * Math.PI * 2;
       g.particles.push({ type: 'dot', x: cx, y: cy, vx: Math.cos(angle) * (5 + Math.random() * 8), vy: Math.sin(angle) * (5 + Math.random() * 8), life: 1.5, c: '#FBBF24', big: true });
     }
-    g.particles.push({ type: 'text', text: '💣 ખમણ!', x: cx, y: cy - 20, vx: 0, vy: -2, life: 2, c: '#FCD34D' });
+    g.particles.push({ type: 'text', text: '💣 જોરદાર!', x: cx, y: cy - 20, vx: 0, vy: -2, life: 2, c: '#FCD34D' });
     let range = brick.w * 1.6;
     for (let j = g.bricks.length - 1; j >= 0; j--) {
       let b = g.bricks[j];
@@ -433,7 +455,7 @@ export default function SwipeBrickBreaker() {
       g.particles.push({ type: 'laser', x, y: cy, life: 0.8 });
       g.particles.push({ type: 'laser', x: cx, y: x, life: 0.8 });
     }
-    g.particles.push({ type: 'text', text: '⚡ ફાફડા!', x: cx, y: cy - 20, vx: 0, vy: -2, life: 2, c: '#A78BFA' });
+    g.particles.push({ type: 'text', text: '⚡ વાહ!', x: cx, y: cy - 20, vx: 0, vy: -2, life: 2, c: '#A78BFA' });
     for (let j = g.bricks.length - 1; j >= 0; j--) {
       let b = g.bricks[j];
       let sameRow = Math.abs((b.y + b.h / 2) - cy) < brick.h * 0.8;
@@ -468,6 +490,19 @@ export default function SwipeBrickBreaker() {
           }
         } else g.state = 'playing';
       } else if (g.state === 'aiming') g.turnBricksBroken = 0;
+
+      // Moving blocks update
+      if (g.state === 'playing' || g.state === 'shooting') {
+        for (let br of g.bricks) {
+          if (br.type === 'moving') {
+            br.x += br.moveDir * 1.5 * dt;
+            if (br.x < 0 || br.x + br.w > g.W || Math.abs(br.x - br.startX) > g.bW * 1.5) {
+              br.moveDir *= -1;
+              br.x += br.moveDir * 1.5 * dt;
+            }
+          }
+        }
+      }
 
       let allReturned = true;
       for (let i = 0; i < g.balls.length; i++) {
@@ -535,29 +570,34 @@ export default function SwipeBrickBreaker() {
             closestBrick.hitScale = 0.88;
             closestBrick.hitShake = 4.0;
             closestBrick.hitGlow = 1.0;
-            g.screenShake = Math.min((g.screenShake || 0) + 1.8, 6.0);
 
             if (closestBrick.val <= 0) {
               let destroyed = { ...closestBrick };
               g.bricks.splice(closestJ, 1);
               g.turnBricksBroken = (g.turnBricksBroken || 0) + 1;
-              playHit(mutedRef.current, 1.0 + Math.random() * 0.4);
-              for (let p = 0; p < 5; p++) {
+              let pitch = 1.0 + Math.min(g.turnBricksBroken * 0.05, 1.0);
+              playHit(mutedRef.current, pitch + (Math.random() - 0.5) * 0.2);
+              
+              const pColor = getBrickColor(1, 10);
+              for (let p = 0; p < 8; p++) {
                 g.particles.push({
-                  type: 'dot',
+                  type: 'crumb',
                   x: destroyed.x + destroyed.w / 2,
                   y: destroyed.y + destroyed.h / 2,
-                  vx: (Math.random() - 0.5) * 10,
-                  vy: (Math.random() - 0.5) * 10,
-                  life: 1,
-                  c: getBrickColor(1, 10)
+                  vx: (Math.random() - 0.5) * 12,
+                  vy: (Math.random() - 0.5) * 12,
+                  life: 1.2,
+                  c: pColor,
+                  rot: Math.random() * Math.PI * 2,
+                  vrot: (Math.random() - 0.5) * 0.4,
+                  shape: Math.random() > 0.5 ? 'rect' : 'tri'
                 });
               }
-              if (g.turnBricksBroken % 5 === 0) {
-                const texts = ['વાહ!', 'જોરદાર!', 'ગજબ!', 'બાપ રે!', 'અદ્ભુત!'];
+              if (g.turnBricksBroken >= 3 && g.turnBricksBroken % 3 === 0) {
+                const texts = ['વાહ!', 'જોરદાર!', 'મોજ આવી ગઈ!', 'ખુબ સરસ!', 'ગજબ!'];
                 g.particles.push({
                   type: 'text',
-                  text: texts[(g.turnBricksBroken / 5 - 1) % texts.length],
+                  text: texts[(g.turnBricksBroken / 3 - 1) % texts.length],
                   x: destroyed.x + destroyed.w / 2,
                   y: destroyed.y,
                   vx: 0,
@@ -707,7 +747,26 @@ export default function SwipeBrickBreaker() {
         let p = g.particles[i]; p.x += p.vx || 0; p.y += p.vy || 0;
         if (p.type === 'dot') { p.vy = (p.vy || 0) + 0.3; p.life -= 0.04; if (p.life <= 0) { g.particles.splice(i, 1); continue; } ctx.fillStyle = p.c || '#fff'; ctx.globalAlpha = Math.max(0, p.life); ctx.beginPath(); ctx.arc(p.x, p.y, p.big ? 4 : 2, 0, Math.PI * 2); ctx.fill(); }
         else if (p.type === 'laser') { p.life -= 0.08; if (p.life <= 0) { g.particles.splice(i, 1); continue; } ctx.globalAlpha = Math.max(0, p.life * 0.7); ctx.fillStyle = '#A78BFA'; ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI * 2); ctx.fill(); }
-        else if (p.type === 'text') { p.life -= 0.02; if (p.life <= 0) { g.particles.splice(i, 1); continue; } ctx.globalAlpha = Math.max(0, Math.min(1, p.life * 2)); ctx.fillStyle = p.c; ctx.shadowColor = '#F59E0B'; ctx.shadowBlur = 12; ctx.font = '800 18px "Noto Serif Gujarati", sans-serif'; ctx.textAlign = 'center'; ctx.fillText(p.text, p.x, p.y); ctx.shadowBlur = 0; }
+        else if (p.type === 'crumb') {
+          p.vy = (p.vy || 0) + 0.3; p.rot += p.vrot; p.life -= 0.03;
+          if (p.life <= 0) { g.particles.splice(i, 1); continue; }
+          ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+          ctx.globalAlpha = Math.max(0, p.life); ctx.fillStyle = p.c;
+          ctx.beginPath();
+          if (p.shape === 'rect') ctx.rect(-3, -3, 6, 6);
+          else { ctx.moveTo(0, -4); ctx.lineTo(4, 3); ctx.lineTo(-4, 3); }
+          ctx.fill(); ctx.restore();
+        } else if (p.type === 'star') {
+          p.rot += p.vrot; p.life -= 0.05;
+          if (p.life <= 0) { g.particles.splice(i, 1); continue; }
+          ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+          ctx.globalAlpha = Math.max(0, p.life); ctx.fillStyle = '#FDE047';
+          ctx.shadowColor = '#F59E0B'; ctx.shadowBlur = 4;
+          ctx.beginPath();
+          ctx.moveTo(0, -3); ctx.lineTo(1, -1); ctx.lineTo(3, 0); ctx.lineTo(1, 1);
+          ctx.lineTo(0, 3); ctx.lineTo(-1, 1); ctx.lineTo(-3, 0); ctx.lineTo(-1, -1);
+          ctx.fill(); ctx.shadowBlur = 0; ctx.restore();
+        } else if (p.type === 'text') { p.life -= 0.02; if (p.life <= 0) { g.particles.splice(i, 1); continue; } ctx.globalAlpha = Math.max(0, Math.min(1, p.life * 2)); ctx.fillStyle = p.c; ctx.shadowColor = '#F59E0B'; ctx.shadowBlur = 12; ctx.font = '800 18px "Noto Serif Gujarati", sans-serif'; ctx.textAlign = 'center'; ctx.fillText(p.text, p.x, p.y); ctx.shadowBlur = 0; }
       }
       ctx.globalAlpha = 1;
 
@@ -793,6 +852,20 @@ export default function SwipeBrickBreaker() {
           ctx.fillStyle = '#fff'; ctx.font = `800 ${Math.max(7, h * 0.24)}px sans-serif`;
           ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(br.val, tx, ty);
 
+        } else if (br.type === 'boss') {
+          br.animPulse = (br.animPulse || 0) + 0.05;
+          let pulse = Math.sin(br.animPulse) * 0.1 + 0.9;
+          const color = '#BE123C';
+          ctx.shadowColor = color; ctx.shadowBlur = 15 * pulse + br.hitGlow * 30; ctx.fillStyle = color;
+          ctx.beginPath(); ctx.roundRect(br.x, br.y, br.w, br.h, 12); ctx.fill(); ctx.shadowBlur = 0;
+          ctx.strokeStyle = '#FDA4AF'; ctx.lineWidth = 3;
+          ctx.beginPath(); ctx.roundRect(br.x + 6, br.y + 6, br.w - 12, br.h - 12, 6); ctx.stroke();
+          ctx.fillStyle = '#fff'; ctx.font = `900 ${Math.max(16, br.h * 0.5)}px sans-serif`;
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText(br.val, br.x + br.w / 2, br.y + br.h / 2);
+          ctx.font = `bold ${Math.max(12, br.h * 0.2)}px sans-serif`;
+          ctx.fillText('👹 BOSS', br.x + br.w / 2, br.y + br.h * 0.2);
+
         } else {
           const color = getBrickColor(br.val, cfg.maxHp);
           ctx.shadowColor = color; ctx.shadowBlur = 6 + br.hitGlow * 20; ctx.fillStyle = color;
@@ -813,11 +886,30 @@ export default function SwipeBrickBreaker() {
           let angle = Math.atan2(dy, dx);
           if (angle > -0.1) angle = -0.1; if (angle < -Math.PI + 0.1) angle = -Math.PI + 0.1;
           let aimDx = Math.cos(angle), aimDy = Math.sin(angle);
-          ctx.strokeStyle = 'rgba(20,184,166,0.6)'; ctx.setLineDash([6, 6]); ctx.lineWidth = 2;
-          ctx.beginPath(); ctx.moveTo(g.playerX, g.playerY);
+          
           let rx = g.playerX, ry = g.playerY;
-          for (let step = 0; step < 50; step++) { rx += aimDx * 12; ry += aimDy * 12; if (rx < g.BALL_RAD || rx > g.W - g.BALL_RAD) aimDx *= -1; if (ry < g.BALL_RAD) aimDy *= -1; ctx.lineTo(rx, ry); }
-          ctx.stroke(); ctx.setLineDash([]);
+          let maxSteps = 45;
+          let timeOffset = (time * 0.005) % 1;
+          
+          for (let step = 0; step < maxSteps; step++) {
+            rx += aimDx * 14; ry += aimDy * 14; 
+            if (rx < g.BALL_RAD || rx > g.W - g.BALL_RAD) aimDx *= -1; 
+            if (ry < g.BALL_RAD) aimDy *= -1; 
+            
+            let progress = step / maxSteps;
+            let alpha = Math.max(0, 1 - progress);
+            let radius = Math.max(1, 4 - (progress * 3));
+            
+            let pulse = Math.sin((progress - timeOffset) * Math.PI * 8) * 0.5 + 0.5;
+            let currentRadius = radius + (pulse * 1.5);
+            let currentAlpha = alpha * (0.5 + pulse * 0.5);
+
+            ctx.beginPath(); 
+            ctx.arc(rx, ry, currentRadius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(52, 211, 153, ${currentAlpha})`;
+            ctx.shadowColor = '#34D399'; ctx.shadowBlur = currentRadius * 2;
+            ctx.fill(); ctx.shadowBlur = 0;
+          }
         }
       }
 
@@ -840,16 +932,50 @@ export default function SwipeBrickBreaker() {
 
       // Balls
       for (let b of g.balls) {
-        ctx.fillStyle = b.active ? '#FCD34D' : 'rgba(20,184,166,0.3)';
-        ctx.shadowColor = b.active ? '#FCD34D' : 'transparent'; ctx.shadowBlur = b.active ? 6 : 0;
-        ctx.beginPath(); ctx.arc(b.x, b.y, g.BALL_RAD, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
+        if (b.active) {
+          let speed = Math.hypot(b.vx, b.vy);
+          if (speed > 0.1) {
+             let trailLen = Math.min(speed * 0.08, 40);
+             let nx = b.vx / speed, ny = b.vy / speed;
+             let grad = ctx.createLinearGradient(b.x, b.y, b.x - nx * trailLen, b.y - ny * trailLen);
+             grad.addColorStop(0, 'rgba(253, 224, 71, 0.95)');
+             grad.addColorStop(1, 'rgba(245, 158, 11, 0)');
+             
+             ctx.beginPath();
+             ctx.moveTo(b.x + ny * g.BALL_RAD*0.8, b.y - nx * g.BALL_RAD*0.8);
+             ctx.lineTo(b.x - nx * trailLen, b.y - ny * trailLen);
+             ctx.lineTo(b.x - ny * g.BALL_RAD*0.8, b.y + nx * g.BALL_RAD*0.8);
+             ctx.closePath();
+             ctx.fillStyle = grad;
+             ctx.fill();
+             
+             if (Math.random() < 0.25) {
+               g.particles.push({
+                 type: 'star',
+                 x: b.x, y: b.y,
+                 vx: -nx * 2 + (Math.random()-0.5)*2,
+                 vy: -ny * 2 + (Math.random()-0.5)*2,
+                 life: 0.8 + Math.random()*0.5,
+                 rot: Math.random() * Math.PI,
+                 vrot: 0.1
+               });
+             }
+          }
+          ctx.beginPath(); ctx.arc(b.x, b.y, g.BALL_RAD, 0, Math.PI * 2);
+          ctx.fillStyle = '#fff';
+          ctx.shadowColor = '#FCD34D'; ctx.shadowBlur = 8; ctx.fill(); ctx.shadowBlur = 0;
+          ctx.strokeStyle = '#F59E0B'; ctx.lineWidth = 1; ctx.stroke();
+        } else {
+          ctx.fillStyle = 'rgba(20,184,166,0.3)';
+          ctx.beginPath(); ctx.arc(b.x, b.y, g.BALL_RAD, 0, Math.PI * 2); ctx.fill();
+        }
       }
 
       // Legend
       if (g.state === 'aiming') {
         ctx.globalAlpha = 0.45; ctx.font = '9px sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-        ctx.fillStyle = '#FDE68A'; ctx.fillText('💣 ખમણ=3×3', 6, 6);
-        ctx.fillStyle = '#DDD6FE'; ctx.fillText('⚡ ફાફડા=Row+Col', 6, 18);
+        ctx.fillStyle = '#FDE68A'; ctx.fillText('💣 બોમ્બ=3×3', 6, 6);
+        ctx.fillStyle = '#DDD6FE'; ctx.fillText('⚡ લેસર=Row+Col', 6, 18);
         ctx.globalAlpha = 1;
       }
 
@@ -912,12 +1038,40 @@ export default function SwipeBrickBreaker() {
       <div style={{ flex: '1 1 0', position: 'relative', overflow: 'hidden' }}>
         <canvas ref={canvasRef} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp} style={{ width: '100%', height: '100%', display: 'block', touchAction: 'none' }} />
 
+        {/* RECALL BUTTON */}
+        {screen === 'playing' && (
+          <button 
+            onClick={recallBalls} 
+            style={{ 
+              position: 'absolute', 
+              bottom: 25, 
+              left: '50%', 
+              transform: 'translateX(-50%)', 
+              width: 100, 
+              height: 48, 
+              borderRadius: 8, 
+              background: 'rgba(0, 0, 0, 0.4)', 
+              border: '2px solid #EF4444', 
+              color: '#EF4444', 
+              fontSize: 24, 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              cursor: 'pointer',
+              zIndex: 10,
+              boxShadow: '0 0 10px rgba(239, 68, 68, 0.4), inset 0 0 10px rgba(239, 68, 68, 0.3)'
+            }}
+          >
+            ⏬
+          </button>
+        )}
+
         {/* ── START ── */}
         {screen === 'start' && (
           <Overlay>
             <p style={{ fontSize: 48, margin: 0 }}>🥘⚡</p>
-            <p style={ts('#14B8A6', 24)}>ખમણ-ફાફડા ક્રશર</p>
-            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 11, fontFamily: 'sans-serif', margin: 0, textAlign: 'center' }}>💣 ખમણ = 3×3 ધડાકો • ⚡ ફાફડા = Row+Col</p>
+            <p style={ts('#14B8A6', 24)}>ગુજરાતી બ્રિક સ્મેશ</p>
+            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 11, fontFamily: 'sans-serif', margin: 0, textAlign: 'center' }}>💣 બોમ્બ = 3×3 ધડાકો • ⚡ લેસર = Row+Col</p>
             {userName ? <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 11, fontFamily: 'sans-serif', margin: 0 }}>આવો, {userName}! Best: {highScore.toLocaleString()}</p> : null}
             {savedLevel > 1 && <Btn onClick={() => startGame(savedLevel)} c1="#F59E0B" c2="#78350F">▶ Level {savedLevel} Resume</Btn>}
             <Btn onClick={() => startGame(1)} c1="#14B8A6" c2="#042F2E">🎮 New Game</Btn>
@@ -955,7 +1109,7 @@ export default function SwipeBrickBreaker() {
           <Overlay justify="center">
             <div className="w-full max-w-sm pointer-events-auto" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
               <LeaderboardUnified 
-                title="ખમણ જલેબી ક્રશર લીડરબોર્ડ"
+                title="ગુજરાતી બ્રિક સ્મેશ લીડરબોર્ડ"
                 icon="social_leaderboard"
                 data={leaderboard}
                 scoreLabel="સ્કોર"

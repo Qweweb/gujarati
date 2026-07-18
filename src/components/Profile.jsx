@@ -175,7 +175,15 @@ const Profile = () => {
     { title: "લોગ-આઉટ (Logout)", icon: "logout", desc: "તમારું એકાઉન્ટ સેફ્ટીથી બંધ કરો", isAction: true, isDanger: true, action: handleLogout },
   ];
 
-  const avatarSrc = profile.avatar || `https://i.pravatar.cc/100?u=${profile.name || 'gujarati'}`;
+  const isValidPhoto = (url) => {
+    return url && 
+           typeof url === 'string' && 
+           url.trim() !== '' && 
+           url !== 'Avatar' && 
+           (url.startsWith('http') || url.startsWith('/') || url.startsWith('data:')) &&
+           !url.includes('pravatar.cc');
+  };
+
   const displayName = profile.name || profile.email || 'ગુજરાતી યુઝર';
   const genderLabel = profile.gender === 'male' ? 'પુરુષ' : profile.gender === 'female' ? 'સ્ત્રી' : profile.gender === 'other' ? 'અન્ય' : '';
 
@@ -192,12 +200,17 @@ const Profile = () => {
       <section className="bg-white dark:bg-dark-surface rounded-[2.5rem] p-8 shadow-sm border border-primary/5 flex flex-col items-center text-center gap-4 relative overflow-hidden">
         {/* Google avatar */}
         <div className="h-24 w-24 bg-primary/10 rounded-full flex items-center justify-center p-1 border-4 border-white shadow-xl">
-            <img 
-              src={avatarSrc} 
-              className="w-full h-full object-cover rounded-full" 
-              alt="Profile"
-              onError={(e) => { e.target.src = `https://i.pravatar.cc/100?u=${profile.name}`; }}
-            />
+            {isValidPhoto(profile.avatar) ? (
+              <img 
+                src={profile.avatar} 
+                className="w-full h-full object-cover rounded-full" 
+                alt="Profile"
+              />
+            ) : (
+              <div className="w-full h-full rounded-full flex items-center justify-center text-white font-black text-4xl bg-teal-600 uppercase select-none">
+                {(profile.name || 'સા').charAt(0).toUpperCase()}
+              </div>
+            )}
         </div>
         <div className="space-y-1">
             <h2 className="font-gujarati font-black text-3xl text-on-surface dark:text-dark-text">
@@ -291,12 +304,17 @@ const Profile = () => {
             {/* Google User Banner */}
             {googleUser && (
               <div className="flex items-center gap-3 p-3 bg-teal-50 dark:bg-teal-950/20 rounded-2xl">
-                <img 
-                  src={profile.avatar || `https://i.pravatar.cc/40`}
-                  className="w-10 h-10 rounded-full object-cover"
-                  onError={(e) => { e.target.style.display='none'; }}
-                  alt="Google"
-                />
+                {isValidPhoto(profile.avatar) ? (
+                  <img 
+                    src={profile.avatar}
+                    className="w-10 h-10 rounded-full object-cover"
+                    alt="Google"
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-black text-lg bg-teal-600 uppercase select-none shrink-0">
+                    {(profile.name || 'સા').charAt(0).toUpperCase()}
+                  </div>
+                )}
                 <div>
                   <p className="font-gujarati font-bold text-sm text-teal-700">Google Account થી Login</p>
                   <p className="font-label text-xs text-stone-500">{profile.email}</p>
@@ -324,12 +342,17 @@ const Profile = () => {
               <div className="flex flex-col items-center gap-2 pb-2">
                 <div className="relative h-20 w-20">
                   <div className="h-20 w-20 bg-teal-50 dark:bg-teal-950/20 rounded-full flex items-center justify-center p-0.5 border-4 border-teal-700/20 shadow-inner overflow-hidden relative group">
-                    <img 
-                      src={avatar || `https://i.pravatar.cc/100?u=${name || 'gujarati'}`} 
-                      className="w-full h-full object-cover rounded-full" 
-                      alt="Profile Preview"
-                      onError={(e) => { e.target.src = `https://i.pravatar.cc/100?u=${name}`; }}
-                    />
+                    {isValidPhoto(avatar) ? (
+                      <img 
+                        src={avatar} 
+                        className="w-full h-full object-cover rounded-full" 
+                        alt="Profile Preview"
+                      />
+                    ) : (
+                      <div className="w-full h-full rounded-full flex items-center justify-center text-white font-black text-3xl bg-teal-600 uppercase select-none">
+                        {(name || 'સા').charAt(0).toUpperCase()}
+                      </div>
+                    )}
                     {uploading && (
                       <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                         <span className="material-symbols-outlined text-white text-lg animate-spin">sync</span>

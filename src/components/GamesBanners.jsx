@@ -113,6 +113,22 @@ export default function GamesBanners({ onGujaratiClick }) {
         )}
       </div>
 
+      {/* Full width banner for Tirandaji */}
+      <Link to="/tirandaji" className="press" style={{
+        borderRadius:24, padding:'24px 20px', textDecoration:'none',
+        background:'linear-gradient(135deg, #14532D, #064E3B)', border:'1px solid rgba(52, 211, 153, 0.3)',
+        boxShadow:'0 8px 24px rgba(0,0,0,0.3)', position:'relative', overflow:'hidden',
+        display:'flex', alignItems:'center', gap:16, marginBottom: '12px'
+      }}>
+        <span style={{ position:'absolute', right:'-10px', top:'50%', transform:'translateY(-50%)', fontSize:'120px', opacity:0.15, pointerEvents:'none', zIndex:0 }}>🏹</span>
+        <div style={{ position:'absolute', top:10, right:10, background:'linear-gradient(135deg,#34D399,#10B981)', padding:'4px 10px', borderRadius:12, fontSize:11, fontWeight:800, color:'#064E3B', boxShadow:'0 2px 6px rgba(0,0,0,0.2)', zIndex:1 }}>HOT 🔥</div>
+        <div style={{ width:72, height:72, borderRadius:20, background:'linear-gradient(135deg,#34D399,#10B981)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:36, boxShadow:'0 8px 16px rgba(0,0,0,0.25)', border:'1px solid rgba(255,255,255,0.2)', zIndex:1, position:'relative', flexShrink: 0 }}>🏹</div>
+        <div style={{ position:'relative', zIndex:1 }}>
+          <p className="type-gu-title" style={{ color:'#ECFDF5', margin:0, fontSize:'22px', fontWeight:900, lineHeight:1.1 }}>તીરંદાજી</p>
+          <p className="type-caption" style={{ color:'#A7F3D0', margin:'6px 0 0', fontWeight:700, fontSize:'13px', lineHeight:1.3 }}>તીરને ગૂંચવણમાંથી બહાર કાઢો</p>
+        </div>
+      </Link>
+
       {/* 2x2 grid for Action Games */}
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
         {/* ખમણ-જલેબી */}
@@ -126,7 +142,7 @@ export default function GamesBanners({ onGujaratiClick }) {
           <div style={{ position:'absolute', top:10, right:10, background:khamanTheme.badge, padding:'4px 10px', borderRadius:12, fontSize:11, fontWeight:800, color:khamanTheme.badgeText, boxShadow:'0 2px 6px rgba(0,0,0,0.2)', zIndex:1 }}>NEW 🎮</div>
           <div style={{ width:64, height:64, borderRadius:20, background:khamanTheme.iconBg, display:'flex', alignItems:'center', justifyContent:'center', fontSize:32, boxShadow:'0 8px 16px rgba(0,0,0,0.25)', border:'1px solid rgba(255,255,255,0.2)', zIndex:1, position:'relative' }}>🍡</div>
           <div style={{ position:'relative', zIndex:1 }}>
-            <p className="type-gu-title" style={{ color:khamanTheme.titleColor, margin:0, fontSize:'16px', fontWeight:900 }}>ખમણ-જલેબી</p>
+            <p className="type-gu-title" style={{ color:khamanTheme.titleColor, margin:0, fontSize:'16px', fontWeight:900 }}>ગુજરાતી બ્રિક સ્મેશ</p>
             <p className="type-caption" style={{ color:khamanTheme.subtitleColor, margin:'4px 0 0', fontWeight:700, fontSize:'11px' }}>બ્રિક્સ તોડો</p>
           </div>
         </Link>

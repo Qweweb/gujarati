@@ -231,6 +231,13 @@
             <div style="position: absolute; top: 8px; width: 100%; text-align: center; color: rgba(255,255,255,0.6); font-size: 10px; font-weight: bold; letter-spacing: 2px;">LEVEL PROGRESS</div>
         </div>
 
+        <!-- Special Active Timers -->
+        <div id="active-timers" class="hidden" style="position: absolute; top: 120px; right: 15px; z-index: 100; text-align: right; pointer-events: none; text-shadow: 1px 1px 2px #000; display: flex; flex-direction: column; gap: 5px;">
+        </div>
+
+        <!-- Weather Overlay -->
+        <div id="weather-overlay" style="position: absolute; top: 0; left: 0; width: 100vw; height: 100dvh; pointer-events: none; z-index: 50; transition: background 1s;"></div>
+
         <div class="stats hidden" id="game-stats">
             <div class="hud-box">
                 <span style="color: #aaa; font-size: 0.8em;">SCORE</span><br>
@@ -303,6 +310,7 @@
         const whiteBusImg = new Image(); whiteBusImg.src = 'white_bus.png';
         const greenCarImg = new Image(); greenCarImg.src = 'green_car.png';
         const whiteCowImg = new Image(); whiteCowImg.src = 'white_cow.png';
+        const policeImg = new Image(); policeImg.src = 'police.png';
         
         const ui = {
             start: document.getElementById('start-screen'),
@@ -417,6 +425,12 @@
         let freeCngSpawnedThisLevel = 0;
         const COINS_PER_LEVEL = 200;
         
+        // New Features Variables
+        let nitroTimer = 0, magnetTimer = 0, vipTimer = 0;
+        let isNitro = false, isMagnet = false, isVip = false;
+        let weather = 'day', weatherTimer = 0;
+        let rainParticles = [];
+        
         let entities = [], particles = [];
         
         function sendBridgeMessage(type, payload) {
@@ -432,7 +446,8 @@
                 this.h = this.w * 1.5;
                 this.y = height - this.h - 80;
                 this.targetX = (this.lane * laneWidth) + (laneWidth / 2);
-                this.x += (this.targetX - this.x) * 0.3;
+                let slideSpeed = weather === 'rain' ? 0.06 : 0.3; // Slippery in rain
+                this.x += (this.targetX - this.x) * slideSpeed;
             },
             draw() {
                 ctx.save();
@@ -446,6 +461,22 @@
                 } else {
                     ctx.fillStyle = '#00B140'; ctx.beginPath(); ctx.roundRect(-this.w/2, 0, this.w, this.h, 10); ctx.fill();
                 }
+
+                if (isNitro) {
+                    ctx.fillStyle = '#FF8800';
+                    ctx.beginPath();
+                    ctx.moveTo(-15, this.h/2);
+                    ctx.lineTo(15, this.h/2);
+                    ctx.lineTo(0, this.h/2 + 40 + Math.random()*30);
+                    ctx.fill();
+                }
+
+                if (isMagnet) {
+                    ctx.strokeStyle = `rgba(136, 68, 255, ${0.5 + Math.sin(frameCount*0.2)*0.3})`;
+                    ctx.lineWidth = 4;
+                    ctx.beginPath(); ctx.arc(0, 0, this.w * 1.5, 0, Math.PI*2); ctx.stroke();
+                }
+
                 ctx.restore();
             }
         };
@@ -476,10 +507,39 @@
                     this.cost = 15;
                 } else if (type === 'free_cng') {
                     this.w = laneWidth * 0.5; this.h = this.w * 1.4; this.color = '#FFD700';
+                } else if (type === 'police') {
+                    this.w = laneWidth * 0.6; this.h = this.w * 1.8; this.speedMult = 1.35;
+                } else if (type === 'pothole') {
+                    this.w = laneWidth * 0.4; this.h = this.w * 0.4; this.speedMult = 0;
+                } else if (type === 'nitro') {
+                    this.w = laneWidth * 0.4; this.h = this.w; this.color = '#FF2222';
+                } else if (type === 'magnet') {
+                    this.w = laneWidth * 0.4; this.h = this.w; this.color = '#8844FF';
+                } else if (type === 'vip') {
+                    this.w = laneWidth * 0.35; this.h = this.w; this.color = '#FF00FF';
                 }
             }
             update() { 
-                this.y += currentSpeed * this.speedMult; 
+                let spd = isNitro ? currentSpeed * 2.5 : currentSpeed;
+                this.y += spd * this.speedMult; 
+
+                // Police Chase Logic
+                if (this.type === 'police' && this.y > player.y - 350 && this.y < player.y) {
+                    if (!this.isChangingLane && Math.abs(this.lane - player.lane) === 1) {
+                        this.isChangingLane = true;
+                        this.targetLane = player.lane;
+                        this.targetX = (this.targetLane * laneWidth) + (laneWidth / 2);
+                    }
+                }
+
+                // Magnet Logic
+                if (this.type === 'passenger' && isMagnet && this.y > 0 && this.y < player.y + 200) {
+                    const dx = player.x - this.x;
+                    const dy = player.y - this.y;
+                    this.x += dx * 0.08;
+                    this.y += dy * 0.08;
+                }
+
                 if (this.isChangingLane) {
                     const diff = this.targetX - this.x;
                     this.x += diff * 0.1;
@@ -566,6 +626,38 @@
                     ctx.fillText('100%', 0, this.h/2);
                     ctx.shadowBlur = 0;
                     ctx.font = 'bold 16px sans-serif'; ctx.fillStyle = '#00FF44'; ctx.fillText('FREE', 0, -10);
+                }
+                else if (this.type === 'police') {
+                    if (policeImg.complete && policeImg.naturalWidth > 0) {
+                        const aspect = policeImg.naturalHeight / policeImg.naturalWidth;
+                        const drawH = this.w * aspect;
+                        ctx.drawImage(policeImg, -this.w/2, -drawH/2 + this.h/2, this.w, drawH);
+                        
+                        // Keep the flashing lightbar on top!
+                        ctx.fillStyle = (frameCount % 10 < 5) ? '#FF0000' : '#0000FF';
+                        ctx.fillRect(-this.w/2 + 10, -drawH/2 + this.h/2 + 20, this.w - 20, 8);
+                    }
+                    else { 
+                        ctx.fillStyle = '#0033CC'; ctx.fillRect(-this.w/2, 0, this.w, this.h);
+                        ctx.fillStyle = (frameCount % 10 < 5) ? '#FF0000' : '#0000FF';
+                        ctx.fillRect(-this.w/2 + 5, -this.h/2 + 10, this.w - 10, 10);
+                    }
+                } 
+                else if (this.type === 'pothole') {
+                    ctx.fillStyle = '#222'; ctx.beginPath(); ctx.ellipse(0, 0, this.w/2, this.h/2, 0, 0, Math.PI*2); ctx.fill();
+                    ctx.strokeStyle = '#111'; ctx.lineWidth = 3; ctx.stroke();
+                } 
+                else if (this.type === 'nitro') {
+                    ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(0, 0, this.w/2, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = '#FFF'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = 'bold ' + (this.w*0.6) + 'px sans-serif'; ctx.fillText('🌶️', 0, 0);
+                } 
+                else if (this.type === 'magnet') {
+                    ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(0, 0, this.w/2, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = '#FFF'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = 'bold ' + (this.w*0.6) + 'px sans-serif'; ctx.fillText('🧲', 0, 0);
+                } 
+                else if (this.type === 'vip') {
+                    ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(0, 0, this.w/2, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = '#FFF'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = 'bold ' + (this.w*0.6) + 'px sans-serif'; ctx.fillText('👨‍💼', 0, 0);
                 }
                 ctx.restore();
             }
@@ -684,8 +776,21 @@
                     if (r < 0.60) {
                         const types = ['car', 'car', 'bus', 'cow', 'white_bus', 'green_car', 'white_cow'];
                         entities.push(new Entity(types[Math.floor(Math.random()*types.length)], lane));
+                        
+                        // Small chance for police or pothole
+                        if (Math.random() < 0.15) {
+                            let l2 = (lane + 1) % numLanes;
+                            if (Math.random() < 0.3) entities.push(new Entity('police', l2));
+                            else entities.push(new Entity('pothole', l2));
+                        }
                     } else if (r < 0.85) {
                         entities.push(new Entity('passenger', lane));
+                        if (Math.random() < 0.15) {
+                            let pwr = Math.random();
+                            if (pwr < 0.3) entities.push(new Entity('nitro', (lane+1)%numLanes));
+                            else if (pwr < 0.6) entities.push(new Entity('magnet', (lane+1)%numLanes));
+                            else entities.push(new Entity('vip', (lane+1)%numLanes));
+                        }
                     } else {
                         entities.push(new Entity('cng', lane));
                     }
@@ -737,8 +842,16 @@
                 const eh = e.h - ePadY*2;
                 
                 if (px < ex + ew && px + pw > ex && py < ey + eh && py + ph > ey) {
-                    if (['bus', 'car', 'cow', 'white_bus', 'green_car', 'white_cow'].includes(e.type)) {
-                        gameOver(); return;
+                    if (['bus', 'car', 'cow', 'white_bus', 'green_car', 'white_cow', 'police'].includes(e.type)) {
+                        if (isNitro) {
+                            // Blast them away!
+                            playPowerupSound();
+                            particles.push(new Particle(e.x, e.y, '💥', '#FF8800', true));
+                            coins += 50;
+                            entities.splice(i, 1);
+                        } else {
+                            gameOver(); return;
+                        }
                     } else if (e.type === 'passenger') {
                         coins += e.val;
                         playCoinSound();
@@ -750,10 +863,31 @@
                     } else if (e.type === 'free_cng') {
                         energy = 100;
                         playPowerupSound();
-                        particles.push(new Particle(e.x, e.y, 'FREE 100%!', '#00FF44'));
+                        particles.push(new Particle(e.x, e.y, '100% FULL!', '#00FF44'));
                         entities.splice(i, 1);
-                        ui.energy.parentElement.style.transform = 'scale(1.15)';
-                        setTimeout(() => ui.energy.parentElement.style.transform = 'scale(1)', 150);
+                    } else if (e.type === 'pothole') {
+                        particles.push(new Particle(e.x, e.y, 'OUCH!', '#FF0000'));
+                        currentSpeed = Math.max(baseSpeed, currentSpeed - 2);
+                        energy -= 5;
+                        entities.splice(i, 1);
+                    } else if (e.type === 'nitro') {
+                        isNitro = true;
+                        nitroTimer = 60 * 5; // 5 seconds
+                        playPowerupSound();
+                        particles.push(new Particle(e.x, e.y, 'NITRO!', '#FF2222'));
+                        entities.splice(i, 1);
+                    } else if (e.type === 'magnet') {
+                        isMagnet = true;
+                        magnetTimer = 60 * 10; // 10 seconds
+                        playPowerupSound();
+                        particles.push(new Particle(e.x, e.y, 'MAGNET!', '#8844FF'));
+                        entities.splice(i, 1);
+                    } else if (e.type === 'vip') {
+                        isVip = true;
+                        vipTimer = 60 * 30; // 30 seconds
+                        playPowerupSound();
+                        particles.push(new Particle(e.x, e.y, 'VIP MISSION!', '#FF00FF'));
+                        entities.splice(i, 1);
                     } else if (e.type === 'cng') {
                         playPowerupSound();
                         if (coins > 0) {
@@ -829,7 +963,74 @@
                 if(state === 'PLAYING') entities[i].update();
                 if (entities[i].y > height + 200) entities.splice(i, 1);
             }
-            for (let i = particles.length - 1; i >= 0; i--) {
+            for(let i=entities.length-1; i>=0; i--) {
+                entities[i].draw();
+            }
+
+            // Weather System (Night/Rain overlays and logic)
+            weatherTimer++;
+            if (weatherTimer > 60 * 45) { // every 45s chance to change
+                weatherTimer = 0;
+                if (level > 2 && Math.random() < 0.4) {
+                    weather = ['day', 'rain', 'night'][Math.floor(Math.random() * 3)];
+                } else {
+                    weather = 'day';
+                }
+                const overlay = document.getElementById('weather-overlay');
+                if (weather === 'rain') {
+                    overlay.style.background = 'rgba(0, 50, 100, 0.3)';
+                } else if (weather === 'night') {
+                    // Dark with a hole for headlight
+                    overlay.style.background = 'radial-gradient(circle at 50% 80%, transparent 10%, rgba(0,0,0,0.85) 60%)';
+                } else {
+                    overlay.style.background = 'transparent';
+                }
+            }
+
+            // Rain particles
+            if (weather === 'rain') {
+                for(let k=0; k<5; k++) rainParticles.push({x: Math.random()*width, y: -20, vy: 15 + Math.random()*10});
+            }
+            for(let i=rainParticles.length-1; i>=0; i--) {
+                let r = rainParticles[i];
+                r.y += r.vy;
+                ctx.fillStyle = 'rgba(170, 221, 255, 0.6)'; ctx.fillRect(r.x, r.y, 2, 10);
+                if (r.y > height) rainParticles.splice(i, 1);
+            }
+
+            // Active Timers UI & Logic
+            if (isNitro) {
+                nitroTimer--;
+                if (nitroTimer <= 0) isNitro = false;
+            }
+            if (isMagnet) {
+                magnetTimer--;
+                if (magnetTimer <= 0) isMagnet = false;
+            }
+            if (isVip) {
+                vipTimer--;
+                if (vipTimer <= 0) {
+                    isVip = false;
+                    coins += 500;
+                    playCoinSound();
+                    particles.push(new Particle(width/2, height/2, '+₹500 VIP!', '#FFD700'));
+                }
+            }
+            
+            let timerHtml = '';
+            if (isNitro) timerHtml += `<div style="color:#FF2222; font-weight:bold; font-size:18px;">🌶️ NITRO: ${Math.ceil(nitroTimer/60)}s</div>`;
+            if (isMagnet) timerHtml += `<div style="color:#8844FF; font-weight:bold; font-size:18px;">🧲 MAGNET: ${Math.ceil(magnetTimer/60)}s</div>`;
+            if (isVip) timerHtml += `<div style="color:#FF00FF; font-weight:bold; font-size:18px;">👨‍💼 VIP: ${Math.ceil(vipTimer/60)}s</div>`;
+            const activeTimersEl = document.getElementById('active-timers');
+            if (timerHtml) {
+                activeTimersEl.innerHTML = timerHtml;
+                activeTimersEl.classList.remove('hidden');
+            } else {
+                activeTimersEl.classList.add('hidden');
+            }
+
+            // Draw particles
+            for(let i=particles.length-1; i>=0; i--) {
                 particles[i].update();
                 if (particles[i].life <= 0) particles.splice(i, 1);
             }

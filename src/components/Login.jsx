@@ -69,7 +69,7 @@ const Login = ({ onLogin }) => {
   const handleVerifyOtp = () => {
     const enteredOtp = otp.join('');
     if (phone === "9999999999" && enteredOtp === "0000") {
-        onLogin();
+        onLogin(phone);
     } else {
         setError("OTP ખોટો છે. (Test OTP: 0000)");
     }

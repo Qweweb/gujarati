@@ -12,6 +12,7 @@ const ActionGamesMenu = () => {
       traffic: { bg:'linear-gradient(135deg,#14532D,#064E3B)',  border:'1px solid rgba(52,211,153,0.3)',   badge:'linear-gradient(135deg,#FDE047,#EAB308)',  badgeText:'#422006', iconBg:'linear-gradient(135deg,#34D399,#10B981)', titleColor:'#ECFDF5', subtitleColor:'#A7F3D0' },
       farasan: { bg:'linear-gradient(135deg,#7F1D1D,#991B1B)',  border:'1px solid rgba(248,113,113,0.3)', badge:'linear-gradient(135deg,#FCA5A5,#EF4444)',  badgeText:'#450A0A', iconBg:'linear-gradient(135deg,#F87171,#DC2626)', titleColor:'#FEF2F2', subtitleColor:'#FECACA' },
       patang:  { bg:'linear-gradient(135deg,#1E3A8A,#1D4ED8)',  border:'1px solid rgba(96,165,250,0.3)',  badge:'linear-gradient(135deg,#93C5FD,#3B82F6)',  badgeText:'#1E3A8A', iconBg:'linear-gradient(135deg,#60A5FA,#2563EB)', titleColor:'#EFF6FF', subtitleColor:'#BFDBFE' },
+      tirandaji: { bg:'linear-gradient(135deg,#D97706,#B45309)', border:'1px solid rgba(251,191,36,0.3)', badge:'linear-gradient(135deg,#FCD34D,#F59E0B)', badgeText:'#78350F', iconBg:'linear-gradient(135deg,#F59E0B,#D97706)', titleColor:'#FEF3C7', subtitleColor:'#FDE68A' },
     };
     const byTheme = {
       theme1: {
@@ -31,6 +32,7 @@ const ActionGamesMenu = () => {
         traffic: { bg:'linear-gradient(135deg,#F08833,#73322B)', border:'1px solid rgba(255,142,31,0.3)',  badge:'linear-gradient(135deg,#FF8E1F,#F08833)', badgeText:'#2B1814', iconBg:'linear-gradient(135deg,#FF8E1F,#F08833)', titleColor:'#FFEFEF', subtitleColor:'#FFD1C9' },
         farasan: { bg:'linear-gradient(135deg,#73322B,#2B1814)', border:'1px solid rgba(240,136,51,0.3)',  badge:'linear-gradient(135deg,#FF8E1F,#F08833)', badgeText:'#2B1814', iconBg:'linear-gradient(135deg,#FF8E1F,#F08833)', titleColor:'#FFEFEF', subtitleColor:'#FFD1C9' },
         patang:  { bg:'linear-gradient(135deg,#FF8E1F,#73322B)', border:'1px solid rgba(240,136,51,0.3)',  badge:'linear-gradient(135deg,#FF8E1F,#F08833)', badgeText:'#2B1814', iconBg:'linear-gradient(135deg,#FF8E1F,#F08833)', titleColor:'#FEF3C7', subtitleColor:'#FDE68A' },
+        tirandaji: { bg:'linear-gradient(135deg,#D97706,#B45309)', border:'1px solid rgba(251,191,36,0.3)', badge:'linear-gradient(135deg,#FCD34D,#F59E0B)', badgeText:'#78350F', iconBg:'linear-gradient(135deg,#F59E0B,#D97706)', titleColor:'#FEF3C7', subtitleColor:'#FDE68A' },
       },
     };
     return (byTheme[themeId] && byTheme[themeId][cardName]) || defaults[cardName];
@@ -41,6 +43,7 @@ const ActionGamesMenu = () => {
   const trafficTheme = getCardTheme('traffic', themeId);
   const farasanTheme = getCardTheme('farasan', themeId);
   const patangTheme  = getCardTheme('patang',  themeId);
+  const tirandajiTheme = getCardTheme('tirandaji', themeId);
 
   return (
     <div className="min-h-screen bg-stone-50 dark:bg-stone-900 pb-24 font-gujarati flex flex-col relative"
@@ -67,7 +70,7 @@ const ActionGamesMenu = () => {
             <div style={{ position:'absolute', top:10, right:10, background:khamanTheme.badge, padding:'4px 10px', borderRadius:12, fontSize:11, fontWeight:800, color:khamanTheme.badgeText, boxShadow:'0 2px 6px rgba(0,0,0,0.2)', zIndex:1 }}>NEW 🎮</div>
             <div style={{ width:64, height:64, borderRadius:20, background:khamanTheme.iconBg, display:'flex', alignItems:'center', justifyContent:'center', fontSize:32, boxShadow:'0 8px 16px rgba(0,0,0,0.25)', border:'1px solid rgba(255,255,255,0.2)', zIndex:1, position:'relative' }}>🍡</div>
             <div style={{ position:'relative', zIndex:1 }}>
-              <p className="type-gu-title" style={{ color:khamanTheme.titleColor, margin:0, fontSize:'16px', fontWeight:900 }}>ખમણ-જલેબી</p>
+              <p className="type-gu-title" style={{ color:khamanTheme.titleColor, margin:0, fontSize:'16px', fontWeight:900 }}>ગુજરાતી બ્રિક સ્મેશ</p>
               <p className="type-caption" style={{ color:khamanTheme.subtitleColor, margin:'4px 0 0', fontWeight:700, fontSize:'11px' }}>બ્રિક્સ તોડો</p>
             </div>
           </Link>
@@ -117,6 +120,22 @@ const ActionGamesMenu = () => {
             <div style={{ position:'relative', zIndex:1 }}>
               <p className="type-gu-title" style={{ color:patangTheme.titleColor, margin:0, fontSize:'16px', fontWeight:900 }}>પતંગ કાપો</p>
               <p className="type-caption" style={{ color:patangTheme.subtitleColor, margin:'4px 0 0', fontWeight:700, fontSize:'11px' }}>કાઈ પો છે</p>
+            </div>
+          </Link>
+
+          {/* તીરંદાજી (Tap Away) */}
+          <Link to="/tirandaji" className="press" style={{
+            borderRadius:24, padding:'24px 12px', textDecoration:'none',
+            background:tirandajiTheme.bg, border:tirandajiTheme.border,
+            boxShadow:'0 8px 24px rgba(0,0,0,0.3)', position:'relative', overflow:'hidden',
+            display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', gap:14,
+          }}>
+            <span style={{ position:'absolute', right:'-10px', top:'50%', transform:'translateY(-50%)', fontSize:'90px', opacity:0.1, pointerEvents:'none', zIndex:0 }}>🏹</span>
+            <div style={{ position:'absolute', top:10, right:10, background:tirandajiTheme.badge, padding:'4px 10px', borderRadius:12, fontSize:11, fontWeight:800, color:tirandajiTheme.badgeText, boxShadow:'0 2px 6px rgba(0,0,0,0.2)', zIndex:1 }}>NEW ✨</div>
+            <div style={{ width:64, height:64, borderRadius:20, background:tirandajiTheme.iconBg, display:'flex', alignItems:'center', justifyContent:'center', fontSize:32, boxShadow:'0 8px 16px rgba(0,0,0,0.25)', border:'1px solid rgba(255,255,255,0.2)', zIndex:1, position:'relative' }}>🏹</div>
+            <div style={{ position:'relative', zIndex:1 }}>
+              <p className="type-gu-title" style={{ color:tirandajiTheme.titleColor, margin:0, fontSize:'16px', fontWeight:900 }}>તીરંદાજી</p>
+              <p className="type-caption" style={{ color:tirandajiTheme.subtitleColor, margin:'4px 0 0', fontWeight:700, fontSize:'11px' }}>માર્ગ ખોલો</p>
             </div>
           </Link>
         </div>

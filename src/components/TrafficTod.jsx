@@ -72,19 +72,21 @@ export default function TrafficTod() {
         
         const userIds = top10.map(x => x.user_id).filter(Boolean);
         
-        let cityMap = {};
+        let profileMap = {};
         if (userIds.length > 0) {
-          const { fetchCitiesForUserIds } = await import('../utils/otlo_helper');
-          cityMap = await fetchCitiesForUserIds(userIds);
+          const { fetchProfilesForUserIds } = await import('../utils/otlo_helper');
+          profileMap = await fetchProfilesForUserIds(userIds);
         }
 
         const mapped = top10.map((item) => {
           const isUser = item.player_name === userName || item.user_id === uid;
+          const uProf = profileMap[item.user_id] || {};
           return {
             name: item.player_name,
             score: item.high_score,
             isUser,
-            city: isUser ? (profile.city || cityMap[item.user_id]) : (cityMap[item.user_id] || null)
+            city: isUser ? (profile.city || uProf.city) : (uProf.city || null),
+            avatar: isUser ? (profile.avatar || uProf.photo_url) : (uProf.photo_url || null)
           };
         });
         setLeaderboard(mapped);
@@ -151,19 +153,21 @@ export default function TrafficTod() {
         
         const userIds = top10.map(x => x.user_id).filter(Boolean);
         
-        let cityMap = {};
+        let profileMap = {};
         if (userIds.length > 0) {
-          const { fetchCitiesForUserIds } = await import('../utils/otlo_helper');
-          cityMap = await fetchCitiesForUserIds(userIds);
+          const { fetchProfilesForUserIds } = await import('../utils/otlo_helper');
+          profileMap = await fetchProfilesForUserIds(userIds);
         }
 
         const mapped = top10.map((item, idx) => {
           const isUser = item.player_name === userName || item.user_id === uid;
+          const uProf = profileMap[item.user_id] || {};
           return {
             name: item.player_name,
             score: item.high_score,
             isUser,
-            city: isUser ? (profile.city || cityMap[item.user_id]) : (cityMap[item.user_id] || null)
+            city: isUser ? (profile.city || uProf.city) : (uProf.city || null),
+            avatar: isUser ? (profile.avatar || uProf.photo_url) : (uProf.photo_url || null)
           };
         });
         setLeaderboard(mapped);
@@ -216,24 +220,24 @@ export default function TrafficTod() {
         <div style={{
           position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          background: 'rgba(0,0,0,0.9)', color: 'white', zIndex: 1000,
-          padding: '20px', boxSizing: 'border-box'
+          background: 'rgba(0,0,0,0.95)', color: 'white', zIndex: 1000,
+          padding: '40px 15px 15px 15px', boxSizing: 'border-box'
         }}>
-          <h1 style={{ color: '#FF4444', fontSize: '3rem', margin: '0 0 10px 0', textAlign: 'center', textShadow: '2px 2px 0 #000' }}>લોચો વાગ્યો!</h1>
+          <h1 style={{ color: '#FF4444', fontSize: '2rem', margin: '0 0 10px 0', textAlign: 'center', textShadow: '2px 2px 0 #000' }}>લોચો વાગ્યો!</h1>
           
-          <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-            <div style={{ background: 'rgba(255,255,255,0.1)', padding: '15px 25px', borderRadius: '15px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
-              <p style={{ margin: 0, color: '#ccc', fontSize: '14px' }}>DISTANCE</p>
-              <p style={{ margin: 0, fontSize: '26px', fontWeight: 'bold' }}>{finalScore}m</p>
+          <div style={{ display: 'flex', gap: '15px', marginBottom: '10px' }}>
+            <div style={{ background: 'rgba(255,255,255,0.1)', padding: '10px 20px', borderRadius: '15px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
+              <p style={{ margin: 0, color: '#ccc', fontSize: '12px' }}>DISTANCE</p>
+              <p style={{ margin: 0, fontSize: '20px', fontWeight: 'bold' }}>{finalScore}m</p>
             </div>
-            <div style={{ background: 'rgba(255,255,255,0.1)', padding: '15px 25px', borderRadius: '15px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
-              <p style={{ margin: 0, color: '#ccc', fontSize: '14px' }}>BHAADA EARNED</p>
-              <p style={{ margin: 0, fontSize: '26px', fontWeight: 'bold', color: '#FFD700' }}>₹ {finalCoins}</p>
+            <div style={{ background: 'rgba(255,255,255,0.1)', padding: '10px 20px', borderRadius: '15px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
+              <p style={{ margin: 0, color: '#ccc', fontSize: '12px' }}>BHAADA</p>
+              <p style={{ margin: 0, fontSize: '20px', fontWeight: 'bold', color: '#FFD700' }}>₹ {finalCoins}</p>
             </div>
           </div>
 
           {/* Leaderboard */}
-          <div className="mt-6 w-full max-w-md px-4 pointer-events-auto text-left">
+          <div className="w-full max-w-md px-2 pointer-events-auto text-left" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
             <LeaderboardUnified 
               title="ટ્રાફિક તોડ લીડરબોર્ડ"
               icon="social_leaderboard"
@@ -246,10 +250,10 @@ export default function TrafficTod() {
           <button 
             onClick={restartGame}
             style={{
-              padding: '15px 40px', fontSize: '20px', fontWeight: 'bold', pointerEvents: 'auto',
+              padding: '12px 30px', fontSize: '18px', fontWeight: 'bold', pointerEvents: 'auto',
               background: 'linear-gradient(135deg, #00FF44, #00CC00)', color: 'white',
-              border: 'none', borderRadius: '30px', marginTop: '25px', cursor: 'pointer',
-              boxShadow: '0 4px 15px rgba(0, 255, 68, 0.4)', textTransform: 'uppercase'
+              border: 'none', borderRadius: '30px', marginTop: '15px', cursor: 'pointer',
+              boxShadow: '0 4px 15px rgba(0, 255, 68, 0.4)', textTransform: 'uppercase', flexShrink: 0
             }}
           >
             PLAY AGAIN
