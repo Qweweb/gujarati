@@ -62,7 +62,7 @@ import SwipeCards from './components/SwipeCards';
 import MysteryHub from './components/MysteryHub';
 import TravelPassport from './components/TravelPassport';
 import ScratchRewards from './components/ScratchRewards';
-import ActionGamesMenu from './components/games/ActionGamesMenu';
+import ActionGamesMenu from './components/ActionGamesMenu';
 import LandingPage from './components/LandingPage';
 import GujaratNewsMap from './components/GujaratNewsMap';
 import './App.css';
