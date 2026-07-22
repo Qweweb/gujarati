@@ -398,7 +398,7 @@ function App() {
   // Detect if accessing from a standard web browser (non-native platform)
   const isBrowser = !Capacitor.isNativePlatform();
   const hasBypass = localStorage.getItem('sanskari_web_bypass') === 'true';
-  const isAllowedWebRoute = isAdminRoute || isPublicCardRoute || currentPath.startsWith('/privacy-policy') || hasBypass;
+  const isAllowedWebRoute = isAdminRoute || isPublicCardRoute || currentPath.startsWith('/privacy-policy') || currentPath.startsWith('/privacypolicy') || hasBypass;
 
   if (isBrowser && !isAllowedWebRoute) {
     return (
@@ -480,6 +480,7 @@ function App() {
                 <Route path="/action-games" element={<FeatureGuard featureKey="games"><ActionGamesMenu /></FeatureGuard>} />
                 <Route path="/gujarati-news" element={<GujaratNewsMap />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/privacypolicy" element={<PrivacyPolicy />} />
               </Routes>
             </Layout>
           } />
