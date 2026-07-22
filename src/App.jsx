@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import Layout from './components/Layout';
 import Dashboard from './components/Dashboard';
@@ -56,13 +56,13 @@ import TrafficTod from './components/TrafficTod';
 import FarasanSlicer from './components/FarasanSlicer';
 import KiteCutter from './components/KiteCutter';
 import TrafficJamHome from './components/TrafficJam/TrafficJamHome';
-import ActionGamesMenu from './components/ActionGamesMenu';
 import TirandajiHome from './components/Tirandaji/TirandajiHome';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import SwipeCards from './components/SwipeCards';
 import MysteryHub from './components/MysteryHub';
 import TravelPassport from './components/TravelPassport';
 import ScratchRewards from './components/ScratchRewards';
+import ActionGamesMenu from './components/games/ActionGamesMenu';
 import LandingPage from './components/LandingPage';
 import GujaratNewsMap from './components/GujaratNewsMap';
 import './App.css';
@@ -382,44 +382,10 @@ function App() {
   }
 
 
-
-  const currentPath = window.location.pathname;
-
-  // Handle secret testing path for developers/admins to bypass browser landing page
-  if (currentPath === '/gjapp' || currentPath.startsWith('/gjapp/')) {
-    localStorage.setItem('sanskari_web_bypass', 'true');
-    window.location.href = '/';
-    return null;
-  }
-
-  const isPublicCardRoute = currentPath === '/c' || currentPath.startsWith('/c/') || (currentPath.startsWith('/card/') && currentPath !== '/card') || currentPath.startsWith('/vcard/');
-  const isAdminRoute = currentPath.startsWith('/gujarati-admin');
-
-  // Detect if accessing from a standard web browser (non-native platform)
-  const isBrowser = !Capacitor.isNativePlatform();
-  const hasBypass = localStorage.getItem('sanskari_web_bypass') === 'true';
-  const isPrivacyRoute = currentPath.startsWith('/privacy-policy') || currentPath.startsWith('/privacypolicy');
-  const isAllowedWebRoute = isAdminRoute || isPublicCardRoute || isPrivacyRoute || hasBypass;
-
-  if (isBrowser && !isAllowedWebRoute) {
-    return (
-      <ThemeProvider>
-        <LandingPage />
-      </ThemeProvider>
-    );
-  }
-
-  if (!isLoggedIn && !isPublicCardRoute && !isAdminRoute && !isPrivacyRoute) {
-     return (
-       <ThemeProvider>
-         <Login onLogin={handleLogin} />
-       </ThemeProvider>
-     );
-  }
-
   return (
     <ThemeProvider>
       <Router>
+        <GlobalAppGuard isLoggedIn={isLoggedIn} handleLogin={handleLogin}>
         <Routes>
           {/* Standalone Admin Route (No App Layout) */}
           <Route path="/gujarati-admin/*" element={<AdminDashboard />} />
@@ -486,6 +452,7 @@ function App() {
             </Layout>
           } />
         </Routes>
+        </GlobalAppGuard>
       </Router>
     </ThemeProvider>
   );
