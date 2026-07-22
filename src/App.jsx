@@ -122,6 +122,12 @@ const GlobalAppGuard = ({ isLoggedIn, handleLogin, children }) => {
     return null;
   }
 
+  // Handle account deletion route without .html extension
+  if (currentPath === '/delete-account') {
+    window.location.href = '/delete-account.html';
+    return null;
+  }
+
   const isPublicCardRoute = currentPath === '/c' || currentPath.startsWith('/c/') || (currentPath.startsWith('/card/') && currentPath !== '/card') || currentPath.startsWith('/vcard/');
   const isAdminRoute = currentPath.startsWith('/gujarati-admin');
   const isPrivacyRoute = currentPath.startsWith('/privacy-policy') || currentPath.startsWith('/privacypolicy');
