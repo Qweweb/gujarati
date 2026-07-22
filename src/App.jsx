@@ -398,7 +398,8 @@ function App() {
   // Detect if accessing from a standard web browser (non-native platform)
   const isBrowser = !Capacitor.isNativePlatform();
   const hasBypass = localStorage.getItem('sanskari_web_bypass') === 'true';
-  const isAllowedWebRoute = isAdminRoute || isPublicCardRoute || currentPath.startsWith('/privacy-policy') || currentPath.startsWith('/privacypolicy') || hasBypass;
+  const isPrivacyRoute = currentPath.startsWith('/privacy-policy') || currentPath.startsWith('/privacypolicy');
+  const isAllowedWebRoute = isAdminRoute || isPublicCardRoute || isPrivacyRoute || hasBypass;
 
   if (isBrowser && !isAllowedWebRoute) {
     return (
@@ -408,7 +409,7 @@ function App() {
     );
   }
 
-  if (!isLoggedIn && !isPublicCardRoute && !isAdminRoute) {
+  if (!isLoggedIn && !isPublicCardRoute && !isAdminRoute && !isPrivacyRoute) {
      return (
        <ThemeProvider>
          <Login onLogin={handleLogin} />
