@@ -111,6 +111,37 @@ const FeatureGuard = ({ children, featureKey, fallbackPath = "/" }) => {
   return children;
 };
 
+const GlobalAppGuard = ({ isLoggedIn, handleLogin, children }) => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  // Handle secret testing path for developers/admins to bypass browser landing page
+  if (currentPath === '/gjapp' || currentPath.startsWith('/gjapp/')) {
+    localStorage.setItem('sanskari_web_bypass', 'true');
+    window.location.href = '/';
+    return null;
+  }
+
+  const isPublicCardRoute = currentPath === '/c' || currentPath.startsWith('/c/') || (currentPath.startsWith('/card/') && currentPath !== '/card') || currentPath.startsWith('/vcard/');
+  const isAdminRoute = currentPath.startsWith('/gujarati-admin');
+  const isPrivacyRoute = currentPath.startsWith('/privacy-policy') || currentPath.startsWith('/privacypolicy');
+
+  // Detect if accessing from a standard web browser (non-native platform)
+  const isBrowser = !Capacitor.isNativePlatform();
+  const hasBypass = localStorage.getItem('sanskari_web_bypass') === 'true';
+  const isAllowedWebRoute = isAdminRoute || isPublicCardRoute || isPrivacyRoute || hasBypass;
+
+  if (isBrowser && !isAllowedWebRoute) {
+    return <LandingPage />;
+  }
+
+  if (!isLoggedIn && !isPublicCardRoute && !isAdminRoute && !isPrivacyRoute) {
+     return <Login onLogin={handleLogin} />;
+  }
+
+  return children;
+};
+
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem('sanskari_darkMode') === 'true';
