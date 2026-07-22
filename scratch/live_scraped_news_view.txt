@@ -1,0 +1,58 @@
+Total articles: 7
+
+ID: 1
+Source: VTV ગુજરાતી
+Title: દેશમાં સ્વરોજગારમાં ગુજરાતના શહેરો સૌથી આગળ | Gujarat Self Employment MoSPI Report
+Published At: 2026-07-04T04:22:00+00:00
+District: rajkot
+Town: None
+Link: https://www.vtvgujarati.com/news-details/gujarat-self-employment-mospi-report-labour-market-dynamics
+--------------------------------------------------
+ID: 2
+Source: VTV ગુજરાતી
+Title: રાજકોટમાં સગીરાને પ્રેમજાળમાં ફસાવી યુવકે વારંવાર દુષ્કર્મ આચર્યું | young man raped a minor girl in Rajkot after ensnaring her in a love trap.
+Published At: 2026-07-04T10:10:00+00:00
+District: rajkot
+Town: None
+Link: https://www.vtvgujarati.com/news-details/rajkot-a-young-man-repeatedly-raped-a-minor-girl-after-ensnaring-her-in-a-love-trap
+--------------------------------------------------
+ID: 3
+Source: VTV ગુજરાતી
+Title: Vastu Shastra| Home Vastu Tips| ઘરમાં રાખેલી આ 5 વસ્તુઓ બની શકે છે ગરીબીનું કારણ!| VTV Gujarati
+Published At: 2026-07-04T09:06:00+00:00
+District: amreli
+Town: None
+Link: https://www.vtvgujarati.com/news-details/vastu-tips-remove-these-5-things-from-home-for-prosperity
+--------------------------------------------------
+ID: 50
+Source: સંદેશ સમાચાર
+Title: PM Modi Gujarat visit: ગુજરાત બનશે સેમિકન્ડક્ટર હબ, PM મોદી સાણંદમાં રૂ. 7600 કરોડના CG Semi પ્લાન્ટનું કરશે લોકાર્પણ
+Published At: 2026-07-04T16:35:35+05:30
+District: ahmedabad
+Town: None
+Link: https://sandesh.com/gujarat/news/ahmedabad/pm-modi-gujarat-visit-sanand-cg-semi-semiconductor-plant-inauguration
+--------------------------------------------------
+ID: 51
+Source: સંદેશ સમાચાર
+Title: Amreli News: માસૂમ આયુષીના મોત મામલે રાજુલામાં આક્રોશ, ધારાસભ્યની આગેવાનીમાં ન્યાયની માગ સાથે રેલી
+Published At: 2026-07-04T16:26:27+05:30
+District: amreli
+Town: None
+Link: https://sandesh.com/gujarat/maru-saher-maru-gaam/news/amreli/amreli-news-outrage-in-rajula-over-innocent-ayushis-death-rally-led-by-mla-demanding-justice
+--------------------------------------------------
+ID: 52
+Source: સંદેશ સમાચાર
+Title: Rajkotના ધોરાજીમાં હિટ એન્ડ રનની ઘટના: બે ઈજાગ્રસ્તોમાંથી એકની હાલત ગંભીર
+Published At: 2026-07-04T15:31:33+05:30
+District: rajkot
+Town: None
+Link: https://sandesh.com/gujarat/news/rajkot/hit-and-run-incident-in-dhoraji-rajkot-one-of-the-two-injured-is-in-critical-condition
+--------------------------------------------------
+ID: 53
+Source: સંદેશ સમાચાર
+Title: Amreli: જાફરાબાદનો દરિયો ગાંડોતૂર, 15 ફૂટ ઊંચા મોજા ઉછળ્યા, બંદર પર 3 નંબરનું સિગ્નલ લગાવાયું
+Published At: 2026-07-04T14:27:42+05:30
+District: amreli
+Town: None
+Link: https://sandesh.com/gujarat/maru-saher-maru-gaam/news/amreli/jafrabad-rough-sea-high-tidal-waves-port-signal-3-hoisted-boats-anchored
+--------------------------------------------------

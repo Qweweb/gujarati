@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import LZString from 'lz-string';
+import { motion, AnimatePresence } from 'framer-motion';
 
 
 const gujToEngMap = {
@@ -1291,7 +1292,8 @@ const DigitalCard = () => {
   const [layoutStyle, setLayoutStyle] = useState('classic');
   const [profileImage, setProfileImage] = useState(null); // Layout Style State
   const [selectedPreset, setSelectedPreset] = useState(null); // Business preset
-  const [currentStep, setCurrentStep] = useState(1); // Creator Wizard State
+  const [currentStep, setCurrentStep] = useState(1);
+  const [activeSheet, setActiveSheet] = useState(null); // Creator Wizard State
 
   const applyBusinessPreset = (preset) => {
     setSelectedPreset(preset.id);
@@ -1795,56 +1797,87 @@ END:VCARD`;
   // CREATOR / BUILDER MODE RENDER
   // =========================================================================
   return (
-    <div className="animate-fade-in space-y-6 pb-12 font-gujarati text-on-surface">
-      {/* Page Header */}
-      <div className="flex items-center gap-4">
-        <button 
-          onClick={() => navigate('/tools')}
-          className="h-10 w-10 bg-white dark:bg-stone-800 rounded-xl shadow-xs flex items-center justify-center text-primary border border-primary/10 active:scale-95 transition-transform cursor-pointer shrink-0"
-        >
-          <span className="material-symbols-outlined font-black">arrow_back</span>
-        </button>
-        <div className="space-y-0.5">
-          <h2 className="font-gujarati font-black text-2xl text-primary md:text-3xl">ડિજિટલ બિઝનેસ કાર્ડ</h2>
-          <p className="font-gujarati text-outline text-sm">તમારા ધંધા કે વ્યવસાય માટે મફત મિની-વેબસાઇટ બનાવો અને કસ્ટમર્સ સાથે લિંક શેર કરો.</p>
-        </div>
-      </div>
-
+    <div className="fixed inset-0 bg-stone-950 font-gujarati overflow-hidden flex flex-col z-[100]">
       {toastText && (
-        <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 bg-stone-900/90 backdrop-blur-md text-white font-gujarati text-xs px-5 py-3 rounded-2xl shadow-xl border border-amber-500/20">
+        <div className="absolute top-6 left-1/2 transform -translate-x-1/2 z-50 bg-stone-900/90 backdrop-blur-md text-white font-gujarati text-xs px-5 py-3 rounded-2xl shadow-xl border border-amber-500/20">
           {toastText}
         </div>
       )}
 
-      {/* Main Grid: Config Form + Live Preview Mock */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      {/* Main Full-Screen Preview Area */}
+      <div 
+        className={`flex-1 overflow-y-auto overflow-x-hidden relative ${activeTheme.bg} ${activeTheme.text} transition-colors duration-700 pb-24`}
+        onClick={() => setActiveSheet(null)}
+      >
+        <div className="absolute inset-0 z-0 pointer-events-none" style={{ backgroundImage: activePattern?.bg !== 'none' ? activePattern?.bg : 'none', backgroundSize: activePattern?.size || 'auto', backgroundRepeat: activePattern?.repeat || 'no-repeat', backgroundPosition: activePattern?.position || 'center' }}></div>
+        <div className="absolute top-0 right-0 h-48 w-48 rounded-full blur-[80px] opacity-25 pointer-events-none" style={{ backgroundColor: customColor }}></div>
         
-        {/* Left Side Config Form (Wizard Steps) */}
-        <div className="lg:col-span-7 space-y-6">
-          
-          {/* Stepper Header */}
-          <div className="bg-white dark:bg-dark-surface p-3 sm:p-4 rounded-[2rem] shadow-sm border border-primary/10 flex justify-between items-center overflow-x-auto hide-scrollbar gap-2">
-            {[
-              { num: 1, label: 'ડિઝાઇન', icon: 'palette' },
-              { num: 2, label: 'પ્રોફાઇલ', icon: 'person' },
-              { num: 3, label: 'કેટલોગ', icon: 'storefront' },
-              { num: 4, label: 'પબ્લિશ', icon: 'rocket_launch' }
-            ].map(step => (
-              <button 
-                key={step.num}
-                onClick={() => setCurrentStep(step.num)}
-                className={`flex flex-col items-center gap-1 min-w-[70px] p-2 rounded-2xl transition-all ${currentStep === step.num ? 'bg-primary/10 text-primary' : 'text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900/50'}`}
-              >
-                <span className={`material-symbols-outlined text-xl ${currentStep === step.num ? 'fill-1' : ''}`}>{step.icon}</span>
-                <span className={`font-gujarati text-[10px] font-black ${currentStep === step.num ? 'text-primary' : 'text-stone-500'}`}>{step.label}</span>
-              </button>
-            ))}
-          </div>
+        {/* Back Button */}
+        <button 
+          onClick={(e) => { e.stopPropagation(); navigate('/tools'); }}
+          className="absolute top-4 left-4 z-40 h-10 w-10 bg-black/20 backdrop-blur-md rounded-xl flex items-center justify-center text-white border border-white/10 active:scale-95"
+        >
+          <span className="material-symbols-outlined font-black">arrow_back</span>
+        </button>
 
-          <div className="bg-white dark:bg-dark-surface rounded-[2rem] border border-primary/10 dark:border-primary/5 overflow-hidden shadow-xs p-5 sm:p-6 space-y-5 min-h-[500px]">
-          
-          {currentStep === 1 && (
-            <div className="space-y-6 animate-fade-in">
+        <div className="w-full max-w-lg mx-auto min-h-[90vh] pt-20 px-4 relative z-10"
+             onClick={(e) => { 
+                e.stopPropagation(); 
+                if (!activeSheet) setActiveSheet('design'); 
+             }}>
+          <div className="pointer-events-none" style={{pointerEvents: 'auto'}}>
+            <CardContent 
+               data={renderedData} 
+               activeTheme={activeTheme} 
+               isPreview={true} 
+               downloadVcf={downloadVcf} 
+               navigate={navigate}
+            />
+          </div>
+        </div>
+        
+        {/* Powered By Footer in Preview */}
+        <div className="w-full border-t border-white/5 pt-4 pb-20 mt-10 text-center text-[10px] opacity-60">
+            Powered by: <a href="https://gujaratiapp.in" target="_blank" rel="noreferrer" className="underline font-bold hover:text-amber-400">gujaratiapp.in</a>
+        </div>
+      </div>
+
+      {/* Bottom Action Bar */}
+      <div className="absolute bottom-0 left-0 right-0 z-40 bg-white/10 dark:bg-stone-900/90 backdrop-blur-xl border-t border-white/10 p-3 pb-safe-4 flex justify-between items-center px-6 text-white max-w-lg mx-auto rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.3)]">
+        <button onClick={() => setActiveSheet(activeSheet === 'design' ? null : 'design')} className={`flex flex-col items-center gap-1 transition-all ${activeSheet==='design'?'text-amber-400 scale-110':'text-white/70 hover:text-white'}`}>
+           <span className="material-symbols-outlined text-2xl">palette</span>
+           <span className="text-[10px] font-bold">ડિઝાઇન</span>
+        </button>
+        <button onClick={() => setActiveSheet(activeSheet === 'profile' ? null : 'profile')} className={`flex flex-col items-center gap-1 transition-all ${activeSheet==='profile'?'text-amber-400 scale-110':'text-white/70 hover:text-white'}`}>
+           <span className="material-symbols-outlined text-2xl">person</span>
+           <span className="text-[10px] font-bold">પ્રોફાઇલ</span>
+        </button>
+        <button onClick={() => setActiveSheet(activeSheet === 'catalog' ? null : 'catalog')} className={`flex flex-col items-center gap-1 transition-all ${activeSheet==='catalog'?'text-amber-400 scale-110':'text-white/70 hover:text-white'}`}>
+           <span className="material-symbols-outlined text-2xl">storefront</span>
+           <span className="text-[10px] font-bold">કેટલોગ</span>
+        </button>
+        <button onClick={() => setActiveSheet(activeSheet === 'publish' ? null : 'publish')} className={`flex flex-col items-center gap-1 transition-all ${activeSheet==='publish'?'text-amber-400 scale-110':'text-white/70 hover:text-white'}`}>
+           <span className="material-symbols-outlined text-2xl">rocket_launch</span>
+           <span className="text-[10px] font-bold">પબ્લિશ</span>
+        </button>
+      </div>
+
+      {/* Bottom Sheets */}
+      <AnimatePresence>
+        {activeSheet && (
+          <motion.div
+            initial={{ y: '100%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="absolute bottom-[76px] left-0 right-0 z-30 bg-white dark:bg-stone-900 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.2)] border-t border-stone-200 dark:border-stone-800 max-h-[75vh] min-h-[40vh] flex flex-col max-w-lg mx-auto overflow-hidden"
+          >
+            <div className="w-12 h-1.5 bg-stone-300 dark:bg-stone-700 rounded-full mx-auto mt-4 mb-2 shrink-0 cursor-pointer hover:bg-stone-400 transition-colors" onClick={() => setActiveSheet(null)}></div>
+            
+            <div className="overflow-y-auto px-5 py-2 pb-10 flex-1 hide-scrollbar">
+              {activeSheet === 'design' && (
+                <div className="text-stone-900 dark:text-stone-100">
+                  <div className="space-y-6 animate-fade-in">
               <h3 className="font-gujarati font-black text-lg text-primary flex items-center gap-2 border-b border-primary/10 pb-3">
                 <span className="material-symbols-outlined">palette</span> ડિઝાઇન અને લેઆઉટ
               </h3>
@@ -1987,10 +2020,11 @@ END:VCARD`;
             </div>
 
             </div>
-          )}
-
-          {currentStep === 2 && (
-            <div className="space-y-6 animate-fade-in">
+                </div>
+              )}
+              {activeSheet === 'profile' && (
+                <div className="text-stone-900 dark:text-stone-100">
+                  <div className="space-y-6 animate-fade-in">
               <h3 className="font-gujarati font-black text-lg text-primary flex items-center gap-2 border-b border-primary/10 pb-3">
                 <span className="material-symbols-outlined">person</span> પ્રોફાઇલ અને સંપર્ક
               </h3>
@@ -2201,10 +2235,11 @@ END:VCARD`;
             </div>
 
             </div>
-          )}
-
-          {currentStep === 3 && (
-            <div className="space-y-6 animate-fade-in">
+                </div>
+              )}
+              {activeSheet === 'catalog' && (
+                <div className="text-stone-900 dark:text-stone-100">
+                  <div className="space-y-6 animate-fade-in">
               <h3 className="font-gujarati font-black text-lg text-primary flex items-center gap-2 border-b border-primary/10 pb-3">
                 <span className="material-symbols-outlined">storefront</span> કેટલોગ અને ગેલેરી
               </h3>
@@ -2363,10 +2398,11 @@ END:VCARD`;
             </div>
 
             </div>
-          )}
-
-          {currentStep === 4 && (
-            <div className="space-y-6 animate-fade-in">
+                </div>
+              )}
+              {activeSheet === 'publish' && (
+                <div className="text-stone-900 dark:text-stone-100">
+                  <div className="space-y-6 animate-fade-in">
               <h3 className="font-gujarati font-black text-lg text-primary flex items-center gap-2 border-b border-primary/10 pb-3">
                 <span className="material-symbols-outlined">rocket_launch</span> પબ્લિશ કરો
               </h3>
@@ -2422,71 +2458,15 @@ END:VCARD`;
             </div>
 
             </div>
-          )}
-          
-          </div>
-
-          {/* Next/Prev Navigation */}
-          <div className="flex items-center justify-between gap-4 pt-2">
-            <button 
-              onClick={() => setCurrentStep(prev => Math.max(1, prev - 1))}
-              disabled={currentStep === 1}
-              className={`flex-1 py-3.5 rounded-2xl font-gujarati font-black text-sm flex items-center justify-center gap-2 transition-all ${currentStep === 1 ? 'bg-stone-100 dark:bg-stone-800 text-stone-400 opacity-50 cursor-not-allowed' : 'bg-stone-200 hover:bg-stone-300 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 active:scale-95 cursor-pointer'}`}
-            >
-              <span className="material-symbols-outlined text-sm">arrow_back</span>
-              પાછળ જાઓ
-            </button>
-            <button 
-              onClick={() => setCurrentStep(prev => Math.min(4, prev + 1))}
-              disabled={currentStep === 4}
-              className={`flex-1 py-3.5 rounded-2xl font-gujarati font-black text-sm flex items-center justify-center gap-2 transition-all ${currentStep === 4 ? 'bg-stone-100 dark:bg-stone-800 text-stone-400 opacity-50 cursor-not-allowed' : 'bg-primary hover:bg-[#0D9488] text-white active:scale-95 cursor-pointer shadow-md hover:shadow-lg'}`}
-            >
-              આગળ વધો
-              <span className="material-symbols-outlined text-sm">arrow_forward</span>
-            </button>
-          </div>
-
-        </div>
-
-        {/* Right Side Live Preview Mockup */}
-        <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-4">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between px-2">
-              <h4 className="font-gujarati font-black text-sm text-stone-500 uppercase tracking-widest flex items-center gap-1">
-                <span className="material-symbols-outlined text-sm font-bold">phone_iphone</span>
-                લાઇવ પ્રીવ્યૂ (Live View)
-              </h4>
-              <span className="bg-emerald-500/10 text-emerald-600 text-[10px] font-black border border-emerald-400/20 px-2 py-0.5 rounded-full uppercase animate-pulse">✓ Live Mockup</span>
+                </div>
+              )}
             </div>
-
-            {/* Mobile View Mockup Box */}
-            <div className={`w-full max-w-sm mx-auto border-8 border-stone-850 dark:border-stone-800 rounded-[3rem] shadow-2xl relative overflow-hidden flex flex-col items-center justify-between min-h-[580px] ${activeTheme.bg} ${activeTheme.text} transition-colors duration-700 p-4`}>
-              
-              {/* Pattern Background overlay */}
-              <div className="absolute inset-0 z-0 pointer-events-none" style={{ backgroundImage: activePattern?.bg !== 'none' ? activePattern?.bg : 'none', backgroundSize: activePattern?.size || 'auto', backgroundRepeat: activePattern?.repeat || 'no-repeat', backgroundPosition: activePattern?.position || 'center' }}></div>
-
-              {/* Camera Notch simulation */}
-              <div className="h-4 w-28 bg-stone-850 dark:bg-stone-800 rounded-b-xl absolute top-0 left-1/2 transform -translate-x-1/2 z-20"></div>
-
-              {/* Accent Glow Circle inside Preview */}
-              <div className="absolute top-0 right-0 h-32 w-32 rounded-full blur-[50px] opacity-25 pointer-events-none" style={{ backgroundColor: customColor }}></div>
-
-              {/* Inner content scroll area */}
-              <div className="w-full flex-1 overflow-y-auto space-y-5 pt-6 pb-4 px-1 scrollbar-hide">
-                <CardContent data={renderedData} activeTheme={activeTheme} isPreview={true} downloadVcf={downloadVcf} navigate={navigate} />
-              </div>
-
-              {/* Mockup Powered Footer */}
-              <div className="w-full border-t border-white/5 pt-2 text-center text-[8px] opacity-60">
-                Powered by: <a href="https://gujaratiapp.in" target="_blank" rel="noreferrer" className="underline font-bold hover:text-amber-400">gujaratiapp.in</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
+
 
 export default DigitalCard;
