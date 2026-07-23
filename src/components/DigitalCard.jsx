@@ -1798,6 +1798,14 @@ END:VCARD`;
   // =========================================================================
   return (
     <div className="fixed inset-0 bg-stone-950 font-gujarati overflow-hidden flex flex-col z-[100]">
+      {/* Editor Close Button */}
+      <button 
+        onClick={() => navigate(-1)} 
+        className="absolute top-4 right-4 z-[200] w-10 h-10 bg-stone-800/80 hover:bg-stone-700 text-white rounded-full flex items-center justify-center backdrop-blur-md transition-all shadow-lg border border-white/10"
+      >
+        <span className="material-symbols-outlined">close</span>
+      </button>
+
       {toastText && (
         <div className="absolute top-6 left-1/2 transform -translate-x-1/2 z-50 bg-stone-900/90 backdrop-blur-md text-white font-gujarati text-xs px-5 py-3 rounded-2xl shadow-xl border border-amber-500/20">
           {toastText}
