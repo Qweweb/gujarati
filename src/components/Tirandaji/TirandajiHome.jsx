@@ -193,14 +193,26 @@ export default function TirandajiHome() {
       const profile = JSON.parse(localStorage.getItem('user_profile') || '{}');
       const name = profile.name || localStorage.getItem('google_name') || 'અજાણ્યો ખેલાડી';
       const avatar = profile.avatar || localStorage.getItem('google_avatar') || null;
-      const city = profile.city || null;
+
+      let previousHighScore = 0;
+      try {
+        const { data: existingData } = await supabase
+          .from('tirandaji_scores')
+          .select('score')
+          .eq('mobile', uid)
+          .single();
+        if (existingData) {
+          previousHighScore = existingData.score || 0;
+        }
+      } catch (e) {}
+
+      const newHighScore = Math.max(finalScore, previousHighScore);
 
       await supabase.from('tirandaji_scores').upsert({
         mobile: uid,
         name: name,
         avatar: avatar,
-        city: city,
-        score: finalScore,
+        score: newHighScore,
         updated_at: new Date().toISOString()
       }, { onConflict: 'mobile' });
       
