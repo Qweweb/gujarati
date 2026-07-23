@@ -1851,7 +1851,7 @@ END:VCARD`;
       </div>
 
       {/* Bottom Action Bar */}
-      <div className="absolute bottom-0 left-0 right-0 z-40 bg-white/10 dark:bg-stone-900/90 backdrop-blur-xl border-t border-white/10 p-3 pb-safe-4 flex justify-between items-center px-6 text-white max-w-lg mx-auto rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.3)]">
+      <div className="absolute bottom-0 left-0 right-0 z-40 bg-white/10 dark:bg-stone-900/90 backdrop-blur-xl border-t border-white/10 px-6 pt-4 pb-10 flex justify-between items-center text-white max-w-lg mx-auto rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.3)]">
         <button onClick={() => setActiveSheet(activeSheet === 'design' ? null : 'design')} className={`flex flex-col items-center gap-1 transition-all ${activeSheet==='design'?'text-amber-400 scale-110':'text-white/70 hover:text-white'}`}>
            <span className="material-symbols-outlined text-2xl">palette</span>
            <span className="text-[10px] font-bold">ડિઝાઇન</span>
