@@ -578,6 +578,103 @@ const Dashboard = () => {
       </div>
 
       {/* ══════════════════════════════════════════════════════════
+          7.5 MANTRA JAAP ANUSHTHAN ATTRACTIVE LONG HERO BANNER
+          ══════════════════════════════════════════════════════════ */}
+      <Link
+        to="/mantra-jaap"
+        className="press group"
+        style={{
+          display: 'block',
+          textDecoration: 'none',
+          borderRadius: 24,
+          overflow: 'hidden',
+          position: 'relative',
+          background: 'linear-gradient(135deg, #2E1065, #78350F, #B45309, #D97706)',
+          border: '2px solid rgba(251, 191, 36, 0.6)',
+          boxShadow: '0 10px 30px rgba(180, 83, 9, 0.4)',
+          padding: '20px 18px',
+        }}
+      >
+        {/* Background Aura Radial */}
+        <div style={{ position: 'absolute', top: '-40%', right: '-20%', width: 200, height: 200, background: 'radial-gradient(circle, rgba(251,191,36,0.3) 0%, transparent 70%)', borderRadius: '50%', pointerEvents: 'none' }} />
+
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1, minWidth: 0 }}>
+            {/* Glowing Icon Container */}
+            <div style={{
+              width: 58, height: 58, borderRadius: 20,
+              background: 'linear-gradient(135deg, #FCD34D, #F59E0B)',
+              boxShadow: '0 8px 20px rgba(245,158,11,0.5)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 32, flexShrink: 0, border: '2px solid #FFF'
+            }}>
+              📿
+            </div>
+
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                <span style={{
+                  background: 'rgba(254, 243, 199, 0.25)',
+                  border: '1px solid rgba(253, 230, 138, 0.5)',
+                  color: '#FEF08A',
+                  fontSize: 10,
+                  fontWeight: 900,
+                  padding: '2px 8px',
+                  borderRadius: 10,
+                  fontFamily: '"Noto Serif Gujarati", serif'
+                }}>
+                  ✨ દિવ્ય સાધના
+                </span>
+                <span style={{ color: '#FDE68A', fontSize: 10, fontWeight: 700, fontFamily: '"Noto Serif Gujarati", serif' }}>
+                  ૨૮+ પવિત્ર મંત્રો
+                </span>
+              </div>
+
+              <h3 style={{
+                fontFamily: '"Noto Serif Gujarati", serif',
+                fontSize: 18,
+                fontWeight: 900,
+                color: '#FFFBEB',
+                margin: 0,
+                lineHeight: 1.2,
+                textShadow: '0 2px 4px rgba(0,0,0,0.4)'
+              }}>
+                🕉️ મંત્ર જાપ અનુષ્ઠાન
+              </h3>
+
+              <p style={{
+                fontFamily: '"Noto Serif Gujarati", serif',
+                fontSize: 11,
+                fontWeight: 600,
+                color: '#FDE68A',
+                margin: '4px 0 0',
+                lineHeight: 1.3
+              }}>
+                ઑફલાઇન મંત્રોચ્ચાર · ઑટો જપ રીપીટ · શુદ્ધ પ્રમાણપત્ર
+              </p>
+            </div>
+          </div>
+
+          {/* Action CTA Button */}
+          <div className="pulse-btn" style={{
+            background: 'linear-gradient(135deg, #FEF08A, #F59E0B)',
+            color: '#451A03',
+            fontFamily: '"Noto Serif Gujarati", serif',
+            fontWeight: 900,
+            fontSize: 12,
+            padding: '10px 14px',
+            borderRadius: 16,
+            boxShadow: '0 6px 18px rgba(0,0,0,0.3)',
+            border: '1px solid #FFF',
+            flexShrink: 0,
+            whiteSpace: 'nowrap'
+          }}>
+            ▶️ શરૂ કરો →
+          </div>
+        </div>
+      </Link>
+
+      {/* ══════════════════════════════════════════════════════════
           5. TOOL GRID — 16 tools, 4 columns
           ══════════════════════════════════════════════════════════ */}
       <div style={{ background:'#FFFFFF', border:'1px solid #E8E6E3', borderRadius:16, padding:'16px 12px' }}>
