@@ -12,7 +12,7 @@ const MANTRA_DEITIES = [
   {
     id: 'shiv',
     name: 'ભગવાન શિવજી',
-    image: 'https://images.unsplash.com/photo-1620052581237-5d36667be337?auto=format&fit=crop&w=300&q=80',
+    image: '/images/gods/shiv.webp',
     mantras: [
       { 
         id: 'Om_Namah_Shivaya',
@@ -83,7 +83,7 @@ const MANTRA_DEITIES = [
   {
     id: 'ram',
     name: 'શ્રી રામચંદ્રજી',
-    image: 'https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=300&q=80',
+    image: '/images/gods/raam.png',
     mantras: [
       { 
         id: 'Shri_Ram_Jai_Ram',
@@ -137,7 +137,7 @@ const MANTRA_DEITIES = [
   {
     id: 'hanuman',
     name: 'હનુમાનજી દાદા',
-    image: 'https://images.unsplash.com/photo-1599818683612-32a2251c5b9d?auto=format&fit=crop&w=300&q=80',
+    image: '/images/gods/hanuman_ji.jpeg',
     mantras: [
       { 
         id: 'Hanuman_Beej_Mantra',
@@ -190,7 +190,7 @@ const MANTRA_DEITIES = [
   {
     id: 'mataji',
     name: 'જગદંબા માતાજી',
-    image: 'https://images.unsplash.com/photo-1609137144813-7d9921338f24?auto=format&fit=crop&w=300&q=80',
+    image: '/images/gods/devi.jpeg',
     mantras: [
       { 
         id: 'Navarna_Mantra',
@@ -260,7 +260,7 @@ const MANTRA_DEITIES = [
   {
     id: 'krishna',
     name: 'શ્રી કૃષ્ણ ભગવાન',
-    image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=300&q=80',
+    image: '/images/gods/krishna.jpg',
     mantras: [
       { 
         id: 'Hare_Krishna_Mahamantra',
@@ -313,7 +313,7 @@ const MANTRA_DEITIES = [
   {
     id: 'swaminarayan',
     name: 'સ્વામિનારાયણ ભગવાન',
-    image: 'https://images.unsplash.com/photo-1542332213-31f87348057f?auto=format&fit=crop&w=300&q=80',
+    image: '/images/gods/swaminarayan.jpeg',
     mantras: [
       { 
         id: 'Swaminarayan_Mahamantra',
@@ -351,7 +351,7 @@ const MANTRA_DEITIES = [
   {
     id: 'ganesh',
     name: 'ગણેશજી દાદા',
-    image: 'https://images.unsplash.com/photo-1567591414436-12a8323a0784?auto=format&fit=crop&w=300&q=80',
+    image: '/images/gods/ganesh.jpg',
     mantras: [
       { 
         id: 'Ganesh_Beej_Mantra',
@@ -404,7 +404,7 @@ const MANTRA_DEITIES = [
   {
     id: 'surya_navgrah',
     name: 'સૂર્યદેવ અને નવગ્રહ',
-    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=300&q=80',
+    image: '/images/gods/navgraha.jpeg',
     mantras: [
       { 
         id: 'Surya_Gayatri_Mantra',
