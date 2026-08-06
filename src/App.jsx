@@ -43,6 +43,7 @@ import DevotionalCards from './components/DevotionalCards';
 import KuldeviGuide from './components/KuldeviGuide';
 import GitaHub from './components/GitaHub';
 import ShradhanjaliMaker from './components/ShradhanjaliMaker';
+import MantraJaapAnushthan from './components/MantraJaapAnushthan';
 import AdminDashboard from './components/AdminDashboard';
 import DailyChallenge from './components/DailyChallenge';
 import GujaratSafari from './components/GujaratSafari';
@@ -462,6 +463,8 @@ function App() {
                 <Route path="/kuldevi" element={<FeatureGuard featureKey="kuldevi"><KuldeviGuide /></FeatureGuard>} />
                 <Route path="/gita" element={<FeatureGuard featureKey="gita"><GitaHub /></FeatureGuard>} />
                 <Route path="/shradhanjali" element={<FeatureGuard featureKey="shradhanjali"><ShradhanjaliMaker /></FeatureGuard>} />
+                <Route path="/mantra-jaap" element={<FeatureGuard featureKey="devotional"><MantraJaapAnushthan /></FeatureGuard>} />
+                <Route path="/jaap-anushthan" element={<FeatureGuard featureKey="devotional"><MantraJaapAnushthan /></FeatureGuard>} />
                 <Route path="/daily-challenge" element={<FeatureGuard featureKey="daily_challenge"><DailyChallenge /></FeatureGuard>} />
                 <Route path="/gujarat-safari" element={<FeatureGuard featureKey="gujarat_safari"><GujaratSafari /></FeatureGuard>} />
                 <Route path="/gujarat-quiz" element={<FeatureGuard featureKey="gujarat_safari"><GujaratQuiz /></FeatureGuard>} />

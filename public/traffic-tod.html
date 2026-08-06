@@ -272,6 +272,7 @@
                     <p>👆 <b>ટેપ કરો:</b> રમત રોકવા/ચાલુ કરવા ⏸️</p>
                     <p style="color: #FFD700;">👤 પેસેન્જર બેસાડો અને ₹ ભાડું મેળવો!</p>
                     <p style="color: #00FFBB;">⛽ CNG સિલિન્ડર લઈને ફ્યુઅલ ભરો!</p>
+                    <p style="color: #FF6666;">🚨 <b>પોલીસ કાર:</b> લેન બદલીને બચો! (સાઈડ ન આપી તો ચલાણ કપાશે, આઉટ નહીં થાઓ!)</p>
                     <hr class="info-hr">
                     <p style="color: #38BDF8; font-weight: 800; text-align: center; margin: 0; font-size: 11px;">ઉપરની પટ્ટી ભરીને આગલા લેવલમાં પહોંચો!</p>
                 </div>
@@ -523,14 +524,7 @@
                 let spd = isNitro ? currentSpeed * 2.5 : currentSpeed;
                 this.y += spd * this.speedMult; 
 
-                // Police Chase Logic
-                if (this.type === 'police' && this.y > player.y - 350 && this.y < player.y) {
-                    if (!this.isChangingLane && Math.abs(this.lane - player.lane) === 1) {
-                        this.isChangingLane = true;
-                        this.targetLane = player.lane;
-                        this.targetX = (this.targetLane * laneWidth) + (laneWidth / 2);
-                    }
-                }
+                // Police drives straight in its assigned lane, giving player time to switch lanes and dodge!
 
                 // Magnet Logic
                 if (this.type === 'passenger' && isMagnet && this.y > 0 && this.y < player.y + 200) {
@@ -842,7 +836,7 @@
                 const eh = e.h - ePadY*2;
                 
                 if (px < ex + ew && px + pw > ex && py < ey + eh && py + ph > ey) {
-                    if (['bus', 'car', 'cow', 'white_bus', 'green_car', 'white_cow', 'police'].includes(e.type)) {
+                    if (['bus', 'car', 'cow', 'white_bus', 'green_car', 'white_cow'].includes(e.type)) {
                         if (isNitro) {
                             // Blast them away!
                             playPowerupSound();
@@ -851,6 +845,22 @@
                             entities.splice(i, 1);
                         } else {
                             gameOver(); return;
+                        }
+                    } else if (e.type === 'police') {
+                        if (isNitro) {
+                            playPowerupSound();
+                            particles.push(new Particle(e.x, e.y, '💥', '#FF8800', true));
+                            coins += 50;
+                            entities.splice(i, 1);
+                        } else {
+                            playPowerupSound();
+                            const fine = Math.min(coins, 30);
+                            coins -= fine;
+                            energy = Math.max(5, energy - 15);
+                            particles.push(new Particle(e.x, e.y, fine > 0 ? `🚨 -₹${fine} ચલાણ!` : '🚨 POLICE FINE!', '#FF3333'));
+                            entities.splice(i, 1);
+                            ui.coins.parentElement.style.transform = 'scale(1.2)';
+                            setTimeout(() => ui.coins.parentElement.style.transform = 'scale(1)', 150);
                         }
                     } else if (e.type === 'passenger') {
                         coins += e.val;
@@ -957,6 +967,16 @@
                         }
                     }
                 });
+                // Dodge detection when police safely passes player in a different lane
+                entities.forEach(e => {
+                    if (e.type === 'police' && !e.hasPassedPlayer && e.y > player.y + player.h) {
+                        e.hasPassedPlayer = true;
+                        if (e.lane !== player.lane) {
+                            playPowerupSound();
+                            particles.push(new Particle(player.x, player.y - 40, '🚨 SAFELY DODGED! SAFE!', '#00FF44'));
+                        }
+                    }
+                });
             }
             
             for (let i = entities.length - 1; i >= 0; i--) {
@@ -1041,6 +1061,26 @@
             renderRoad();
             entities.sort((a,b) => a.y - b.y);
             entities.forEach(e => e.draw());
+
+            // Draw Police Warning Banner at top of road for any incoming Police Car
+            entities.forEach(e => {
+                if (e.type === 'police' && e.y < player.y && e.y > -300) {
+                    const laneCenterX = (e.lane * laneWidth) + (laneWidth / 2);
+                    ctx.save();
+                    ctx.fillStyle = (frameCount % 12 < 6) ? 'rgba(255, 0, 0, 0.45)' : 'rgba(0, 100, 255, 0.45)';
+                    ctx.fillRect(e.lane * laneWidth, 0, laneWidth, 75);
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.font = '900 15px "Plus Jakarta Sans", sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.shadowColor = '#000';
+                    ctx.shadowBlur = 6;
+                    ctx.fillText('🚨 POLICE!', laneCenterX, 32);
+                    ctx.font = 'bold 12px "Noto Serif Gujarati", sans-serif';
+                    ctx.fillText('લેન બદલો!', laneCenterX, 55);
+                    ctx.restore();
+                }
+            });
+
             player.draw();
             particles.forEach(p => p.draw());
         }

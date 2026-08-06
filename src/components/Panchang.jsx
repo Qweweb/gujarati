@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { calculateChoghadiyas, calculateMuhurts } from '../utils/choghadiya_helper';
 import { getDailyPanchang } from '../utils/panchangEngine';
 import { RASHI_DATA, generateDailyRashifal } from '../data/rashifalDatabase';
+import { calculateDynamicSaturnPanoti, generateFullKundaliData } from '../utils/astroEngine';
 
 const calculateAstroForMilan = (dob, tob, noTime, coords) => {
   const finalTob = noTime ? "12:00" : tob;
@@ -247,75 +248,12 @@ const Panchang = () => {
     const matchedRashi = RASHI_DATA.find(r => r.id === rashiId) || RASHI_DATA[0];
     setPanotiSelectedRashi(matchedRashi);
 
-    let status = "";
-    let severity = ""; // success, warning, danger
-    let phase = "";
-    let description = "";
-    let remedies = [];
+    const rashiOrder = ["mesh", "vrishabh", "mithun", "kark", "simha", "kanya", "tula", "vrishchik", "dhanu", "makar", "kumbh", "meen"];
+    let moonRashiNum = rashiOrder.indexOf(rashiId) + 1;
+    if (moonRashiNum === 0) moonRashiNum = 1;
 
-    // Makar, Kumbh, Meen, Kark, Vrischika
-    if (matchedRashi.id === "makar") {
-      status = "સાડાસાતી (Sade Sati) - અંતિમ તબક્કો";
-      severity = "warning";
-      phase = "ત્રીજું ચરણ (Setting Phase)";
-      description = "તમારી રાશિ પર શનિની સાડાસાતીનો છેલ્લો અઢી વર્ષનો તબક્કો ચાલી રહ્યો છે. માનસિક ચિંતાઓમાં ધીરે ધીરે રાહત મળશે અને પ્રગતિના નવા દ્વાર ખુલશે. નાણાકીય રોકાણોમાં સાવધાની રાખવી.";
-      remedies = [
-        "શનિવારે પીપળાના વૃક્ષ નીચે સરસિયાના તેલનો દીવો કરવો.",
-        "પીડિતો અથવા સફાઈ કામદારોને કાળા કપડા કે અડદનું દાન કરવું.",
-        "દરરોજ સૂર્યાસ્ત પછી 'ॐ शं शनैश्चराय नमः' મંત્રના ૧૦૮ જાપ કરવા."
-      ];
-    } else if (matchedRashi.id === "kumbh") {
-      status = "સાડાસાતી (Sade Sati) - શિખર તબક્કો";
-      severity = "danger";
-      phase = "બીજું ચરણ (Peak Phase)";
-      description = "તમારી રાશિ પર શનિની સાડાસાતીનો સૌથી પ્રભાવશાળી બીજો તબક્કો ચાલી રહ્યો છે. માનસિક તણાવ, વાહન ચલાવતી વખતે સાવધાની અને વાદ-વિવાદથી બચવું જરૂરી છે. ધીરજ અને સદાચારથી શનિદેવ પ્રસન્ન થાય છે.";
-      remedies = [
-        "શનિવારે હનુમાનજીના મંદિરે જઈ હનુમાન ચાલીસા અથવા સુંદરકાંડના પાઠ કરવા.",
-        "શનિ મહારાજને વાદળી અથવા કાળા રંગના પુષ્પો અને કાળા તલ અર્પણ કરવા.",
-        "શનિ બીજ મંત્ર: 'ॐ प्रां प्रीं प्रौं सः शनैश्चराय नमः' નો જાપ કરવો."
-      ];
-    } else if (matchedRashi.id === "meen") {
-      status = "સાડાસાતી (Sade Sati) - પ્રારંભિક તબક્કો";
-      severity = "warning";
-      phase = "પ્રથમ ચરણ (Rising Phase)";
-      description = "તમારી રાશિ પર શનિની સાડાસાતીનો પ્રથમ અઢી વર્ષનો પ્રારંભિક તબક્કો ચાલી રહ્યો છે. આ સમયગાળામાં ખર્ચ વધવાની સંભાવના છે અને વિદેશ મુસાફરી અથવા કાર્યક્ષેત્રમાં ફેરબદલ આવી શકે છે. કાયદાકીય કામોમાં સાવધાની રાખો.";
-      remedies = [
-        "ગરીબ લોકોને ભોજન કરાવવું અને કાળા શ્વાન (ડોગ) ને તેલવાળી રોટલી ખવડાવવી.",
-        "શનિવારે તાંબાના લોટામાં પાણી ભરી કાળા તલ નાખી સૂર્ય અને શનિદેવને અર્ધ્ય આપવું.",
-        "શનિ સ્તોત્ર અથવા શનિ ચાલીસાના પાઠ કરવા."
-      ];
-    } else if (matchedRashi.id === "karka") {
-      status = "શનિની ઢય્યા (Ashtama Dhayya)";
-      severity = "danger";
-      phase = "અષ્ટમ શનિ (૮મી ઢય્યા)";
-      description = "તમારી રાશિ પર શનિની અષ્ટમ ઢય્યા ચાલી રહી છે. આ અઢી વર્ષના સમયગાળા દરમિયાન શારીરિક સ્વાસ્થ્યનું વિશેષ ધ્યાન રાખવું. નકામી વાતોમાં સમય ન બગાડવો અને નોકરી/વ્યવસાયમાં મહેનત વધારવી.";
-      remedies = [
-        "શનિવારે તેલ દાન (તામ્રપાત્રમાં તેલ ભરી તમારો ચહેરો જોઈને દાન કરવું - છાયા દાન).",
-        "હનુમાન મંદિરમાં કાળા ચણા અને ગોળનો પ્રસાદ ચડાવવો.",
-        "પશુ-પક્ષીઓ અને કીડીઓને દાણા નાખવા."
-      ];
-    } else if (matchedRashi.id === "vrischika") {
-      status = "શનિની ઢય્યા (Kantaka Dhayya)";
-      severity = "warning";
-      phase = "ચતુર્થ શનિ (૪થી ઢય્યા)";
-      description = "તમારી રાશિ પર શનિની ચતુર્થ ઢય્યા ચાલી રહી છે. કૌટુંબિક બાબતો અને મિલકત સંબંધિત નિર્ણયોમાં ધીરજ રાખવી. આ સમયે વ્યવસાયિક ભાગીદારીમાં સાવધાની રાખવી. તમારા કામમાં ઈમાનદારી રાખવાથી શનિદેવ શુભ ફળ આપશે.";
-      remedies = [
-        "શનિવારે શનિ મંદિરમાં સરસિયાના તેલનો દીવો કરી લોખંડની વસ્તુનું દાન કરવું.",
-        "દરરોજ સવારે શનિ ચાલીસાના પાઠ કરવા.",
-        "શનિ ગાયત્રી મંત્ર: 'ॐ भगभवाय વિદ્મહે મૃગરૂપાય ધીમહિ તન્નો શનિઃ પ્રચોદયાત।' નો જાપ કરવો."
-      ];
-    } else {
-      status = "શનિ પનૌતી મુક્ત (શુભ સમય)";
-      severity = "success";
-      phase = "કોઈ સાડાસાતી કે ઢય્યા નથી";
-      description = "ખૂબ સરસ! અત્યારે તમારી રાશિ પર શનિદેવની કોઈ સાડાસાતી કે ઢય્યા ચાલુ નથી. શનિ મહારાજની આપના પર શુભ દ્રષ્ટિ છે. સત્કર્મ કરતા રહો અને ઈશ્વર ભક્તિમાં લીન રહો.";
-      remedies = [
-        "શનિવારે કીડીઓને ગળ્યું અન્ન (લોટ અને ખાંડ) નાખવું.",
-        "હનુમાન ચાલીસાના પાઠ કરવા અને જરૂરિયાતમંદોને મદદ કરવી."
-      ];
-    }
-
-    setPanotiResult({ status, severity, phase, description, remedies });
+    const panotiRes = calculateDynamicSaturnPanoti(moonRashiNum, new Date());
+    setPanotiResult(panotiRes);
   };
 
   const handleBirthPanotiSubmit = (e) => {
@@ -326,21 +264,18 @@ const Panchang = () => {
     }
 
     try {
-      const astro = calculateAstroForMilan(
-        panotiDob,
-        panotiNoTime ? "12:00" : panotiTob || "12:00",
-        panotiNoTime,
-        panotiSelectedCoords
-      );
-      
-      const rashiMap = ["mesh", "vrishabh", "mithun", "karka", "simha", "kanya", "tula", "vrischika", "dhanu", "makar", "kumbh", "meen"];
-      const rashiId = rashiMap[astro.rashiId - 1];
-      
+      const finalTob = panotiNoTime ? "12:00" : (panotiTob || "12:00");
+      const astroData = generateFullKundaliData("", panotiDob, finalTob, panotiNoTime, panotiSelectedCoords);
+
+      const rashiOrder = ["mesh", "vrishabh", "mithun", "kark", "simha", "kanya", "tula", "vrishchik", "dhanu", "makar", "kumbh", "meen"];
+      const rashiId = rashiOrder[astroData.moonRashiNum - 1];
+
       handleCheckPanoti(rashiId);
     } catch (err) {
       alert("ગણતરી કરવામાં ભૂલ આવી, કૃપા કરી વિગતો ચકાસો.");
     }
   };
+
 
   // Set default rashi based on panchang transit rashi
   useEffect(() => {

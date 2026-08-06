@@ -1530,352 +1530,82 @@ const DevotionalHub = () => {
         </div>
       </section>
 
-      {/* 5. GORGEOUS MANTRA JAAP HUB */}
-      <section id="mantra-jaap-section" className="bg-[#2D3748] rounded-[2.5rem] p-6 sm:p-10 text-[#F8FAFC] shadow-sm relative overflow-hidden space-y-8 border border-[#2D3748]">
-        <div className="absolute right-0 top-0 opacity-5 pointer-events-none">
-          <span className="material-symbols-outlined text-[200px]">filter_vintage</span>
+      {/* 5. GORGEOUS DEDICATED MANTRA JAAP ANUSHTHAN HERO CARD */}
+      <section id="mantra-jaap-section" className="bg-gradient-to-br from-[#1E293B] via-[#0F172A] to-[#1E1B4B] rounded-[2.5rem] p-6 sm:p-10 text-[#F8FAFC] shadow-xl relative overflow-hidden space-y-6 border border-amber-500/30">
+        <div className="absolute right-0 top-0 opacity-10 pointer-events-none">
+          <span className="material-symbols-outlined text-[240px] text-amber-400">spa</span>
         </div>
 
-        {/* Global Hub Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pb-6 border-b border-[#0D9488]/20">
-          <div className="text-center sm:text-left space-y-1">
-            <div className="flex items-center justify-center sm:justify-start gap-3">
-              <h3 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-3xl text-[#0D9488] flex items-center justify-center sm:justify-start gap-2">
-                <span className="material-symbols-outlined text-3xl animate-spin" style={{ animationDuration: '6s' }}>spa</span>
-                મંત્ર જાપ અનુષ્ઠાન
-              </h3>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-amber-500/20 relative z-10">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3 py-0.5 rounded-full font-gujarati text-[10px] font-black uppercase tracking-wider">
+                ઓનલાઇન સાધના અને પ્રમાણપત્ર
+              </span>
+              {streakCount > 0 && (
+                <span className="bg-amber-500 text-slate-950 px-2.5 py-0.5 rounded-full font-gujarati font-black text-[10px] flex items-center gap-1">
+                  🔥 {toGujaratiNum(streakCount)} દિવસ
+                </span>
+              )}
             </div>
-            <p className="font-gujarati text-xs text-[#0D9488]/70">
-              અત્યાર સુધી {communityCount.toLocaleString('gu-IN')} લોકોએ ઓનલાઇન જાપ કર્યા
+            <h3 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-3xl text-amber-400 flex items-center gap-2 pt-1">
+              <span className="material-symbols-outlined text-3xl animate-spin" style={{ animationDuration: '8s' }}>spa</span>
+              મંત્ર જાપ અનુષ્ઠાન
+            </h3>
+            <p className="font-gujarati text-xs text-slate-300">
+              અત્યાર સુધી {communityCount.toLocaleString('gu-IN')} થી વધુ લોકોએ પવિત્ર ઓનલાઇન જાપ પૂર્ણ કર્યા
             </p>
           </div>
-          
-          {/* Streak Badge */}
-          {streakCount > 0 && (
-            <div className="bg-[#0D9488] text-[#2D3748] px-4 py-2 rounded-2xl flex items-center gap-2 shadow-sm animate-bounce border border-[#0D9488]">
-              <span className="material-symbols-outlined text-lg fill-1">local_fire_department</span>
-              <span className="font-gujarati font-black text-xs">{streakCount} દિવસની લીંક</span>
-            </div>
-          )}
+
+          <button
+            onClick={() => navigate('/mantra-jaap')}
+            className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-gujarati font-black py-3.5 px-7 rounded-2xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 border-b-4 border-amber-800 text-sm cursor-pointer shrink-0"
+          >
+            <span>🕉️</span> નવું અનુષ્ઠાન શરૂ કરો ▶
+          </button>
         </div>
 
-        {/* --- SCREEN 1: DEITY SELECTION --- */}
-        {mantraScreen === 'deity' && (
-          <div className="space-y-6">
-            <div className="text-center space-y-1">
-              <h4 className="font-gujarati font-black text-xl text-yellow-100">૧. જાપ કરવા માટે દેવ/દેવી પસંદ કરો</h4>
-              <p className="font-gujarati text-stone-400 text-xs">આપની આરાધના શરૂ કરવા માટે પવિત્ર નામ પર ક્લિક કરો</p>
+        {/* Quick Features Highlights */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 relative z-10 font-gujarati">
+          <div 
+            onClick={() => navigate('/mantra-jaap')}
+            className="bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-amber-500/50 p-4 rounded-2xl cursor-pointer transition-all flex items-center gap-3 group"
+          >
+            <div className="h-11 w-11 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-black text-xl group-hover:scale-110 transition-transform">
+              🪔
             </div>
-            
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-              {MANTRA_DEITIES.map((deity) => (
-                <button
-                  key={deity.id}
-                  onClick={() => { setSelectedDeity(deity); setMantraScreen('mantra'); }}
-                  className="bg-[#FFFFFF]/10 hover:bg-[#FFFFFF]/20 border border-[#FFFFFF]/10 hover:border-[#0D9488] rounded-3xl p-5 text-center flex flex-col items-center gap-3 transition-all duration-305 group hover:scale-[1.03] hover:shadow-sm active:scale-95"
-                >
-                  <div className="h-16 w-16 rounded-full overflow-hidden shadow-md border-2 border-[#2D3748] group-hover:border-[#0D9488] group-hover:scale-110 transition-all bg-[#0D9488]">
-                    <img src={deity.image} alt={deity.name} className="w-full h-full object-cover" />
-                  </div>
-                  <span className="font-gujarati font-black text-sm text-[#F8FAFC] group-hover:text-[#0D9488] transition-colors">
-                    {deity.name}
-                  </span>
-                </button>
-              ))}
+            <div>
+              <h4 className="font-black text-sm text-slate-100 group-hover:text-amber-300 transition-colors">૧૧ થી ૧૦૦૮ પવિત્ર જપ</h4>
+              <p className="text-[11px] text-slate-400">ઇષ્ટદેવ પસંદ કરી ગણતરી સેટ કરો</p>
             </div>
           </div>
-        )}
 
-        {/* --- SCREEN 2: MANTRA SELECTION --- */}
-        {mantraScreen === 'mantra' && selectedDeity && (
-          <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <button 
-                onClick={() => setMantraScreen('deity')}
-                className="h-10 w-10 bg-[#0D9488] rounded-full flex items-center justify-center border border-[#2D3748] hover:bg-[#0D9488]/80 active:scale-90 transition-transform"
-              >
-                <span className="material-symbols-outlined text-sm text-[#2D3748]">arrow_back</span>
-              </button>
-              <div className="space-y-0.5">
-                <h4 className="font-gujarati font-black text-lg text-[#0D9488]">{selectedDeity.name} ના પવિત્ર મંત્રો</h4>
-                <p className="font-gujarati text-[#F8FAFC]/70 text-xs">૨. આપની આસ્થા મુજબનો એક મંત્ર પસંદ કરો</p>
-              </div>
+          <div 
+            onClick={() => navigate('/mantra-jaap')}
+            className="bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-amber-500/50 p-4 rounded-2xl cursor-pointer transition-all flex items-center gap-3 group"
+          >
+            <div className="h-11 w-11 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-black text-xl group-hover:scale-110 transition-transform">
+              📜
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {selectedDeity.mantras.map((mantra, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => { 
-                    setSelectedMantra(mantra); 
-                    setMantraTarget(mantra.defaultCount);
-                    setMantraScreen('target'); 
-                  }}
-                  className="bg-[#FFFFFF]/10 hover:bg-[#FFFFFF]/20 border border-[#FFFFFF]/10 hover:border-[#0D9488] rounded-3xl p-5 text-left flex justify-between items-center transition-all duration-305 group hover:scale-[1.01] active:scale-[0.99]"
-                >
-                  <div className="space-y-1">
-                    <p className="font-gujarati font-black text-base text-[#F8FAFC] group-hover:text-[#0D9488] transition-colors">{mantra.name}</p>
-                    <span className="font-gujarati text-[10px] text-[#F8FAFC]/60">સામાન્ય જાપ સંખ્યા: {mantra.defaultCount}</span>
-                  </div>
-                  <span className="material-symbols-outlined text-[#F8FAFC]/60 group-hover:translate-x-1 transition-transform group-hover:text-[#0D9488]">chevron_right</span>
-                </button>
-              ))}
+            <div>
+              <h4 className="font-black text-sm text-slate-100 group-hover:text-amber-300 transition-colors">HD PNG પ્રમાણપત્ર</h4>
+              <p className="text-[11px] text-slate-400">ડાઉનલોડ કરી સોશિયલ મીડિયા પર શેર કરો</p>
             </div>
           </div>
-        )}
 
-        {/* --- SCREEN 3: TARGET COUNT SELECTION --- */}
-        {mantraScreen === 'target' && selectedMantra && (
-          <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <button 
-                onClick={() => setMantraScreen('mantra')}
-                className="h-10 w-10 bg-[#0D9488] rounded-full flex items-center justify-center border border-[#2D3748] hover:bg-[#0D9488]/80 active:scale-90 transition-transform"
-              >
-                <span className="material-symbols-outlined text-sm text-[#2D3748]">arrow_back</span>
-              </button>
-              <div className="space-y-0.5">
-                <h4 className="font-gujarati font-black text-lg text-[#0D9488]">{selectedMantra.name}</h4>
-                <p className="font-gujarati text-[#F8FAFC]/70 text-xs">૩. જપ કરવા માટે કુલ સંખ્યા નક્કી કરો</p>
-              </div>
+          <div 
+            onClick={() => navigate('/mantra-jaap')}
+            className="bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-amber-500/50 p-4 rounded-2xl cursor-pointer transition-all flex items-center gap-3 group"
+          >
+            <div className="h-11 w-11 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-black text-xl group-hover:scale-110 transition-transform">
+              🏆
             </div>
-
-            <div className="bg-[#FFFFFF]/10 rounded-3xl p-6 border border-[#FFFFFF]/10 space-y-6 max-w-md mx-auto">
-              <div className="text-center space-y-1">
-                <p className="font-gujarati text-[10px] text-[#F8FAFC]/60 uppercase tracking-widest">લક્ષ્ય જપ સંખ્યા</p>
-                <div className="font-headline font-black text-5xl text-[#0D9488] leading-none">
-                  {mantraTarget}
-                </div>
-              </div>
-
-              {/* Quick Presets */}
-              <div className="grid grid-cols-3 gap-2">
-                {[11, 21, 51, 108, 501, 1008].map((val) => (
-                  <button
-                    key={val}
-                    onClick={() => setMantraTarget(val)}
-                    className={`py-3.5 rounded-2xl text-xs font-black transition-all ${mantraTarget === val ? 'bg-[#0D9488] text-[#2D3748] shadow-sm' : 'bg-[#FFFFFF]/10 text-[#F8FAFC] hover:bg-[#FFFFFF]/20'}`}
-                  >
-                    {val}
-                  </button>
-                ))}
-              </div>
-
-              {/* Custom Count Stepper */}
-              <div className="flex justify-center items-center gap-4 pt-4 border-t border-[#FFFFFF]/10">
-                <button
-                  onClick={() => setMantraTarget(prev => Math.max(1, prev - 1))}
-                  className="h-10 w-10 bg-[#FFFFFF]/10 hover:bg-[#FFFFFF]/20 rounded-full flex items-center justify-center active:scale-90 transition-transform text-[#0D9488]"
-                >
-                  <span className="material-symbols-outlined text-sm">remove</span>
-                </button>
-                <span className="font-gujarati text-xs text-[#F8FAFC] font-bold">કસ્ટમ સેટ કરો</span>
-                <button
-                  onClick={() => setMantraTarget(prev => prev + 1)}
-                  className="h-10 w-10 bg-[#FFFFFF]/10 hover:bg-[#FFFFFF]/20 rounded-full flex items-center justify-center active:scale-90 transition-transform text-[#0D9488]"
-                >
-                  <span className="material-symbols-outlined text-sm">add</span>
-                </button>
-              </div>
-
-              {/* Start Button */}
-              <button
-                onClick={() => { setMantraCount(0); setCompletedMalas(0); setMantraScreen('active'); playTempleBell(); }}
-                className="w-full bg-[#0D9488] hover:bg-[#0D9488]/90 text-[#2D3748] font-gujarati font-black py-4 px-6 rounded-2xl shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2 border-b-4 border-[#2D3748]/20"
-              >
-                <span className="material-symbols-outlined text-lg">play_arrow</span>
-                ▶️ અનુષ્ઠાન શરૂ કરો
-              </button>
+            <div>
+              <h4 className="font-black text-sm text-slate-100 group-hover:text-amber-300 transition-colors">સાધના લીડરબોર્ડ</h4>
+              <p className="text-[11px] text-slate-400">ટોચના સાધકોની યાદીમાં સ્થાન મેળવો</p>
             </div>
           </div>
-        )}
-
-        {/* --- SCREEN 4: ACTIVE JAPA COUNTER SCREEN --- */}
-        {mantraScreen === 'active' && selectedMantra && (
-          <div className="space-y-8 text-center">
-            {/* Header info */}
-            <div className="space-y-1">
-              <span className={`px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase border border-[#0D9488] text-[#0D9488] inline-block`}>
-                {selectedDeity?.name.split(' ').slice(1).join(' ')}
-              </span>
-              <h4 className="font-gujarati font-black text-2xl text-[#F8FAFC]">{selectedMantra.name}</h4>
-              <p className="font-gujarati text-[#F8FAFC]/70 text-xs">કુલ લક્ષ્ય: {mantraTarget} જપ</p>
-            </div>
-
-            {/* Circular Progress Ring Counter */}
-            <div className="relative h-64 w-64 mx-auto flex items-center justify-center">
-              <svg className="absolute w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                {/* Trail track */}
-                <circle cx="50" cy="50" r="42" stroke="rgba(255,255,255,0.03)" strokeWidth="6" fill="transparent" />
-                {/* Progress track */}
-                <circle 
-                  cx="50" 
-                  cy="50" 
-                  r="42" 
-                  stroke="url(#japaGrad)" 
-                  strokeWidth="6" 
-                  fill="transparent" 
-                  strokeDasharray={`${2 * Math.PI * 42}`}
-                  strokeDashoffset={`${2 * Math.PI * 42 * (1 - mantraCount / mantraTarget)}`}
-                  strokeLinecap="round"
-                  className="transition-all duration-300"
-                />
-                <defs>
-                  <linearGradient id="japaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#2D3748" />
-                    <stop offset="100%" stopColor="#0D9488" />
-                  </linearGradient>
-                </defs>
-              </svg>
-
-              {/* Centered digits */}
-              <div className="space-y-1 z-10">
-                <span className="font-gujarati text-[10px] text-[#0D9488]/70 uppercase tracking-widest block">ચાલુ જપ</span>
-                <span className="font-headline font-black text-6xl leading-none text-[#F8FAFC] block">
-                  {String(mantraCount).padStart(3, '0')}
-                </span>
-                <span className="font-gujarati text-xs text-[#0D9488] font-bold block">
-                  માળા: {completedMalas} ({completedMalas * 108 + (mantraCount % 108)} / {mantraTarget})
-                </span>
-              </div>
-            </div>
-
-            {/* Prayer Bead Tap Button */}
-            <div className="space-y-4">
-              <button
-                onClick={incrementJapa}
-                className="h-36 w-36 bg-[#0D9488] border-4 border-[#2D3748] shadow-sm rounded-full mx-auto flex flex-col items-center justify-center active:scale-90 active:shadow-inner transition-all hover:scale-[1.03] group relative overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.25)_0%,transparent_60%)] pointer-events-none"></div>
-                <span className="material-symbols-outlined text-4xl text-[#2D3748] animate-pulse group-hover:scale-115 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>brightness_5</span>
-                <span className="font-gujarati font-black text-xs text-yellow-100 mt-2 tracking-wider">અહીં દબાવો</span>
-              </button>
-              <p className="font-gujarati text-stone-400 text-xs">માળાનો એક-એક મણકો ફેરવી જાપ કરવા માટે ટેપ કરો</p>
-            </div>
-
-            {/* Hand wave detector gyro control */}
-            <div className="max-w-xs mx-auto p-4 bg-stone-900/60 rounded-2xl border border-stone-800 flex justify-between items-center gap-4">
-              <div className="text-left">
-                <span className="font-gujarati font-black text-xs text-stone-200 flex items-center gap-1">
-                  <span className="material-symbols-outlined text-sm animate-bounce text-teal-600">sensors</span>
-                  ડિવાઇસ હલાવીને જાપ (Gyro)
-                </span>
-                <p className="text-[10px] text-stone-500 font-gujarati leading-tight mt-0.5">મોબાઈલ હાથમાં રાખી હલાવતા જાવ</p>
-              </div>
-              <button
-                onClick={() => {
-                  if (!motionActive) {
-                    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-                      DeviceMotionEvent.requestPermission()
-                        .then(res => {
-                          if (res === 'granted') setMotionActive(true);
-                        }).catch(console.error);
-                    } else {
-                      setMotionActive(true);
-                    }
-                  } else {
-                    setMotionActive(false);
-                  }
-                }}
-                className={`w-14 h-8 rounded-full p-1 transition-colors relative flex items-center ${motionActive ? 'bg-teal-700 justify-end' : 'bg-stone-700 justify-start'}`}
-              >
-                <div className="h-6 w-6 bg-white rounded-full shadow-md"></div>
-              </button>
-            </div>
-
-            {/* Exit controls */}
-            <div className="pt-4 border-t border-[#FFFFFF]/10 flex justify-center gap-4 max-w-sm mx-auto">
-              <button
-                onClick={() => { if (window.confirm("શું આપ ખરેખર જપ અધૂરા છોડી બહાર જવા માંગો છો?")) resetMantraJapa(); }}
-                className="flex-1 bg-[#FFFFFF]/10 hover:bg-[#FFFFFF]/20 border border-[#FFFFFF]/10 py-3.5 px-4 rounded-2xl font-gujarati font-black text-xs text-[#F8FAFC] active:scale-95 transition-transform"
-              >
-                🛑 જપ બંધ કરો
-              </button>
-              <button
-                onClick={incrementJapa}
-                className="flex-1 bg-[#0D9488] py-3.5 px-4 rounded-2xl font-gujarati font-black text-xs text-[#2D3748] active:scale-95 transition-transform"
-              >
-                📿 આગળ વધો +1
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* --- SCREEN 5: COMPLETION CERTIFICATE SCREEN --- */}
-        {mantraScreen === 'certificate' && selectedMantra && (
-          <div className="space-y-8 animate-fade-in py-4">
-            <div className="max-w-md mx-auto p-6 sm:p-8 rounded-[2.5rem] bg-[#F8FAFC] border-4 border-double border-[#0D9488] shadow-sm relative overflow-hidden space-y-6 text-center">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(196,159,103,0.1)_0%,transparent_70%)] pointer-events-none"></div>
-              
-              {/* Traditional sacred motifs */}
-              <div className="flex justify-between items-center text-[#0D9488]/60 px-4">
-                <span className="material-symbols-outlined">filter_vintage</span>
-                <span className="material-symbols-outlined text-2xl">brightness_5</span>
-                <span className="material-symbols-outlined">filter_vintage</span>
-              </div>
-
-              {/* Certificate Heading */}
-              <div className="space-y-1">
-                <p className="font-label text-[10px] text-[#2D3748]/70 font-black uppercase tracking-[0.25em]">જપ અનુષ્ઠાન પ્રમાણપત્ર</p>
-                <h4 className="font-gujarati font-black text-2xl text-[#2D3748]">🪔 ભક્તિ રત્ન પ્રમાણપત્ર 🪔</h4>
-              </div>
-
-              <div className="h-[2px] w-36 bg-gradient-to-r from-transparent via-[#0D9488] to-transparent mx-auto"></div>
-
-              {/* Custom message content */}
-              <div className="space-y-4 px-2">
-                <p className="font-gujarati text-sm text-[#1A1614] leading-relaxed">
-                  આથી પ્રમાણિત કરવામાં આવે છે કે આપની અપાર ભક્તિ અને નિષ્ઠા સાથે શ્રદ્ધાપૂર્વક
-                </p>
-                <div className="py-3 px-4 bg-[#0D9488]/10 rounded-2xl border border-[#0D9488] inline-block">
-                  <p className="font-gujarati font-black text-lg text-[#2D3748] leading-none">
-                    "{selectedMantra.name}"
-                  </p>
-                </div>
-                <p className="font-gujarati text-sm text-[#1A1614] leading-relaxed">
-                  મંત્રના <span className="font-black text-[#2D3748] text-lg">{mantraTarget}</span> પવિત્ર જપ પૂર્ણ કરી આપશ્રીએ જપ અનુષ્ઠાન સંપન્ન કર્યું છે.
-                </p>
-                <p className="font-gujarati text-xs text-[#78716C] leading-relaxed italic">
-                  પ્રભુ આપની સર્વ આધ્યાત્મિક અને લૌકિક મનોકામનાઓ શીઘ્ર અતિ શીઘ્ર પૂર્ણ કરે તેવા શુભ આશીર્વાદ!
-                </p>
-              </div>
-
-              {/* Signature section */}
-              <div className="pt-4 border-t border-[#0D9488] flex justify-between items-center text-left">
-                <div>
-                  <p className="text-[10px] font-gujarati text-[#78716C]">અનુષ્ઠાન તારીખ</p>
-                  <p className="font-gujarati text-xs text-[#2D3748] font-bold">
-                    {new Date().toLocaleDateString('gu-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-[10px] font-gujarati text-stone-500">પ્રમાણિત કરનાર</p>
-                  <p className="font-gujarati text-xs text-yellow-600 font-bold">ૐ ગુજરાતી એપ</p>
-                </div>
-              </div>
-
-              {/* Action buttons */}
-              <div className="space-y-3 pt-4">
-                <a
-                  href={`https://api.whatsapp.com/send?text=મેં આજે ગુજરાતી એપ પર શ્રદ્ધાપૂર્વક *${selectedMantra.name}* ના *${mantraTarget}* મંત્ર જાપ પૂર્ણ કરી ધન્યતા અનુભવી છે! આપ પણ આપના ફોનમાં જાપ શરૂ કરો 🙏`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-gujarati font-black py-4 px-6 rounded-2xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-2 border-b-4 border-emerald-850"
-                >
-                  <span className="material-symbols-outlined text-lg">share</span>
-                  પ્રમાણપત્ર વોટ્સએપ પર શેર કરો 🙏
-                </a>
-                
-                <button
-                  onClick={resetMantraJapa}
-                  className="w-full bg-stone-850 hover:bg-stone-800 border border-stone-800 text-stone-300 font-gujarati font-black py-3.5 px-6 rounded-2xl active:scale-95 transition-all"
-                >
-                  🔄 ફરીથી નવો જાપ શરૂ કરો
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        </div>
       </section>
 
       <section className="bg-surface-container-low p-10 rounded-[2.5rem] relative overflow-hidden text-center border border-primary/5">

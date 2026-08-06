@@ -6,7 +6,7 @@ export const RASHI_DATA = [
   { id: "simha", name: "સિંહ (Leo)", letters: "મ, ટ" },
   { id: "kanya", name: "કન્યા (Virgo)", letters: "પ, ઠ, ણ" },
   { id: "tula", name: "તુલા (Libra)", letters: "ર, ત" },
-  { id: "vrishchik", name: "વૃશ્ચિક (Scorpio)", letters: "ન, ย" },
+  { id: "vrishchik", name: "વૃશ્ચિક (Scorpio)", letters: "ન, ય" },
   { id: "dhanu", name: "ધન (Sagittarius)", letters: "ભ, ધ, ફ, ઢ" },
   { id: "makar", name: "મકર (Capricorn)", letters: "ખ, જ" },
   { id: "kumbh", name: "કુંભ (Aquarius)", letters: "ગ, શ, સ, ષ" },

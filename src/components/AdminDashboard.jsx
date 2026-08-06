@@ -132,6 +132,7 @@ const AdminDashboard = () => {
   const [userFilter, setUserFilter] = useState("all");
   const [userCityFilter, setUserCityFilter] = useState("");
   const [isSavingUser, setIsSavingUser] = useState(null);
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState(null);
 
   // Custom Push Notification State
   const [notifTitle, setNotifTitle] = useState("ગુજરાતી એપ");
@@ -719,6 +720,55 @@ const AdminDashboard = () => {
     }
   };
 
+  const getLocalDateString = (dStr) => {
+    if (!dStr) return null;
+    if (typeof dStr === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dStr.trim())) {
+      return dStr.trim();
+    }
+    try {
+      const d = new Date(dStr);
+      if (isNaN(d.getTime())) return null;
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const getLast30DaysList = () => {
+    const days = [];
+    const today = new Date();
+    for (let i = 0; i < 30; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const dateStr = `${year}-${month}-${day}`;
+      
+      const formattedDate = d.toLocaleDateString('gu-IN', { day: 'numeric', month: 'short' });
+      const dayName = d.toLocaleDateString('gu-IN', { weekday: 'short' });
+      
+      const activeCount = users.filter(u => {
+        const actDateStr = getLocalDateString(u.last_active_at || u.last_active);
+        const regDateStr = getLocalDateString(u.created_at);
+        return actDateStr === dateStr || regDateStr === dateStr;
+      }).length;
+
+      days.push({
+        dateStr,
+        dateObj: d,
+        formattedDate,
+        dayName,
+        isToday: i === 0,
+        activeCount
+      });
+    }
+    return days;
+  };
+
   const getFilteredUsers = () => {
     return users.filter(user => {
       const query = usersSearch.toLowerCase().trim();
@@ -729,9 +779,22 @@ const AdminDashboard = () => {
       const searchOk = !query || nameMatch || mobileMatch || emailMatch || cityMatch;
 
       let statusOk = true;
+      const todayStr = getLocalDateString(new Date());
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-      if (userFilter === "active") {
+
+      const actDateStr = getLocalDateString(user.last_active_at || user.last_active);
+      const regDateStr = getLocalDateString(user.created_at);
+
+      if (userFilter === "today") {
+        statusOk = actDateStr === todayStr || regDateStr === todayStr;
+      } else if (userFilter === "new_24h") {
+        const oneDayAgo = new Date();
+        oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+        statusOk = user.created_at && new Date(user.created_at) >= oneDayAgo;
+      } else if (userFilter === "selected_date" && selectedCalendarDate) {
+        statusOk = actDateStr === selectedCalendarDate || regDateStr === selectedCalendarDate;
+      } else if (userFilter === "active") {
         const act = user.last_active_at || user.last_active;
         statusOk = act && new Date(act) >= thirtyDaysAgo;
       } else if (userFilter === "inactive") {
@@ -2405,33 +2468,76 @@ const AdminDashboard = () => {
                 <>
                   {/* Stats Cards */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="bg-white dark:bg-stone-905 p-5 rounded-3xl border border-stone-200/50 dark:border-stone-850 shadow-sm flex flex-col justify-between">
+                    {/* Stat Card 1: Total Installs */}
+                    <div 
+                      onClick={() => { setUserFilter('all'); setSelectedCalendarDate(null); }}
+                      className={`bg-white dark:bg-stone-905 p-5 rounded-3xl border shadow-sm flex flex-col justify-between cursor-pointer transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] ${
+                        userFilter === 'all' && !selectedCalendarDate
+                          ? 'border-amber-500 ring-2 ring-amber-500/50 shadow-amber-500/10'
+                          : 'border-stone-200/50 dark:border-stone-850 hover:border-amber-300'
+                      }`}
+                    >
                       <span className="text-stone-400 font-gujarati text-xs">કુલ ઇન્સ્ટોલ (Total Installs)</span>
                       <span className="font-headline font-black text-2xl text-amber-500 mt-2">{users.length}</span>
-                      <span className="text-[10px] text-stone-500 font-bold mt-1">નોંધાયેલા ઉપકરણો</span>
+                      <span className="text-[10px] text-stone-500 font-bold mt-1">નોંધાયેલા ઉપકરણો (બધા)</span>
                     </div>
-                    <div className="bg-white dark:bg-stone-905 p-5 rounded-3xl border border-stone-200/50 dark:border-stone-850 shadow-sm flex flex-col justify-between">
-                      <span className="text-stone-400 font-gujarati text-xs">આજે એક્ટિવ યુઝર્સ</span>
+
+                    {/* Stat Card 2: Active Users Today */}
+                    <div 
+                      onClick={() => { setUserFilter('today'); setSelectedCalendarDate(null); }}
+                      className={`bg-white dark:bg-stone-905 p-5 rounded-3xl border shadow-sm flex flex-col justify-between cursor-pointer transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] ${
+                        userFilter === 'today'
+                          ? 'border-emerald-500 ring-2 ring-emerald-500/50 bg-emerald-50/10 dark:bg-emerald-950/20 shadow-emerald-500/10'
+                          : 'border-stone-200/50 dark:border-stone-850 hover:border-emerald-300'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-stone-400 font-gujarati text-xs">આજે એક્ટિવ યુઝર્સ</span>
+                        {userFilter === 'today' && <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>}
+                      </div>
                       <span className="font-headline font-black text-2xl text-emerald-600 mt-2">
                         {users.filter(u => {
-                          const act = u.last_active_at || u.last_active;
-                          return act && act.startsWith(new Date().toISOString().split('T')[0]);
+                          const todayStr = getLocalDateString(new Date());
+                          const actStr = getLocalDateString(u.last_active_at || u.last_active);
+                          const regStr = getLocalDateString(u.created_at);
+                          return actStr === todayStr || regStr === todayStr;
                         }).length}
                       </span>
-                      <span className="text-[10px] text-emerald-500 font-bold mt-1">છેલ્લા ૨૪ કલાકમાં</span>
+                      <span className="text-[10px] text-emerald-500 font-bold mt-1 flex items-center justify-between">
+                        <span>છેલ્લા ૨૪ કલાકમાં</span>
+                        <span className="underline">યાદી જુઓ ➔</span>
+                      </span>
                     </div>
-                    <div className="bg-white dark:bg-stone-905 p-5 rounded-3xl border border-stone-200/50 dark:border-stone-850 shadow-sm flex flex-col justify-between">
+
+                    {/* Stat Card 3: New Users 24h */}
+                    <div 
+                      onClick={() => { setUserFilter('new_24h'); setSelectedCalendarDate(null); }}
+                      className={`bg-white dark:bg-stone-905 p-5 rounded-3xl border shadow-sm flex flex-col justify-between cursor-pointer transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] ${
+                        userFilter === 'new_24h'
+                          ? 'border-blue-500 ring-2 ring-blue-500/50 bg-blue-50/10 dark:bg-blue-950/20 shadow-blue-500/10'
+                          : 'border-stone-200/50 dark:border-stone-850 hover:border-blue-300'
+                      }`}
+                    >
                       <span className="text-stone-400 font-gujarati text-xs">નવા યુઝર્સ (છેલ્લા ૨૪ કલાક)</span>
                       <span className="font-headline font-black text-2xl text-blue-600 mt-2">
                         {users.filter(u => {
                           const oneDayAgo = new Date();
                           oneDayAgo.setDate(oneDayAgo.getDate() - 1);
-                          return new Date(u.created_at) >= oneDayAgo;
+                          return u.created_at && new Date(u.created_at) >= oneDayAgo;
                         }).length}
                       </span>
                       <span className="text-[10px] text-blue-500 font-bold mt-1">નવા ઇન્સ્ટોલેશન્સ</span>
                     </div>
-                    <div className="bg-white dark:bg-stone-905 p-5 rounded-3xl border border-stone-200/50 dark:border-stone-850 shadow-sm flex flex-col justify-between">
+
+                    {/* Stat Card 4: Inactive Users */}
+                    <div 
+                      onClick={() => { setUserFilter('inactive'); setSelectedCalendarDate(null); }}
+                      className={`bg-white dark:bg-stone-905 p-5 rounded-3xl border shadow-sm flex flex-col justify-between cursor-pointer transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] ${
+                        userFilter === 'inactive'
+                          ? 'border-rose-500 ring-2 ring-rose-500/50 bg-rose-50/10 dark:bg-rose-950/20 shadow-rose-500/10'
+                          : 'border-stone-200/50 dark:border-stone-850 hover:border-rose-300'
+                      }`}
+                    >
                       <span className="text-stone-400 font-gujarati text-xs">નિષ્ક્રિય / અનઇન્સ્ટોલ (Est.)</span>
                       <span className="font-headline font-black text-2xl text-rose-500 mt-2">
                         {users.filter(u => {
@@ -2442,6 +2548,81 @@ const AdminDashboard = () => {
                         }).length}
                       </span>
                       <span className="text-[10px] text-rose-500 font-bold mt-1">૩૦+ દિવસથી નિષ્ક્રિય</span>
+                    </div>
+                  </div>
+
+                  {/* 30-Day Activity Calendar Section */}
+                  <div className="bg-white dark:bg-stone-900 p-5 rounded-3xl border border-stone-200/50 dark:border-stone-850 shadow-sm space-y-3">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
+                          <span className="material-symbols-outlined text-sm">calendar_month</span>
+                        </div>
+                        <div>
+                          <h4 className="font-headline font-bold text-sm text-stone-900 dark:text-stone-100 flex items-center gap-2">
+                            📅 ૩૦ દિવસીય વપરાશકર્તા સક્રિયતા કેલેન્ડર (30-Day Activity Calendar)
+                          </h4>
+                          <p className="font-gujarati text-[11px] text-stone-500">
+                            કોઈપણ તારીખ પર ક્લિક કરો જેથી તે ચોક્કસ દિવસે કેટલા અને કયા યુઝર્સ એક્ટિવ કે ઓનલાઈન હતા તેની વિગતો નીચે મળશે
+                          </p>
+                        </div>
+                      </div>
+                      {selectedCalendarDate && (
+                        <button
+                          onClick={() => { setSelectedCalendarDate(null); setUserFilter('all'); }}
+                          className="text-[11px] font-gujarati font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 px-3 py-1 rounded-xl border border-amber-200 dark:border-amber-800 transition-all flex items-center gap-1 cursor-pointer"
+                        >
+                          <span className="material-symbols-outlined text-xs">restart_alt</span>
+                          કેલેન્ડર ફિલ્ટર હટાવો
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Calendar Grid */}
+                    <div className="grid grid-cols-5 sm:grid-cols-7 md:grid-cols-10 gap-2 overflow-x-auto p-2 bg-stone-50/70 dark:bg-stone-950/70 rounded-2xl border border-stone-100 dark:border-stone-850 max-h-[220px] overflow-y-auto">
+                      {getLast30DaysList().map((day) => {
+                        const isSelected = selectedCalendarDate === day.dateStr;
+                        return (
+                          <button
+                            key={day.dateStr}
+                            onClick={() => {
+                              setSelectedCalendarDate(day.dateStr);
+                              setUserFilter('selected_date');
+                            }}
+                            className={`p-2 rounded-2xl flex flex-col items-center justify-between text-center transition-all duration-200 border cursor-pointer ${
+                              isSelected
+                                ? 'bg-amber-500 text-white border-amber-500 shadow-md scale-[1.04] ring-2 ring-amber-400'
+                                : day.isToday
+                                ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-400 dark:border-emerald-700 text-emerald-800 dark:text-emerald-200 hover:border-emerald-500'
+                                : day.activeCount > 0
+                                ? 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-200 hover:border-amber-400 hover:shadow-sm'
+                                : 'bg-stone-100/50 dark:bg-stone-900/40 border-stone-200/40 dark:border-stone-850 text-stone-400 dark:text-stone-500 hover:border-stone-300'
+                            }`}
+                          >
+                            <span className={`text-[9px] font-bold uppercase ${isSelected ? 'text-amber-100' : 'text-stone-400'}`}>
+                              {day.dayName}
+                            </span>
+                            <span className={`font-headline font-black text-xs my-0.5 ${isSelected ? 'text-white' : ''}`}>
+                              {day.formattedDate}
+                            </span>
+                            {day.isToday && (
+                              <span className={`text-[8px] font-bold px-1.5 rounded-full mb-0.5 ${isSelected ? 'bg-amber-600 text-white' : 'bg-emerald-500 text-white'}`}>
+                                આજે
+                              </span>
+                            )}
+                            <div className={`mt-1 px-1.5 py-0.5 rounded-full text-[9px] font-black flex items-center gap-1 ${
+                              isSelected
+                                ? 'bg-white text-amber-600'
+                                : day.activeCount > 0
+                                ? 'bg-emerald-500 text-white'
+                                : 'bg-stone-200 dark:bg-stone-800 text-stone-400'
+                            }`}>
+                              {day.activeCount > 0 && <span className="w-1 h-1 rounded-full bg-current"></span>}
+                              {day.activeCount} યુઝર
+                            </div>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
 
@@ -2475,16 +2656,53 @@ const AdminDashboard = () => {
                     <div className="relative">
                       <select 
                         value={userFilter}
-                        onChange={(e) => setUserFilter(e.target.value)}
+                        onChange={(e) => {
+                          setUserFilter(e.target.value);
+                          if (e.target.value !== 'selected_date') {
+                            setSelectedCalendarDate(null);
+                          }
+                        }}
                         className="w-full px-4 py-2.5 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl text-xs font-gujarati outline-none focus:border-amber-500 transition-all text-stone-800 dark:text-stone-200"
                       >
                         <option value="all">બધા યુઝર્સ દર્શાવો</option>
+                        <option value="today">આજે એક્ટિવ યુઝર્સ (છેલ્લા ૨૪ કલાક)</option>
+                        <option value="new_24h">નવા યુઝર્સ (છેલ્લા ૨૪ કલાક)</option>
                         <option value="active">સક્રિય યુઝર્સ (છેલ્લા ૩૦ દિવસમાં)</option>
                         <option value="inactive">નિષ્ક્રિય યુઝર્સ (૩૦+ દિવસથી)</option>
                         <option value="verified">ફક્ત વેરિફાઈડ (બ્લુ ટીક)</option>
+                        {selectedCalendarDate && (
+                          <option value="selected_date">📅 પસંદ કરેલ તારીખ ({selectedCalendarDate})</option>
+                        )}
                       </select>
                     </div>
                   </div>
+
+                  {/* Active Filter Notification Bar */}
+                  {(userFilter !== 'all' || selectedCalendarDate) && (
+                    <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 font-gujarati text-xs animate-fade-in">
+                      <div className="flex items-center gap-2 text-amber-900 dark:text-amber-200 font-bold">
+                        <span className="material-symbols-outlined text-amber-500 text-base">filter_alt</span>
+                        <span>
+                          {userFilter === 'today' && "🟢 આજે (છેલ્લા ૨૪ કલાકમાં) એક્ટિવ / એપ વાપરનાર યુઝર્સની યાદી"}
+                          {userFilter === 'selected_date' && selectedCalendarDate && `📅 ${new Date(selectedCalendarDate + 'T00:00:00').toLocaleDateString('gu-IN', { day: 'numeric', month: 'long', year: 'numeric' })} ના દિવસે એક્ટિવ યુઝર્સ`}
+                          {userFilter === 'new_24h' && "🆕 છેલ્લા ૨૪ કલાકમાં નોંધાયેલા નવા યુઝર્સ"}
+                          {userFilter === 'inactive' && "💤 ૩૦+ દિવસથી નિષ્ક્રિય યુઝર્સ"}
+                          {userFilter === 'verified' && "✔ વેરિફાઇડ યુઝર્સ"}
+                          {userFilter === 'active' && "⚡ ૩૦ દિવસમાં એક્ટિવ યુઝર્સ"}
+                        </span>
+                        <span className="bg-amber-500 text-white text-[11px] px-2.5 py-0.5 rounded-full font-black">
+                          {getFilteredUsers().length} યુઝર્સ
+                        </span>
+                      </div>
+                      <button 
+                        onClick={() => { setUserFilter('all'); setSelectedCalendarDate(null); }}
+                        className="flex items-center gap-1 bg-white dark:bg-stone-900 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300 px-3 py-1.5 rounded-xl border border-stone-200 dark:border-stone-750 text-xs font-bold transition-all shadow-sm cursor-pointer"
+                      >
+                        <span className="material-symbols-outlined text-xs text-rose-500">close</span>
+                        બધા યુઝર્સ દર્શાવો (Clear Filter)
+                      </button>
+                    </div>
+                  )}
 
                   {/* Users Table */}
                   <div className="bg-white dark:bg-stone-900 rounded-[2rem] border border-stone-200/50 dark:border-stone-850 shadow-sm overflow-hidden">
@@ -2511,7 +2729,9 @@ const AdminDashboard = () => {
                             getFilteredUsers().map((user) => {
                               const initials = user.name ? user.name.split(' ').map(n => n[0]).join('').slice(0, 2) : "યુ";
                               const actDate = user.last_active_at || user.last_active;
-                              const isTodayActive = actDate && actDate.startsWith(new Date().toISOString().split('T')[0]);
+                              const todayStr = getLocalDateString(new Date());
+                              const actStr = getLocalDateString(actDate);
+                              const isTodayActive = actStr === todayStr;
                               const isVerified = !!user.verified_badge;
                               const isRepresentative = !!user.is_representative;
                               const regDate = user.created_at ? new Date(user.created_at).toLocaleDateString('gu-IN', {

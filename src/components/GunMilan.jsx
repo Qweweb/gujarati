@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { generateFullKundaliData } from '../utils/astroEngine';
 
 // Astrological Constants for Ashta Koota
 const RASHIS = [
@@ -68,119 +69,22 @@ const PLANET_FRIENDSHIP = {
   "સૂર્ય": { "સૂર્ય": 5, "ચંદ્ર": 5, "મંગળ": 5, "બુધ": 3, "ગુરુ": 5, "શુક્ર": 0, "શનિ": 0 },
   "ચંદ્ર": { "સૂર્ય": 5, "ચંદ્ર": 5, "મંગળ": 3, "બુધ": 5, "ગુરુ": 3, "શુક્ર": 3, "શનિ": 3 },
   "મંગળ": { "સૂર્ય": 5, "ચંદ્ર": 5, "મંગળ": 5, "બુધ": 0, "ગુરુ": 5, "શુક્ર": 3, "શનિ": 3 },
-  "બુધ": { "સૂર્ય": 5, "ચંદ્ર": 0, "મંગળ": 3, "બુધ": 5, "ગુરુ": 3, "શુક્ર": 5, "શનિ": 3 },
+  "બુધ": { "સૂર્ય": 5, "ચંદ્ર": 0, "મંગળ": 3, "બુધ": 5, "ગુરુ": 3, "શુક્ર": 5, "શનિ": 5 },
   "ગુરુ": { "સૂર્ય": 5, "ચંદ્ર": 5, "મંગળ": 5, "બુધ": 0, "ગુરુ": 5, "શુક્ર": 0, "શનિ": 3 },
   "શુક્ર": { "સૂર્ય": 0, "ચંદ્ર": 0, "મંગળ": 3, "બુધ": 5, "ગુરુ": 3, "શુક્ર": 5, "શનિ": 5 },
   "શનિ": { "સૂર્ય": 0, "ચંદ્ર": 0, "મંગળ": 0, "બુધ": 5, "ગુરુ": 3, "શુક્ર": 5, "શનિ": 5 }
 };
 
-// True Astrological Calculator helper for matching details
+// True Astrological Calculator helper leveraging Astronomy Engine
 const calculateAstroForMilan = (dob, tob, noTime, coords) => {
   const finalTob = noTime ? "12:00" : tob;
-  const [year, month, day] = dob.split("-").map(Number);
-  const [hours, minutes] = finalTob.split(":").map(Number);
-
-  const lat = coords ? parseFloat(coords.lat) : 23.0225; // default Ahmedabad
-  const lon = coords ? parseFloat(coords.lon) : 72.5714; // default Ahmedabad
-
-  const timezoneOffset = 5.5; // IST
-  let utcHours = hours - timezoneOffset;
-  let utcDay = day;
-  let utcMonth = month;
-  let utcYear = year;
-
-  if (utcHours < 0) {
-    utcHours += 24;
-    utcDay -= 1;
-    if (utcDay < 1) {
-      utcMonth -= 1;
-      if (utcMonth < 1) {
-        utcMonth = 12;
-        utcYear -= 1;
-      }
-      const daysInMonth = new Date(utcYear, utcMonth, 0).getDate();
-      utcDay = daysInMonth;
-    }
-  }
-
-  const Y = utcMonth <= 2 ? utcYear - 1 : utcYear;
-  const M = utcMonth <= 2 ? utcMonth + 12 : utcMonth;
-  const D = utcDay + (utcHours + minutes / 60) / 24;
-
-  const A = Math.floor(Y / 100);
-  const B = 2 - A + Math.floor(A / 4);
-
-  const jd = Math.floor(365.25 * (Y + 4716)) + Math.floor(30.6001 * (M + 1)) + D + B - 1524.5;
-  const t = jd - 2451545.0;
-
-  const ayanamsa = 23.85 + (t / 365.25) * 0.0139696;
-
-  let gmst = (280.46061837 + 360.98564736629 * t) % 360;
-  if (gmst < 0) gmst += 360;
-  let lst = (gmst + lon) % 360;
-  if (lst < 0) lst += 360;
-
-  const obliquity = 23.4393 - (t / 365.25) * 0.000013;
-  const lstRad = (lst * Math.PI) / 180;
-  const latRad = (lat * Math.PI) / 180;
-  const oblRad = (obliquity * Math.PI) / 180;
-
-  const yVal = -Math.cos(lstRad);
-  const xVal = Math.sin(lstRad) * Math.cos(oblRad) + Math.tan(latRad) * Math.sin(oblRad);
-
-  let tropicalAsc = Math.atan2(yVal, xVal) * (180 / Math.PI);
-  if (tropicalAsc < 0) tropicalAsc += 360;
-
-  let siderealAsc = (tropicalAsc - ayanamsa) % 360;
-  if (siderealAsc < 0) siderealAsc += 360;
-
-  const lagnaSignNum = Math.floor(siderealAsc / 30) + 1;
-
-  const orbitalParams = {
-    "સૂ": { L0: 280.466, n: 0.98564736 },
-    "ચ": { L0: 218.316, n: 13.17639648 },
-    "મં": { L0: 355.453, n: 0.52402078 },
-    "બુ": { L0: 252.251, n: 4.092334436 },
-    "ગુ": { L0: 34.404,  n: 0.0830853 },
-    "શુ": { L0: 181.979, n: 1.60213022 },
-    "શ": { L0: 50.077,  n: 0.03345963 },
-    "રા": { L0: 125.122, n: -0.05295376 },
-  };
-
-  const Mm = (134.963 + 13.064993 * t) * Math.PI / 180;
-  const Ms = (357.529 + 0.9856 * t) * Math.PI / 180;
-  const moonPerturbation = 6.289 * Math.sin(Mm) + 1.274 * Math.sin(2 * Mm - Ms) + 0.658 * Math.sin(2 * Ms);
-  let moonLong = orbitalParams["ચ"].L0 + orbitalParams["ચ"].n * t + moonPerturbation;
-
-  const planetSiderealLongs = {};
-  Object.keys(orbitalParams).forEach(p => {
-    let long = orbitalParams[p].L0 + orbitalParams[p].n * t;
-    if (p === "ચ") long = moonLong;
-    let sidReal = (long - ayanamsa) % 360;
-    if (sidReal < 0) sidReal += 360;
-    planetSiderealLongs[p] = sidReal;
-  });
-
-  const planetsInHouses = {};
-  Object.keys(planetSiderealLongs).forEach(p => {
-    const long = planetSiderealLongs[p];
-    const rashiNum = Math.floor(long / 30) + 1;
-    planetsInHouses[p] = (rashiNum - lagnaSignNum + 12) % 12 + 1;
-  });
-
-  const moonDeg = planetSiderealLongs["ચ"];
-  const nakshatraIdx = Math.floor(moonDeg / 13.33333) % 27;
-  const moonRashiNum = Math.floor(moonDeg / 30) % 12 + 1;
-  const pada = Math.floor((moonDeg % 13.33333) / 3.33333) + 1;
-
-  const marsHouse = planetsInHouses["મં"];
-  const isManglik = [1, 4, 7, 8, 12].includes(marsHouse);
-
+  const data = generateFullKundaliData("", dob, finalTob, noTime, coords);
+  const nakIdx = NAKSHATRAS.findIndex(n => n.name === data.nakshatraName);
   return {
-    rashiId: moonRashiNum,
-    nakshatraIdx,
-    pada,
-    isManglik: isManglik ? "yes" : "no"
+    rashiId: data.moonRashiNum,
+    nakshatraIdx: nakIdx !== -1 ? nakIdx : 0,
+    pada: data.pada,
+    isManglik: data.isManglik ? "yes" : "no"
   };
 };
 
@@ -388,13 +292,31 @@ const GunMilan = ({ isEmbedded = false }) => {
       ganaScore = 0;
     }
 
-    // 7. Bhakoot (Max 7 Points)
+    // 7. Bhakoot (Max 7 Points) - With Bhakoot Dosh Parihar Exceptions
     const rashiDist = ((girlR.id - boyR.id + 12) % 12) + 1;
-    const badDists = [2, 12, 6, 8];
-    const bhakootScore = badDists.includes(rashiDist) ? 0 : 7;
+    const isBadBhakoot = [2, 12, 6, 8].includes(rashiDist);
+    const isSameRashiLord = boyR.lord === girlR.lord;
+    const isFriendlyLord = PLANET_FRIENDSHIP[boyR.lord]?.[girlR.lord] === 5;
 
-    // 8. Nadi (Max 8 Points)
-    const nadiScore = boyN.nadi !== girlN.nadi ? 8 : 0;
+    let bhakootScore = 7;
+    if (isBadBhakoot && !isSameRashiLord && !isFriendlyLord) {
+      bhakootScore = 0;
+    }
+
+    // 8. Nadi (Max 8 Points) - With Nadi Dosh Parihar Exceptions
+    const isSameNadi = boyN.nadi === girlN.nadi;
+    const isDiffPada = bPada !== gPada;
+    const isDiffNakshatra = bNakIdx !== gNakIdx;
+
+    let nadiScore = 8;
+    if (isSameNadi) {
+      // Classical Parihar: Same Rashi different Nakshatra, or Same Nakshatra different Pada, or Same/Friendly Rashi Lords
+      if ((boyR.id === girlR.id && isDiffNakshatra) || (bNakIdx === gNakIdx && isDiffPada) || isSameRashiLord || isFriendlyLord) {
+        nadiScore = 8;
+      } else {
+        nadiScore = 0;
+      }
+    }
 
     // Total Score
     const totalScore = varnaScore + vashyaScore + taraScore + yoniScore + maitriScore + ganaScore + bhakootScore + nadiScore;

@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { calculateDynamicSaturnPanoti } from '../utils/astroEngine';
 
 const RASHIS = [
-  { id: "મેષ", name: "મેષ (Aries)", symbol: "♈", english: "Mesha" },
-  { id: "વૃષભ", name: "વૃષભ (Taurus)", symbol: "♉", english: "Vrishabha" },
-  { id: "મિથુન", name: "મિથુન (Gemini)", symbol: "♊", english: "Mithuna" },
-  { id: "કર્ક", name: "કર્ક (Cancer)", symbol: "♋", english: "Karka" },
-  { id: "સિંહ", name: "સિંહ (Leo)", symbol: "♌", english: "Simha" },
-  { id: "કન્યા", name: "કન્યા (Virgo)", symbol: "♍", english: "Kanya" },
-  { id: "તુલા", name: "તુલા (Libra)", symbol: "♎", english: "Tula" },
-  { id: "વૃશ્ચિક", name: "વૃશ્ચિક (Scorpio)", symbol: "♏", english: "Vrishchika" },
-  { id: "ધન", name: "ધન (Sagittarius)", symbol: "♐", english: "Dhanu" },
-  { id: "મકર", name: "મકર (Capricorn)", symbol: "♑", english: "Makar" },
-  { id: "કુંભ", name: "કુંભ (Aquarius)", symbol: "♒", english: "Kumbh" },
-  { id: "મીન", name: "મીન (Pisces)", symbol: "♓", english: "Meen" }
+  { id: "મેષ", num: 1, name: "મેષ (Aries)", symbol: "♈", english: "Mesha" },
+  { id: "વૃષભ", num: 2, name: "વૃષભ (Taurus)", symbol: "♉", english: "Vrishabha" },
+  { id: "મિથુન", num: 3, name: "મિથુન (Gemini)", symbol: "♊", english: "Mithuna" },
+  { id: "કર્ક", num: 4, name: "કર્ક (Cancer)", symbol: "♋", english: "Karka" },
+  { id: "સિંહ", num: 5, name: "સિંહ (Leo)", symbol: "♌", english: "Simha" },
+  { id: "કન્યા", num: 6, name: "કન્યા (Virgo)", symbol: "♍", english: "Kanya" },
+  { id: "તુલા", num: 7, name: "તુલા (Libra)", symbol: "♎", english: "Tula" },
+  { id: "વૃશ્ચિક", num: 8, name: "વૃશ્ચિક (Scorpio)", symbol: "♏", english: "Vrishchika" },
+  { id: "ધન", num: 9, name: "ધન (Sagittarius)", symbol: "♐", english: "Dhanu" },
+  { id: "મકર", num: 10, name: "મકર (Capricorn)", symbol: "♑", english: "Makar" },
+  { id: "કુંભ", num: 11, name: "કુંભ (Aquarius)", symbol: "♒", english: "Kumbh" },
+  { id: "મીન", num: 12, name: "મીન (Pisces)", symbol: "♓", english: "Meen" }
 ];
 
 const PanotiChecker = () => {
@@ -23,75 +24,10 @@ const PanotiChecker = () => {
 
   const checkPanoti = (rashi) => {
     setSelectedRashi(rashi);
-    let status = "";
-    let severity = ""; // success, warning, danger
-    let phase = "";
-    let description = "";
-    let remedies = [];
-
-    if (rashi.id === "મકર") {
-      status = "સાડાસાતી (Sade Sati) - અંતિમ તબક્કો";
-      severity = "warning";
-      phase = "ત્રીજું ચરણ (Setting Phase)";
-      description = "તમારી રાશિ પર શનિની સાડાસાતીનો છેલ્લો અઢી વર્ષનો તબક્કો ચાલી રહ્યો છે. માનસિક ચિંતાઓમાં ધીરે ધીરે રાહત મળશે અને પ્રગતિના નવા દ્વાર ખુલશે. નાણાકીય રોકાણોમાં સાવધાની રાખવી.";
-      remedies = [
-        "શનિવારે પીપળાના વૃક્ષ નીચે સરસિયાના તેલનો દીવો કરવો.",
-        "પીડિતો અથવા સફાઈ કામદારોને કાળા કપડા કે અડદનું દાન કરવું.",
-        "દરરોજ સૂર્યાસ્ત પછી 'ॐ शं शनैश्चराय नमः' મંત્રના ૧૦૮ જાપ કરવા."
-      ];
-    } else if (rashi.id === "કુંભ") {
-      status = "સાડાસાતી (Sade Sati) - શિખર તબક્કો";
-      severity = "danger";
-      phase = "બીજું ચરણ (Peak Phase)";
-      description = "તમારી રાશિ પર શનિની સાડાસાતીનો સૌથી પ્રભાવશાળી બીજો તબક્કો ચાલી રહ્યો છે. માનસિક તણાવ, વાહન ચલાવતી વખતે સાવધાની અને વાદ-વિવાદથી બચવું જરૂરી છે. ધીરજ અને સદાચારથી શનિદેવ પ્રસન્ન થાય છે.";
-      remedies = [
-        "શનિવારે હનુમાનજીના મંદિરે જઈ હનુમાન ચાલીસા અથવા સુંદરકાંડના પાઠ કરવા.",
-        "શનિ મહારાજને વાદળી અથવા કાળા રંગના પુષ્પો અને કાળા તલ અર્પણ કરવા.",
-        "શનિ બીજ મંત્ર: 'ॐ प्रां प्रीं प्रौं सः शनैश्चराय नमः' નો જાપ કરવો."
-      ];
-    } else if (rashi.id === "મીન") {
-      status = "સાડાસાતી (Sade Sati) - પ્રારંભિક તબક્કો";
-      severity = "warning";
-      phase = "પ્રથમ ચરણ (Rising Phase)";
-      description = "તમારી રાશિ પર શનિની સાડાસાતીનો પ્રથમ અઢી વર્ષનો પ્રારંભિક તબક્કો ચાલી રહ્યો છે. આ સમયગાળામાં ખર્ચ વધવાની સંભાવના છે અને વિદેશ મુસાફરી અથવા કાર્યક્ષેત્રમાં ફેરબદલ આવી શકે છે. કાયદાકીય કામોમાં સાવધાની રાખો.";
-      remedies = [
-        "ગરીબ લોકોને ભોજન કરાવવું અને કાળા શ્વાન (ડોગ) ને તેલવાળી રોટલી ખવડાવવી.",
-        "શનિવારે તાંબાના લોટામાં પાણી ભરી કાળા તલ નાખી સૂર્ય અને શનિદેવને અર્ધ્ય આપવું.",
-        "શનિ સ્તોત્ર અથવા શનિ ચાલીસાના પાઠ કરવા."
-      ];
-    } else if (rashi.id === "કર્ક") {
-      status = "શનિની ઢય્યા (Ashtama Dhayya)";
-      severity = "danger";
-      phase = "અષ્ટમ શનિ (૮મી ઢય્યા)";
-      description = "તમારી રાશિ પર શનિની અષ્ટમ ઢય્યા ચાલી રહી છે. આ અઢી વર્ષના સમયગાળા દરમિયાન શારીરિક સ્વાસ્થ્યનું વિશેષ ધ્યાન રાખવું. નકામી વાતોમાં સમય ન બગાડવો અને નોકરી/વ્યવસાયમાં મહેનત વધારવી.";
-      remedies = [
-        "શનિવારે તેલ દાન (તામ્રપાત્રમાં તેલ ભરી તમારો ચહેરો જોઈને દાન કરવું - છાયા દાન).",
-        "હનુમાન મંદિરમાં કાળા ચણા અને ગોળનો પ્રસાદ ચડાવવો.",
-        "પશુ-પક્ષીઓ અને કીડીઓને દાણા નાખવા."
-      ];
-    } else if (rashi.id === "વૃશ્ચિક") {
-      status = "શનિની ઢય્યા (Kantaka Dhayya)";
-      severity = "warning";
-      phase = "ચતુર્થ શનિ (૪થી ઢય્યા)";
-      description = "તમારી રાશિ પર શનિની ચતુર્થ ઢય્યા ચાલી રહી છે. કૌટુંબિક બાબતો અને મિલકત સંબંધિત નિર્ણયોમાં ધીરજ રાખવી. આ સમયે વ્યવસાયિક ભાગીદારીમાં સાવધાની રાખવી. તમારા કામમાં ઈમાનદારી રાખવાથી શનિદેવ શુભ ફળ આપશે.";
-      remedies = [
-        "શનિવારે શનિ મંદિરમાં સરસિયાના તેલનો દીવો કરી લોખંડની વસ્તુનું દાન કરવું.",
-        "દરરોજ સવારે શનિ ચાલીસાના પાઠ કરવા.",
-        "શનિ ગાયત્રી મંત્ર: 'ॐ भगभवाय विद्महे मृत्युरूपाय धीमहि तन्नो शनिः प्रचोदयात।' નો જાપ કરવો."
-      ];
-    } else {
-      status = "શનિ પનૌતી મુક્ત (શુભ સમય)";
-      severity = "success";
-      phase = "કોઈ સાડાસાતી કે ઢય્યા નથી";
-      description = "ખૂબ સરસ! અત્યારે તમારી રાશિ પર શનિદેવની કોઈ સાડાસાતી કે ઢય્યા ચાલુ નથી. શનિ મહારાજની આપના પર શુભ દ્રષ્ટિ છે. સત્કર્મ કરતા રહો અને ઈશ્વર ભક્તિમાં લીન રહો.";
-      remedies = [
-        "જીવનના સકારાત્મક સમય માટે શનિવારે કીડીઓને ગળ્યું અન્ન (લોટ અને ખાંડ) નાખવું.",
-        "હનુમાન ચાલીસાના પાઠ કરવા અને જરૂરિયાતમંદોને મદદ કરવી."
-      ];
-    }
-
-    setResult({ status, severity, phase, description, remedies });
+    const res = calculateDynamicSaturnPanoti(rashi.num, new Date());
+    setResult(res);
   };
+
 
   const triggerWhatsAppShare = () => {
     if (!selectedRashi || !result) return;

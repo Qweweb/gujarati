@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { downloadAsPDF } from '../utils/downloadHelper';
 import GunMilan from './GunMilan';
+import { generateFullKundaliData } from '../utils/astroEngine';
 
 const getPlanetColorForTable = (p) => {
   if (p === "સૂ") return "#ea580c"; // Sun - Orange
@@ -212,191 +213,28 @@ const KundaliGenerator = ({ defaultTab = 'kundali' }) => {
     const lat = selectedCoords ? parseFloat(selectedCoords.lat) : 23.0225; // default Ahmedabad
     const lon = selectedCoords ? parseFloat(selectedCoords.lon) : 72.5714; // default Ahmedabad
 
-    // 1. Calculate Julian Date (Greenwich Sidereal base)
-    const timezoneOffset = 5.5; // IST = UTC + 5.5
-    let utcHours = hours - timezoneOffset;
-    let utcDay = day;
-    let utcMonth = month;
-    let utcYear = year;
-
-    if (utcHours < 0) {
-      utcHours += 24;
-      utcDay -= 1;
-      if (utcDay < 1) {
-        utcMonth -= 1;
-        if (utcMonth < 1) {
-          utcMonth = 12;
-          utcYear -= 1;
-        }
-        const daysInMonth = new Date(utcYear, utcMonth, 0).getDate();
-        utcDay = daysInMonth;
-      }
-    }
-
-    const Y = utcMonth <= 2 ? utcYear - 1 : utcYear;
-    const M = utcMonth <= 2 ? utcMonth + 12 : utcMonth;
-    const D = utcDay + (utcHours + minutes / 60) / 24;
-
-    const A = Math.floor(Y / 100);
-    const B = 2 - A + Math.floor(A / 4);
-
-    const jd = Math.floor(365.25 * (Y + 4716)) + Math.floor(30.6001 * (M + 1)) + D + B - 1524.5;
-    const t = jd - 2451545.0; // days since J2000.0 epoch
-
-    // 2. Lahiri Sidereal Ayanamsa
-    const ayanamsa = 23.85 + (t / 365.25) * 0.0139696;
-
-    // 3. Greenwich Mean Sidereal Time (GMST) and Local Sidereal Time (LST)
-    let gmst = (280.46061837 + 360.98564736629 * t) % 360;
-    if (gmst < 0) gmst += 360;
-
-    let lst = (gmst + lon) % 360;
-    if (lst < 0) lst += 360;
-
-    // 4. Calculate Ascendant (Lagna) Longitude
-    const obliquity = 23.4393 - (t / 365.25) * 0.000013;
-    const lstRad = (lst * Math.PI) / 180;
-    const latRad = (lat * Math.PI) / 180;
-    const oblRad = (obliquity * Math.PI) / 180;
-
-    const yVal = -Math.cos(lstRad);
-    const xVal = Math.sin(lstRad) * Math.cos(oblRad) + Math.tan(latRad) * Math.sin(oblRad);
-
-    let tropicalAsc = Math.atan2(yVal, xVal) * (180 / Math.PI);
-    if (tropicalAsc < 0) tropicalAsc += 360;
-
-    let siderealAsc = (tropicalAsc - ayanamsa) % 360;
-    if (siderealAsc < 0) siderealAsc += 360;
-
-    const lagnaSignNum = Math.floor(siderealAsc / 30) + 1; // 1 to 12
-
-    // 5. Calculate Sidereal Planetary Longitudes
-    const orbitalParams = {
-      "સૂ": { L0: 280.466, n: 0.98564736 },
-      "ચ": { L0: 218.316, n: 13.17639648 },
-      "મં": { L0: 355.453, n: 0.52402078 },
-      "બુ": { L0: 252.251, n: 4.092334436 },
-      "ગુ": { L0: 34.404,  n: 0.0830853 },
-      "શુ": { L0: 181.979, n: 1.60213022 },
-      "શ": { L0: 50.077,  n: 0.03345963 },
-      "રા": { L0: 125.122, n: -0.05295376 },
-    };
-
-    // Moon Perturbation equation
-    const Mm = (134.963 + 13.064993 * t) * Math.PI / 180;
-    const Ms = (357.529 + 0.9856 * t) * Math.PI / 180;
-    const moonPerturbation = 6.289 * Math.sin(Mm) + 1.274 * Math.sin(2 * Mm - Ms) + 0.658 * Math.sin(2 * Ms);
-    let moonLong = orbitalParams["ચ"].L0 + orbitalParams["ચ"].n * t + moonPerturbation;
-
-    const planetSiderealLongs = {};
-    Object.keys(orbitalParams).forEach(p => {
-      let long = orbitalParams[p].L0 + orbitalParams[p].n * t;
-      if (p === "ચ") long = moonLong;
-      let sidReal = (long - ayanamsa) % 360;
-      if (sidReal < 0) sidReal += 360;
-      planetSiderealLongs[p] = sidReal;
-    });
-    planetSiderealLongs["કે"] = (planetSiderealLongs["રા"] + 180) % 360;
-
-    // Distribute planets in D1 Chart Houses (Relative to Lagna Sign)
-    const planetsInHouses = {};
-    const planetsRashiNum = {};
-    Object.keys(planetSiderealLongs).forEach(p => {
-      const long = planetSiderealLongs[p];
-      const rashiNum = Math.floor(long / 30) + 1;
-      planetsRashiNum[p] = rashiNum;
-      planetsInHouses[p] = (rashiNum - lagnaSignNum + 12) % 12 + 1;
-    });
-
-    // Navamsa (D9) Chart Distribution (Vedic rules)
-    const getNavamsaSign = (long) => {
-      const rashiNum = Math.floor(long / 30) + 1;
-      const navIdx = Math.floor((long % 30) / 3.33333);
-      let startSign = 1;
-      if ([1, 5, 9].includes(rashiNum)) startSign = 1;
-      else if ([2, 6, 10].includes(rashiNum)) startSign = 10;
-      else if ([3, 7, 11].includes(rashiNum)) startSign = 7;
-      else if ([4, 8, 12].includes(rashiNum)) startSign = 4;
-      return (startSign - 1 + navIdx) % 12 + 1;
-    };
-
-    const navamsaLagnaSign = getNavamsaSign(siderealAsc);
-    const planetsInD9Houses = {};
-    Object.keys(planetSiderealLongs).forEach(p => {
-      const navRashi = getNavamsaSign(planetSiderealLongs[p]);
-      planetsInD9Houses[p] = (navRashi - navamsaLagnaSign + 12) % 12 + 1;
-    });
-
-    // 6. Moon Nakshatra & Pada Calculation
-    const moonDeg = planetSiderealLongs["ચ"];
-    const nakshatraIdx = Math.floor(moonDeg / 13.33333) % 27;
-    const nakshatraName = NAKSHATRAS[nakshatraIdx];
-    const pada = Math.floor((moonDeg % 13.33333) / 3.33333) + 1;
-    const moonRashiNum = Math.floor(moonDeg / 30) % 12 + 1;
-    const moonRashi = KUNDALI_RASHIS[moonRashiNum - 1];
-
-    // 7. Vimshottari Dasha Engine (Dynamically calculates elapsed times since birth)
-    const currentYear = new Date().getFullYear();
-    const elapsed = Math.max(0, currentYear - year);
-
-    const birthDashaIdx = nakshatraIdx % 9;
-    const birthDashaName = DASHAS_LIST[birthDashaIdx];
-    const birthDashaSpan = DASHA_SPANS[birthDashaName];
-    const remainingBirthDashaYears = (1 - (moonDeg % 13.33333) / 13.33333) * birthDashaSpan;
-
-    let dashaIdx = birthDashaIdx;
-    let currentDashaStartYear = year;
-    let currentDashaEndYear = year + remainingBirthDashaYears;
-
-    if (elapsed > remainingBirthDashaYears) {
-      let tempElapsed = elapsed - remainingBirthDashaYears;
-      currentDashaStartYear = year + remainingBirthDashaYears;
-      while (true) {
-        dashaIdx = (dashaIdx + 1) % 9;
-        const nextDashaName = DASHAS_LIST[dashaIdx];
-        const nextDashaSpan = DASHA_SPANS[nextDashaName];
-        if (tempElapsed < nextDashaSpan) {
-          currentDashaEndYear = currentDashaStartYear + nextDashaSpan;
-          break;
-        }
-        tempElapsed -= nextDashaSpan;
-        currentDashaStartYear += nextDashaSpan;
-      }
-    }
-
-    const currentDashaName = DASHAS_LIST[dashaIdx];
-    const nextDashaName = DASHAS_LIST[(dashaIdx + 1) % 9];
-    const nextDashaStartYear = Math.floor(currentDashaEndYear);
-    const dashaSpan = DASHA_SPANS[currentDashaName];
-    const yearsInCurrentDasha = elapsed - (currentDashaStartYear - year);
-    const progressPercent = Math.max(5, Math.min(95, Math.round((yearsInCurrentDasha / dashaSpan) * 100)));
-
-    // 8. Dosh Auditing
-    const marsHouse = planetsInHouses["મં"];
-    const isManglik = [1, 4, 7, 8, 12].includes(marsHouse);
-    const manglikSeverity = isManglik ? (marsHouse === 7 || marsHouse === 8 ? "ઉચ્ચ (ભારે મંગળ)" : "આંશિક (સૌમ્ય મંગળ)") : "કોઈ દોષ નથી";
-
-    const rahuHouse = planetsInHouses["રા"];
-    const ketuHouse = planetsInHouses["કે"];
-    const minSarp = Math.min(rahuHouse, ketuHouse);
-    const maxSarp = Math.max(rahuHouse, ketuHouse);
-    let allInside = true;
-    let allOutside = true;
-    Object.keys(planetsInHouses).forEach(p => {
-      if (p !== "રા" && p !== "કે") {
-        const h = planetsInHouses[p];
-        if (h < minSarp || h > maxSarp) allInside = false;
-        if (h > minSarp && h < maxSarp) allOutside = false;
-      }
-    });
-    const sarpDoshTypes = ["અનંત", "કુલિક", "વાસુકી", "શંખપાલ", "પદ્મ", "મહાપદ્મ", "તક્ષક", "કર્કોટકા", "શંખચૂડ", "ઘાતક", "વિષધર", "શેષનાગ"];
-    const hasKaalSarp = allInside || allOutside;
-    const kaalSarpType = hasKaalSarp ? sarpDoshTypes[Math.floor(Math.abs(t)) % 12] : "નથી";
-
-    const isSadeSati = [10, 11, 12, 1].includes(moonRashiNum);
-    const sadeSatiPhase = isSadeSati
-      ? (moonRashiNum === 10 ? "અંતિમ ચરણ (અસ્તકાળ - રાહત)" : moonRashiNum === 11 ? "દ્વિતીય ચરણ (શિખરકાળ - કઠિન)" : "પ્રથમ ચરણ (ઉદયકાળ)")
-      : "સક્રિય નથી";
+    const astroData = generateFullKundaliData(fullName, dob, finalTob, noTime, selectedCoords);
+    const {
+      lagnaSignNum,
+      navamsaLagnaSign,
+      planetsInHouses,
+      planetsInD9Houses,
+      nakshatraName,
+      pada,
+      moonRashi,
+      moonRashiNum,
+      currentDashaName,
+      nextDashaName,
+      nextDashaStartYear,
+      progressPercent,
+      isManglik,
+      manglikSeverity,
+      hasKaalSarp,
+      kaalSarpType,
+      isSadeSati,
+      sadeSatiPhase,
+      planetDetailsList
+    } = astroData;
 
     // 9. Generate DYNAMIC Interpretations and Predictions
     const dashaInterpretations = {
@@ -464,34 +302,6 @@ const KundaliGenerator = ({ defaultTab = 'kundali' }) => {
       remedies: `🙏 દૈનિક સરળ ઉપાયો: સવારે ઉઠી સૂર્યનારાયણને જળ ચડાવો, પક્ષીઓને ચણ આપો અને ગુજરાતી એપના જાપ સેક્શનમાં જઈ રોજ સૂર્ય ગાયત્રી કે મહામૃત્યુંજય મંત્રની ૧ માળા ફેરવવી.`
     };
 
-    // Calculate details list for the PDF and UI table
-    const planetNames = {
-      "સૂ": "સૂર્ય (Sun)",
-      "ચ": "ચંદ્ર (Moon)",
-      "મં": "મંગળ (Mars)",
-      "બુ": "બુધ (Mercury)",
-      "ગુ": "ગુરુ (Jupiter)",
-      "શુ": "શુક્ર (Venus)",
-      "શ": "શનિ (Saturn)",
-      "રા": "રાહુ (Rahu)",
-      "કે": "કેતુ (Ketu)"
-    };
-    const planetDetailsList = Object.keys(planetSiderealLongs).map(p => {
-      const long = planetSiderealLongs[p];
-      const rIdx = Math.floor(long / 30) % 12;
-      const rashi = KUNDALI_RASHIS[rIdx];
-      const nIdx = Math.floor(long / 13.33333) % 27;
-      const nName = NAKSHATRAS[nIdx];
-      const padVal = Math.floor((long % 13.33333) / 3.33333) + 1;
-      return {
-        key: p,
-        fullName: planetNames[p],
-        rashiName: rashi.name,
-        rashiLord: rashi.lord,
-        nakshatraName: nName,
-        pada: padVal
-      };
-    });
 
     const newKundaliData = {
       lagnaSignNum,
