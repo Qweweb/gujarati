@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { downloadAsPDF } from '../utils/downloadHelper';
+import { useReactToPrint } from 'react-to-print';
+import './KundaliStyle.css';
 import GunMilan from './GunMilan';
 import { generateFullKundaliData } from '../utils/astroEngine';
 
@@ -402,16 +403,16 @@ const KundaliGenerator = ({ defaultTab = 'kundali' }) => {
         </text>
 
         {/* House 2 */}
-        <text x="90" y="45" textAnchor="middle" fontSize="12" fontWeight="900" fill="#b45309">{getSignForHouse(2)}</text>
-        <text x="90" y="68" textAnchor="middle" fontSize="13" fontWeight="900">
+        <text x="85" y="42" textAnchor="middle" fontSize="12" fontWeight="900" fill="#b45309">{getSignForHouse(2)}</text>
+        <text x="70" y="35" textAnchor="middle" fontSize="13" fontWeight="900">
           {planetsByHouse[2].map((p, idx) => (
             <tspan key={idx} fill={getPlanetColor(p)} dx={idx > 0 ? 5 : 0}>{p}</tspan>
           ))}
         </text>
 
         {/* House 3 */}
-        <text x="45" y="90" textAnchor="middle" fontSize="12" fontWeight="900" fill="#b45309">{getSignForHouse(3)}</text>
-        <text x="45" y="113" textAnchor="middle" fontSize="13" fontWeight="900">
+        <text x="42" y="85" textAnchor="middle" fontSize="12" fontWeight="900" fill="#b45309">{getSignForHouse(3)}</text>
+        <text x="35" y="70" textAnchor="middle" fontSize="13" fontWeight="900">
           {planetsByHouse[3].map((p, idx) => (
             <tspan key={idx} fill={getPlanetColor(p)} dx={idx > 0 ? 5 : 0}>{p}</tspan>
           ))}
@@ -427,16 +428,16 @@ const KundaliGenerator = ({ defaultTab = 'kundali' }) => {
         </text>
 
         {/* House 5 */}
-        <text x="45" y="210" textAnchor="middle" fontSize="12" fontWeight="900" fill="#b45309">{getSignForHouse(5)}</text>
-        <text x="45" y="233" textAnchor="middle" fontSize="13" fontWeight="900">
+        <text x="42" y="215" textAnchor="middle" fontSize="12" fontWeight="900" fill="#b45309">{getSignForHouse(5)}</text>
+        <text x="35" y="230" textAnchor="middle" fontSize="13" fontWeight="900">
           {planetsByHouse[5].map((p, idx) => (
             <tspan key={idx} fill={getPlanetColor(p)} dx={idx > 0 ? 5 : 0}>{p}</tspan>
           ))}
         </text>
 
         {/* House 6 */}
-        <text x="90" y="255" textAnchor="middle" fontSize="12" fontWeight="900" fill="#b45309">{getSignForHouse(6)}</text>
-        <text x="90" y="278" textAnchor="middle" fontSize="13" fontWeight="900">
+        <text x="85" y="258" textAnchor="middle" fontSize="12" fontWeight="900" fill="#b45309">{getSignForHouse(6)}</text>
+        <text x="70" y="265" textAnchor="middle" fontSize="13" fontWeight="900">
           {planetsByHouse[6].map((p, idx) => (
             <tspan key={idx} fill={getPlanetColor(p)} dx={idx > 0 ? 5 : 0}>{p}</tspan>
           ))}
@@ -452,16 +453,16 @@ const KundaliGenerator = ({ defaultTab = 'kundali' }) => {
         </text>
 
         {/* House 8 */}
-        <text x="210" y="255" textAnchor="middle" fontSize="12" fontWeight="900" fill="#b45309">{getSignForHouse(8)}</text>
-        <text x="210" y="278" textAnchor="middle" fontSize="13" fontWeight="900">
+        <text x="215" y="258" textAnchor="middle" fontSize="12" fontWeight="900" fill="#b45309">{getSignForHouse(8)}</text>
+        <text x="230" y="265" textAnchor="middle" fontSize="13" fontWeight="900">
           {planetsByHouse[8].map((p, idx) => (
             <tspan key={idx} fill={getPlanetColor(p)} dx={idx > 0 ? 5 : 0}>{p}</tspan>
           ))}
         </text>
 
         {/* House 9 */}
-        <text x="255" y="210" textAnchor="middle" fontSize="12" fontWeight="900" fill="#b45309">{getSignForHouse(9)}</text>
-        <text x="255" y="233" textAnchor="middle" fontSize="13" fontWeight="900">
+        <text x="258" y="215" textAnchor="middle" fontSize="12" fontWeight="900" fill="#b45309">{getSignForHouse(9)}</text>
+        <text x="265" y="230" textAnchor="middle" fontSize="13" fontWeight="900">
           {planetsByHouse[9].map((p, idx) => (
             <tspan key={idx} fill={getPlanetColor(p)} dx={idx > 0 ? 5 : 0}>{p}</tspan>
           ))}
@@ -477,16 +478,16 @@ const KundaliGenerator = ({ defaultTab = 'kundali' }) => {
         </text>
 
         {/* House 11 */}
-        <text x="255" y="90" textAnchor="middle" fontSize="12" fontWeight="900" fill="#b45309">{getSignForHouse(11)}</text>
-        <text x="255" y="113" textAnchor="middle" fontSize="13" fontWeight="900">
+        <text x="258" y="85" textAnchor="middle" fontSize="12" fontWeight="900" fill="#b45309">{getSignForHouse(11)}</text>
+        <text x="265" y="70" textAnchor="middle" fontSize="13" fontWeight="900">
           {planetsByHouse[11].map((p, idx) => (
             <tspan key={idx} fill={getPlanetColor(p)} dx={idx > 0 ? 5 : 0}>{p}</tspan>
           ))}
         </text>
 
         {/* House 12 */}
-        <text x="210" y="45" textAnchor="middle" fontSize="12" fontWeight="900" fill="#b45309">{getSignForHouse(12)}</text>
-        <text x="210" y="68" textAnchor="middle" fontSize="13" fontWeight="900">
+        <text x="215" y="42" textAnchor="middle" fontSize="12" fontWeight="900" fill="#b45309">{getSignForHouse(12)}</text>
+        <text x="230" y="35" textAnchor="middle" fontSize="13" fontWeight="900">
           {planetsByHouse[12].map((p, idx) => (
             <tspan key={idx} fill={getPlanetColor(p)} dx={idx > 0 ? 5 : 0}>{p}</tspan>
           ))}
@@ -495,18 +496,14 @@ const KundaliGenerator = ({ defaultTab = 'kundali' }) => {
     );
   };
 
-  // --- DYNAMIC PDF PRINT TRIGGER ---
-  const triggerPDFDownload = async () => {
-    if (isGeneratingPDF) return;
-    setIsGeneratingPDF(true);
-    try {
-      await downloadAsPDF(printRef.current, `Kundali_${fullName || 'Report'}.pdf`);
-    } catch (e) {
-      console.error(e);
-      alert("Error generating PDF: " + (e.message || e.toString()));
-    } finally {
-      setIsGeneratingPDF(false);
-    }
+  // --- DYNAMIC PDF PRINT TRIGGER (utilizing react-to-print) ---
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+    documentTitle: `Kundali_${fullName || 'Report'}`,
+  });
+
+  const triggerPDFDownload = () => {
+    handlePrint();
   };
 
   // --- WHATSAPP SHARE GENERATOR ---
@@ -518,7 +515,7 @@ const KundaliGenerator = ({ defaultTab = 'kundali' }) => {
   return (
     <div className="animate-fade-in space-y-8 pb-16 max-w-4xl mx-auto px-4">
       {/* Printable Area Wrapper with custom Watermarks (Prints beautifully on A4) */}
-      <div ref={printRef} className="print:bg-[#fef8f1] print:text-black">
+      <div ref={printRef} className="kundali-print-wrapper">
         {/* --- PAGE HEADER --- */}
         <div className="flex items-center justify-between border-b border-primary/10 pb-4 print:hidden">
           <div className="space-y-1">
@@ -711,190 +708,143 @@ const KundaliGenerator = ({ defaultTab = 'kundali' }) => {
                 5-PAGE KUNDALI PDF RENDERER (Cleanly separated A4 printable sheets)
             ---------------------------------------------------- */}
 
-            {/* PAGE 1: COVER SHEET */}
-            <div className="bg-[#fefaf3] rounded-[2.5rem] p-10 border border-[#7c2d12]/20 shadow-sm relative overflow-hidden text-center min-h-[700px] flex flex-col justify-between print:min-h-screen print:border-none print:shadow-none print:rounded-none">
-              {/* Light Watermark background */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] rotate-45 select-none pointer-events-none">
-                <span className="text-[120px] font-black text-[#7c2d12] tracking-widest">GUJARATI APP</span>
+            {/* PAGE 1: COVER, PANCHANG & CHARTS */}
+            <div className="kundali-page">
+              <div className="header-banner">
+                <div className="om-symbol">卐 ૐ શ્રી ગણેશાય નમઃ 卐</div>
+                <h1 className="main-title">સંપૂર્ણ વૈદિક જન્મ કુંડળી વિશ્લેષણ</h1>
+                <p className="sub-title">નામ: <b>{fullName}</b> | જન્મ સ્થળ: {birthPlace}</p>
               </div>
 
-              <div className="space-y-4">
-                <span className="material-symbols-outlined text-6xl text-[#7c2d12] animate-pulse">temple_hindu</span>
-                <p className="font-gujarati font-black text-2xl text-[#7c2d12] tracking-[0.2em] uppercase">શ્રી ગણેશાય નમઃ</p>
-                <div className="h-1 w-24 bg-gradient-to-r from-transparent via-[#7c2d12]/50 to-transparent mx-auto"></div>
-              </div>
+              <div className="section-title">૧. જાતક પરિચય અને જન્મ પંચાંગ વિગતો</div>
+              <table className="info-table">
+                <tbody>
+                  <tr>
+                    <td className="info-label">જાતકનું નામ:</td>
+                    <td className="info-val">{fullName}</td>
+                    <td className="info-label">જન્મ તારીખ:</td>
+                    <td className="info-val">{dob.split('-').reverse().join('/')}</td>
+                  </tr>
+                  <tr>
+                    <td className="info-label">જન્મ સમય:</td>
+                    <td className="info-val">{noTime ? "ખબર નથી (12:00 PM બપોરે)" : tob}</td>
+                    <td className="info-label">જન્મ લગ્ન:</td>
+                    <td className="info-val"><b>{KUNDALI_RASHIS[kundaliData.lagnaSignNum - 1]?.name || 'મેષ'}</b></td>
+                  </tr>
+                  <tr>
+                    <td className="info-label">જન્મ રાશિ:</td>
+                    <td className="info-val"><b>{kundaliData.moonRashi.name} ({kundaliData.moonRashi.lord} સ્વામી)</b></td>
+                    <td className="info-label">જન્મ નક્ષત્ર:</td>
+                    <td className="info-val">{kundaliData.nakshatraName} (ચરણ {toGujaratiNum(kundaliData.pada)})</td>
+                  </tr>
+                </tbody>
+              </table>
 
-              <div className="space-y-4 my-auto">
-                <p className="font-gujarati text-outline uppercase tracking-widest text-xs">જન્મ પત્રિકા કુંડળી અહેવાલ</p>
-                <h3 className="font-gujarati font-black text-5xl text-[#7c2d12] leading-tight px-4 break-words">
-                  {fullName}
-                </h3>
-                <div className="h-[2px] w-48 bg-gradient-to-r from-transparent via-[#7c2d12]/30 to-transparent mx-auto"></div>
-              </div>
-
-              <div className="bg-white/40 backdrop-blur-sm p-6 rounded-3xl border border-[#7c2d12]/10 max-w-md mx-auto space-y-3 shadow-inner">
-                <div className="flex justify-between items-center text-xs border-b border-[#7c2d12]/10 pb-2">
-                  <span className="font-gujarati font-bold text-stone-550">જન્મ તારીખ</span>
-                  <span className="font-headline font-black text-[#7c2d12]">{dob.split('-').reverse().join('/')}</span>
-                </div>
-                <div className="flex justify-between items-center text-xs border-b border-[#7c2d12]/10 pb-2">
-                  <span className="font-gujarati font-bold text-stone-550">જન્મ સમય</span>
-                  <span className="font-headline font-black text-[#7c2d12]">{noTime ? "ખબર નથી (12:00 PM બપોરે)" : tob}</span>
-                </div>
-                <div className="flex justify-between items-center text-xs">
-                  <span className="font-gujarati font-bold text-stone-550">જન્મ સ્થળ</span>
-                  <span className="font-sans font-black text-[#7c2d12] text-[10px] truncate max-w-[200px]">{birthPlace}</span>
-                </div>
-              </div>
-
-              <div className="pt-8 border-t border-[#7c2d12]/10 flex justify-between items-center text-xs">
-                <p className="font-gujarati text-stone-400">સચોટ ગણતરી: વૈદિક સિદ્ધાંતો</p>
-                <p className="font-gujarati text-primary font-black">🕉️ ગુજરાતી એપ</p>
-              </div>
-            </div>
-
-            {/* PAGE 2: CHARTS SHEET */}
-            <div className="bg-white rounded-[2.5rem] p-8 sm:p-10 border border-primary/5 shadow-sm min-h-[700px] flex flex-col justify-between relative print:min-h-screen print:border-none print:shadow-none print:rounded-none page-break-before">
-              {/* Light Watermark background */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] rotate-[-45deg] select-none pointer-events-none">
-                <span className="text-[120px] font-black text-[#7c2d12] tracking-widest">GUJARATI APP</span>
-              </div>
-
-              <div className="text-center space-y-1">
-                <h3 className="font-gujarati font-black text-2xl text-primary">લગ્ન કુંડળી (D1) અને નવમાંશ (D9)</h3>
-                <p className="font-gujarati text-xs text-outline">ગ્રહોની સ્થિતિ અને વૈદિક કુંડળી ચક્રો</p>
-              </div>
-
-              <div className="flex flex-col md:flex-row items-center gap-8 justify-center my-auto">
-                <div className="space-y-3 text-center">
-                  <span className="px-4 py-1.5 bg-orange-50 rounded-full font-gujarati font-black text-xs text-orange-700 border border-orange-200">મુખ્ય લગ્ન કુંડળી (D1)</span>
+              <div className="section-title">૨. જન્મ લગ્ન કુંડળી (D1) અને નવમાંશ કુંડળી (D9)</div>
+              <div className="chart-center">
+                <div className="chart-box">
+                  <div className="chart-label">જન્મ લગ્ન કુંડળી (D1)</div>
                   {renderKundaliChartSVG(kundaliData.planetsInHouses, kundaliData.lagnaSignNum)}
                 </div>
-                <div className="space-y-3 text-center">
-                  <span className="px-4 py-1.5 bg-rose-50 rounded-full font-gujarati font-black text-xs text-rose-700 border border-rose-200">નવમાંશ કુંડળી (D9 - લગ્ન સુખ)</span>
+                <div className="chart-box">
+                  <div className="chart-label">નવમાંશ કુંડળી (D9 - વૈવાહિક સુખ)</div>
                   {renderKundaliChartSVG(kundaliData.planetsInD9Houses, kundaliData.navamsaLagnaSign)}
                 </div>
               </div>
 
-              {/* Table of Planet positions */}
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs text-left border border-black/5 rounded-2xl overflow-hidden divide-y divide-black/5">
-                  <thead className="bg-stone-50 font-gujarati font-black text-stone-600">
-                    <tr>
-                      <th className="p-3">ગ્રહ (Planet)</th>
-                      <th className="p-3">રાશિ (Rashi)</th>
-                      <th className="p-3">રાશિ સ્વામી (Lord)</th>
-                      <th className="p-3">નક્ષત્ર (Nakshatra)</th>
-                      <th className="p-3">ચરણ (Pada)</th>
+              {/* Cover page bottom */}
+              <div style={{ marginTop: '24px', borderTop: '1px dashed #e5d5b5', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#7c1d1d', fontWeight: 'bold' }}>
+                <div>ગણતરી પદ્ધતિ: વૈદિક જ્યોતિષ સિદ્ધાંત (લાહિરી અયનાંશ)</div>
+                <div style={{ marginLeft: 'auto' }}>🕉️ ગુજરાતી એપ</div>
+              </div>
+            </div>
+
+            {/* PAGE 2: PLANET POSITIONS & PREDICTIONS */}
+            <div className="kundali-page page-break-before">
+              <div className="section-title">૩. ગ્રહ સ્પષ્ટ સ્થિતિ કોષ્ટક</div>
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>ગ્રહ (Planet)</th>
+                    <th>રાશિ (Rashi)</th>
+                    <th>રાશિ સ્વામી (Lord)</th>
+                    <th>નક્ષત્ર (Nakshatra)</th>
+                    <th>ચરણ (Pada)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {kundaliData.planetDetailsList.map((p, idx) => (
+                    <tr key={idx}>
+                      <td style={{ color: getPlanetColorForTable(p.key), fontWeight: 'bold' }}>{p.fullName}</td>
+                      <td>{p.rashiName}</td>
+                      <td>{p.rashiLord}</td>
+                      <td>{p.nakshatraName}</td>
+                      <td>{toGujaratiNum(p.pada)}</td>
                     </tr>
-                  </thead>
-                  <tbody className="font-gujarati text-stone-700 divide-y divide-black/5">
-                    {kundaliData.planetDetailsList.map((p, idx) => (
-                      <tr key={idx}>
-                        <td className="p-3 font-bold" style={{ color: getPlanetColorForTable(p.key) }}>{p.fullName}</td>
-                        <td className="p-3">{p.rashiName}</td>
-                        <td className="p-3">{p.rashiLord}</td>
-                        <td className="p-3">{p.nakshatraName}</td>
-                        <td className="p-3">{toGujaratiNum(p.pada)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                  ))}
+                </tbody>
+              </table>
+
+              <div className="section-title">૪. વ્યક્તિગત જ્યોતિષીય વિશ્લેષણ</div>
+              <div className="prediction-box">
+                <div className="prediction-header">🌟 સ્વભાવ અને પર્સનાલિટી</div>
+                <div>{kundaliData.predictions.nature}</div>
+              </div>
+              <div className="prediction-box">
+                <div className="prediction-header">💰 આર્થિક સ્થિતિ અને પ્રગતિ</div>
+                <div>{kundaliData.predictions.finance}</div>
+              </div>
+              <div className="prediction-box">
+                <div className="prediction-header">❤️ પ્રેમ અને લગ્નજીવન</div>
+                <div>{kundaliData.predictions.marriage}</div>
+              </div>
+              <div className="prediction-box">
+                <div className="prediction-header">💼 કારકિર્દી અને વ્યવસાય</div>
+                <div>{kundaliData.predictions.career}</div>
               </div>
             </div>
 
-            {/* PAGE 3: INTERPRETATIONS SHEET */}
-            <div className="bg-white rounded-[2.5rem] p-8 sm:p-10 border border-primary/5 shadow-sm min-h-[700px] flex flex-col justify-between relative print:min-h-screen print:border-none print:shadow-none print:rounded-none page-break-before">
-              {/* Light Watermark background */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] rotate-45 select-none pointer-events-none">
-                <span className="text-[120px] font-black text-[#7c2d12] tracking-widest">GUJARATI APP</span>
-              </div>
-
-              <div className="text-center space-y-1">
-                <h3 className="font-gujarati font-black text-2xl text-primary flex items-center justify-center gap-2">
-                  <span className="material-symbols-outlined text-amber-500">psychology_alt</span>
-                  વ્યક્તિગત જ્યોતિષીય વિશ્લેષણ
-                </h3>
-                <p className="font-gujarati text-xs text-outline">શાસ્ત્રીય ચિકિત્સા અને પ્રભાવ ફળાદેશ</p>
-              </div>
-
-              {/* 7 Core Prediction Blocks */}
-              <div className="space-y-4 my-auto">
-                <div className="p-4 bg-stone-50 rounded-2xl border border-black/5 flex items-start gap-4">
-                  <span className="text-2xl">🌟</span>
-                  <div className="space-y-0.5">
-                    <h5 className="font-gujarati font-black text-sm text-stone-850">સ્વભાવ અને પર્સનાલિટી</h5>
-                    <p className="font-gujarati text-xs text-stone-600 leading-relaxed">{kundaliData.predictions.nature}</p>
+            {/* PAGE 3: MAHADASHA, DOSHA & REMEDIES */}
+            <div className="kundali-page page-break-before">
+              <div className="section-title">૫. મહાદશા, અશુભ દોષો અને વૈદિક ઉપાયો</div>
+              <div className="dasha-box">
+                <div className="dasha-title">⏳ હાલની સક્રિય વિંશોત્તરી મહાદશા</div>
+                <div className="dasha-desc">{kundaliData.predictions.futureTimeline}</div>
+                <div className="dasha-progress-container">
+                  <div className="dasha-progress-bar">
+                    <div className="dasha-progress-fill" style={{ width: `${kundaliData.progressPercent}%` }}></div>
                   </div>
-                </div>
-
-                <div className="p-4 bg-stone-50 rounded-2xl border border-black/5 flex items-start gap-4">
-                  <span className="text-2xl">💰</span>
-                  <div className="space-y-0.5">
-                    <h5 className="font-gujarati font-black text-sm text-stone-850">આર્થિક સ્થિતિ અને પ્રગતિ</h5>
-                    <p className="font-gujarati text-xs text-stone-600 leading-relaxed">{kundaliData.predictions.finance}</p>
-                  </div>
-                </div>
-
-                <div className="p-4 bg-stone-50 rounded-2xl border border-black/5 flex items-start gap-4">
-                  <span className="text-2xl">❤️</span>
-                  <div className="space-y-0.5">
-                    <h5 className="font-gujarati font-black text-sm text-stone-850">પ્રેમ અને લગ્નજીવન</h5>
-                    <p className="font-gujarati text-xs text-stone-600 leading-relaxed">{kundaliData.predictions.marriage}</p>
-                  </div>
-                </div>
-
-                <div className="p-4 bg-stone-50 rounded-2xl border border-black/5 flex items-start gap-4">
-                  <span className="text-2xl">💼</span>
-                  <div className="space-y-0.5">
-                    <h5 className="font-gujarati font-black text-sm text-stone-850">કારકિર્દી અને વ્યવસાય</h5>
-                    <p className="font-gujarati text-xs text-stone-600 leading-relaxed">{kundaliData.predictions.career}</p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginTop: '4px', fontWeight: 'bold', color: '#78350f' }}>
+                    <span>{kundaliData.currentDashaName} ({toGujaratiNum(kundaliData.progressPercent)}%)</span>
+                    <span>વર્ષ {toGujaratiNum(kundaliData.nextDashaStartYear)}થી {kundaliData.nextDashaName}</span>
                   </div>
                 </div>
               </div>
+
+              <div className="badge-grid">
+                <div className={`dosh-badge ${kundaliData.isManglik ? 'danger' : 'success'}`}>
+                  <div className="badge-title">મંગળ દોષ: {kundaliData.isManglik ? "હા" : "ના"}</div>
+                  <div className="badge-desc">{kundaliData.isManglik ? kundaliData.manglikSeverity : "કુંડળીમાં કોઈ મંગળ દોષ નથી."}</div>
+                </div>
+                <div className={`dosh-badge ${kundaliData.hasKaalSarp ? 'danger' : 'success'}`}>
+                  <div className="badge-title">કાલસર્પ દોષ: {kundaliData.hasKaalSarp ? "હા" : "ના"}</div>
+                  <div className="badge-desc">{kundaliData.hasKaalSarp ? `કુંડળીમાં ${kundaliData.kaalSarpType} કાલસર્પ દોષ છે.` : "કુંડળીમાં કોઈ કાલસર્પ દોષ નથી."}</div>
+                </div>
+                <div className={`dosh-badge ${kundaliData.isSadeSati ? 'danger' : 'success'}`}>
+                  <div className="badge-title">શનિ પનૌતી / સાડાસાતી: {kundaliData.isSadeSati ? "હા" : "ના"}</div>
+                  <div className="badge-desc">{kundaliData.isSadeSati ? kundaliData.sadeSatiPhase : "કોઈ સાડાસાતી કે ઢય્યા નથી."}</div>
+                </div>
+              </div>
+
+              <div className="section-title">નિવારણ ઉપાયો</div>
+              <div className="remedy-item">🛡️ <b>દોષ નિવારણ:</b> {kundaliData.predictions.doshRemedies}</div>
+              <div className="remedy-item">🙏 <b>કલ્યાણકારી સૂચનો:</b> {kundaliData.predictions.remedies}</div>
             </div>
 
-            {/* PAGE 4: DASHAS & TIMELINE SHEET */}
-            <div className="bg-white rounded-[2.5rem] p-8 sm:p-10 border border-primary/5 shadow-sm min-h-[700px] flex flex-col justify-between relative print:min-h-screen print:border-none print:shadow-none print:rounded-none page-break-before">
-              {/* Light Watermark background */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] rotate-[-45deg] select-none pointer-events-none">
-                <span className="text-[120px] font-black text-[#7c2d12] tracking-widest">GUJARATI APP</span>
-              </div>
 
-              <div className="text-center space-y-1">
-                <h3 className="font-gujarati font-black text-2xl text-primary">વિંશોત્તરી દશા અને સમયરેખા</h3>
-                <p className="font-gujarati text-xs text-outline">જીવનના ભિન્ન તબક્કા અને આવનારો ફળાદેશ</p>
-              </div>
-
-              {/* Dasha Predict Block */}
-              <div className="p-6 bg-amber-50 rounded-3xl border border-amber-200 text-center space-y-2 my-auto max-w-lg mx-auto">
-                <span className="material-symbols-outlined text-4xl text-amber-600 animate-spin" style={{ animationDuration: '8s' }}>hourglass_empty</span>
-                <h4 className="font-gujarati font-black text-lg text-amber-900">હાલની સક્રિય મહાદશા</h4>
-                <p className="font-gujarati text-base text-stone-800 leading-relaxed">{kundaliData.predictions.futureTimeline}</p>
-              </div>
-
-              {/* Visual timeline bar representing periods */}
-              <div className="space-y-6">
-                <h5 className="font-gujarati font-black text-sm text-stone-800 text-center">આગામી વર્ષોની ગ્રહદશા વિગત</h5>
-                <div className="relative pt-1 max-w-md mx-auto">
-                  <div className="flex mb-2 items-center justify-between text-xs font-bold text-outline">
-                    <span className="font-gujarati">{kundaliData.currentDashaName} મહાદશા</span>
-                    <span className="font-gujarati">{kundaliData.nextDashaName} મહાદશા</span>
-                  </div>
-                  <div className="overflow-hidden h-4 text-xs flex rounded-full bg-stone-100 border">
-                    <div style={{ width: `${kundaliData.progressPercent}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gradient-to-r from-orange-500 to-amber-500"></div>
-                    <div style={{ width: `${100 - kundaliData.progressPercent}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-stone-300"></div>
-                  </div>
-                  <div className="flex justify-between items-center text-[10px] text-stone-400 font-bold mt-1">
-                    <span>હાલનો સમય ({toGujaratiNum(kundaliData.progressPercent)}% પ્રગતિ)</span>
-                    <span>વર્ષ {toGujaratiNum(kundaliData.nextDashaStartYear)}થી નવી શરૂઆત</span>
-                  </div>
-                </div>
-              </div>
-            </div>
 
             {/* PAGE 5: REMEDIES & APP CONNECT SHEET */}
-            <div className="bg-[#fcfaf7] rounded-[2.5rem] p-8 sm:p-10 border border-[#7c2d12]/20 shadow-sm min-h-[700px] flex flex-col justify-between relative print:min-h-screen print:border-none print:shadow-none print:rounded-none page-break-before">
+            <div className="hidden">
               {/* Light Watermark background */}
               <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] rotate-45 select-none pointer-events-none">
                 <span className="text-[120px] font-black text-[#7c2d12] tracking-widest">GUJARATI APP</span>
@@ -960,15 +910,22 @@ const KundaliGenerator = ({ defaultTab = 'kundali' }) => {
       {isCalculated && (
         <div className="flex flex-wrap gap-3 justify-center pt-4 pb-8 print:hidden">
           <button 
+            onClick={triggerPDFDownload}
+            className="bg-[#991b1b] hover:bg-[#7c1d1d] text-white font-gujarati font-black py-3.5 px-6 rounded-2xl shadow-lg flex items-center gap-2 active:scale-95 transition-all text-xs cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-lg">download</span>
+            કુંડળી PDF ડાઉનલોડ / પ્રિન્ટ કરો 📥
+          </button>
+          <button 
             onClick={triggerWhatsAppShare}
-            className="bg-stone-900 hover:bg-stone-850 text-white border border-stone-800 font-gujarati font-black py-3.5 px-6 rounded-2xl shadow flex items-center gap-2 active:scale-95 transition-all text-xs"
+            className="bg-stone-900 hover:bg-stone-850 text-white border border-stone-800 font-gujarati font-black py-3.5 px-6 rounded-2xl shadow flex items-center gap-2 active:scale-95 transition-all text-xs cursor-pointer"
           >
             <span className="material-symbols-outlined text-lg">share</span>
             વોટ્સએપ શેર કરો 🙏
           </button>
           <button 
             onClick={resetGenerator}
-            className="bg-stone-150 hover:bg-stone-200 text-stone-700 font-gujarati font-black py-3.5 px-6 rounded-2xl active:scale-95 transition-all text-xs"
+            className="bg-stone-150 hover:bg-stone-200 text-stone-700 font-gujarati font-black py-3.5 px-6 rounded-2xl active:scale-95 transition-all text-xs cursor-pointer"
           >
             🔄 નવી કુંડળી બનાવો
           </button>

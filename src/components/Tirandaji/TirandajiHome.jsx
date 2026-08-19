@@ -35,18 +35,19 @@ export default function TirandajiHome() {
   const [showChallengePopup, setShowChallengePopup] = useState(false);
   const [challengePercent, setChallengePercent] = useState(0);
   
-  const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
-
   // Init Level
   useEffect(() => {
-    loadLevel(levelIndex, gameState === 'menu');
+    const savedLevel = parseInt(localStorage.getItem('tirandaji_max_level') || '0', 10);
+    setLevelIndex(savedLevel);
+    loadLevel(savedLevel, true);
+    
     fetchLeaderboard();
     loadStreakData();
     
     const handleResize = () => setWindowSize({ width: window.innerWidth, height: window.innerHeight });
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [levelIndex]);
+  }, []);
 
   // Timer Effect
   useEffect(() => {
@@ -300,12 +301,15 @@ export default function TirandajiHome() {
 
   const nextLevel = () => {
     window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: "Mock Interstitial Ad Shown" } }));
-    setLevelIndex(prev => prev + 1);
+    const newIdx = levelIndex + 1;
+    setLevelIndex(newIdx);
+    localStorage.setItem('tirandaji_max_level', newIdx.toString());
+    loadLevel(newIdx, false);
   };
 
   const retryLevel = () => {
     window.dispatchEvent(new CustomEvent('show-toast', { detail: { message: "Mock Interstitial Ad Shown" } }));
-    loadLevel(levelIndex);
+    loadLevel(levelIndex, false);
   };
 
   const watchAdForLives = () => {
@@ -369,7 +373,7 @@ export default function TirandajiHome() {
                 onClick={() => setGameState('playing')}
                 className="w-full py-4 bg-gradient-to-r from-[#14532D] to-[#064E3B] text-[#ECFDF5] rounded-2xl font-bold text-xl shadow-lg transition-all active:scale-95 mb-4 border border-[#34D399]/30"
               >
-                🎮 New Game
+                ▶️ Play Level {levelIndex + 1}
               </button>
               <button 
                 onClick={() => setShowLeaderboard(true)}

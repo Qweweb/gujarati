@@ -309,6 +309,39 @@ const Tools = () => {
         )}
 
 
+        {/* Gujarati Blog & Articles Card */}
+        <section id="blogs-hub" onClick={() => navigate('/blogs')} className="cursor-pointer bg-[#F4F4F0] dark:bg-[#1E1A18] backdrop-blur-md rounded-[2.5rem] p-6 shadow-sm hover:shadow-md border border-[#0D9488]/30 transition-all duration-300 flex flex-col justify-between space-y-5">
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-3 text-[#2D3748] dark:text-[#0D9488]">
+                <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-600">
+                  <span className="material-symbols-outlined font-black">article</span>
+                </div>
+                <h3 className="font-gujarati font-black text-xl">ગુજરાતી બ્લોગ અને સાહિત્ય</h3>
+              </div>
+              <span className="px-2.5 py-1 bg-amber-500 text-white rounded-full text-[10px] font-gujarati font-bold">નવું 📰</span>
+            </div>
+            <p className="font-gujarati text-xs text-[#2D3748]/70 dark:text-[#F4F4F0]/70 leading-relaxed font-bold">
+              ધર્મ, સંસ્કૃતિ, વાસ્તુ, આયુર્વેદિક ઉપચારો અને જીવન ઉપયોગી શ્રદ્ધાથી ભરેલા લેખો વાંચો અને સોશિયલ મીડિયા પર શેર કરો.
+            </p>
+            
+            <div className="bg-white/50 dark:bg-black/20 rounded-2.5xl p-4 flex gap-3 border border-[#0D9488]/20 justify-center">
+              <div className="p-3 bg-[#F4F4F0] dark:bg-[#1E1A18] rounded-xl shadow-sm border border-[#0D9488]/30 text-center flex-1">
+                <span className="material-symbols-outlined text-xl text-amber-600 mb-1">temple_hindu</span>
+                <p className="font-gujarati font-black text-[9px] text-[#2D3748] dark:text-[#F4F4F0]">ધર્મ & વ્રત વિધિ</p>
+              </div>
+              <div className="p-3 bg-[#F4F4F0] dark:bg-[#1E1A18] rounded-xl shadow-sm border border-[#0D9488]/30 text-center flex-1">
+                <span className="material-symbols-outlined text-xl text-emerald-600 mb-1">health_and_safety</span>
+                <p className="font-gujarati font-black text-[9px] text-[#2D3748] dark:text-[#F4F4F0]">આયુર્વેદિક ટિપ્સ</p>
+              </div>
+            </div>
+          </div>
+
+          <button onClick={() => navigate('/blogs')} className="w-full py-3.5 bg-amber-600 text-white hover:opacity-90 rounded-2xl font-gujarati font-black text-sm transition-all duration-300 shadow-sm cursor-pointer flex items-center justify-center gap-1">
+            <span className="material-symbols-outlined text-sm font-bold">article</span> તમામ બ્લોગ્સ વાંચો →
+          </button>
+        </section>
+
         {/* Biodata Maker Card */}
         {shouldShow(['business']) && (
           <section id="biodata-maker" onClick={() => navigate('/biodata')} className="cursor-pointer bg-[#F4F4F0] dark:bg-[#1E1A18] backdrop-blur-md rounded-[2.5rem] p-6 shadow-sm hover:shadow-md border border-[#0D9488]/30 transition-all duration-300 flex flex-col justify-between space-y-5">
@@ -369,7 +402,7 @@ const Tools = () => {
             </button>
           </section>
         )}
-        
+
         {/* Shradhanjali Maker Card */}
         {shouldShow(['spiritual']) && (
           <section id="shradhanjali-maker" onClick={() => navigate('/shradhanjali')} className="cursor-pointer bg-[#F4F4F0] dark:bg-[#1E1A18] backdrop-blur-md rounded-[2.5rem] p-6 shadow-sm hover:shadow-md border border-[#0D9488]/30 transition-all duration-300 flex flex-col justify-between space-y-5">

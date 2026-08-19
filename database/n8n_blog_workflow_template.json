@@ -1,0 +1,82 @@
+{
+  "name": "Gujarati App Daily Blog Auto-Publisher",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      },
+      "id": "1",
+      "name": "Schedule Trigger (Daily 8:00 AM)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://YOUR_SUPABASE_ID.supabase.co/rest/v1/blogs",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "YOUR_SUPABASE_ANON_KEY"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer YOUR_SUPABASE_ANON_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"title\": \"આજનો પવિત્ર શ્લોક અને સુવિચાર\",\n  \"slug\": \"daily-shlok-{{ $now.format('yyyy-MM-dd') }}\",\n  \"category\": \"ધર્મ અને ભક્તિ\",\n  \"author\": \"n8n ઓટોમેટેડ બોટ\",\n  \"excerpt\": \"દૈનિક શ્લોક અને સકારાત્મક સુવિચાર વાંચવા માટે અહીં ક્લિક કરો.\",\n  \"content\": \"## આજનો સુવિચાર\\n\\nસત્કાર્ય એ જ સાચી પૂજા છે...\",\n  \"cover_image\": \"https://images.unsplash.com/photo-1567157577867-05ccb1388e66?q=80&w=1000\",\n  \"is_published\": true\n}",
+        "options": {}
+      },
+      "id": "2",
+      "name": "Publish to Supabase Gujarati App",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        500,
+        300
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger (Daily 8:00 AM)": {
+      "main": [
+        [
+          {
+            "node": "Publish to Supabase Gujarati App",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

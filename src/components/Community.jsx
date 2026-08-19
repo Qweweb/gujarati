@@ -1,6 +1,6 @@
 import { uploadToCloudinary } from '../utils/cloudinaryHelper';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ShareButton from './ShareButton';
 import CommunityFeed from './CommunityFeed';
 import { 
@@ -45,6 +45,7 @@ const SIMULATED_IMAGES = [
 
 const Community = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [isDev] = useState(() => localStorage.getItem('user_phone') === '9999999999' || localStorage.getItem('supabase_user_mobile') === '9999999999');
 
@@ -169,6 +170,29 @@ const Community = () => {
     };
     loadData();
   }, [userLocation, feedFilter]);
+
+  // Handle auto-focus and comments modal when deep linked to a specific post via push notification
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const postId = params.get('postId');
+    if (postId && posts.length > 0) {
+      const found = posts.find(p => String(p.id) === String(postId));
+      if (found) {
+        setShowCommentsPostId(found.id);
+        // Scroll to the post and highlight it
+        setTimeout(() => {
+          const el = document.querySelector(`[data-post-id="${found.id}"]`);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.classList.add('ring-4', 'ring-amber-500', 'transition-all', 'duration-500');
+            setTimeout(() => {
+              el.classList.remove('ring-4', 'ring-amber-500');
+            }, 3000);
+          }
+        }, 500);
+      }
+    }
+  }, [location.search, posts]);
 
   const reloadFollowed = () => {
     setFollowedLocations(getFollowedLocations());

@@ -1783,5 +1783,3371 @@
     ],
     "difficulty": "medium",
     "minMoves": 13
+  },
+  {
+    "id": 21,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 2,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 4
+      },
+      {
+        "id": "v2",
+        "type": "scorpio",
+        "color": "white",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 2
+      },
+      {
+        "id": "v3",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 0
+      },
+      {
+        "id": "v4",
+        "type": "scorpio",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 1
+      },
+      {
+        "id": "v5",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "id": "v6",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 1
+      },
+      {
+        "id": "v7",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 4
+      },
+      {
+        "id": "v8",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 1
+      }
+    ],
+    "difficulty": "medium",
+    "minMoves": 20
+  },
+  {
+    "id": 22,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 3,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 2
+      },
+      {
+        "id": "v2",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 0
+      },
+      {
+        "id": "v3",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 2
+      },
+      {
+        "id": "v4",
+        "type": "fortuner",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 2
+      },
+      {
+        "id": "v5",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 0
+      },
+      {
+        "id": "v6",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 1
+      },
+      {
+        "id": "v7",
+        "type": "scorpio",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 3
+      },
+      {
+        "id": "v8",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 1
+      }
+    ],
+    "difficulty": "medium",
+    "minMoves": 20
+  },
+  {
+    "id": 23,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 4,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 0
+      },
+      {
+        "id": "v2",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 4
+      },
+      {
+        "id": "v3",
+        "type": "fortuner",
+        "color": "red",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 2
+      },
+      {
+        "id": "v4",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 3
+      },
+      {
+        "id": "v5",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "id": "v6",
+        "type": "scorpio",
+        "color": "black",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 3
+      },
+      {
+        "id": "v7",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 3
+      },
+      {
+        "id": "v8",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 1
+      }
+    ],
+    "difficulty": "medium",
+    "minMoves": 20
+  },
+  {
+    "id": 24,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 3,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 2
+      },
+      {
+        "id": "v2",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 4
+      },
+      {
+        "id": "v3",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 0
+      },
+      {
+        "id": "v4",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 3
+      },
+      {
+        "id": "v5",
+        "type": "fortuner",
+        "color": "white",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 2
+      },
+      {
+        "id": "v6",
+        "type": "scorpio",
+        "color": "black",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 1
+      },
+      {
+        "id": "v7",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 0
+      },
+      {
+        "id": "v8",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 4
+      }
+    ],
+    "difficulty": "medium",
+    "minMoves": 20
+  },
+  {
+    "id": 25,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 1,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 0
+      },
+      {
+        "id": "v2",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 3
+      },
+      {
+        "id": "v3",
+        "type": "fortuner",
+        "color": "white",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 1
+      },
+      {
+        "id": "v4",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 3
+      },
+      {
+        "id": "v5",
+        "type": "scorpio",
+        "color": "red",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 3
+      },
+      {
+        "id": "v6",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 1
+      },
+      {
+        "id": "v7",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 2
+      },
+      {
+        "id": "v8",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 5
+      }
+    ],
+    "difficulty": "medium",
+    "minMoves": 20
+  },
+  {
+    "id": 26,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 2,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 3
+      },
+      {
+        "id": "v2",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 1
+      },
+      {
+        "id": "v3",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 5,
+        "col": 0
+      },
+      {
+        "id": "v4",
+        "type": "fortuner",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 1
+      },
+      {
+        "id": "v5",
+        "type": "scorpio",
+        "color": "white",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 2
+      },
+      {
+        "id": "v6",
+        "type": "fortuner",
+        "color": "white",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 3
+      },
+      {
+        "id": "v7",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 0
+      },
+      {
+        "id": "v8",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 5
+      }
+    ],
+    "difficulty": "medium",
+    "minMoves": 20
+  },
+  {
+    "id": 27,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 4,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 0
+      },
+      {
+        "id": "v2",
+        "type": "fortuner",
+        "color": "white",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 1
+      },
+      {
+        "id": "v3",
+        "type": "fortuner",
+        "color": "white",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 3
+      },
+      {
+        "id": "v4",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 0
+      },
+      {
+        "id": "v5",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 3
+      },
+      {
+        "id": "v6",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "id": "v7",
+        "type": "fortuner",
+        "color": "white",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 2
+      },
+      {
+        "id": "v8",
+        "type": "fortuner",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 2
+      }
+    ],
+    "difficulty": "medium",
+    "minMoves": 20
+  },
+  {
+    "id": 28,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 2,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "thar",
+        "color": "black",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 5
+      },
+      {
+        "id": "v2",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 1
+      },
+      {
+        "id": "v3",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 4
+      },
+      {
+        "id": "v4",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 2
+      },
+      {
+        "id": "v5",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 3
+      },
+      {
+        "id": "v6",
+        "type": "thar",
+        "color": "black",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 0
+      },
+      {
+        "id": "v7",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 1
+      },
+      {
+        "id": "v8",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 0
+      }
+    ],
+    "difficulty": "medium",
+    "minMoves": 20
+  },
+  {
+    "id": 29,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 4,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "fortuner",
+        "color": "red",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 2
+      },
+      {
+        "id": "v2",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "id": "v3",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 3
+      },
+      {
+        "id": "v4",
+        "type": "scorpio",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 4
+      },
+      {
+        "id": "v5",
+        "type": "scorpio",
+        "color": "red",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 2
+      },
+      {
+        "id": "v6",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 1
+      },
+      {
+        "id": "v7",
+        "type": "scorpio",
+        "color": "white",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 0
+      },
+      {
+        "id": "v8",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 0
+      }
+    ],
+    "difficulty": "medium",
+    "minMoves": 20
+  },
+  {
+    "id": 30,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 0,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "fortuner",
+        "color": "white",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 3
+      },
+      {
+        "id": "v2",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 1
+      },
+      {
+        "id": "v3",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 1
+      },
+      {
+        "id": "v4",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 1
+      },
+      {
+        "id": "v5",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 5
+      },
+      {
+        "id": "v6",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 4
+      },
+      {
+        "id": "v7",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 2
+      },
+      {
+        "id": "v8",
+        "type": "scorpio",
+        "color": "black",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 1
+      }
+    ],
+    "difficulty": "medium",
+    "minMoves": 20
+  },
+  {
+    "id": 31,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 3,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 1
+      },
+      {
+        "id": "v2",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 2
+      },
+      {
+        "id": "v3",
+        "type": "fortuner",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 1
+      },
+      {
+        "id": "v4",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 4
+      },
+      {
+        "id": "v5",
+        "type": "fortuner",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 2
+      },
+      {
+        "id": "v6",
+        "type": "thar",
+        "color": "black",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "id": "v7",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 5
+      },
+      {
+        "id": "v8",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 4
+      },
+      {
+        "id": "v9",
+        "type": "scorpio",
+        "color": "black",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 1
+      },
+      {
+        "id": "v10",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 0
+      }
+    ],
+    "difficulty": "hard",
+    "minMoves": 30
+  },
+  {
+    "id": 32,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 4,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 4
+      },
+      {
+        "id": "v2",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 0
+      },
+      {
+        "id": "v3",
+        "type": "thar",
+        "color": "black",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 2
+      },
+      {
+        "id": "v4",
+        "type": "fortuner",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 3
+      },
+      {
+        "id": "v5",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 1
+      },
+      {
+        "id": "v6",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 4
+      },
+      {
+        "id": "v7",
+        "type": "scorpio",
+        "color": "black",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 3
+      },
+      {
+        "id": "v8",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 3
+      },
+      {
+        "id": "v9",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 1
+      },
+      {
+        "id": "v10",
+        "type": "scorpio",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 0
+      }
+    ],
+    "difficulty": "hard",
+    "minMoves": 30
+  },
+  {
+    "id": 33,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 1,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 1
+      },
+      {
+        "id": "v2",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 4
+      },
+      {
+        "id": "v3",
+        "type": "scorpio",
+        "color": "white",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 2
+      },
+      {
+        "id": "v4",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 1
+      },
+      {
+        "id": "v5",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 1
+      },
+      {
+        "id": "v6",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 3
+      },
+      {
+        "id": "v7",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 5
+      },
+      {
+        "id": "v8",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 0
+      },
+      {
+        "id": "v9",
+        "type": "scorpio",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 2
+      },
+      {
+        "id": "v10",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 5
+      }
+    ],
+    "difficulty": "hard",
+    "minMoves": 30
+  },
+  {
+    "id": 34,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 3,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 2
+      },
+      {
+        "id": "v2",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 1
+      },
+      {
+        "id": "v3",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 4
+      },
+      {
+        "id": "v4",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 0
+      },
+      {
+        "id": "v5",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 5
+      },
+      {
+        "id": "v6",
+        "type": "fortuner",
+        "color": "red",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 0
+      },
+      {
+        "id": "v7",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 3
+      },
+      {
+        "id": "v8",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 5
+      },
+      {
+        "id": "v9",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 2
+      },
+      {
+        "id": "v10",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 5,
+        "col": 3
+      }
+    ],
+    "difficulty": "hard",
+    "minMoves": 30
+  },
+  {
+    "id": 35,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 4,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 1
+      },
+      {
+        "id": "v2",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 4
+      },
+      {
+        "id": "v3",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 3
+      },
+      {
+        "id": "v4",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 2
+      },
+      {
+        "id": "v5",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 3
+      },
+      {
+        "id": "v6",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 1
+      },
+      {
+        "id": "v7",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 0
+      },
+      {
+        "id": "v8",
+        "type": "scorpio",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 0
+      },
+      {
+        "id": "v9",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 3
+      },
+      {
+        "id": "v10",
+        "type": "scorpio",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 2
+      }
+    ],
+    "difficulty": "hard",
+    "minMoves": 30
+  },
+  {
+    "id": 36,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 4,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 5
+      },
+      {
+        "id": "v2",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 3
+      },
+      {
+        "id": "v3",
+        "type": "thar",
+        "color": "black",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 0
+      },
+      {
+        "id": "v4",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 3
+      },
+      {
+        "id": "v5",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 1
+      },
+      {
+        "id": "v6",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 1
+      },
+      {
+        "id": "v7",
+        "type": "scorpio",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 2
+      },
+      {
+        "id": "v8",
+        "type": "scorpio",
+        "color": "black",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 0
+      },
+      {
+        "id": "v9",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 5
+      },
+      {
+        "id": "v10",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 4
+      }
+    ],
+    "difficulty": "hard",
+    "minMoves": 30
+  },
+  {
+    "id": 37,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 4,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 4
+      },
+      {
+        "id": "v2",
+        "type": "scorpio",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 3
+      },
+      {
+        "id": "v3",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 1
+      },
+      {
+        "id": "v4",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 4
+      },
+      {
+        "id": "v5",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 5,
+        "col": 4
+      },
+      {
+        "id": "v6",
+        "type": "fortuner",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "id": "v7",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 1
+      },
+      {
+        "id": "v8",
+        "type": "scorpio",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 3
+      },
+      {
+        "id": "v9",
+        "type": "scorpio",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 0
+      },
+      {
+        "id": "v10",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 0
+      }
+    ],
+    "difficulty": "hard",
+    "minMoves": 30
+  },
+  {
+    "id": 38,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 1,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 5,
+        "col": 0
+      },
+      {
+        "id": "v2",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 4
+      },
+      {
+        "id": "v3",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 2
+      },
+      {
+        "id": "v4",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 0
+      },
+      {
+        "id": "v5",
+        "type": "scorpio",
+        "color": "red",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 1
+      },
+      {
+        "id": "v6",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 3
+      },
+      {
+        "id": "v7",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 0
+      },
+      {
+        "id": "v8",
+        "type": "thar",
+        "color": "black",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 4
+      },
+      {
+        "id": "v9",
+        "type": "scorpio",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 2
+      },
+      {
+        "id": "v10",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 0
+      }
+    ],
+    "difficulty": "hard",
+    "minMoves": 30
+  },
+  {
+    "id": 39,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 4,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 1
+      },
+      {
+        "id": "v2",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 0
+      },
+      {
+        "id": "v3",
+        "type": "scorpio",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 0
+      },
+      {
+        "id": "v4",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 0
+      },
+      {
+        "id": "v5",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "id": "v6",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 3
+      },
+      {
+        "id": "v7",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 3
+      },
+      {
+        "id": "v8",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 4
+      },
+      {
+        "id": "v9",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 2
+      },
+      {
+        "id": "v10",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 5,
+        "col": 1
+      }
+    ],
+    "difficulty": "hard",
+    "minMoves": 30
+  },
+  {
+    "id": 40,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 3,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 1
+      },
+      {
+        "id": "v2",
+        "type": "fortuner",
+        "color": "white",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 3
+      },
+      {
+        "id": "v3",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 2
+      },
+      {
+        "id": "v4",
+        "type": "fortuner",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 3
+      },
+      {
+        "id": "v5",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 0
+      },
+      {
+        "id": "v6",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 5
+      },
+      {
+        "id": "v7",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 2
+      },
+      {
+        "id": "v8",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 3
+      },
+      {
+        "id": "v9",
+        "type": "scorpio",
+        "color": "black",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 4
+      },
+      {
+        "id": "v10",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 2
+      }
+    ],
+    "difficulty": "hard",
+    "minMoves": 30
+  },
+  {
+    "id": 41,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 3,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 2
+      },
+      {
+        "id": "v2",
+        "type": "fortuner",
+        "color": "white",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "id": "v3",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 1
+      },
+      {
+        "id": "v4",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 1
+      },
+      {
+        "id": "v5",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 1
+      },
+      {
+        "id": "v6",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 2
+      },
+      {
+        "id": "v7",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 0
+      },
+      {
+        "id": "v8",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 0
+      },
+      {
+        "id": "v9",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 3
+      },
+      {
+        "id": "v10",
+        "type": "scorpio",
+        "color": "black",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 1
+      },
+      {
+        "id": "v11",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 4
+      },
+      {
+        "id": "v12",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 4
+      }
+    ],
+    "difficulty": "expert",
+    "minMoves": 40
+  },
+  {
+    "id": 42,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 3,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "fortuner",
+        "color": "white",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 3
+      },
+      {
+        "id": "v2",
+        "type": "scorpio",
+        "color": "black",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "id": "v3",
+        "type": "fortuner",
+        "color": "red",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 2
+      },
+      {
+        "id": "v4",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 3
+      },
+      {
+        "id": "v5",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 3
+      },
+      {
+        "id": "v6",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 0
+      },
+      {
+        "id": "v7",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 4
+      },
+      {
+        "id": "v8",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 0
+      },
+      {
+        "id": "v9",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 4
+      },
+      {
+        "id": "v10",
+        "type": "thar",
+        "color": "black",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 1
+      },
+      {
+        "id": "v11",
+        "type": "thar",
+        "color": "black",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 1
+      },
+      {
+        "id": "v12",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 5
+      }
+    ],
+    "difficulty": "expert",
+    "minMoves": 40
+  },
+  {
+    "id": 43,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 4,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 1
+      },
+      {
+        "id": "v2",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 3
+      },
+      {
+        "id": "v3",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 0
+      },
+      {
+        "id": "v4",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 2
+      },
+      {
+        "id": "v5",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 0
+      },
+      {
+        "id": "v6",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 3
+      },
+      {
+        "id": "v7",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 2
+      },
+      {
+        "id": "v8",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 0
+      },
+      {
+        "id": "v9",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 2
+      },
+      {
+        "id": "v10",
+        "type": "thar",
+        "color": "black",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 4
+      },
+      {
+        "id": "v11",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 5
+      }
+    ],
+    "difficulty": "expert",
+    "minMoves": 40
+  },
+  {
+    "id": 44,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 3,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 2
+      },
+      {
+        "id": "v2",
+        "type": "fortuner",
+        "color": "white",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 0
+      },
+      {
+        "id": "v3",
+        "type": "thar",
+        "color": "black",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 1
+      },
+      {
+        "id": "v4",
+        "type": "scorpio",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 3
+      },
+      {
+        "id": "v5",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "id": "v6",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 3
+      },
+      {
+        "id": "v7",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 5
+      },
+      {
+        "id": "v8",
+        "type": "scorpio",
+        "color": "black",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 5
+      },
+      {
+        "id": "v9",
+        "type": "scorpio",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 2
+      },
+      {
+        "id": "v10",
+        "type": "fortuner",
+        "color": "white",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 3
+      },
+      {
+        "id": "v11",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 4
+      }
+    ],
+    "difficulty": "expert",
+    "minMoves": 40
+  },
+  {
+    "id": 45,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 3,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 0
+      },
+      {
+        "id": "v2",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 2
+      },
+      {
+        "id": "v3",
+        "type": "fortuner",
+        "color": "white",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 1
+      },
+      {
+        "id": "v4",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 4
+      },
+      {
+        "id": "v5",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 2
+      },
+      {
+        "id": "v6",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 1
+      },
+      {
+        "id": "v7",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 2
+      },
+      {
+        "id": "v8",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "id": "v9",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 0
+      },
+      {
+        "id": "v10",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 5
+      }
+    ],
+    "difficulty": "expert",
+    "minMoves": 40
+  },
+  {
+    "id": 46,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 4,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "fortuner",
+        "color": "white",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "id": "v2",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 0
+      },
+      {
+        "id": "v3",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 0
+      },
+      {
+        "id": "v4",
+        "type": "scorpio",
+        "color": "black",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 3
+      },
+      {
+        "id": "v5",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 4
+      },
+      {
+        "id": "v6",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 1
+      },
+      {
+        "id": "v7",
+        "type": "scorpio",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 2
+      },
+      {
+        "id": "v8",
+        "type": "thar",
+        "color": "black",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 3
+      },
+      {
+        "id": "v9",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 3
+      },
+      {
+        "id": "v10",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 5
+      },
+      {
+        "id": "v11",
+        "type": "scorpio",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 2
+      },
+      {
+        "id": "v12",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 1
+      }
+    ],
+    "difficulty": "expert",
+    "minMoves": 40
+  },
+  {
+    "id": 47,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 3,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 3
+      },
+      {
+        "id": "v2",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 2
+      },
+      {
+        "id": "v3",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "id": "v4",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 2
+      },
+      {
+        "id": "v5",
+        "type": "fortuner",
+        "color": "white",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 0
+      },
+      {
+        "id": "v6",
+        "type": "fortuner",
+        "color": "white",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 1
+      },
+      {
+        "id": "v7",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 3
+      },
+      {
+        "id": "v8",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 0
+      },
+      {
+        "id": "v9",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 3
+      },
+      {
+        "id": "v10",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 5,
+        "col": 5
+      },
+      {
+        "id": "v11",
+        "type": "scorpio",
+        "color": "black",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 0
+      },
+      {
+        "id": "v12",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 2
+      }
+    ],
+    "difficulty": "expert",
+    "minMoves": 40
+  },
+  {
+    "id": 48,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 3,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 1
+      },
+      {
+        "id": "v2",
+        "type": "thar",
+        "color": "black",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 3
+      },
+      {
+        "id": "v3",
+        "type": "fortuner",
+        "color": "white",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 0
+      },
+      {
+        "id": "v4",
+        "type": "scorpio",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 2
+      },
+      {
+        "id": "v5",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 1
+      },
+      {
+        "id": "v6",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 5,
+        "col": 0
+      },
+      {
+        "id": "v7",
+        "type": "thar",
+        "color": "black",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "id": "v8",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 2
+      },
+      {
+        "id": "v9",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 5
+      },
+      {
+        "id": "v10",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 4
+      },
+      {
+        "id": "v11",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 2
+      }
+    ],
+    "difficulty": "expert",
+    "minMoves": 40
+  },
+  {
+    "id": 49,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 4,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 5
+      },
+      {
+        "id": "v2",
+        "type": "fortuner",
+        "color": "red",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 0
+      },
+      {
+        "id": "v3",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 1
+      },
+      {
+        "id": "v4",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 3
+      },
+      {
+        "id": "v5",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 1
+      },
+      {
+        "id": "v6",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 3
+      },
+      {
+        "id": "v7",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 4
+      },
+      {
+        "id": "v8",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 1,
+        "col": 5
+      },
+      {
+        "id": "v9",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "id": "v10",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 2
+      },
+      {
+        "id": "v11",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "horizontal",
+        "row": 5,
+        "col": 1
+      },
+      {
+        "id": "v12",
+        "type": "scorpio",
+        "color": "black",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 0
+      }
+    ],
+    "difficulty": "expert",
+    "minMoves": 40
+  },
+  {
+    "id": 50,
+    "gridSize": {
+      "rows": 6,
+      "cols": 6
+    },
+    "exit": {
+      "side": "right",
+      "row": 2
+    },
+    "heroVehicle": {
+      "id": "hero",
+      "type": "swift",
+      "color": "red",
+      "row": 2,
+      "col": 2,
+      "length": 2,
+      "orientation": "horizontal"
+    },
+    "vehicles": [
+      {
+        "id": "v1",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 5,
+        "col": 5
+      },
+      {
+        "id": "v2",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "vertical",
+        "row": 3,
+        "col": 1
+      },
+      {
+        "id": "v3",
+        "type": "gsrtc_bus",
+        "color": "red",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 4,
+        "col": 3
+      },
+      {
+        "id": "v4",
+        "type": "fortuner",
+        "color": "black",
+        "length": 3,
+        "orientation": "horizontal",
+        "row": 0,
+        "col": 0
+      },
+      {
+        "id": "v5",
+        "type": "eeco",
+        "color": "white",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 2,
+        "col": 0
+      },
+      {
+        "id": "v6",
+        "type": "thar",
+        "color": "blue",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 3,
+        "col": 3
+      },
+      {
+        "id": "v7",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 4
+      },
+      {
+        "id": "v8",
+        "type": "scorpio",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 0
+      },
+      {
+        "id": "v9",
+        "type": "thar",
+        "color": "red",
+        "length": 2,
+        "orientation": "vertical",
+        "row": 0,
+        "col": 3
+      },
+      {
+        "id": "v10",
+        "type": "eeco",
+        "color": "silver",
+        "length": 2,
+        "orientation": "horizontal",
+        "row": 1,
+        "col": 1
+      },
+      {
+        "id": "v11",
+        "type": "auto_rickshaw",
+        "color": "red",
+        "length": 1,
+        "orientation": "vertical",
+        "row": 4,
+        "col": 2
+      }
+    ],
+    "difficulty": "expert",
+    "minMoves": 40
   }
 ]

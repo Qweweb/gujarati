@@ -25,6 +25,8 @@ import KundaliGenerator from './components/KundaliGenerator';
 import VastuCalculator from './components/VastuCalculator';
 import NamkaranTool from './components/NamkaranTool';
 import GunMilan from './components/GunMilan';
+import BlogHub from './components/BlogHub';
+import BlogPostDetail from './components/BlogPostDetail';
 
 const PanotiRedirect = () => {
   const navigate = useNavigate();
@@ -72,6 +74,90 @@ import { PushNotifications } from '@capacitor/push-notifications';
 import { FCM } from '@capacitor-community/fcm';
 import { supabase } from './supabaseClient';
 import { Capacitor } from '@capacitor/core';
+import { scheduleDailyQuizNotifications, initQuizNotificationListener, recordNotificationClick, syncCustomOfflineNotifications } from './utils/quizNotificationScheduler';
+
+const NotificationPreviewBanner = () => {
+  const [notifData, setNotifData] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handlePreview = (e) => {
+      if (e.detail) {
+        setNotifData(e.detail);
+      }
+    };
+    window.addEventListener('show-notification-preview', handlePreview);
+    return () => window.removeEventListener('show-notification-preview', handlePreview);
+  }, []);
+
+  if (!notifData) return null;
+
+  return (
+    <div
+      onClick={() => {
+        recordNotificationClick(notifData);
+        const target = notifData.url || notifData.route;
+        if (target) {
+          if (target.startsWith('http://') || target.startsWith('https://')) {
+            window.open(target, '_blank');
+          } else {
+            navigate(target);
+          }
+        }
+        setNotifData(null);
+      }}
+      className="fixed top-4 left-1/2 -translate-x-1/2 z-[9999] w-[92%] max-w-md bg-stone-900/95 text-white border border-amber-500/50 p-4 rounded-2xl shadow-2xl backdrop-blur-md cursor-pointer animate-bounce-in flex items-start gap-3 transition-all hover:scale-105"
+    >
+      <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 shadow-md border border-amber-400/40 bg-stone-800 flex items-center justify-center">
+        <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center justify-between gap-2">
+          <h4 className="font-gujarati font-bold text-xs text-amber-400">Gujarati App Notification</h4>
+          <span className="text-[10px] text-stone-400">હમણાં જ</span>
+        </div>
+        <h3 className="font-gujarati font-black text-sm text-white mt-0.5">{notifData.title}</h3>
+        <p className="font-gujarati text-xs text-stone-300 mt-1 leading-snug line-clamp-3">{notifData.body}</p>
+        
+        {notifData.imageUrl && (
+          <div className="mt-2.5 rounded-xl overflow-hidden max-h-36 border border-stone-800 shadow-sm">
+            <img src={notifData.imageUrl} alt="Notification Preview" className="w-full h-full object-cover" />
+          </div>
+        )}
+
+        <span className="inline-block mt-2 text-[10px] font-gujarati font-bold text-amber-400 underline">
+          🎯 ખોલવા માટે અહીં ટેપ કરો →
+        </span>
+      </div>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          setNotifData(null);
+        }}
+        className="text-stone-400 hover:text-white text-sm"
+      >
+        ✕
+      </button>
+    </div>
+  );
+};
+
+const QuizNotificationInitializer = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    scheduleDailyQuizNotifications();
+    syncCustomOfflineNotifications();
+    initQuizNotificationListener((route) => {
+      if (route) {
+        navigate(route);
+      }
+    });
+  }, [navigate]);
+
+  return null;
+};
+
 
 // Route guard component to check feature flags
 const FeatureGuard = ({ children, featureKey, fallbackPath = "/" }) => {
@@ -132,17 +218,18 @@ const GlobalAppGuard = ({ isLoggedIn, handleLogin, children }) => {
   const isPublicCardRoute = currentPath === '/c' || currentPath.startsWith('/c/') || (currentPath.startsWith('/card/') && currentPath !== '/card') || currentPath.startsWith('/vcard/');
   const isAdminRoute = currentPath.startsWith('/gujarati-admin');
   const isPrivacyRoute = currentPath.startsWith('/privacy-policy') || currentPath.startsWith('/privacypolicy');
+  const isBlogRoute = currentPath === '/blogs' || currentPath.startsWith('/blog/') || currentPath === '/blog';
 
   // Detect if accessing from a standard web browser (non-native platform)
   const isBrowser = !Capacitor.isNativePlatform();
   const hasBypass = localStorage.getItem('sanskari_web_bypass') === 'true';
-  const isAllowedWebRoute = isAdminRoute || isPublicCardRoute || isPrivacyRoute || hasBypass;
+  const isAllowedWebRoute = isAdminRoute || isPublicCardRoute || isPrivacyRoute || isBlogRoute || hasBypass;
 
   if (isBrowser && !isAllowedWebRoute) {
     return <LandingPage />;
   }
 
-  if (!isLoggedIn && !isPublicCardRoute && !isAdminRoute && !isPrivacyRoute) {
+  if (!isLoggedIn && !isPublicCardRoute && !isAdminRoute && !isPrivacyRoute && !isBlogRoute) {
      return <Login onLogin={handleLogin} />;
   }
 
@@ -423,19 +510,24 @@ function App() {
   return (
     <ThemeProvider>
       <Router>
+        <QuizNotificationInitializer />
+        <NotificationPreviewBanner />
         <GlobalAppGuard isLoggedIn={isLoggedIn} handleLogin={handleLogin}>
         <Routes>
           {/* Standalone Admin Route (No App Layout) */}
           <Route path="/gujarati-admin/*" element={<AdminDashboard />} />
           
-          {/* Standalone Public vCard Route */}
+          {/* Standalone Public vCard & Blog Routes */}
           <Route path="/vcard/:slug" element={<VCardPublic />} />
+          <Route path="/blog/:slug" element={<BlogPostDetail />} />
           
           {/* Main App Routes (Wrapped in Layout) */}
           <Route path="*" element={
             <Layout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
               <Routes>
                 <Route path="/" element={<Dashboard />} />
+                <Route path="/blogs" element={<BlogHub />} />
+                <Route path="/blogs/:slug" element={<BlogPostDetail />} />
                 <Route path="/devotional" element={<FeatureGuard featureKey="devotional"><DevotionalHub /></FeatureGuard>} />
                 <Route path="/health" element={<FeatureGuard featureKey="health"><HealthAssistant /></FeatureGuard>} />
                 <Route path="/community" element={<CommunityRoute />} />

@@ -105,6 +105,10 @@ serve(async (req) => {
           body: notifyText,
           ...(imageUrl && { image: imageUrl })
         },
+        data: {
+          url: payload.is_custom ? '/community' : `/community?postId=${payload.record?.id || ''}`,
+          postId: payload.is_custom ? '' : String(payload.record?.id || '')
+        },
         android: {
           notification: {
             sound: 'default',

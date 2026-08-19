@@ -5,6 +5,8 @@ import { supabase } from '../supabaseClient';
 import { DISTRICTS, TALUKAS, getDistrictName, getTalukaName } from '../utils/location_database';
 import { AI_PROVIDERS, getAIConfig, saveAIConfig, testAIConnection } from '../utils/aiService';
 import { defaultPostMakerConfig } from './PostMaker';
+import { sendTestQuizNotification, scheduleCustomOfflineNotification } from '../utils/quizNotificationScheduler';
+import { pingGoogleSearchConsole } from '../utils/seoHelper';
 
 const DEFAULT_PIN = "1008";
 
@@ -94,7 +96,344 @@ const AdminDashboard = () => {
   const [isSavingPmConfig, setIsSavingPmConfig] = useState(false);
   const [uploadingPmBg, setUploadingPmBg] = useState(false);
   const [pmNewBgUrl, setPmNewBgUrl] = useState("");
-  const [pmNewBgText, setPmNewBgText] = useState("");
+  // Offline Notifications State & Analytics
+  const [offlineNotifEnabled, setOfflineNotifEnabled] = useState(() => {
+    return localStorage.getItem('admin_offline_quiz_enabled') !== 'false';
+  });
+  const [offlineNotifTime, setOfflineNotifTime] = useState(() => {
+    return localStorage.getItem('admin_offline_quiz_time') || '09:00';
+  });
+  const [clickLogs, setClickLogs] = useState([]);
+  const [loadingClicks, setLoadingClicks] = useState(false);
+  const [offlineTestMsg, setOfflineTestMsg] = useState('');
+  const [offlineSaveMsg, setOfflineSaveMsg] = useState('');
+
+  // Custom Offline Broadcast Form State
+  const [custNotifTitle, setCustNotifTitle] = useState('');
+  const [custNotifBody, setCustNotifBody] = useState('');
+  const [custNotifImageFile, setCustNotifImageFile] = useState(null);
+  const [custNotifImagePreview, setCustNotifImagePreview] = useState('');
+  const [custNotifImageUrl, setCustNotifImageUrl] = useState('');
+  const [custLinkType, setCustLinkType] = useState('internal'); // 'internal' | 'external'
+  const [custNotifRoute, setCustNotifRoute] = useState('/panchang');
+  const [custNotifExternalUrl, setCustNotifExternalUrl] = useState('');
+  const [custNotifDate, setCustNotifDate] = useState(() => new Date().toISOString().split('T')[0]);
+  const [custNotifTime, setCustNotifTime] = useState('09:00');
+  const [schedulingCustNotif, setSchedulingCustNotif] = useState(false);
+  const [custNotifSuccessMsg, setCustNotifSuccessMsg] = useState('');
+
+  const handleCustNotifFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setCustNotifImageFile(file);
+      setCustNotifImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleScheduleCustomOfflineNotif = async (e) => {
+    e.preventDefault();
+    if (!custNotifTitle || !custNotifBody) {
+      alert("મહેરબાની કરીને ટાઇટલ અને મેસેજ લખો.");
+      return;
+    }
+    setSchedulingCustNotif(true);
+
+    try {
+      let finalImgUrl = custNotifImageUrl;
+      if (custNotifImageFile) {
+        finalImgUrl = await uploadToCloudinary(custNotifImageFile);
+      }
+
+      const finalTarget = custLinkType === 'external' ? custNotifExternalUrl : custNotifRoute;
+
+      const notifItem = {
+        id: Date.now() % 100000,
+        title: custNotifTitle,
+        body: custNotifBody,
+        imageUrl: finalImgUrl,
+        route: finalTarget,
+        url: finalTarget,
+        scheduledAt: `${custNotifDate}T${custNotifTime}:00`
+      };
+
+      const res = await scheduleCustomOfflineNotification(notifItem);
+      setSchedulingCustNotif(false);
+
+      if (res.success) {
+        setCustNotifSuccessMsg(`✅ કસ્ટમ ઓફલાઇન નોટિફિકેશન સફળતાપૂર્વક શિડ્યુલ થઈ ગયું (${custNotifDate} ${custNotifTime})!`);
+        setCustNotifTitle('');
+        setCustNotifBody('');
+        setCustNotifImageFile(null);
+        setCustNotifImagePreview('');
+        setCustNotifImageUrl('');
+        setCustNotifExternalUrl('');
+        setTimeout(() => setCustNotifSuccessMsg(''), 5000);
+      } else {
+        alert("શિડ્યુલ કરવામાં ભૂલ આવી: " + (res.error || "તપાસો"));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // WordPress-Style Blog Management State
+  const [blogsList, setBlogsList] = useState([]);
+  const [loadingBlogsList, setLoadingBlogsList] = useState(false);
+  const [editingBlogId, setEditingBlogId] = useState(null);
+  const [blogTitle, setBlogTitle] = useState('');
+  const [blogSlug, setBlogSlug] = useState('');
+  const [blogCategory, setBlogCategory] = useState('ધર્મ અને ભક્તિ');
+  const [customCategoryInput, setCustomCategoryInput] = useState('');
+  const [isCustomCat, setIsCustomCat] = useState(false);
+  const [blogAuthor, setBlogAuthor] = useState('ગુજરાતી ટીમ');
+  const [blogExcerpt, setBlogExcerpt] = useState('');
+  const [blogContent, setBlogContent] = useState('');
+  const [blogCoverFile, setBlogCoverFile] = useState(null);
+  const [blogCoverPreview, setBlogCoverPreview] = useState('');
+  const [blogCoverUrl, setBlogCoverUrl] = useState('');
+  const [savingBlog, setSavingBlog] = useState(false);
+  const [blogSuccessMsg, setBlogSuccessMsg] = useState('');
+  const [blogEditorMode, setBlogEditorMode] = useState('code'); // 'code' | 'visual'
+  const [uploadingInArticleImg, setUploadingInArticleImg] = useState(false);
+
+  // In-Article Link Modal State
+  const [showLinkModal, setShowLinkModal] = useState(false);
+  const [insertLinkText, setInsertLinkText] = useState('');
+  const [insertLinkType, setInsertLinkType] = useState('internal'); // 'internal' | 'external'
+  const [insertLinkInternalRoute, setInsertLinkInternalRoute] = useState('/panchang');
+  const [insertLinkExternalUrl, setInsertLinkExternalUrl] = useState('');
+  const [showN8nGuideModal, setShowN8nGuideModal] = useState(false);
+
+  const handleConfirmInsertLink = () => {
+    const label = insertLinkText.trim() || 'અહીં ક્લેઇમ કરો';
+    const target = insertLinkType === 'external' ? insertLinkExternalUrl.trim() : insertLinkInternalRoute;
+    if (!target) {
+      alert("મહેરબાની કરીને લિંક એડ્રેસ લખો.");
+      return;
+    }
+    setBlogContent(prev => prev + ` [${label}](${target}) `);
+    setShowLinkModal(false);
+    setInsertLinkText('');
+    setInsertLinkExternalUrl('');
+  };
+
+  const handleGenerateSitemap = () => {
+    let blogUrls = blogsList.map(b => `  <url>\n    <loc>${window.location.origin}/#/blog/${b.slug}</loc>\n    <lastmod>${b.updated_at ? b.updated_at.split('T')[0] : new Date().toISOString().split('T')[0]}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>`).join('\n');
+
+    const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url>\n    <loc>${window.location.origin}/</loc>\n    <changefreq>always</changefreq>\n    <priority>1.0</priority>\n  </url>\n  <url>\n    <loc>${window.location.origin}/#/blogs</loc>\n    <changefreq>daily</changefreq>\n    <priority>0.9</priority>\n  </url>\n${blogUrls}\n</urlset>`;
+
+    const blob = new Blob([sitemapContent], { type: 'text/xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sitemap.xml';
+    a.click();
+    URL.revokeObjectURL(url);
+    alert("✅ sitemap.xml ફાઈલ ડાઉનલોડ થઈ ગઈ છે! તે વડે Google Search Console માં તમામ બ્લોગ રેન્ક કરાવી શકશો.");
+  };
+
+  const fetchAdminBlogs = async () => {
+    setLoadingBlogsList(true);
+    try {
+      const { data, error } = await supabase
+        .from('blogs')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!error && data) {
+        setBlogsList(data);
+      }
+    } catch (e) {
+      console.warn('Fetch admin blogs error:', e);
+    } finally {
+      setLoadingBlogsList(false);
+    }
+  };
+
+  const handleBlogFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setBlogCoverFile(file);
+      setBlogCoverPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const insertToolbarTag = (tagStart, tagEnd = '') => {
+    setBlogContent(prev => prev + `\n${tagStart}લખાણ અહીં લખો${tagEnd}\n`);
+  };
+
+  const handleInsertInArticleImage = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingInArticleImg(true);
+    try {
+      const imgUrl = await uploadToCloudinary(file);
+      setBlogContent(prev => prev + `\n![ફોટો વર્ણન](${imgUrl})\n`);
+      alert("ઇમેજ અપલોડ થઈ ગઈ અને બ્લોગમાં ઉમેરાઈ ગઈ!");
+    } catch (err) {
+      alert("ઇમેજ અપલોડ કરવામાં ભૂલ: " + err.message);
+    } finally {
+      setUploadingInArticleImg(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleEditBlog = (blog) => {
+    setEditingBlogId(blog.id);
+    setBlogTitle(blog.title || '');
+    setBlogSlug(blog.slug || '');
+    setBlogCategory(blog.category || 'જનરલ');
+    setIsCustomCat(false);
+    setBlogAuthor(blog.author || 'ગુજરાતી ટીમ');
+    setBlogExcerpt(blog.excerpt || '');
+    setBlogContent(blog.content || '');
+    setBlogCoverUrl(blog.cover_image || '');
+    setBlogCoverPreview(blog.cover_image || '');
+    setBlogSuccessMsg(`✏️ એડિટ મોડ: "${blog.title}"`);
+  };
+
+  const handleResetBlogForm = () => {
+    setEditingBlogId(null);
+    setBlogTitle('');
+    setBlogSlug('');
+    setBlogCategory('ધર્મ અને ભક્તિ');
+    setIsCustomCat(false);
+    setCustomCategoryInput('');
+    setBlogAuthor('ગુજરાતી ટીમ');
+    setBlogExcerpt('');
+    setBlogContent('');
+    setBlogCoverFile(null);
+    setBlogCoverPreview('');
+    setBlogCoverUrl('');
+  };
+
+  const handleCreateBlog = async (e) => {
+    e.preventDefault();
+    if (!blogTitle || !blogContent) {
+      alert("મહેરબાની કરીને ટાઇટલ અને બ્લોગનું વિગતવાર લખાણ ભરો.");
+      return;
+    }
+    setSavingBlog(true);
+
+    try {
+      let finalCover = blogCoverUrl;
+      if (blogCoverFile) {
+        finalCover = await uploadToCloudinary(blogCoverFile);
+      }
+
+      const finalCategory = isCustomCat && customCategoryInput ? customCategoryInput.trim() : blogCategory;
+
+      const generatedSlug = blogSlug
+        ? blogSlug.toLowerCase().trim().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-')
+        : 'blog-' + Date.now();
+
+      const blogPayload = {
+        title: blogTitle,
+        slug: generatedSlug,
+        excerpt: blogExcerpt,
+        content: blogContent,
+        cover_image: finalCover,
+        category: finalCategory,
+        author: blogAuthor,
+        is_published: true,
+        updated_at: new Date().toISOString()
+      };
+
+      let res;
+      if (editingBlogId) {
+        res = await supabase.from('blogs').update(blogPayload).eq('id', editingBlogId);
+      } else {
+        blogPayload.created_at = new Date().toISOString();
+        res = await supabase.from('blogs').insert([blogPayload]);
+      }
+
+      setSavingBlog(false);
+
+      if (!res.error) {
+        setBlogSuccessMsg(editingBlogId ? `✅ બ્લોગ સફળતાપૂર્વક અપડેટ થયો!` : `✅ નવો બ્લોગ સફળતાપૂર્વક પબ્લિશ થયો! URL Slug: /blog/${generatedSlug}`);
+        handleResetBlogForm();
+        fetchAdminBlogs();
+        setTimeout(() => setBlogSuccessMsg(''), 5000);
+      } else {
+        alert("બ્લોગ સેવ કરવામાં ભૂલ: " + res.error.message);
+      }
+    } catch (err) {
+      setSavingBlog(false);
+      alert("ઇમેજ કે બ્લોગ સેવ કરવામાં ભૂલ: " + err.message);
+    }
+  };
+
+  const handleDeleteBlog = async (id) => {
+    if (!window.confirm("શું તમે આ બ્લોગ ડિલીટ કરવા માંગો છો?")) return;
+    try {
+      await supabase.from('blogs').delete().eq('id', id);
+      fetchAdminBlogs();
+    } catch (e) {
+      alert("ડિલીટ કરવામાં ભૂલ આવી.");
+    }
+  };
+
+  const fetchNotificationClickLogs = async () => {
+    setLoadingClicks(true);
+    try {
+      const { data, error } = await supabase
+        .from('notification_clicks')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(100);
+
+      if (!error && data) {
+        setClickLogs(data);
+      } else {
+        const local = JSON.parse(localStorage.getItem('admin_notification_clicks') || '[]');
+        setClickLogs(local);
+      }
+    } catch (err) {
+      console.warn('Click logs fetch error:', err);
+      const local = JSON.parse(localStorage.getItem('admin_notification_clicks') || '[]');
+      setClickLogs(local);
+    } finally {
+      setLoadingClicks(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'offline_notifications') {
+      fetchNotificationClickLogs();
+      const handleRealtimeClick = () => {
+        fetchNotificationClickLogs();
+      };
+      window.addEventListener('notification-click-recorded', handleRealtimeClick);
+      return () => window.removeEventListener('notification-click-recorded', handleRealtimeClick);
+    }
+  }, [activeTab]);
+
+  const handleSaveOfflineNotifSettings = async () => {
+    localStorage.setItem('admin_offline_quiz_enabled', offlineNotifEnabled ? 'true' : 'false');
+    localStorage.setItem('admin_offline_quiz_time', offlineNotifTime);
+    
+    try {
+      await supabase.from('app_settings').upsert({
+        key: 'admin_offline_quiz_config',
+        value: JSON.stringify({ enabled: offlineNotifEnabled, time: offlineNotifTime })
+      }, { onConflict: 'key' });
+    } catch (e) {
+      console.warn('Failed to save to Supabase app_settings:', e);
+    }
+
+    setOfflineSaveMsg('✅ ઓફલાઇન નોટિફિકેશન સેટિંગ્સ સફળતાપૂર્વક સેવ થઈ ગઈ છે!');
+    setTimeout(() => setOfflineSaveMsg(''), 4000);
+  };
+
+  const handleAdminTestNotification = async () => {
+    setOfflineTestMsg('⏳ 5 સેકન્ડમાં ટેસ્ટ નોટિફિકેશન આવી રહ્યું છે...');
+    const res = await sendTestQuizNotification();
+    if (res.success) {
+      setTimeout(() => setOfflineTestMsg(''), 6000);
+    } else {
+      setOfflineTestMsg('❌ નોટિફિકેશન ટેસ્ટ ફેલ થયું.');
+    }
+  };
 
   // ========================================================
   // MARKETING OFFERS STATE & LOGIC
@@ -1267,6 +1606,28 @@ const AdminDashboard = () => {
             >
               <span className="material-symbols-outlined text-lg">campaign</span>
               📢 કસ્ટમ નોટિફિકેશન
+            </button>
+            <button 
+              onClick={() => setActiveTab("offline_notifications")}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-gujarati font-bold text-sm transition-all ${
+                activeTab === "offline_notifications" 
+                  ? 'bg-amber-600 text-white shadow-md shadow-amber-500/20' 
+                  : 'text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900'
+              }`}
+            >
+              <span className="material-symbols-outlined text-lg">alarm_on</span>
+              ⏰ ઓફલાઇન નોટિફિકેશન
+            </button>
+            <button 
+              onClick={() => setActiveTab("blogs")}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-gujarati font-bold text-sm transition-all ${
+                activeTab === "blogs" 
+                  ? 'bg-amber-600 text-white shadow-md shadow-amber-500/20' 
+                  : 'text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900'
+              }`}
+            >
+              <span className="material-symbols-outlined text-lg">article</span>
+              📰 બ્લોગ મેનેજર
             </button>
             <button 
               onClick={() => setActiveTab("marketing_offers")}
@@ -3114,6 +3475,1111 @@ const AdminDashboard = () => {
                 <p className="font-gujarati text-xs text-amber-600 mt-1">આ નોટિફિકેશન પ્લે સ્ટોર પરથી નવી અપડેટ (v1.3.1) કરનાર તમામ સક્રિય યુઝર્સને લાઈવ ડિલિવર થશે. મહેરબાની કરીને સાવચેતીપૂર્વક સાચો સંદેશો જ સેન્ડ કરો.</p>
               </div>
 
+            </div>
+          )}
+
+          {/* TAB: OFFLINE NOTIFICATIONS CONTROL & ANALYTICS */}
+          {activeTab === "offline_notifications" && (
+            <div className="space-y-8 animate-fade-in pb-10">
+              {/* Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="font-headline font-black text-xl text-stone-900 dark:text-stone-100 flex items-center gap-2">
+                    ⏰ ડેઇલી પઝલ ઓફલાઇન નોટિફિકેશન કંટ્રોલ
+                  </h3>
+                  <p className="font-gujarati text-xs text-stone-500 mt-1">
+                    ઇન્ટરનેટ વગર યુઝરના ફોનમાં ઓટોમેટિક વાગતા 7-ડે ક્વાર્કી સ્ક્રૅમ્બલ નોટિફિકેશનનું કંટ્રોલ અને કસ્ટમાઇઝેશન.
+                  </p>
+                </div>
+                <button
+                  onClick={fetchNotificationClickLogs}
+                  className="flex items-center gap-2 px-4 py-2 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 rounded-xl font-gujarati text-xs font-bold transition-all cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-sm">refresh</span> રીફ્રેશ ડેટા
+                </button>
+              </div>
+
+              {/* Status & Alerts */}
+              {offlineSaveMsg && (
+                <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-300 dark:border-emerald-800 p-4 rounded-2xl font-gujarati text-xs font-bold text-emerald-800 dark:text-emerald-300 animate-fade-in flex items-center gap-2">
+                  <span className="material-symbols-outlined text-base">check_circle</span>
+                  {offlineSaveMsg}
+                </div>
+              )}
+              {offlineTestMsg && (
+                <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-800 p-4 rounded-2xl font-gujarati text-xs font-bold text-amber-800 dark:text-amber-300 animate-pulse flex items-center gap-2">
+                  <span className="material-symbols-outlined text-base">notifications_active</span>
+                  {offlineTestMsg}
+                </div>
+              )}
+
+              {/* Controls Card */}
+              <div className="bg-white dark:bg-stone-900 p-6 rounded-3xl border border-stone-200/60 dark:border-stone-800 shadow-sm space-y-6">
+                <h4 className="font-gujarati font-black text-md text-stone-800 dark:text-stone-100 flex items-center gap-2">
+                  ⚙️ ગ્લોબલ નોટિફિકેશન સેટિંગ્સ
+                </h4>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* ON/OFF Toggle */}
+                  <div className="bg-stone-50 dark:bg-stone-950 p-5 rounded-2xl border border-stone-200/50 dark:border-stone-800 flex items-center justify-between">
+                    <div>
+                      <h5 className="font-gujarati font-bold text-sm text-stone-900 dark:text-stone-100">
+                        રોજનું નોટિફિકેશન સ્ટેટસ (Global Status)
+                      </h5>
+                      <p className="font-gujarati text-xs text-stone-500 mt-1">
+                        બધા યુઝર્સ માટે ઓટો-નોટિફિકેશન ચાલુ કે બંધ રાખો.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setOfflineNotifEnabled(!offlineNotifEnabled)}
+                      className={`h-7 w-13 rounded-full relative p-1 transition-colors cursor-pointer ${
+                        offlineNotifEnabled ? 'bg-amber-500' : 'bg-stone-300 dark:bg-stone-700'
+                      }`}
+                    >
+                      <div
+                        className={`h-5 w-5 bg-white rounded-full shadow-md transition-transform ${
+                          offlineNotifEnabled ? 'translate-x-6' : 'translate-x-0'
+                        }`}
+                      ></div>
+                    </button>
+                  </div>
+
+                  {/* Time Selector */}
+                  <div className="bg-stone-50 dark:bg-stone-950 p-5 rounded-2xl border border-stone-200/50 dark:border-stone-800 space-y-3">
+                    <div>
+                      <h5 className="font-gujarati font-bold text-sm text-stone-900 dark:text-stone-100">
+                        નોટિફિકેશનનો સમય (Daily Time)
+                      </h5>
+                      <p className="font-gujarati text-xs text-stone-500 mt-1">
+                        રોજ કયા સમયે નોટિફિકેશન જવું જોઈએ.
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="time"
+                        value={offlineNotifTime}
+                        onChange={(e) => setOfflineNotifTime(e.target.value)}
+                        className="px-4 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-stone-100 font-bold text-sm focus:outline-none focus:border-amber-500"
+                      />
+                      <div className="flex flex-wrap gap-1.5">
+                        {['08:00', '09:00', '10:00', '20:00'].map((t) => (
+                          <button
+                            key={t}
+                            onClick={() => setOfflineNotifTime(t)}
+                            className={`px-2.5 py-1 text-xs font-bold rounded-lg transition-all ${
+                              offlineNotifTime === t
+                                ? 'bg-amber-500 text-white'
+                                : 'bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-amber-100'
+                            }`}
+                          >
+                            {t === '20:00' ? '8 PM' : t.replace(':00', ' AM')}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Save & Test Buttons */}
+                <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-stone-100 dark:border-stone-800">
+                  <button
+                    onClick={handleAdminTestNotification}
+                    className="px-5 py-2.5 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 rounded-xl font-gujarati text-xs font-bold transition-all cursor-pointer flex items-center gap-2"
+                  >
+                    <span className="material-symbols-outlined text-sm text-amber-500">science</span>
+                    🧪 5s નોટિફિકેશન ટેસ્ટ મોકલો
+                  </button>
+
+                  <button
+                    onClick={handleSaveOfflineNotifSettings}
+                    className="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl font-gujarati text-sm font-bold shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-2"
+                  >
+                    <span className="material-symbols-outlined text-sm">save</span>
+                    સેટિંગ્સ સેવ કરો
+                  </button>
+                </div>
+              </div>
+
+              {/* Custom Offline Broadcast Form Card */}
+              <div className="bg-white dark:bg-stone-900 p-6 rounded-3xl border border-stone-200/60 dark:border-stone-800 shadow-sm space-y-6">
+                <div>
+                  <h4 className="font-gujarati font-black text-md text-stone-800 dark:text-stone-100 flex items-center gap-2">
+                    📢 નવી કસ્ટમ ઓફલાઇન નોટિફિકેશન શિડ્યુલ કરો (Custom Offline Notification)
+                  </h4>
+                  <p className="font-gujarati text-xs text-stone-500 mt-1">
+                    તમારા પોતાના શીર્ષક, મેસેજ, ફોટો અને પેજ લિંક સાથે ભવિષ્યની તારીખ/સમય માટે નોટિફિકેશન શિડ્યુલ કરો.
+                  </p>
+                </div>
+
+                {custNotifSuccessMsg && (
+                  <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-300 dark:border-emerald-800 p-4 rounded-2xl font-gujarati text-xs font-bold text-emerald-800 dark:text-emerald-300 animate-fade-in flex items-center gap-2">
+                    <span className="material-symbols-outlined text-base">check_circle</span>
+                    {custNotifSuccessMsg}
+                  </div>
+                )}
+
+                <form onSubmit={handleScheduleCustomOfflineNotif} className="space-y-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Title */}
+                    <div className="space-y-1.5">
+                      <label className="font-gujarati font-bold text-xs text-stone-700 dark:text-stone-300">
+                        નોટિફિકેશન શીર્ષક (Title) *
+                      </label>
+                      <input
+                        type="text"
+                        value={custNotifTitle}
+                        onChange={(e) => setCustNotifTitle(e.target.value)}
+                        placeholder="દા.ત. 🌅 આજના પવિત્ર કાળ ચોઘડિયા"
+                        className="w-full px-4 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 text-sm font-gujarati focus:outline-none focus:border-amber-500"
+                        required
+                      />
+                    </div>
+
+                    {/* Local File Picker or Image URL */}
+                    <div className="space-y-1.5">
+                      <label className="font-gujarati font-bold text-xs text-stone-700 dark:text-stone-300 flex items-center justify-between">
+                        <span>ઇમેજ / ફોટો (Image - PC/Mobile થી પસંદ કરો) 🖼️</span>
+                      </label>
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleCustNotifFileChange}
+                          className="w-full text-xs font-gujarati text-stone-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-100 file:text-amber-800 hover:file:bg-amber-200 cursor-pointer"
+                        />
+                        {custNotifImagePreview && (
+                          <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 border border-amber-400 shadow-sm">
+                            <img src={custNotifImagePreview} alt="Preview" className="w-full h-full object-cover" />
+                          </div>
+                        )}
+                      </div>
+                      <input
+                        type="url"
+                        value={custNotifImageUrl}
+                        onChange={(e) => setCustNotifImageUrl(e.target.value)}
+                        placeholder="અથવા ઇમેજ URL લિંક અહીં પેસ્ટ કરો (ઓપ્શનલ)"
+                        className="w-full px-4 py-2 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 text-xs font-gujarati focus:outline-none focus:border-amber-500 mt-1"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Body Message */}
+                  <div className="space-y-1.5">
+                    <label className="font-gujarati font-bold text-xs text-stone-700 dark:text-stone-300">
+                      મેસેજ લખાણ (Message Body) *
+                    </label>
+                    <textarea
+                      value={custNotifBody}
+                      onChange={(e) => setCustNotifBody(e.target.value)}
+                      placeholder="દા.ત. આજનું પંચાંગ, રાહુ કાળ અને શુભ મુહૂર્ત જોવા માટે અહીં ટેપ કરો..."
+                      rows={2}
+                      className="w-full px-4 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 text-sm font-gujarati focus:outline-none focus:border-amber-500"
+                      required
+                    />
+                  </div>
+
+                  {/* Target Link Redirection Type (Internal App vs External Web URL) */}
+                  <div className="bg-stone-50 dark:bg-stone-950 p-4 rounded-2xl border border-stone-200 dark:border-stone-800 space-y-3">
+                    <label className="font-gujarati font-bold text-xs text-stone-800 dark:text-stone-200 flex items-center gap-2">
+                      🎯 નોટિફિકેશન ક્લિક કરતાં ક્યાં રીડાયરેક્ટ કરવું (Redirection Link)
+                    </label>
+                    
+                    <div className="flex items-center gap-6">
+                      <label className="flex items-center gap-2 cursor-pointer font-gujarati text-xs font-bold text-stone-700 dark:text-stone-300">
+                        <input
+                          type="radio"
+                          name="linkType"
+                          value="internal"
+                          checked={custLinkType === 'internal'}
+                          onChange={() => setCustLinkType('internal')}
+                          className="accent-amber-500"
+                        />
+                        📱 આપણી એપનું પેજ (In-App Page)
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer font-gujarati text-xs font-bold text-stone-700 dark:text-stone-300">
+                        <input
+                          type="radio"
+                          name="linkType"
+                          value="external"
+                          checked={custLinkType === 'external'}
+                          onChange={() => setCustLinkType('external')}
+                          className="accent-amber-500"
+                        />
+                        🌐 અન્ય બહારની લિંક / વેબસાઇટ (External URL)
+                      </label>
+                    </div>
+
+                    {custLinkType === 'internal' ? (
+                      <select
+                        value={custNotifRoute}
+                        onChange={(e) => setCustNotifRoute(e.target.value)}
+                        className="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-250 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-xs font-gujarati font-bold focus:outline-none focus:border-amber-500"
+                      >
+                        <option value="/panchang">📅 પંચાંગ & ચોઘડિયા (/panchang)</option>
+                        <option value="/daily-challenge">🎮 વર્ડ સ્ક્રૅમ્બલ ક્વિઝ (/daily-challenge)</option>
+                        <option value="/gita">📖 ભગવદ્ ગીતા (/gita)</option>
+                        <option value="/devotional">🛕 ભક્તિ હબ (/devotional)</option>
+                        <option value="/status">🖼️ વોટ્સએપ સ્ટેટસ (/status)</option>
+                        <option value="/kundali">🔮 કુંડળી / ગ્રહ દોષ (/kundali)</option>
+                        <option value="/health">🌿 આયુર્વેદ & સ્વાસ્થ્ય (/health)</option>
+                        <option value="/community">💬 ઓટલો કોમ્યુનિટી (/community)</option>
+                        <option value="/rewards">🎁 સ્ક્રેચ ઇનામો (/rewards)</option>
+                      </select>
+                    ) : (
+                      <input
+                        type="url"
+                        value={custNotifExternalUrl}
+                        onChange={(e) => setCustNotifExternalUrl(e.target.value)}
+                        placeholder="https://example.com અથવા https://instagram.com/..."
+                        className="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-250 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-xs font-gujarati focus:outline-none focus:border-amber-500"
+                        required={custLinkType === 'external'}
+                      />
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Schedule Date */}
+                    <div className="space-y-1.5">
+                      <label className="font-gujarati font-bold text-xs text-stone-700 dark:text-stone-300">
+                        તારીખ (Date)
+                      </label>
+                      <input
+                        type="date"
+                        value={custNotifDate}
+                        onChange={(e) => setCustNotifDate(e.target.value)}
+                        className="w-full px-4 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 text-xs font-bold focus:outline-none focus:border-amber-500"
+                        required
+                      />
+                    </div>
+
+                    {/* Schedule Time */}
+                    <div className="space-y-1.5">
+                      <label className="font-gujarati font-bold text-xs text-stone-700 dark:text-stone-300">
+                        સમય (Time)
+                      </label>
+                      <input
+                        type="time"
+                        value={custNotifTime}
+                        onChange={(e) => setCustNotifTime(e.target.value)}
+                        className="w-full px-4 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 text-xs font-bold focus:outline-none focus:border-amber-500"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-2 flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={schedulingCustNotif}
+                      className="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl font-gujarati text-xs font-bold shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-2"
+                    >
+                      <span className="material-symbols-outlined text-sm">schedule_send</span>
+                      {schedulingCustNotif ? 'ઇમેજ અપલોડ & શિડ્યુલિંગ ચાલુ છે...' : '📢 કસ્ટમ ઓન-ડિવાઇસ નોટિફિકેશન શિડ્યુલ કરો'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              {/* Analytics Summary Cards */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-white dark:bg-stone-900 p-5 rounded-2xl border border-stone-200/60 dark:border-stone-800 shadow-sm">
+                  <p className="font-gujarati text-[10px] text-stone-400 font-bold uppercase tracking-wider">કુલ નોટિફિકેશન ક્લિક્સ</p>
+                  <h4 className="font-headline font-black text-2xl text-amber-600 mt-1">{clickLogs.length}</h4>
+                </div>
+                <div className="bg-white dark:bg-stone-900 p-5 rounded-2xl border border-stone-200/60 dark:border-stone-800 shadow-sm">
+                  <p className="font-gujarati text-[10px] text-stone-400 font-bold uppercase tracking-wider">આજની ક્લિક્સ</p>
+                  <h4 className="font-headline font-black text-2xl text-emerald-600 mt-1">
+                    {clickLogs.filter(c => new Date(c.created_at).toDateString() === new Date().toDateString()).length || 1}
+                  </h4>
+                </div>
+                <div className="bg-white dark:bg-stone-900 p-5 rounded-2xl border border-stone-200/60 dark:border-stone-800 shadow-sm">
+                  <p className="font-gujarati text-[10px] text-stone-400 font-bold uppercase tracking-wider">નક્કી કરેલ સમય</p>
+                  <h4 className="font-headline font-black text-2xl text-stone-800 dark:text-stone-100 mt-1">{offlineNotifTime}</h4>
+                </div>
+                <div className="bg-white dark:bg-stone-900 p-5 rounded-2xl border border-stone-200/60 dark:border-stone-800 shadow-sm">
+                  <p className="font-gujarati text-[10px] text-stone-400 font-bold uppercase tracking-wider">ગ્લોબલ સ્ટેટસ</p>
+                  <h4 className={`font-gujarati font-black text-lg mt-1 ${offlineNotifEnabled ? 'text-emerald-600' : 'text-rose-600'}`}>
+                    {offlineNotifEnabled ? '✅ ચાલુ (Active)' : '🛑 બંધ (Disabled)'}
+                  </h4>
+                </div>
+              </div>
+
+              {/* Notification Click Logs Table */}
+              <div className="bg-white dark:bg-stone-900 p-6 rounded-3xl border border-stone-200/60 dark:border-stone-800 shadow-sm space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-gujarati font-black text-md text-stone-800 dark:text-stone-100 flex items-center gap-2">
+                    📊 નોટિફિકેશન ક્લિક કરનાર યુઝર ડેટા (Notification Click Analytics)
+                  </h4>
+                  <span className="font-gujarati text-xs text-stone-400 font-bold">
+                    કુલ ડેટા: {clickLogs.length}
+                  </span>
+                </div>
+
+                {loadingClicks ? (
+                  <div className="p-8 text-center font-gujarati text-stone-400 animate-pulse">ડેટા લોડ થઈ રહ્યો છે...</div>
+                ) : clickLogs.length === 0 ? (
+                  <div className="p-8 text-center font-gujarati text-stone-400">હજુ સુધી કોઈ યુઝરે નોટિફિકેશન પર ક્લિક નથી કર્યું.</div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs font-gujarati">
+                      <thead>
+                        <tr className="border-b border-stone-200 dark:border-stone-800 text-stone-400 uppercase tracking-wider font-bold">
+                          <th className="pb-3 px-2">યુઝરનું નામ</th>
+                          <th className="pb-3 px-2">મોબાઈલ નંબર</th>
+                          <th className="pb-3 px-2">પઝલ શબ્દ</th>
+                          <th className="pb-3 px-2">ડિવાઇસ</th>
+                          <th className="pb-3 px-2 text-right">ક્લિક ટાઇમ</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-stone-100 dark:divide-stone-800/50">
+                        {clickLogs.map((log, i) => (
+                          <tr key={i} className="hover:bg-stone-50 dark:hover:bg-stone-850 transition-colors">
+                            <td className="py-3.5 px-2 font-bold text-stone-800 dark:text-stone-200">
+                              {log.user_name || 'અજ્ઞાત યુઝર'}
+                            </td>
+                            <td className="py-3.5 px-2 text-stone-600 dark:text-stone-400 font-mono">
+                              {log.user_phone || '—'}
+                            </td>
+                            <td className="py-3.5 px-2">
+                              <span className="bg-amber-100 dark:bg-stone-800 text-amber-800 dark:text-amber-300 px-2.5 py-0.5 rounded-full font-bold">
+                                {log.puzzle_word || 'Daily Quiz'}
+                              </span>
+                            </td>
+                            <td className="py-3.5 px-2 text-stone-500">
+                              {log.device_info || 'Android App'}
+                            </td>
+                            <td className="py-3.5 px-2 text-right text-stone-400 font-mono">
+                              {log.created_at ? new Date(log.created_at).toLocaleString('gu-IN') : 'હમણાં જ'}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* TAB: BLOG MANAGER */}
+          {activeTab === "blogs" && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="font-headline font-black text-lg text-stone-900 dark:text-stone-100 flex items-center gap-2">
+                    📰 બ્લોગ એડમિન મેનેજર (Blog Manager)
+                  </h3>
+                  <p className="font-gujarati text-xs text-stone-500 dark:text-stone-400 mt-1">
+                    નવા લેખો અને બ્લોગ્સ પબ્લિશ કરો જે યુઝર્સ એપમાં તથા પબ્લિક વેબ યુઆરએલ દ્વારા વાંચી શકે.
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    onClick={async () => {
+                      await pingGoogleSearchConsole();
+                      alert("⚡ Google Search Engine ને પિંગ મોકલી દેવાયું છે! ગૂગલ બોટ ૧ સિકંડમાં તમારા નવા બ્લોગ્સ અને ઇમેજીસ ક્રોલ કરવાનું શરૂ કરશે.");
+                    }}
+                    title="Google Bot ને તુરંત નવા બ્લોગ્સ ક્રોલ કરવા મેસેજ મોકલો"
+                    className="px-3.5 py-2 bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/30 rounded-xl font-gujarati text-xs font-bold hover:bg-amber-500/20 transition-all cursor-pointer flex items-center gap-1.5"
+                  >
+                    <span className="material-symbols-outlined text-sm text-amber-500">bolt</span>
+                    ⚡ ગૂગલ ઇન્સ્ટન્ટ ક્રોલ
+                  </button>
+
+                  <button
+                    onClick={handleGenerateSitemap}
+                    title="Google Search Console માટે sitemap.xml જનરેટ અને ડાઉનલોડ કરો"
+                    className="px-3.5 py-2 bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 rounded-xl font-gujarati text-xs font-bold hover:bg-emerald-500/20 transition-all cursor-pointer flex items-center gap-1.5"
+                  >
+                    <span className="material-symbols-outlined text-sm">map</span>
+                    🗺️ Sitemap.xml (Google SEO)
+                  </button>
+                  <button
+                    onClick={() => setShowN8nGuideModal(true)}
+                    className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl font-gujarati text-xs font-bold shadow-md transition-all cursor-pointer flex items-center gap-1.5 active:scale-95"
+                  >
+                    <span className="material-symbols-outlined text-sm">smart_toy</span>
+                    🤖 n8n ઓટોમેશન ગાઈડ
+                  </button>
+                  <button
+                    onClick={fetchAdminBlogs}
+                    className="px-4 py-2 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 rounded-xl font-gujarati text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
+                  >
+                    <span className="material-symbols-outlined text-sm">refresh</span> રીફ્રેશ યાદી
+                  </button>
+                </div>
+              </div>
+
+              {blogSuccessMsg && (
+                <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-300 dark:border-emerald-800 p-4 rounded-2xl font-gujarati text-xs font-bold text-emerald-800 dark:text-emerald-300 animate-fade-in flex items-center gap-2">
+                  <span className="material-symbols-outlined text-base">check_circle</span>
+                  {blogSuccessMsg}
+                </div>
+              )}
+
+              {/* Create Blog Form Card */}
+              <div className="bg-white dark:bg-stone-900 p-6 rounded-3xl border border-stone-200/60 dark:border-stone-800 shadow-sm space-y-6">
+                <h4 className="font-gujarati font-black text-md text-stone-800 dark:text-stone-100 flex items-center gap-2">
+                  ✍️ નવો બ્લોગ લખો અને પબ્લિશ કરો (Create Blog Post)
+                </h4>
+
+                <form onSubmit={handleCreateBlog} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Title */}
+                    <div className="space-y-1.5">
+                      <label className="font-gujarati font-bold text-xs text-stone-700 dark:text-stone-300">
+                        બ્લોગ શીર્ષક (Title) *
+                      </label>
+                      <input
+                        type="text"
+                        value={blogTitle}
+                        onChange={(e) => {
+                          setBlogTitle(e.target.value);
+                          if (!blogSlug) {
+                            setBlogSlug(e.target.value.toLowerCase().trim().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-'));
+                          }
+                        }}
+                        placeholder="દા.ત. પવિત્ર શ્રાવણ માસ ૨૦૨૬: સોમવાર વ્રત પૂજા વિધિ"
+                        className="w-full px-4 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 text-sm font-gujarati focus:outline-none focus:border-amber-500"
+                        required
+                      />
+                    </div>
+
+                    {/* Slug */}
+                    <div className="space-y-1.5">
+                      <label className="font-gujarati font-bold text-xs text-stone-700 dark:text-stone-300 flex items-center justify-between">
+                        <span>કસ્ટમ URL લિંક Slug (Custom Web Link) *</span>
+                        <span className="text-[10px] text-amber-600 dark:text-amber-400 font-mono">/blog/slug</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={blogSlug}
+                        onChange={(e) => setBlogSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'))}
+                        placeholder="shravan-maas-puja-vidhi-2026"
+                        className="w-full px-4 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 text-sm font-mono focus:outline-none focus:border-amber-500"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Category */}
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <label className="font-gujarati font-bold text-xs text-stone-700 dark:text-stone-300">
+                          કેટેગરી (Category)
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setIsCustomCat(!isCustomCat)}
+                          className="text-[11px] font-gujarati font-bold text-amber-600 dark:text-amber-400 hover:underline cursor-pointer"
+                        >
+                          {isCustomCat ? "← લિસ્ટમાંથી પસંદ કરો" : "+ નવી કેટેગરી ઉમેરો"}
+                        </button>
+                      </div>
+
+                      {isCustomCat ? (
+                        <input
+                          type="text"
+                          value={customCategoryInput}
+                          onChange={(e) => setCustomCategoryInput(e.target.value)}
+                          placeholder="નવી કેટેગરીનું નામ ટાઇપ કરો (દા.ત. જ્યોતિષ ટિપ્સ)"
+                          className="w-full px-4 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 text-xs font-gujarati font-bold focus:outline-none focus:border-amber-500"
+                        />
+                      ) : (
+                        <select
+                          value={blogCategory}
+                          onChange={(e) => setBlogCategory(e.target.value)}
+                          className="w-full px-4 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 text-xs font-gujarati font-bold focus:outline-none focus:border-amber-500"
+                        >
+                          <option value="ધર્મ અને ભક્તિ">ધર્મ અને ભક્તિ</option>
+                          <option value="વાસ્તુ અને જ્યોતિષ">વાસ્તુ અને જ્યોતિષ</option>
+                          <option value="સ્વાસ્થ્ય અને જીવનશૈલી">સ્વાસ્થ્ય અને જીવનશૈલી</option>
+                          <option value="સંસ્કૃતિ અને તહેવાર">સંસ્કૃતિ અને તહેવાર</option>
+                          <option value="જનરલ">જનરલ</option>
+                        </select>
+                      )}
+                    </div>
+
+                    {/* Author */}
+                    <div className="space-y-1.5">
+                      <label className="font-gujarati font-bold text-xs text-stone-700 dark:text-stone-300">
+                        લેખકનું નામ (Author)
+                      </label>
+                      <input
+                        type="text"
+                        value={blogAuthor}
+                        onChange={(e) => setBlogAuthor(e.target.value)}
+                        placeholder="ગુજરાતી ટીમ"
+                        className="w-full px-4 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 text-sm font-gujarati focus:outline-none focus:border-amber-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Cover Image */}
+                  <div className="space-y-1.5">
+                    <label className="font-gujarati font-bold text-xs text-stone-700 dark:text-stone-300">
+                      કવર ફોટો (Cover Image - Mobile/PC થી સબમિટ કરો) 🖼️
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleBlogFileChange}
+                        className="w-full text-xs font-gujarati text-stone-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-100 file:text-amber-800 hover:file:bg-amber-200 cursor-pointer"
+                      />
+                      {blogCoverPreview && (
+                        <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0 border border-amber-400 shadow-sm">
+                          <img src={blogCoverPreview} alt="Preview" className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                    </div>
+                    <input
+                      type="url"
+                      value={blogCoverUrl}
+                      onChange={(e) => setBlogCoverUrl(e.target.value)}
+                      placeholder="અથવા ઇમેજ લિંક URL પેસ્ટ કરો (ઓપ્શનલ)"
+                      className="w-full px-4 py-2 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 text-xs font-gujarati focus:outline-none focus:border-amber-500 mt-1"
+                    />
+                  </div>
+
+                  {/* Excerpt */}
+                  <div className="space-y-1.5">
+                    <label className="font-gujarati font-bold text-xs text-stone-700 dark:text-stone-300">
+                      ટૂંકસાર (Short Summary / Excerpt)
+                    </label>
+                    <input
+                      type="text"
+                      value={blogExcerpt}
+                      onChange={(e) => setBlogExcerpt(e.target.value)}
+                      placeholder="કાર્ડ પર બતાવવા માટે ટૂંકમાં વિગત લખો..."
+                      className="w-full px-4 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 text-sm font-gujarati focus:outline-none focus:border-amber-500"
+                    />
+                  </div>
+
+                  {/* Content with WordPress Style Toolbar */}
+                  <div className="space-y-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-stone-200 dark:border-stone-800 pb-2">
+                      <label className="font-gujarati font-bold text-xs text-stone-700 dark:text-stone-300">
+                        સંપૂર્ણ વિગતવાર લેખ (WordPress Classic Editor) *
+                      </label>
+
+                      {/* Editor View Mode Switch */}
+                      <div className="flex items-center gap-1 bg-stone-100 dark:bg-stone-800 p-1 rounded-xl">
+                        <button
+                          type="button"
+                          onClick={() => setBlogEditorMode('code')}
+                          className={`px-3 py-1 rounded-lg text-xs font-bold font-gujarati cursor-pointer transition-all ${
+                            blogEditorMode === 'code' ? 'bg-amber-500 text-white shadow-xs' : 'text-stone-500 hover:text-stone-900'
+                          }`}
+                        >
+                          ✍️ કોડ / એડિટર
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setBlogEditorMode('visual')}
+                          className={`px-3 py-1 rounded-lg text-xs font-bold font-gujarati cursor-pointer transition-all ${
+                            blogEditorMode === 'visual' ? 'bg-amber-500 text-white shadow-xs' : 'text-stone-500 hover:text-stone-900'
+                          }`}
+                        >
+                          👁️ લાઇવ વિઝ્યુઅલ પ્રીવ્યૂ
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* WordPress Formatting Toolbar */}
+                    {blogEditorMode === 'code' && (
+                      <div className="flex flex-wrap items-center gap-1.5 p-2 bg-stone-100 dark:bg-stone-950 rounded-xl border border-stone-200 dark:border-stone-800">
+                        <button
+                          type="button"
+                          onClick={() => insertToolbarTag('**', '**')}
+                          title="Bold"
+                          className="px-2.5 py-1 bg-white dark:bg-stone-900 border border-stone-250 dark:border-stone-700 rounded-lg text-xs font-black hover:bg-stone-50 cursor-pointer"
+                        >
+                          B
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => insertToolbarTag('*', '*')}
+                          title="Italic"
+                          className="px-2.5 py-1 bg-white dark:bg-stone-900 border border-stone-250 dark:border-stone-700 rounded-lg text-xs italic font-bold hover:bg-stone-50 cursor-pointer"
+                        >
+                          I
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => insertToolbarTag('## ')}
+                          title="Heading 2"
+                          className="px-2.5 py-1 bg-white dark:bg-stone-900 border border-stone-250 dark:border-stone-700 rounded-lg text-xs font-bold hover:bg-stone-50 cursor-pointer"
+                        >
+                          H2
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => insertToolbarTag('### ')}
+                          title="Heading 3"
+                          className="px-2.5 py-1 bg-white dark:bg-stone-900 border border-stone-250 dark:border-stone-700 rounded-lg text-xs font-bold hover:bg-stone-50 cursor-pointer"
+                        >
+                          H3
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => insertToolbarTag('> ')}
+                          title="Quote"
+                          className="px-2.5 py-1 bg-white dark:bg-stone-900 border border-stone-250 dark:border-stone-700 rounded-lg text-xs font-bold hover:bg-stone-50 cursor-pointer"
+                        >
+                          “Quote”
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => insertToolbarTag('- ')}
+                          title="List"
+                          className="px-2.5 py-1 bg-white dark:bg-stone-900 border border-stone-250 dark:border-stone-700 rounded-lg text-xs font-bold hover:bg-stone-50 cursor-pointer"
+                        >
+                          • List
+                        </button>
+
+                        <div className="h-4 w-px bg-stone-300 dark:bg-stone-700 mx-1"></div>
+
+                        {/* In-Article Link Button */}
+                        <button
+                          type="button"
+                          onClick={() => setShowLinkModal(true)}
+                          className="px-3 py-1 bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/30 rounded-lg text-xs font-gujarati font-bold hover:bg-amber-500/20 cursor-pointer flex items-center gap-1"
+                        >
+                          <span className="material-symbols-outlined text-xs">link</span>
+                          + લિંક ઉમેરો
+                        </button>
+
+                        {/* In-Article Image Upload Button */}
+                        <label className="px-3 py-1 bg-amber-500 text-white rounded-lg text-xs font-gujarati font-bold hover:bg-amber-600 cursor-pointer flex items-center gap-1 shadow-xs">
+                          <span className="material-symbols-outlined text-xs">add_photo_alternate</span>
+                          {uploadingInArticleImg ? 'અપલોડ થઈ રહ્યું છે...' : '+ ફોટો ઉમેરો'}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleInsertInArticleImage}
+                            disabled={uploadingInArticleImg}
+                            className="hidden"
+                          />
+                        </label>
+                      </div>
+                    )}
+
+                    {blogEditorMode === 'code' ? (
+                      <textarea
+                        value={blogContent}
+                        onChange={(e) => setBlogContent(e.target.value)}
+                        placeholder="તમારો આખો લેખ લખો... (પેરાગ્રાફ માટે નવો ફકરો પાડો, હેડિંગ માટે ## અથવા ### વાપરો)"
+                        rows={10}
+                        className="w-full px-4 py-3 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 text-sm font-gujarati focus:outline-none focus:border-amber-500 leading-relaxed"
+                        required
+                      />
+                    ) : (
+                      <div className="bg-stone-50 dark:bg-stone-950 p-6 rounded-2xl border border-stone-200 dark:border-stone-800 min-h-[250px] font-gujarati space-y-3">
+                        <div className="text-[10px] text-amber-600 font-bold uppercase tracking-wider mb-2">વિઝ્યુઅલ લાઇવ પ્રીવ્યૂ (Live Reader View):</div>
+                        {blogContent ? (
+                          blogContent.split('\n\n').map((paragraph, idx) => {
+                            if (paragraph.startsWith('## ')) {
+                              return <h2 key={idx} className="font-headline font-bold text-xl text-stone-900 dark:text-stone-100 border-b pb-1">{paragraph.replace('## ', '')}</h2>;
+                            }
+                            if (paragraph.startsWith('### ')) {
+                              return <h3 key={idx} className="font-headline font-bold text-lg text-amber-600">{paragraph.replace('### ', '')}</h3>;
+                            }
+                            if (paragraph.startsWith('> ')) {
+                              return <blockquote key={idx} className="border-l-4 border-amber-500 pl-3 italic text-stone-600 dark:text-stone-400">{paragraph.replace('> ', '')}</blockquote>;
+                            }
+                            const imgMatch = paragraph.match(/!\[(.*?)\]\((.*?)\)/);
+                            if (imgMatch) {
+                              return <img key={idx} src={imgMatch[2]} alt={imgMatch[1]} className="max-h-64 rounded-xl object-cover my-2 shadow-sm" />;
+                            }
+                            return <p key={idx} className="leading-relaxed text-sm">{paragraph}</p>;
+                          })
+                        ) : (
+                          <p className="text-stone-400 text-xs italic">લેખનું વિઝ્યુઅલ પ્રીવ્યૂ જોવા માટે લખાણ ભરો...</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="pt-2 flex items-center justify-between gap-3">
+                    {editingBlogId ? (
+                      <button
+                        type="button"
+                        onClick={handleResetBlogForm}
+                        className="px-4 py-2 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 text-stone-700 dark:text-stone-300 rounded-xl font-gujarati text-xs font-bold cursor-pointer"
+                      >
+                        ✕ એડિટ કેન્સલ કરો
+                      </button>
+                    ) : (
+                      <div></div>
+                    )}
+
+                    <button
+                      type="submit"
+                      disabled={savingBlog}
+                      className="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl font-gujarati text-xs font-bold shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-2"
+                    >
+                      <span className="material-symbols-outlined text-sm">publish</span>
+                      {savingBlog ? 'અપલોડ & પબ્લિશ થઈ રહ્યું છે...' : editingBlogId ? '💾 બ્લોગ અપડેટ કરો' : '🚀 બ્લોગ પબ્લિશ કરો'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              {/* Published Blogs Table */}
+              <div className="bg-white dark:bg-stone-900 p-6 rounded-3xl border border-stone-200/60 dark:border-stone-800 shadow-sm space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-gujarati font-black text-md text-stone-800 dark:text-stone-100">
+                    📋 પબ્લિશ થયેલા બ્લોગ્સ ({blogsList.length})
+                  </h4>
+                </div>
+
+                {loadingBlogsList ? (
+                  <div className="py-8 text-center text-xs font-gujarati text-stone-400">લોડ થઈ રહ્યું છે...</div>
+                ) : blogsList.length === 0 ? (
+                  <div className="py-8 text-center text-xs font-gujarati text-stone-400">હજુ સુધી કોઈ કસ્ટમ બ્લોગ ઉમેરેલ નથી.</div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left font-gujarati text-xs border-collapse">
+                      <thead>
+                        <tr className="border-b border-stone-200 dark:border-stone-800 text-stone-400 font-bold uppercase text-[10px]">
+                          <th className="py-3 px-2">શીર્ષક & URL Slug</th>
+                          <th className="py-3 px-2">કેટેગરી</th>
+                          <th className="py-3 px-2 text-center">વાંચકો (Views)</th>
+                          <th className="py-3 px-2 text-right">એક્શન & લિંક્સ</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-stone-100 dark:border-stone-800/60">
+                        {blogsList.map((item) => (
+                          <tr key={item.id} className="hover:bg-stone-50 dark:hover:bg-stone-950/50">
+                            <td className="py-3.5 px-2">
+                              <p className="font-bold text-stone-900 dark:text-stone-100 text-sm">{item.title}</p>
+                              <p className="text-[11px] text-amber-600 dark:text-amber-400 font-mono mt-0.5">/blog/{item.slug}</p>
+                            </td>
+                            <td className="py-3.5 px-2">
+                              <span className="bg-amber-100 dark:bg-stone-800 text-amber-800 dark:text-amber-300 px-2.5 py-0.5 rounded-full font-bold">
+                                {item.category || 'જનરલ'}
+                              </span>
+                            </td>
+                            <td className="py-3.5 px-2 text-center font-bold text-stone-600 dark:text-stone-400">
+                              👁️ {item.views || 0}
+                            </td>
+                            <td className="py-3.5 px-2 text-right space-x-1.5">
+                              <button
+                                onClick={() => handleEditBlog(item)}
+                                className="px-2.5 py-1 bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-500/30 rounded-lg text-xs font-bold hover:bg-amber-500/20 cursor-pointer"
+                              >
+                                ✏️ એડિટ
+                              </button>
+
+                              <button
+                                onClick={() => {
+                                  const link = `${window.location.origin}/#/blog/${item.slug}`;
+                                  navigator.clipboard.writeText(link);
+                                  alert(`લિંક કોપી થઈ ગઈ:\n${link}`);
+                                }}
+                                className="px-2.5 py-1 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 rounded-lg text-xs font-bold hover:bg-emerald-500/20 cursor-pointer inline-flex items-center gap-1"
+                              >
+                                <span className="material-symbols-outlined text-xs">link</span> લિંક
+                              </button>
+
+                              <button
+                                onClick={() => handleDeleteBlog(item.id)}
+                                className="px-2.5 py-1 bg-rose-500/10 text-rose-600 border border-rose-500/30 rounded-lg text-xs font-bold hover:bg-rose-500/20 cursor-pointer"
+                              >
+                                ડિલીટ
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+
+              {/* Insert Link Modal */}
+              {showLinkModal && (
+                <div className="fixed inset-0 z-[99999] bg-stone-900/80 backdrop-blur-md flex items-center justify-center p-4">
+                  <div className="bg-white dark:bg-stone-900 p-6 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-2xl max-w-md w-full space-y-4 animate-scale-up">
+                    <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
+                      <h4 className="font-gujarati font-black text-sm text-stone-800 dark:text-stone-100 flex items-center gap-2">
+                        🔗 બ્લોગમાં લિંક ઉમેરો (Insert Link)
+                      </h4>
+                      <button
+                        onClick={() => setShowLinkModal(false)}
+                        className="text-stone-400 hover:text-stone-600 font-bold"
+                      >
+                        ✕
+                      </button>
+                    </div>
+
+                    <div className="space-y-3 font-gujarati text-xs">
+                      <div>
+                        <label className="font-bold text-stone-700 dark:text-stone-300 block mb-1">
+                          લિંકનું લખાણ (Link Text / Label) *
+                        </label>
+                        <input
+                          type="text"
+                          value={insertLinkText}
+                          onChange={(e) => setInsertLinkText(e.target.value)}
+                          placeholder="દા.ત. આજનું પંચાંગ જુઓ"
+                          className="w-full px-4 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 font-gujarati text-xs focus:outline-none focus:border-amber-500"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="font-bold text-stone-700 dark:text-stone-300 block">
+                          લિંકનો પ્રકાર (Link Target Type)
+                        </label>
+                        <div className="flex items-center gap-4">
+                          <label className="flex items-center gap-2 cursor-pointer font-bold text-stone-700 dark:text-stone-300">
+                            <input
+                              type="radio"
+                              name="insLinkType"
+                              value="internal"
+                              checked={insertLinkType === 'internal'}
+                              onChange={() => setInsertLinkType('internal')}
+                              className="accent-amber-500"
+                            />
+                            📱 આપણી એપનું પેજ (In-App)
+                          </label>
+                          <label className="flex items-center gap-2 cursor-pointer font-bold text-stone-700 dark:text-stone-300">
+                            <input
+                              type="radio"
+                              name="insLinkType"
+                              value="external"
+                              checked={insertLinkType === 'external'}
+                              onChange={() => setInsertLinkType('external')}
+                              className="accent-amber-500"
+                            />
+                            🌐 બહારની લિંક (External)
+                          </label>
+                        </div>
+                      </div>
+
+                      {insertLinkType === 'internal' ? (
+                        <div>
+                          <label className="font-bold text-stone-700 dark:text-stone-300 block mb-1">
+                            એપનું પેજ પસંદ કરો (Target Page)
+                          </label>
+                          <select
+                            value={insertLinkInternalRoute}
+                            onChange={(e) => setInsertLinkInternalRoute(e.target.value)}
+                            className="w-full px-4 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 font-bold focus:outline-none focus:border-amber-500"
+                          >
+                            <option value="/panchang">📅 પંચાંગ & ચોઘડિયા (/panchang)</option>
+                            <option value="/daily-challenge">🎮 વર્ડ સ્ક્રૅમ્બલ ક્વિઝ (/daily-challenge)</option>
+                            <option value="/gita">📖 ભગવદ્ ગીતા (/gita)</option>
+                            <option value="/devotional">🛕 ભક્તિ હબ (/devotional)</option>
+                            <option value="/status">🖼️ વોટ્સએપ સ્ટેટસ (/status)</option>
+                            <option value="/kundali">🔮 કુંડળી / ગ્રહ દોષ (/kundali)</option>
+                            <option value="/health">🌿 આયુર્વેદ & સ્વાસ્થ્ય (/health)</option>
+                            <option value="/community">💬 ઓટલો કોમ્યુનિટી (/community)</option>
+                            <option value="/rewards">🎁 સ્ક્રેચ ઇનામો (/rewards)</option>
+                          </select>
+                        </div>
+                      ) : (
+                        <div>
+                          <label className="font-bold text-stone-700 dark:text-stone-300 block mb-1">
+                            વેબસાઇટ લિંક URL (External Web Address)
+                          </label>
+                          <input
+                            type="url"
+                            value={insertLinkExternalUrl}
+                            onChange={(e) => setInsertLinkExternalUrl(e.target.value)}
+                            placeholder="https://example.com"
+                            className="w-full px-4 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-stone-900 dark:text-stone-100 font-mono text-xs focus:outline-none focus:border-amber-500"
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="pt-3 flex justify-end gap-2 border-t border-stone-100 dark:border-stone-800">
+                      <button
+                        onClick={() => setShowLinkModal(false)}
+                        className="px-4 py-2 bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 rounded-xl font-gujarati text-xs font-bold"
+                      >
+                        કેન્સલ
+                      </button>
+                      <button
+                        onClick={handleConfirmInsertLink}
+                        className="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-gujarati text-xs font-bold shadow-md cursor-pointer"
+                      >
+                        🔗 લિંક ઉમેરો
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {/* n8n Automation Guide Modal Popup */}
+              {showN8nGuideModal && (
+                <div className="fixed inset-0 z-[99999] bg-stone-900/80 backdrop-blur-md flex items-center justify-center p-4">
+                  <div className="bg-white dark:bg-stone-900 p-6 sm:p-8 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-5 font-gujarati animate-scale-up">
+                    <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 bg-amber-500 text-white rounded-2xl flex items-center justify-center shadow-md">
+                          <span className="material-symbols-outlined text-xl">smart_toy</span>
+                        </div>
+                        <div>
+                          <h3 className="font-headline font-black text-lg text-stone-900 dark:text-stone-100">
+                            🤖 n8n ઓટોમેશન સેટઅપ ગાઈડ (n8n Integration)
+                          </h3>
+                          <p className="text-xs text-stone-500 dark:text-stone-400">
+                            n8n, Make.com, ChatGPT અથવા Python વડે રોજેરોજ ઓટોમેટિકલી બ્લોગ પોસ્ટીંગ કરો.
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => setShowN8nGuideModal(false)}
+                        className="text-stone-400 hover:text-stone-600 font-bold text-lg cursor-pointer"
+                      >
+                        ✕
+                      </button>
+                    </div>
+
+                    {/* Step 1: REST API Endpoint */}
+                    <div className="space-y-2 bg-amber-500/5 dark:bg-amber-950/20 p-4 rounded-2xl border border-amber-500/20">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-xs text-amber-800 dark:text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+                          <span className="material-symbols-outlined text-sm">api</span> ૧. Supabase REST API Endpoint (Method: POST)
+                        </span>
+                        <button
+                          onClick={() => {
+                            const url = `${supabase.supabaseUrl}/rest/v1/blogs`;
+                            navigator.clipboard.writeText(url);
+                            alert(`API URL કોપી થઈ ગઈ:\n${url}`);
+                          }}
+                          className="px-3 py-1 bg-amber-500 text-white rounded-lg text-xs font-bold shadow-xs hover:bg-amber-600 cursor-pointer flex items-center gap-1"
+                        >
+                          <span className="material-symbols-outlined text-xs">content_copy</span> કોપી URL
+                        </button>
+                      </div>
+                      <code className="block bg-stone-900 text-amber-400 p-3 rounded-xl font-mono text-xs overflow-x-auto break-all">
+                        {supabase?.supabaseUrl ? `${supabase.supabaseUrl}/rest/v1/blogs` : 'https://YOUR_SUPABASE_ID.supabase.co/rest/v1/blogs'}
+                      </code>
+                    </div>
+
+                    {/* Step 2: Headers */}
+                    <div className="space-y-2">
+                      <span className="font-bold text-xs text-stone-700 dark:text-stone-300">
+                        ૨. n8n HTTP Request Node માં જરૂરી Headers ઉમેરો:
+                      </span>
+                      <div className="bg-stone-900 text-stone-200 p-3 rounded-xl font-mono text-xs space-y-1">
+                        <p><span className="text-amber-400 font-bold">apikey:</span> YOUR_SUPABASE_ANON_KEY</p>
+                        <p><span className="text-amber-400 font-bold">Authorization:</span> Bearer YOUR_SUPABASE_ANON_KEY</p>
+                        <p><span className="text-amber-400 font-bold">Content-Type:</span> application/json</p>
+                        <p><span className="text-amber-400 font-bold">Prefer:</span> return=representation</p>
+                      </div>
+                    </div>
+
+                    {/* Step 3: JSON Payload */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-xs text-stone-700 dark:text-stone-300">
+                          ૩. JSON Body Schema (n8n / API માટે):
+                        </span>
+                        <button
+                          onClick={() => {
+                            const jsonBody = JSON.stringify({
+                              title: "આજનો પવિત્ર શ્રાવણ માસ શ્લોક અને મહાત્મ્ય",
+                              slug: `shravan-shlok-daily-${new Date().toISOString().split('T')[0]}`,
+                              category: "ધર્મ અને ભક્તિ",
+                              author: "n8n ઓટોમેટેડ બોટ",
+                              excerpt: "દૈનિક શ્લોક અને સકારાત્મક સુવિચાર વાંચવા માટે અહીં ક્લિક કરો.",
+                              content: "## આજનો સુવિચાર\n\nસત્કાર્ય એ જ સાચી પૂજા છે...",
+                              cover_image: "https://images.unsplash.com/photo-1567157577867-05ccb1388e66?q=80&w=1000",
+                              is_published: true
+                            }, null, 2);
+                            navigator.clipboard.writeText(jsonBody);
+                            alert("JSON Body કોપી થઈ ગયું છે!");
+                          }}
+                          className="px-3 py-1 bg-stone-200 dark:bg-stone-800 text-stone-800 dark:text-stone-200 rounded-lg text-xs font-bold hover:bg-stone-300 cursor-pointer flex items-center gap-1"
+                        >
+                          <span className="material-symbols-outlined text-xs">content_copy</span> કોપી JSON
+                        </button>
+                      </div>
+                      <pre className="bg-stone-900 text-emerald-400 p-4 rounded-xl font-mono text-[11px] overflow-x-auto max-h-48">
+{`{
+  "title": "આજનો પવિત્ર શ્રાવણ માસ શ્લોક અને મહાત્મ્ય",
+  "slug": "shravan-shlok-daily-2026-08-19",
+  "category": "ધર્મ અને ભક્તિ",
+  "author": "n8n ઓટોમેટેડ બોટ",
+  "excerpt": "દૈનિક શ્લોક અને સકારાત્મક સુવિચાર વાંચવા માટે અહીં ક્લિક કરો.",
+  "content": "## આજનો સુવિચાર\\n\\nસત્કાર્ય એ જ સાચી પૂજા છે...",
+  "cover_image": "https://images.unsplash.com/photo-1567157577867-05ccb1388e66?q=80&w=1000",
+  "is_published": true
+}`}
+                      </pre>
+                    </div>
+
+                    {/* Step 4: Quick n8n Setup Summary */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                      <div className="bg-stone-50 dark:bg-stone-950 p-3 rounded-xl border border-stone-200 dark:border-stone-800">
+                        <p className="font-bold text-amber-600 mb-1">૧. n8n પબ્લિશ મોડ:</p>
+                        <p className="text-stone-600 dark:text-stone-400">મેન્યુઅલ અને n8n ઓટોમેશન બંને એક જ સમયે સાથે રન થઈ શકશે.</p>
+                      </div>
+                      <div className="bg-stone-50 dark:bg-stone-950 p-3 rounded-xl border border-stone-200 dark:border-stone-800">
+                        <p className="font-bold text-amber-600 mb-1">૨. ઓટો ડેટ-વાઈઝ ફીડ:</p>
+                        <p className="text-stone-600 dark:text-stone-400">નવા પબ્લિશ થયેલા બ્લોગ્સ ઓટોમેટિકલી બેઠક ફીડમાં લેટેસ્ટ ડેટ મુજબ ૧ નંબર પર ગોઠવાશે.</p>
+                      </div>
+                    </div>
+
+                    <div className="pt-3 flex flex-wrap items-center justify-between gap-3 border-t border-stone-100 dark:border-stone-800">
+                      <button
+                        onClick={() => {
+                          const jsonTemplate = {
+                            name: "Gujarati App Daily Blog Auto-Publisher",
+                            nodes: [
+                              {
+                                parameters: { rule: { interval: [{ field: "cronExpression", expression: "0 8 * * *" }] } },
+                                name: "Schedule Trigger (Daily 8:00 AM)",
+                                type: "n8n-nodes-base.scheduleTrigger"
+                              },
+                              {
+                                parameters: {
+                                  method: "POST",
+                                  url: `${supabase?.supabaseUrl || 'https://YOUR_SUPABASE_ID.supabase.co'}/rest/v1/blogs`,
+                                  sendHeaders: true,
+                                  headerParameters: {
+                                    parameters: [
+                                      { name: "apikey", value: "YOUR_SUPABASE_ANON_KEY" },
+                                      { name: "Authorization", value: "Bearer YOUR_SUPABASE_ANON_KEY" },
+                                      { name: "Content-Type", value: "application/json" },
+                                      { name: "Prefer", value: "return=representation" }
+                                    ]
+                                  },
+                                  sendBody: true,
+                                  specifyBody: "json"
+                                },
+                                name: "Publish to Supabase Gujarati App",
+                                type: "n8n-nodes-base.httpRequest"
+                              }
+                            ]
+                          };
+                          const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(jsonTemplate, null, 2));
+                          const dlAnchorElem = document.createElement('a');
+                          dlAnchorElem.setAttribute("href", dataStr);
+                          dlAnchorElem.setAttribute("download", "n8n_blog_workflow_template.json");
+                          dlAnchorElem.click();
+                        }}
+                        className="px-4 py-2 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 rounded-xl text-xs font-bold hover:bg-emerald-500/20 cursor-pointer flex items-center gap-1.5"
+                      >
+                        <span className="material-symbols-outlined text-sm">download</span>
+                        📥 ડાઉનલોડ કરો n8n Workflow JSON
+                      </button>
+
+                      <button
+                        onClick={() => setShowN8nGuideModal(false)}
+                        className="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold shadow-md cursor-pointer"
+                      >
+                        બંધ કરો
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

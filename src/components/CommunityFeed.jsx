@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
 import { feedDatabase, FEED_CATEGORIES, DESI_REACTIONS } from '../data/feedDatabase';
 
 const CommunityFeed = () => {
+  const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState('all');
   const [reactions, setReactions] = useState({});
   const [hoveredPostId, setHoveredPostId] = useState(null);
+  const [featuredBlogs, setFeaturedBlogs] = useState([]);
   
   // Cache-first: Load instantly from localStorage if available, fallback to feedDatabase
   const [allPosts, setAllPosts] = useState(() => {
@@ -20,6 +24,53 @@ const CommunityFeed = () => {
   });
   
   const [loading, setLoading] = useState(allPosts.length === 0);
+
+  useEffect(() => {
+    const fetchFeaturedBlogs = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('blogs')
+          .select('*')
+          .eq('is_published', true)
+          .order('created_at', { ascending: false })
+          .limit(6);
+
+        if (!error && data && data.length > 0) {
+          setFeaturedBlogs(data);
+        } else {
+          setFeaturedBlogs([
+            {
+              id: 'b1',
+              title: 'પવિત્ર શ્રાવણ માસ ૨૦૨૬: સોમવારના વ્રત અને મહાદેવની પૂજા વિધિ',
+              slug: 'shravan-maas-puja-vidhi-2026',
+              cover_image: 'https://images.unsplash.com/photo-1567157577867-05ccb1388e66?q=80&w=1000&auto=format&fit=crop',
+              category: 'ધર્મ અને ભક્તિ',
+              author: 'ગુજરાતી ટીમ'
+            },
+            {
+              id: 'b2',
+              title: 'ઘરમાં વાસ્તુ દોષ નિવારણ માટેના ૫ સરળ અને અચૂક ઉપાયો',
+              slug: 'vastu-dosha-remedies-home-tips',
+              cover_image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1000&auto=format&fit=crop',
+              category: 'વાસ્તુ અને જ્યોતિષ',
+              author: 'આચાર્ય શાસ્ત્રી'
+            },
+            {
+              id: 'b3',
+              title: 'આયુર્વેદ અનુસાર રોજ સવારે નયણે કોઠે ગરમ પાણી પીવાના ફાયદા',
+              slug: 'ayurveda-warm-water-benefits-morning',
+              cover_image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1000&auto=format&fit=crop',
+              category: 'સ્વાસ્થ્ય અને જીવનશૈલી',
+              author: 'વૈદ્યરાજ પટેલ'
+            }
+          ]);
+        }
+      } catch (e) {
+        console.warn('Featured blogs fetch error:', e);
+      }
+    };
+    fetchFeaturedBlogs();
+  }, []);
 
   // Load saved reactions & custom posts from local storage
   useEffect(() => {
@@ -42,7 +93,7 @@ const CommunityFeed = () => {
         const rawPosts = await getOtloPosts('all');
         const savedReactions = JSON.parse(localStorage.getItem('feed_reactions') || '{}');
         
-        sbPosts = rawPosts.map(p => {
+        sbPosts = rawPosts.map((p, idx) => {
           const counts = { ...(p.reactionCounts || {}) };
           let userReaction = p.userReaction;
           const localReaction = savedReactions[p.id];
@@ -56,6 +107,8 @@ const CommunityFeed = () => {
               counts[localReaction] = (counts[localReaction] || 0) + 1;
             }
           }
+
+          const parsedTime = p.createdAt ? new Date(p.createdAt).getTime() : (Date.now() - idx * 60000);
           
           return {
             id: p.id,
@@ -72,6 +125,7 @@ const CommunityFeed = () => {
             userReaction: userReaction,
             views: p.views || 0,
             isDummy: false,
+            sortTimestamp: parsedTime,
             timestamp: getRelativeTimeString(p.createdAt)
           };
         });
@@ -84,7 +138,10 @@ const CommunityFeed = () => {
 
       const savedPosts = localStorage.getItem('sanskari_feed_posts');
       const deletedDummies = JSON.parse(localStorage.getItem('sanskari_deleted_dummies') || '[]');
-      const activeDummies = feedDatabase.filter(p => !deletedDummies.includes(p.id));
+      const activeDummies = feedDatabase.filter(p => !deletedDummies.includes(p.id)).map((p, idx) => ({
+        ...p,
+        sortTimestamp: Date.now() - (idx + 1) * 3600000 * 12
+      }));
 
       let finalPosts = [...sbPosts];
 
@@ -92,7 +149,11 @@ const CommunityFeed = () => {
         try {
           const customPosts = JSON.parse(savedPosts);
           if (customPosts && customPosts.length > 0) {
-            finalPosts = [...finalPosts, ...customPosts];
+            const formattedCustom = customPosts.map((p, idx) => ({
+              ...p,
+              sortTimestamp: p.createdAt ? new Date(p.createdAt).getTime() : (Date.now() - idx * 300000)
+            }));
+            finalPosts = [...finalPosts, ...formattedCustom];
           }
         } catch (e) {
           console.error("Failed to parse posts", e);
@@ -101,9 +162,68 @@ const CommunityFeed = () => {
       
       finalPosts = [...finalPosts, ...activeDummies];
       
+      // Fetch blogs from Supabase or fallback to interleave into feed stream
+      let rawBlogs = [];
+      try {
+        const { data, error } = await supabase
+          .from('blogs')
+          .select('*')
+          .eq('is_published', true)
+          .order('created_at', { ascending: false });
+
+        if (!error && data && data.length > 0) {
+          rawBlogs = data;
+        }
+      } catch (e) {
+        console.warn("Blogs fetch error for feed stream:", e);
+      }
+
+      if (rawBlogs.length === 0) {
+        rawBlogs = [
+          {
+            id: 'b1',
+            title: 'પવિત્ર શ્રાવણ માસ ૨૦૨૬: સોમવારના વ્રત અને મહાદેવની પૂજા વિધિ',
+            slug: 'shravan-maas-puja-vidhi-2026',
+            excerpt: 'શ્રાવણ માસમાં સોમવારના વ્રતનું વિશેષ મહત્વ રહેલું છે. મહાદેવને પ્રસન્ન કરવા માટે આ વિધિથી પૂજા-અર્ચના કરો.',
+            cover_image: 'https://images.unsplash.com/photo-1567157577867-05ccb1388e66?q=80&w=1000&auto=format&fit=crop',
+            category: 'ધર્મ અને ભક્તિ',
+            author: 'ગુજરાતી સાહિત્ય ટીમ',
+            views: 1240,
+            created_at: new Date(Date.now() - 3600000 * 4).toISOString()
+          },
+          {
+            id: 'b2',
+            title: 'ઘરમાં વાસ્તુ દોષ નિવારણ માટેના ૫ સરળ અને અચૂક ઉપાયો',
+            slug: 'vastu-dosha-remedies-home-tips',
+            excerpt: 'ઘરમાં સુખ, શાંતિ અને સમૃદ્ધિ માટે વાસ્તુશાસ્ત્ર અનુસાર આ ૫ સરળ અને અસરકારક બદલાવ કરો.',
+            cover_image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1000&auto=format&fit=crop',
+            category: 'વાસ્તુ અને જ્યોતિષ',
+            author: 'આચાર્ય શાસ્ત્રી',
+            views: 890,
+            created_at: new Date(Date.now() - 3600000 * 24 * 3).toISOString()
+          }
+        ];
+      }
+
+      const formattedBlogPosts = rawBlogs.map((b, idx) => {
+        const bTime = b.created_at ? new Date(b.created_at).getTime() : (Date.now() - idx * 86400000);
+        return {
+          id: `blog_${b.id || b.slug}`,
+          isBlog: true,
+          categoryId: 'blog',
+          sortTimestamp: bTime,
+          blogData: b,
+          timestamp: b.created_at ? new Date(b.created_at).toLocaleDateString('gu-IN') : 'તાજેતરમાં'
+        };
+      });
+
+      // Combine standard posts and blog posts and sort STRICTLY DATE-WISE (Latest / Recent First)
+      const combinedFeed = [...finalPosts, ...formattedBlogPosts];
+      combinedFeed.sort((a, b) => (b.sortTimestamp || 0) - (a.sortTimestamp || 0));
+
       // Update state and write to cache
-      setAllPosts(finalPosts);
-      localStorage.setItem('sanskari_feed_posts_cache', JSON.stringify(finalPosts));
+      setAllPosts(combinedFeed);
+      localStorage.setItem('sanskari_feed_posts_cache', JSON.stringify(combinedFeed));
       setLoading(false);
     };
 
@@ -306,13 +426,13 @@ const CommunityFeed = () => {
 
   const filteredPosts = activeFilter === 'all' 
     ? allPosts 
-    : allPosts.filter(post => post.categoryId === activeFilter);
+    : allPosts.filter(post => post.categoryId === activeFilter || (post.isBlog && activeFilter === 'blog'));
 
   return (
     <div className="space-y-6 mt-8 pb-10">
       <div className="flex items-center justify-between">
-        <h2 className="font-gujarati font-black text-2xl text-[#2D3748] dark:text-[#F4F4F0]">આજની બેઠક</h2>
-        <span className="text-xs font-bold text-[#0D9488] bg-[#0D9488]/10 px-3 py-1 rounded-full border border-[#0D9488]/30">નવું ફીચર</span>
+        <h2 className="font-gujarati font-black text-2xl text-[#2D3748] dark:text-[#F4F4F0]">આજની ચર્ચાઓ</h2>
+        <span className="text-xs font-bold text-[#0D9488] bg-[#0D9488]/10 px-3 py-1 rounded-full border border-[#0D9488]/30">લાઈવ ફીડ</span>
       </div>
 
       {/* Category Filters */}
@@ -363,6 +483,82 @@ const CommunityFeed = () => {
           )
         ) : (
           filteredPosts.map(post => {
+            if (post.isBlog) {
+              const blog = post.blogData;
+              return (
+                <article 
+                  key={post.id}
+                  className="bg-white dark:bg-[#1E1A18] rounded-3xl overflow-hidden shadow-md border-2 border-amber-500/30 dark:border-amber-500/20 font-gujarati animate-fade-in space-y-3"
+                >
+                  {/* Blog Card Header */}
+                  <div className="p-4 flex items-center justify-between border-b border-stone-100 dark:border-stone-800/80 bg-amber-500/5 dark:bg-amber-950/20">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 bg-amber-500 text-white rounded-2xl flex items-center justify-center shadow-xs">
+                        <span className="material-symbols-outlined text-xl">menu_book</span>
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-gujarati font-black text-[#2D3748] dark:text-[#F4F4F0] text-sm">
+                            {blog.author || 'ગુજરાતી સાહિત્ય ટીમ'}
+                          </h3>
+                          <span className="bg-amber-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">
+                            📰 વિશેષ લેખ
+                          </span>
+                        </div>
+                        <p className="text-xs text-stone-500 font-medium">{post.timestamp}</p>
+                      </div>
+                    </div>
+                    <span className="bg-amber-100 dark:bg-stone-800 text-amber-800 dark:text-amber-300 text-[10px] font-bold px-2.5 py-1 rounded-full">
+                      {blog.category || 'જનરલ'}
+                    </span>
+                  </div>
+
+                  {/* Blog Title & Excerpt */}
+                  <div className="px-5 pt-2 space-y-2.5 cursor-pointer" onClick={() => navigate(`/blog/${blog.slug}`)}>
+                    <h2 className="font-headline font-black text-lg sm:text-xl text-stone-900 dark:text-stone-100 hover:text-amber-600 dark:hover:text-amber-400 transition-colors leading-tight">
+                      {blog.title}
+                    </h2>
+
+                    {blog.excerpt && (
+                      <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed line-clamp-3">
+                        {blog.excerpt}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Blog Cover Image */}
+                  {blog.cover_image && (
+                    <div 
+                      className="w-full max-h-[360px] overflow-hidden cursor-pointer bg-stone-100 dark:bg-stone-900 border-t border-b border-stone-100 dark:border-stone-800"
+                      onClick={() => navigate(`/blog/${blog.slug}`)}
+                    >
+                      <img 
+                        src={blog.cover_image} 
+                        alt={blog.title} 
+                        className="w-full h-full object-cover hover:scale-102 transition-transform duration-300"
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                    </div>
+                  )}
+
+                  {/* Read Article CTA Bar */}
+                  <div className="p-4 bg-stone-50/50 dark:bg-stone-900/50 flex items-center justify-between border-t border-stone-100 dark:border-stone-800">
+                    <span className="text-xs text-stone-500 font-medium flex items-center gap-1">
+                      <span className="material-symbols-outlined text-sm text-amber-500">visibility</span>
+                      {(blog.views || 0) + 12} વાંચકો
+                    </span>
+
+                    <button
+                      onClick={() => navigate(`/blog/${blog.slug}`)}
+                      className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl text-xs font-bold shadow-md cursor-pointer flex items-center gap-1.5 active:scale-95 transition-all"
+                    >
+                      📖 આખો લેખ વાંચો
+                      <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                    </button>
+                  </div>
+                </article>
+              );
+            }
             const category = FEED_CATEGORIES.find(c => c.id === post.categoryId);
             let isPoll = false;
             let pollData = null;

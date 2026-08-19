@@ -6,6 +6,7 @@ import { supabase } from '../supabaseClient';
 import { syncUserProfile } from '../utils/otlo_helper';
 import LeaderboardUnified from './LeaderboardUnified';
 import { PUZZLES } from '../data/dailyPuzzles';
+import { sendTestQuizNotification } from '../utils/quizNotificationScheduler';
 
 export default function DailyChallenge() {
   const [currentPuzzle, setCurrentPuzzle] = useState(null);
@@ -17,6 +18,17 @@ export default function DailyChallenge() {
   const [activeCoupon, setActiveCoupon] = useState(null);
   const [leaderboard, setLeaderboard] = useState([]);
   const [userRank, setUserRank] = useState(null);
+  const [testNotifMsg, setTestNotifMsg] = useState('');
+
+  const handleTestNotification = async () => {
+    setTestNotifMsg('⏳ 5 સેકન્ડમાં ટેસ્ટ નોટિફિકેશન આવશે (આડાઅવળા શબ્દ સાથે)...');
+    const res = await sendTestQuizNotification();
+    if (res.success) {
+      setTimeout(() => setTestNotifMsg(''), 7000);
+    } else {
+      setTestNotifMsg('❌ પરમિશન મંજૂર ન હોવાને કારણે નોટિફિકેશન આવી શક્યું નહીં.');
+    }
+  };
 
   useEffect(() => {
     // Check if played today

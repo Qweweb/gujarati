@@ -1,6 +1,8 @@
 import { uploadToCloudinary } from '../utils/cloudinaryHelper';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './BiodataStyle.css';
+import './JobResume.css';
 
 const GOD_ICONS = [
   {
@@ -193,6 +195,36 @@ const JOB_TEMPLATES = [
   }
 ];
 
+const parseExperience = (text) => {
+  if (!text) return [];
+  return text.split(/\n\s*\n/).map(block => {
+    const lines = block.split('\n').map(l => l.trim()).filter(l => l);
+    if (lines.length === 0) return null;
+    const role = lines[0] || '';
+    const company = lines[1] || '';
+    const duration = lines[2] || '';
+    const points = lines.slice(3).map(pt => pt.replace(/^[\s•\-\*]+/, '')) || [];
+    return { role, company, duration, points };
+  }).filter(x => x !== null);
+};
+
+const parseProjects = (text) => {
+  if (!text) return [];
+  return text.split(/\n\s*\n/).map(block => {
+    const lines = block.split('\n').map(l => l.trim()).filter(l => l);
+    if (lines.length === 0) return null;
+    const title = lines[0] || '';
+    const tech = lines[1] || '';
+    const points = lines.slice(2).map(pt => pt.replace(/^[\s•\-\*]+/, '')) || [];
+    return { title, tech, points };
+  }).filter(x => x !== null);
+};
+
+const parseCommaSkills = (text) => {
+  if (!text) return [];
+  return text.split(',').map(s => s.trim()).filter(s => s);
+};
+
 const BiodataMaker = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('marriage'); // 'marriage' or 'job'
@@ -227,17 +259,26 @@ const BiodataMaker = () => {
 
   // Job Resume Fields
   const [jobData, setJobData] = useState({
-    fullName: '',
-    title: '',
+    name: '',
+    jobTitle: '',
+    location: '',
+    phone: '',
     email: '',
-    mobile: '',
-    address: '',
     linkedin: '',
+    showPhotoPlaceholder: true,
     summary: '',
-    education: '',
-    experience: '',
-    skills: '',
-    languages: ''
+    experienceText: '', // raw textarea string to be parsed
+    projectsText: '', // raw textarea string to be parsed
+    frontendSkills: '', // comma separated list
+    backendSkills: '', // comma separated list
+    degree: '',
+    institute: '',
+    year: '',
+    grade: '',
+    dob: '',
+    gender: '',
+    languages: '',
+    personalLocation: ''
   });
 
   const handleMarriageChange = (field, value) => {
@@ -422,53 +463,7 @@ const BiodataMaker = () => {
         {/* Left Form: Hidden on print, Sticky on large screens */}
         <div className="lg:col-span-5 space-y-6 print:hidden lg:sticky lg:top-24 h-fit">
           
-          {/* Template Selection */}
-          <section className="bg-white dark:bg-dark-surface p-6 rounded-[2.5rem] shadow-sm border border-primary/5 space-y-4">
-            <h3 className="font-gujarati font-black text-lg text-stone-800 flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary">palette</span>
-              થીમ ડિઝાઇન પસંદ કરો
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {(activeTab === 'marriage' ? MARRIAGE_TEMPLATES : JOB_TEMPLATES).map((tmpl) => (
-                <button
-                  key={tmpl.id}
-                  onClick={() => setSelectedTemplate(tmpl.id)}
-                  className={`p-4 rounded-2xl border-2 flex flex-col items-center justify-center transition-all ${selectedTemplate === tmpl.id ? 'border-primary bg-primary/5 text-primary scale-105 shadow-md' : 'border-stone-200 text-stone-600 hover:bg-stone-50'}`}
-                >
-                  <span className="font-gujarati font-black text-xs text-center leading-snug">{tmpl.name}</span>
-                </button>
-              ))}
-            </div>
-          </section>
 
-          {/* Spiritual Symbol Selection - Hidden on Job Tab & Print */}
-          {activeTab === 'marriage' && (
-            <section className="bg-white dark:bg-dark-surface p-6 rounded-[2.5rem] shadow-sm border border-primary/5 space-y-4">
-              <h3 className="font-gujarati font-black text-lg text-stone-800 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">brightness_5</span>
-                ભગવાન / આરાધ્ય દેવ પ્રતીક પસંદ કરો
-              </h3>
-              <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
-                {GOD_ICONS.map((god) => (
-                  <button
-                    key={god.id}
-                    onClick={() => setSelectedGod(god)}
-                    title={god.name}
-                    className={`p-2 rounded-2xl border flex flex-col items-center justify-center transition-all ${selectedGod.id === god.id ? 'bg-primary/10 border-primary scale-110 shadow-sm' : 'border-stone-200 bg-stone-50 hover:bg-stone-100'}`}
-                  >
-                    {god.textIcon ? (
-                      <span className="text-3xl drop-shadow-sm">{god.textIcon}</span>
-                    ) : (
-                      <img src={god.imgUrl} alt={god.name} className="w-10 h-10 object-contain drop-shadow-sm" />
-                    )}
-                  </button>
-                ))}
-              </div>
-              <p className="font-gujarati text-[11px] text-stone-400 font-bold">
-                * નોંધ: પસંદ કરેલા ભગવાન મુજબ બાયોડેટાના ટોચનું પ્રતીક અને નીચેનો મંત્ર આપોઆપ બદલાઈ જશે.
-              </p>
-            </section>
-          )}
 
           {/* Photo Upload Box */}
           <section className="bg-white dark:bg-dark-surface p-6 rounded-[2.5rem] shadow-sm border border-primary/5 space-y-4">
@@ -501,91 +496,173 @@ const BiodataMaker = () => {
             </div>
           </section>
 
-          {/* Form Fields */}
           {activeTab === 'marriage' ? (
             <div className="bg-white dark:bg-dark-surface p-6 sm:p-8 rounded-[2.5rem] shadow-sm border border-primary/5 space-y-6">
               <h3 className="font-gujarati font-black text-xl text-primary border-b border-stone-100 pb-3">{labels.personalHeader}</h3>
               <div className="space-y-4">
-                <Input label="પૂરું નામ (Full Name)" value={marriageData.fullName} onChange={(val) => handleMarriageChange('fullName', val)} placeholder="નામ, પિતાનું નામ, અટક" />
+                <Input label="પૂરું નામ (Full Name)" value={marriageData.name} onChange={(val) => handleMarriageChange('name', val)} placeholder="નામ, પિતાનું નામ, અટક" />
+                <div className="grid grid-cols-2 gap-4">
+                  <Input label="અભ્યાસ ટાઇટલ (Education Title)" value={marriageData.educationTitle} onChange={(val) => handleMarriageChange('educationTitle', val)} placeholder="દા.ત. BE Computer" />
+                  <Input label="વર્તમાન શહેર (Current City)" value={marriageData.city} onChange={(val) => handleMarriageChange('city', val)} placeholder="દા.ત. અમદાવાદ" />
+                </div>
                 <div className="grid grid-cols-2 gap-4">
                   <Input label="જન્મ તારીખ" type="date" value={marriageData.dob} onChange={(val) => handleMarriageChange('dob', val)} />
-                  <Input label="જન્મ સમય" type="time" value={marriageData.birthTime} onChange={(val) => handleMarriageChange('birthTime', val)} />
+                  <Input label="જન્મ સમય" type="time" value={marriageData.time} onChange={(val) => handleMarriageChange('time', val)} />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <Input label="જન્મ સ્થળ" value={marriageData.birthPlace} onChange={(val) => handleMarriageChange('birthPlace', val)} placeholder="દા.ત. સુરત" />
-                  <Input
-                    label="રાશિ (Rashi)"
-                    value={marriageData.rashi}
-                    onChange={(val) => handleMarriageChange('rashi', val)}
-                    placeholder="-- રાશિ સિલેક્ટ કરો --"
-                    options={RASHI_OPTIONS}
-                  />
+                  <Input label="જન્મ સ્થળ" value={marriageData.place} onChange={(val) => handleMarriageChange('place', val)} placeholder="દા.ત. સુરત" />
+                  <Input label="ઉંમર (Age)" value={marriageData.age} onChange={(val) => handleMarriageChange('age', val)} placeholder="દા.ત. ૨૬ વર્ષ" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <Input label="ઊંચાઈ" value={marriageData.height} onChange={(val) => handleMarriageChange('height', val)} placeholder={"દા.ત. 5' 8\""} />
-                  <Input
-                    label="વર્ણ / રંગ (Complexion)"
-                    value={marriageData.complexion}
-                    onChange={(val) => handleMarriageChange('complexion', val)}
-                    placeholder="-- રંગ સિલેક્ટ કરો --"
-                    options={COMPLEXION_OPTIONS}
-                  />
+                  <Input label="ઊંચાઈ (Height)" value={marriageData.height} onChange={(val) => handleMarriageChange('height', val)} placeholder={"દા.ત. 5' 6\""} />
+                  <Input label="વજન (Weight)" value={marriageData.weight} onChange={(val) => handleMarriageChange('weight', val)} placeholder="દા.ત. ૬૫ કિગ્રા" />
                 </div>
-                <Input
-                  label="લોહીનું ગ્રુપ (Blood Group)"
-                  value={marriageData.bloodGroup}
-                  onChange={(val) => handleMarriageChange('bloodGroup', val)}
-                  placeholder="-- બ્લડ ગ્રુપ સિલેક્ટ કરો --"
-                  options={BLOOD_OPTIONS}
-                />
+                <div className="grid grid-cols-2 gap-4">
+                  <Input label="વર્ણ / રંગ (Complexion)" value={marriageData.complexion} onChange={(val) => handleMarriageChange('complexion', val)} placeholder="દા.ત. ગોરો, ઘઉંવર્ણ" />
+                  <Input label="જ્ઞાતિ (Caste)" value={marriageData.caste} onChange={(val) => handleMarriageChange('caste', val)} placeholder="દા.ત. પટેલ, બ્રાહ્મણ" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Input label="ધર્મ (Religion)" value={marriageData.religion} onChange={(val) => handleMarriageChange('religion', val)} placeholder="દા.ત. હિન્દુ" />
+                  <Input label="માતૃભાષા / ભાષાઓ" value={marriageData.languages} onChange={(val) => handleMarriageChange('languages', val)} placeholder="દા.ત. ગુજરાતી, હિન્દી, English" />
+                </div>
+                <Input label="ખોરાક / આહાર (Diet)" value={marriageData.diet} onChange={(val) => handleMarriageChange('diet', val)} placeholder="દા.ત. શાકાહારી (Vegetarian)" />
               </div>
 
               <h3 className="font-gujarati font-black text-xl text-primary border-b border-stone-100 pb-3 pt-4">{labels.careerHeader}</h3>
               <div className="space-y-4">
-                <Input label="શિક્ષણ (Education)" value={marriageData.education} onChange={(val) => handleMarriageChange('education', val)} placeholder="દા.ત. B.Com" />
-                <Input label="વ્યવસાય / નોકરી (Occupation)" value={marriageData.occupation} onChange={(val) => handleMarriageChange('occupation', val)} placeholder="દા.ત. બેંક એકાઉન્ટન્ટ" />
-                <Input label="વાર્ષિક આવક" value={marriageData.income} onChange={(val) => handleMarriageChange('income', val)} placeholder="દા.ત. ૬,૦૦,૦૦૦ પ્રતિ વર્ષ" />
+                <Input label="શિક્ષણ વિગત (Detailed Education)" value={marriageData.education} onChange={(val) => handleMarriageChange('education', val)} placeholder="દા.ત. B.Tech in IT" />
+                <Input label="સ્કૂલ / કોલેજનું નામ" value={marriageData.college} onChange={(val) => handleMarriageChange('college', val)} placeholder="દા.ત. Nirma University" />
+                <Input label="વ્યવસાય / નોકરી (Occupation)" value={marriageData.occupation} onChange={(val) => handleMarriageChange('occupation', val)} placeholder="દા.ત. સિનિયર સોફ્ટવેર એન્જિનિયર" />
+                <div className="grid grid-cols-2 gap-4">
+                  <Input label="કંપની / વ્યવસાય પ્રકાર" value={marriageData.companyType} onChange={(val) => handleMarriageChange('companyType', val)} placeholder="દા.ત. MNC Software Co." />
+                  <Input label="વાર્ષિક આવક (Income)" value={marriageData.income} onChange={(val) => handleMarriageChange('income', val)} placeholder="દા.ત. ૧૨ લાખ પ્રતિ વર્ષ" />
+                </div>
+                <Input label="નોકરીનું લોકેશન (Work Location)" value={marriageData.workLocation} onChange={(val) => handleMarriageChange('workLocation', val)} placeholder="દા.ત. પુણે, મહારાષ્ટ્ર" />
               </div>
 
               <h3 className="font-gujarati font-black text-xl text-primary border-b border-stone-100 pb-3 pt-4">{labels.familyHeader}</h3>
               <div className="space-y-4">
-                <Input label="પિતાનું નામ" value={marriageData.fatherName} onChange={(val) => handleMarriageChange('fatherName', val)} />
-                <Input label="પિતાનો વ્યવસાય" value={marriageData.fatherOcc} onChange={(val) => handleMarriageChange('fatherOcc', val)} />
-                <Input label="માતાનું નામ" value={marriageData.motherName} onChange={(val) => handleMarriageChange('motherName', val)} />
-                <Input label="ભાઈ / બહેન" value={marriageData.siblings} onChange={(val) => handleMarriageChange('siblings', val)} placeholder="દા.ત. ૧ ભાઈ, ૧ બહેન" />
-                <Input label="મોસાળ (મામાનું ગામ)" value={marriageData.maternalUncle} onChange={(val) => handleMarriageChange('maternalUncle', val)} />
-                <Input label="મૂળ વતન" value={marriageData.nativePlace} onChange={(val) => handleMarriageChange('nativePlace', val)} />
+                <div className="grid grid-cols-2 gap-4">
+                  <Input label="પિતાનું નામ" value={marriageData.fatherName} onChange={(val) => handleMarriageChange('fatherName', val)} />
+                  <Input label="પિતાનો વ્યવસાય" value={marriageData.fatherOcc} onChange={(val) => handleMarriageChange('fatherOcc', val)} />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Input label="માતાનું નામ" value={marriageData.motherName} onChange={(val) => handleMarriageChange('motherName', val)} />
+                  <Input label="માતાનો વ્યવસાય" value={marriageData.motherOcc} onChange={(val) => handleMarriageChange('motherOcc', val)} />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Input label="ભાઈની વિગત" value={marriageData.brotherDetails} onChange={(val) => handleMarriageChange('brotherDetails', val)} placeholder="દા.ત. ૧ ભાઈ (અપરણિત)" />
+                  <Input label="બહેનની વિગત" value={marriageData.sisterDetails} onChange={(val) => handleMarriageChange('sisterDetails', val)} placeholder="દા.ત. ૧ બહેન (પરણેલ)" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Input label="કુટુંબનો પ્રકાર" value={marriageData.familyType} onChange={(val) => handleMarriageChange('familyType', val)} placeholder="દા.ત. સંયુક્ત કુટુંબ" />
+                  <Input label="મોસાળ (Maternal)" value={marriageData.mosal} onChange={(val) => handleMarriageChange('mosal', val)} placeholder="દા.ત. મહેસાણા (પટેલ)" />
+                </div>
+                <Input label="મૂળ વતન" value={marriageData.nativePlace} onChange={(val) => handleMarriageChange('nativePlace', val)} placeholder="દા.ત. સિદ્ધપુર, પાટણ" />
               </div>
 
               <h3 className="font-gujarati font-black text-xl text-primary border-b border-stone-100 pb-3 pt-4">{labels.contactHeader}</h3>
               <div className="space-y-4">
-                <Input label="મોબાઈલ નંબર" value={marriageData.mobile} onChange={(val) => handleMarriageChange('mobile', val)} />
-                <Input label="સરનામું" value={marriageData.address} onChange={(val) => handleMarriageChange('address', val)} />
+                <Input label="મોબાઈલ નંબર" value={marriageData.contactPhones} onChange={(val) => handleMarriageChange('contactPhones', val)} placeholder="દા.ત. 98765 43210" />
+                <Input label="ઈમેલ એડ્રેસ" type="email" value={marriageData.email} onChange={(val) => handleMarriageChange('email', val)} placeholder="દા.ત. example@gmail.com" />
+                <Input label="રહેઠાણનું સરનામું" value={marriageData.address} onChange={(val) => handleMarriageChange('address', val)} placeholder="દા.ત. ઘરનું પૂરું સરનામું" />
               </div>
             </div>
           ) : (
             <div className="bg-white dark:bg-dark-surface p-6 sm:p-8 rounded-[2.5rem] shadow-sm border border-primary/5 space-y-6">
-              <h3 className="font-gujarati font-black text-xl text-primary border-b border-stone-100 pb-3">વ્યવસાયિક વિગત (Resume Details)</h3>
+              <h3 className="font-gujarati font-black text-xl text-primary border-b border-stone-100 pb-3">ઉમેદવાર વિગત (Candidate Info)</h3>
               <div className="space-y-4">
-                <Input label="પૂરું નામ (Full Name)" value={jobData.fullName} onChange={(val) => handleJobChange('fullName', val)} />
-                <Input label="પ્રોફેશનલ શીર્ષક (Job Title)" value={jobData.title} onChange={(val) => handleJobChange('title', val)} placeholder="દા.ત. સિનિયર ડેવલપર" />
-                <Input label="પ્રોફેશનલ સમરી (Summary)" value={jobData.summary} onChange={(val) => handleJobChange('summary', val)} placeholder="તમારા કૌશલ્ય વિશે ટૂંકી સમરી..." />
+                <Input label="પૂરું નામ (Full Name)" value={jobData.name} onChange={(val) => handleJobChange('name', val)} placeholder="દા.ત. DHRUVISHA" />
+                <Input label="પ્રોફેશનલ શીર્ષક (Job Title)" value={jobData.jobTitle} onChange={(val) => handleJobChange('jobTitle', val)} placeholder="દા.ત. Software Engineer / Frontend Developer" />
+                <div className="grid grid-cols-2 gap-4">
+                  <Input label="મોબાઈલ નંબર (Phone)" value={jobData.phone} onChange={(val) => handleJobChange('phone', val)} placeholder="દા.ત. +91 98XXX XXXXX" />
+                  <Input label="ઈમેલ (Email)" type="email" value={jobData.email} onChange={(val) => handleJobChange('email', val)} placeholder="દા.ત. email@example.com" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Input label="શહેર / લોકેશન" value={jobData.location} onChange={(val) => handleJobChange('location', val)} placeholder="દા.ત. Jamnagar / Ahmedabad" />
+                  <Input label="LinkedIn URL (Optional)" value={jobData.linkedin} onChange={(val) => handleJobChange('linkedin', val)} placeholder="દા.ત. linkedin.com/in/username" />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="font-gujarati font-bold text-sm text-stone-700 block">જો ફોટો ન હોય તો પ્લેસહોલ્ડર બતાવવું?</label>
+                  <select
+                    value={jobData.showPhotoPlaceholder ? "yes" : "no"}
+                    onChange={(e) => handleJobChange('showPhotoPlaceholder', e.target.value === "yes")}
+                    className="w-full bg-stone-50 border-2 border-stone-200 focus:border-primary focus:bg-white rounded-2xl py-3.5 px-5 font-gujarati outline-none transition-all text-stone-850"
+                  >
+                    <option value="yes">હા, પ્લેસહોલ્ડર બતાવો</option>
+                    <option value="no">ના, ફોટો એરિયા છુપાવો</option>
+                  </select>
+                </div>
               </div>
 
-              <h3 className="font-gujarati font-black text-xl text-primary border-b border-stone-100 pb-3 pt-4">સંપર્ક વિગત</h3>
+              <h3 className="font-gujarati font-black text-xl text-primary border-b border-stone-100 pb-3 pt-4">પ્રોફેશનલ સમરી (Summary)</h3>
               <div className="space-y-4">
-                <Input label="ઈમેલ એડ્રેસ" type="email" value={jobData.email} onChange={(val) => handleJobChange('email', val)} />
-                <Input label="મોબાઈલ નંબર" value={jobData.mobile} onChange={(val) => handleJobChange('mobile', val)} />
-                <Input label="સરનામું" value={jobData.address} onChange={(val) => handleJobChange('address', val)} />
-                <Input label="LinkedIn / વેબસાઇટ" value={jobData.linkedin} onChange={(val) => handleJobChange('linkedin', val)} />
+                <div className="space-y-1.5">
+                  <label className="font-gujarati font-bold text-sm text-stone-700 block">સમરી (Professional Summary)</label>
+                  <textarea
+                    rows={4}
+                    value={jobData.summary}
+                    onChange={(e) => handleJobChange('summary', e.target.value)}
+                    className="w-full bg-stone-50 border-2 border-stone-200 focus:border-primary focus:bg-white rounded-2xl py-3.5 px-5 font-gujarati outline-none transition-all placeholder:text-stone-300 text-stone-800"
+                    placeholder="તમારા કૌશલ્ય અને અનુભવ વિશે ટૂંકી વિગત..."
+                  />
+                </div>
               </div>
 
-              <h3 className="font-gujarati font-black text-xl text-primary border-b border-stone-100 pb-3 pt-4">અનુભવ અને શિક્ષણ</h3>
+              <h3 className="font-gujarati font-black text-xl text-primary border-b border-stone-100 pb-3 pt-4">કામનો અનુભવ (Work Experience)</h3>
               <div className="space-y-4">
-                <Input label="કામનો અનુભવ" value={jobData.experience} onChange={(val) => handleJobChange('experience', val)} placeholder="કંપનીનું નામ, સમય અને રોલ..." />
-                <Input label="શિક્ષણ લાયકાત" value={jobData.education} onChange={(val) => handleJobChange('education', val)} placeholder="ડિગ્રી અને સંસ્થા..." />
-                <Input label="કૌશલ્યો (Skills)" value={jobData.skills} onChange={(val) => handleJobChange('skills', val)} placeholder="દા.ત. JavaScript, accounting..." />
-                <Input label="જાણીતી ભાષાઓ" value={jobData.languages} onChange={(val) => handleJobChange('languages', val)} placeholder="દા.ત. ગુજરાતી, English..." />
+                <div className="space-y-1.5">
+                  <label className="font-gujarati font-bold text-sm text-stone-700 block">અનુભવ બ્લોક્સ (Double Newline થી અલગ કરો)</label>
+                  <textarea
+                    rows={6}
+                    value={jobData.experienceText}
+                    onChange={(e) => handleJobChange('experienceText', e.target.value)}
+                    className="w-full bg-stone-50 border-2 border-stone-200 focus:border-primary focus:bg-white rounded-2xl py-3.5 px-5 font-mono text-sm outline-none transition-all text-stone-850"
+                    placeholder={"ફોર્મેટ બરાબર રાખવું:\nરોલ / હોદ્દો\nકંપનીનું નામ\nકામનો સમયગાળો (દા.ત. 2024 - Present)\n• પ્રથમ પોઈન્ટ\n• બીજો પોઈન્ટ\n\n(અલગ કરવા વચ્ચે એક ખાલી લાઇન છોડો)"}
+                  />
+                </div>
+              </div>
+
+              <h3 className="font-gujarati font-black text-xl text-primary border-b border-stone-100 pb-3 pt-4">પ્રોજેક્ટ્સ (Key Projects)</h3>
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="font-gujarati font-bold text-sm text-stone-700 block">પ્રોજેક્ટ બ્લોક્સ (Double Newline થી અલગ કરો)</label>
+                  <textarea
+                    rows={5}
+                    value={jobData.projectsText}
+                    onChange={(e) => handleJobChange('projectsText', e.target.value)}
+                    className="w-full bg-stone-50 border-2 border-stone-200 focus:border-primary focus:bg-white rounded-2xl py-3.5 px-5 font-mono text-sm outline-none transition-all text-stone-850"
+                    placeholder={"પ્રોજેક્ટ નામ\nટેકનોલોજી લિસ્ટ\n• પ્રોજેક્ટની મુખ્ય વિશેષતા ૧\n• પ્રોજેક્ટની મુખ્ય વિશેષતા ૨\n\n(અલગ કરવા વચ્ચે એક ખાલી લાઇન છોડો)"}
+                  />
+                </div>
+              </div>
+
+              <h3 className="font-gujarati font-black text-xl text-primary border-b border-stone-100 pb-3 pt-4">કૌશલ્યો (Technical Skills)</h3>
+              <div className="space-y-4">
+                <Input label="Frontend & UI Skills (અલ્પવિરામથી અલગ કરો)" value={jobData.frontendSkills} onChange={(val) => handleJobChange('frontendSkills', val)} placeholder="React.js, JavaScript, Tailwind CSS" />
+                <Input label="Backend & Tools (અલ્પવિરામથી અલગ કરો)" value={jobData.backendSkills} onChange={(val) => handleJobChange('backendSkills', val)} placeholder="Node.js, REST APIs, Git, VS Code" />
+              </div>
+
+              <h3 className="font-gujarati font-black text-xl text-primary border-b border-stone-100 pb-3 pt-4">અભ્યાસ (Education)</h3>
+              <div className="space-y-4">
+                <Input label="ડિગ્રીનું નામ (Degree Name)" value={jobData.degree} onChange={(val) => handleJobChange('degree', val)} placeholder="દા.ત. B.Tech in Computer Engineering" />
+                <Input label="કોલેજ / યુનિવર્સિટી (Institute Name)" value={jobData.institute} onChange={(val) => handleJobChange('institute', val)} placeholder="દા.ત. GTU Nadiad" />
+                <div className="grid grid-cols-2 gap-4">
+                  <Input label="વર્ષ (Year)" value={jobData.year} onChange={(val) => handleJobChange('year', val)} placeholder="દા.ત. 2018 - 2022" />
+                  <Input label="ગ્રેડ / પર્સન્ટેજ (Grade/Result)" value={jobData.grade} onChange={(val) => handleJobChange('grade', val)} placeholder="દા.ત. First Class Distinction" />
+                </div>
+              </div>
+
+              <h3 className="font-gujarati font-black text-xl text-primary border-b border-stone-100 pb-3 pt-4">વ્યક્તિગત વિગત (Personal Details)</h3>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <Input label="જન્મ તારીખ (DOB)" value={jobData.dob} onChange={(val) => handleJobChange('dob', val)} placeholder="દા.ત. 15-05-2002" />
+                  <Input label="લિંગ (Gender)" value={jobData.gender} onChange={(val) => handleJobChange('gender', val)} placeholder="દા.ત. Female / Male" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Input label="જાણીતી ભાષાઓ (Languages)" value={jobData.languages} onChange={(val) => handleJobChange('languages', val)} placeholder="દા.ત. English, Gujarati, Hindi" />
+                  <Input label="લોકેશન / વતન" value={jobData.personalLocation} onChange={(val) => handleJobChange('personalLocation', val)} placeholder="દા.ત. Jamnagar, Gujarat" />
+                </div>
               </div>
             </div>
           )}
@@ -612,243 +689,343 @@ const BiodataMaker = () => {
           <div className="w-full flex justify-center pb-4 overflow-hidden">
             <div
               id="printable-biodata-card"
-              className={`w-full max-w-[21cm] min-h-[29.7cm] mx-auto relative overflow-hidden transition-all flex flex-col justify-between ${activeTab === 'marriage' ? 'bg-[#f8f5ef] p-0 font-gujarati text-[#333]' : 'p-8 sm:p-10 bg-white font-sans text-stone-800'}`}
+              className={`w-full max-w-[21cm] min-h-[29.7cm] mx-auto relative overflow-hidden transition-all flex flex-col justify-between ${activeTab === 'marriage' ? 'p-0 font-gujarati text-[#2b2016]' : 'p-0 bg-white font-sans text-stone-850'}`}
             >
-            {activeTab === 'marriage' ? (
-                <div className="w-full bg-white shadow-[0_0_20px_rgba(0,0,0,0.08)] h-full min-h-[29.7cm]">
-                    <div className="text-center text-white p-4 md:p-[30px]" style={{ background: 'linear-gradient(135deg,#9d7a2f,#d4b15f)' }}>
-                        <h1 className="text-2xl md:text-[34px] mb-2 md:mb-[10px] font-bold">|| {lang === 'gu' ? selectedGod.labelGu : selectedGod.labelEn} ||</h1>
-                        <p className="text-sm md:text-[18px]">❀ {labels.titleMain} ❀</p>
-                    </div>
+              {activeTab === 'marriage' ? (
+                <div className="biodata-wrapper w-full bg-[#fffdfa] text-[#2b2016] h-full min-h-[29.7cm]">
+                  <div className="royal-border">
+                    {/* ઓર્નામેન્ટલ કોર્નર્સ */}
+                    <div className="corner c-top-left"></div>
+                    <div className="corner c-top-right"></div>
+                    <div className="corner c-bottom-left"></div>
+                    <div className="corner c-bottom-right"></div>
 
-                    <div className="text-center p-4 md:p-[25px]">
-                        <img src={photoUrl || "https://via.placeholder.com/170"} className="w-24 h-24 md:w-[170px] md:h-[170px] rounded-full border-4 md:border-[6px] border-[#d4b15f] object-cover mx-auto inline-block bg-stone-100" alt="Profile" />
-                    </div>
+                    <div>
+                      {/* ૧. હેડર */}
+                      <div className="bio-header">
+                        <div className="bio-om">॥ શ્રી ગણેશાય નમઃ ॥</div>
+                        <div className="bio-main-title">|| લગ્ન માટેનો બાયોડેટા ||</div>
+                      </div>
 
-                    <div className="m-3 md:m-[20px] rounded-lg md:rounded-[15px] overflow-hidden border border-[#ececec]">
-                        <div className="bg-[#0B3B36] text-white px-3 py-2 md:px-[20px] md:py-[12px] text-lg md:text-[20px] font-semibold">
-                            {labels.personalHeader}
+                      {/* ૨. ફોટો અને નામ પ્રોફાઇલ */}
+                      <div className="bio-hero">
+                        <div>
+                          <h2 className="bio-name">{marriageData.name || 'નામ દર્શાવવા અહીં લખો'}</h2>
+                          <div className="bio-edu-tag">🎓 {marriageData.educationTitle || 'શિક્ષણ લાયકાત'}</div>
+                          <div className="bio-location-tag">📍 રહેઠાણ: {marriageData.city || 'શહેર / ગામ'}</div>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2">
-                            <div className="p-3 md:p-[15px_20px] border-b md:border-r border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.fullName}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.fullName || '----'}</div></div>
-                            <div className="p-3 md:p-[15px_20px] border-b border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.dob}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.dob || '----'}</div></div>
-                            <div className="p-3 md:p-[15px_20px] border-b md:border-r border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.birthTime}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.birthTime || '----'}</div></div>
-                            <div className="p-3 md:p-[15px_20px] border-b border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.birthPlace}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.birthPlace || '----'}</div></div>
-                            <div className="p-3 md:p-[15px_20px] border-b md:border-r border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.rashi}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.rashi || '----'}</div></div>
-                            <div className="p-3 md:p-[15px_20px] border-b border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.height}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.height || '----'}</div></div>
-                            <div className="p-3 md:p-[15px_20px] border-b md:border-r border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.complexion}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.complexion || '----'}</div></div>
-                            <div className="p-3 md:p-[15px_20px] border-b border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.bloodGroup}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.bloodGroup || '----'}</div></div>
-                        </div>
-                    </div>
-
-                    <div className="m-3 md:m-[20px] rounded-lg md:rounded-[15px] overflow-hidden border border-[#ececec]">
-                        <div className="bg-[#0B3B36] text-white px-3 py-2 md:px-[20px] md:py-[12px] text-lg md:text-[20px] font-semibold">
-                            {labels.careerHeader}
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2">
-                            <div className="col-span-1 md:col-span-2 p-3 md:p-[15px_20px] border-b border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.education}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.education || '----'}</div></div>
-                            <div className="p-3 md:p-[15px_20px] border-b md:border-r border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.occupation}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.occupation || '----'}</div></div>
-                            <div className="p-3 md:p-[15px_20px] border-b border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.income}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.income || '----'}</div></div>
-                        </div>
-                    </div>
-
-                    <div className="m-3 md:m-[20px] rounded-lg md:rounded-[15px] overflow-hidden border border-[#ececec]">
-                        <div className="bg-[#0B3B36] text-white px-3 py-2 md:px-[20px] md:py-[12px] text-lg md:text-[20px] font-semibold">
-                            {labels.familyHeader}
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2">
-                            <div className="p-3 md:p-[15px_20px] border-b md:border-r border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.fatherName}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.fatherName || '----'}</div></div>
-                            <div className="p-3 md:p-[15px_20px] border-b border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.fatherOcc}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.fatherOcc || '----'}</div></div>
-                            <div className="p-3 md:p-[15px_20px] border-b md:border-r border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.motherName}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.motherName || '----'}</div></div>
-                            <div className="p-3 md:p-[15px_20px] border-b border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.siblings}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.siblings || '----'}</div></div>
-                            <div className="p-3 md:p-[15px_20px] border-b md:border-r border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.maternalUncle}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.maternalUncle || '----'}</div></div>
-                            <div className="p-3 md:p-[15px_20px] border-b border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.nativePlace}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.nativePlace || '----'}</div></div>
-                        </div>
-                    </div>
-
-                    <div className="m-3 md:m-[20px] rounded-lg md:rounded-[15px] overflow-hidden border border-[#ececec]">
-                        <div className="bg-[#0B3B36] text-white px-3 py-2 md:px-[20px] md:py-[12px] text-lg md:text-[20px] font-semibold">
-                            {labels.contactHeader}
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2">
-                            <div className="p-3 md:p-[15px_20px] border-b md:border-r border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.mobile}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.mobile || '----'}</div></div>
-                            <div className="p-3 md:p-[15px_20px] border-b border-[#eee]"><div className="text-[#888] text-xs md:text-[14px] mb-1 md:mb-[5px]">{labels.address}</div><div className="text-sm md:text-[17px] font-semibold text-[#222]">{marriageData.address || '----'}</div></div>
-                        </div>
-                    </div>
-                </div>
-              ) : (
-                // JOB BIODATA PREVIEW (Resume) Two-Column Grid
-                <div className="flex flex-col md:flex-row w-full h-full min-h-[29.7cm] shadow-[0_10px_40px_rgba(0,0,0,0.08)] bg-white font-[Poppins,sans-serif]">
-                  
-                  {/* Left Sidebar 32% */}
-                  <div className="w-full md:w-[32%] bg-[#0B3B36] text-white p-8 md:p-[35px_25px] flex flex-col min-w-0">
-                    
-                    {/* Profile */}
-                    <div className="text-center mb-[30px]">
-                      {photoUrl ? (
-                        <img src={photoUrl} className="w-24 h-24 md:w-[140px] md:h-[140px] max-w-full rounded-full object-cover border-[5px] border-white/20 mx-auto" alt="Profile" />
-                      ) : (
-                        <div className="w-24 h-24 md:w-[140px] md:h-[140px] max-w-full rounded-full border-[5px] border-white/20 mx-auto bg-white/10 flex items-center justify-center">
-                          <span className="material-symbols-outlined text-4xl md:text-5xl text-white/50">person</span>
-                        </div>
-                      )}
-                      <div className="text-2xl md:text-[28px] font-bold mt-[15px] leading-[1.2]">{jobData.fullName || 'Rahul Patel'}</div>
-                      <div className="text-xs md:text-[14px] tracking-[1px] mt-[8px] text-[#d4d9dd]">{jobData.title || 'Full Stack Developer'}</div>
-                    </div>
-
-                    {/* Contact Info */}
-                    <div className="mt-[30px]">
-                      <h3 className="text-[15px] uppercase tracking-[2px] mb-[15px] pb-[8px] border-b border-white/25">Contact</h3>
-                      {jobData.mobile && <div className="mb-[12px] text-[14px] leading-[1.6]">📞 {jobData.mobile}</div>}
-                      {jobData.email && <div className="mb-[12px] text-[14px] leading-[1.6] break-words">✉ {jobData.email}</div>}
-                      {jobData.address && <div className="mb-[12px] text-[14px] leading-[1.6]">📍 {jobData.address}</div>}
-                      {jobData.linkedin && <div className="mb-[12px] text-[14px] leading-[1.6] break-words">🌐 {jobData.linkedin}</div>}
-                      {!jobData.mobile && !jobData.email && !jobData.address && !jobData.linkedin && (
-                         <>
-                           <div className="mb-[12px] text-[14px] leading-[1.6]">📞 +91 9876543210</div>
-                           <div className="mb-[12px] text-[14px] leading-[1.6]">✉ rahul@gmail.com</div>
-                           <div className="mb-[12px] text-[14px] leading-[1.6]">📍 Ahmedabad, Gujarat</div>
-                           <div className="mb-[12px] text-[14px] leading-[1.6]">🌐 www.portfolio.com</div>
-                         </>
-                      )}
-                    </div>
-
-                    {/* Skills */}
-                    <div className="mt-[30px]">
-                      <h3 className="text-[15px] uppercase tracking-[2px] mb-[15px] pb-[8px] border-b border-white/25">Skills</h3>
-                      {jobData.skills ? jobData.skills.split('\n').map((skillLine, idx) => {
-                          const match = skillLine.match(/^(.*?)\s*(\d+)\s*%?$/);
-                          if (match) {
-                              const name = match[1].trim();
-                              const percent = Math.min(100, Math.max(0, parseInt(match[2])));
-                              return (
-                                  <div key={idx} className="mb-[15px]">
-                                      <div className="flex justify-between text-[14px] mb-[6px]">
-                                          <span>{name}</span>
-                                          <span>{percent}%</span>
-                                      </div>
-                                      <div className="h-[8px] bg-[#dfe4e8] rounded-[50px] overflow-hidden">
-                                          <div className="h-full bg-[#0B3B36]" style={{ width: `${percent}%` }}></div>
-                                      </div>
-                                  </div>
-                              );
-                          } else if (skillLine.trim()) {
-                              return <div key={idx} className="mb-[10px] text-[14px] leading-[1.6]">• {skillLine}</div>;
-                          }
-                          return null;
-                      }) : (
-                          <>
-                            <div className="mb-[15px]">
-                                <div className="flex justify-between text-[14px] mb-[6px]"><span>React JS</span><span>90%</span></div>
-                                <div className="h-[8px] bg-[#dfe4e8] rounded-[50px] overflow-hidden"><div className="h-full bg-[#0B3B36]" style={{ width: '90%' }}></div></div>
-                            </div>
-                            <div className="mb-[15px]">
-                                <div className="flex justify-between text-[14px] mb-[6px]"><span>Node JS</span><span>85%</span></div>
-                                <div className="h-[8px] bg-[#dfe4e8] rounded-[50px] overflow-hidden"><div className="h-full bg-[#0B3B36]" style={{ width: '85%' }}></div></div>
-                            </div>
-                            <div className="mb-[15px]">
-                                <div className="flex justify-between text-[14px] mb-[6px]"><span>Laravel</span><span>92%</span></div>
-                                <div className="h-[8px] bg-[#dfe4e8] rounded-[50px] overflow-hidden"><div className="h-full bg-[#0B3B36]" style={{ width: '92%' }}></div></div>
-                            </div>
-                          </>
-                      )}
-                    </div>
-
-                    {/* Languages */}
-                    <div className="mt-[30px]">
-                      <h3 className="text-[15px] uppercase tracking-[2px] mb-[15px] pb-[8px] border-b border-white/25">Languages</h3>
-                      <ul className="list-none">
-                        {jobData.languages ? jobData.languages.split('\n').filter(l => l.trim()).map((lang, idx) => (
-                           <li key={idx} className="mb-[10px] text-[14px] leading-[1.6]">{lang}</li>
-                        )) : (
-                           <>
-                              <li className="mb-[10px] text-[14px] leading-[1.6]">Gujarati</li>
-                              <li className="mb-[10px] text-[14px] leading-[1.6]">Hindi</li>
-                              <li className="mb-[10px] text-[14px] leading-[1.6]">English</li>
-                           </>
+                        {photoUrl ? (
+                          <img src={photoUrl} alt="candidate" className="bio-img" />
+                        ) : (
+                          <div className="bio-photo-placeholder">
+                            ફોટો અપલોડ
+                          </div>
                         )}
-                      </ul>
+                      </div>
+
+                      {/* ૩. વ્યક્તિગત વિગતો */}
+                      <div className="bio-section-title">૧. વ્યક્તિગત માહિતી (Personal Details)</div>
+                      <table className="bio-table">
+                        <tbody>
+                          <tr>
+                            <td className="lbl">જન્મ તારીખ:</td>
+                            <td className="val"><b>{marriageData.dob ? marriageData.dob.split('-').reverse().join('-') : '----'}</b></td>
+                            <td className="lbl">જન્મ સમય:</td>
+                            <td className="val">{marriageData.time || '----'}</td>
+                          </tr>
+                          <tr>
+                            <td className="lbl">જન્મ સ્થળ:</td>
+                            <td className="val">{marriageData.place || '----'}</td>
+                            <td className="lbl">ઉંમર (Age):</td>
+                            <td className="val">{marriageData.age || '----'}</td>
+                          </tr>
+                          <tr>
+                            <td className="lbl">ઊંચાઈ (Height):</td>
+                            <td className="val">{marriageData.height || '----'}</td>
+                            <td className="lbl">વજન (Weight):</td>
+                            <td className="val">{marriageData.weight || '----'}</td>
+                          </tr>
+                          <tr>
+                            <td className="lbl">વર્ણ / રંગ:</td>
+                            <td className="val">{marriageData.complexion || '----'}</td>
+                            <td className="lbl">જ્ઞાતિ (Caste):</td>
+                            <td className="val"><b>{marriageData.caste || '----'}</b></td>
+                          </tr>
+                          <tr>
+                            <td className="lbl">ધર્મ (Religion):</td>
+                            <td className="val">{marriageData.religion || '----'}</td>
+                            <td className="lbl">માતૃભાષા:</td>
+                            <td className="val">{marriageData.languages || '----'}</td>
+                          </tr>
+                          <tr>
+                            <td className="lbl">ખોરાક (Diet):</td>
+                            <td className="val" colSpan="3">{marriageData.diet || '----'}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                      {/* ૪. શૈક્ષણિક અને વ્યવસાયિક વિગતો */}
+                      <div className="bio-section-title">૨. શૈક્ષણિક અને વ્યવસાયિક વિગતો (Education & Job)</div>
+                      <table className="bio-table">
+                        <tbody>
+                          <tr>
+                            <td className="lbl">ઉચ્ચ શિક્ષણ:</td>
+                            <td className="val" colSpan="3"><b>{marriageData.education || '----'}</b></td>
+                          </tr>
+                          <tr>
+                            <td className="lbl">સ્કૂલ / કોલેજ:</td>
+                            <td className="val" colSpan="3">{marriageData.college || '----'}</td>
+                          </tr>
+                          <tr>
+                            <td className="lbl">વ્યવસાય / હોદ્દો:</td>
+                            <td className="val val-bold">{marriageData.occupation || '----'}</td>
+                            <td className="lbl">કંપની / બિઝનેસ:</td>
+                            <td className="val">{marriageData.companyType || '----'}</td>
+                          </tr>
+                          <tr>
+                            <td className="lbl">વાર્ષિક આવક:</td>
+                            <td className="val">{marriageData.income || '----'}</td>
+                            <td className="lbl">કાર્ય સ્થળ:</td>
+                            <td className="val">{marriageData.workLocation || '----'}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                      {/* ૫. પારિવારિક માહિતી */}
+                      <div className="bio-section-title">૩. પારિવારિક માહિતી (Family Background)</div>
+                      <table className="bio-table">
+                        <tbody>
+                          <tr>
+                            <td className="lbl-full">પિતાનું નામ:</td>
+                            <td className="val-full"><b>{marriageData.fatherName || '----'}</b> ({marriageData.fatherOcc || '----'})</td>
+                          </tr>
+                          <tr>
+                            <td className="lbl-full">માતાનું નામ:</td>
+                            <td className="val-full"><b>{marriageData.motherName || '----'}</b> ({marriageData.motherOcc || '----'})</td>
+                          </tr>
+                          <tr>
+                            <td className="lbl-full">ભાઈની વિગત:</td>
+                            <td className="val-full">{marriageData.brotherDetails || '----'}</td>
+                          </tr>
+                          <tr>
+                            <td className="lbl-full">બહેનની વિગત:</td>
+                            <td className="val-full">{marriageData.sisterDetails || '----'}</td>
+                          </tr>
+                          <tr>
+                            <td className="lbl-full">કુટુંબનો પ્રકાર:</td>
+                            <td className="val-full">{marriageData.familyType || '----'}</td>
+                          </tr>
+                          <tr>
+                            <td className="lbl-full">મોસાળ (Maternal):</td>
+                            <td className="val-full">{marriageData.mosal || '----'}</td>
+                          </tr>
+                          <tr>
+                            <td className="lbl-full">મૂળ વતન:</td>
+                            <td className="val-full">{marriageData.nativePlace || '----'}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                      {/* ૬. સંપર્ક વિગતો */}
+                      <div className="bio-contact-box">
+                        <div className="bio-contact-title">📞 સંપર્ક અને સરનામું (Contact Information)</div>
+                        <table className="bio-contact-table">
+                          <tbody>
+                            <tr>
+                              <td style={{ width: '24%', fontWeight: 'bold', color: '#78350f' }}>મોબાઈલ નંબર:</td>
+                              <td style={{ width: '76%' }}><b>{marriageData.contactPhones || '----'}</b></td>
+                            </tr>
+                            <tr>
+                              <td style={{ fontWeight: 'bold', color: '#78350f' }}>ઈમેલ એડ્રેસ:</td>
+                              <td>{marriageData.email || '----'}</td>
+                            </tr>
+                            <tr>
+                              <td style={{ fontWeight: 'bold', color: '#78350f', verticalAlign: 'top' }}>રહેઠાણનું સરનામું:</td>
+                              <td>{marriageData.address || '----'}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <div className="footer-note">
+                      આપેલા તમામ ડેટા અને પારિવારિક વિગતો સંપૂર્ણ સત્ય અને પ્રામાણિક છે.
                     </div>
                   </div>
-
-                  {/* Right Content 68% */}
-                  <div className="w-full md:w-[68%] p-8 md:p-[40px] flex flex-col bg-white">
-                    
-                    {/* Summary */}
-                    <div className="mb-[35px]">
-                      <div className="text-[18px] font-bold text-[#0B3B36] mb-[18px] uppercase tracking-[1px] relative after:content-[''] after:w-[50px] after:h-[3px] after:bg-[#0B3B36] after:absolute after:left-0 after:-bottom-[6px]">
-                        Professional Summary
-                      </div>
-                      <div className="text-[#555] leading-[1.8] text-[14px] whitespace-pre-line text-justify">
-                        {jobData.summary || 'Experienced Full Stack Developer with expertise in React, Laravel, Node.js and modern web technologies. Passionate about building scalable applications, optimizing performance and delivering exceptional user experiences.'}
-                      </div>
-                    </div>
-
-                    {/* Experience */}
-                    <div className="mb-[35px]">
-                      <div className="text-[18px] font-bold text-[#0B3B36] mb-[18px] uppercase tracking-[1px] relative after:content-[''] after:w-[50px] after:h-[3px] after:bg-[#0B3B36] after:absolute after:left-0 after:-bottom-[6px]">
-                        Work Experience
-                      </div>
-                      {jobData.experience ? jobData.experience.split(/\n\s*\n/).map((block, idx) => {
-                          const lines = block.split('\n').map(l => l.trim()).filter(l => l);
-                          if (lines.length === 0) return null;
-                          return (
-                              <div key={idx} className="mb-[25px]">
-                                  <h4 className="text-[17px] text-[#222] font-semibold">{lines[0]}</h4>
-                                  {lines[1] && <div className="text-[#0B3B36] font-semibold mt-[3px] text-[15px]">{lines[1]}</div>}
-                                  {lines[2] && <div className="text-[#888] text-[13px] my-[6px]">{lines[2]}</div>}
-                                  {lines.length > 3 && (
-                                      <div className="text-[#555] text-[14px] leading-[1.7] whitespace-pre-line mt-[6px]">
-                                          {lines.slice(3).join('\n')}
-                                      </div>
-                                  )}
-                              </div>
-                          );
-                      }) : (
-                          <>
-                            <div className="mb-[25px]">
-                                <h4 className="text-[17px] text-[#222] font-semibold">Senior Full Stack Developer</h4>
-                                <div className="text-[#0B3B36] font-semibold mt-[3px] text-[15px]">ABC Technologies</div>
-                                <div className="text-[#888] text-[13px] my-[6px]">Jan 2023 - Present</div>
-                                <div className="text-[#555] text-[14px] leading-[1.7]">Led development of enterprise applications, managed development teams and improved system performance by 40%.</div>
-                            </div>
-                            <div className="mb-[25px]">
-                                <h4 className="text-[17px] text-[#222] font-semibold">Web Developer</h4>
-                                <div className="text-[#0B3B36] font-semibold mt-[3px] text-[15px]">XYZ Solutions</div>
-                                <div className="text-[#888] text-[13px] my-[6px]">Jun 2020 - Dec 2022</div>
-                                <div className="text-[#555] text-[14px] leading-[1.7]">Built responsive websites and custom CRM systems using Laravel and React.</div>
-                            </div>
-                          </>
-                      )}
-                    </div>
-
-                    {/* Education */}
-                    <div className="mb-[35px]">
-                      <div className="text-[18px] font-bold text-[#0B3B36] mb-[18px] uppercase tracking-[1px] relative after:content-[''] after:w-[50px] after:h-[3px] after:bg-[#0B3B36] after:absolute after:left-0 after:-bottom-[6px]">
-                        Education
-                      </div>
-                      {jobData.education ? jobData.education.split(/\n\s*\n/).map((block, idx) => {
-                          const lines = block.split('\n').map(l => l.trim()).filter(l => l);
-                          if (lines.length === 0) return null;
-                          return (
-                              <div key={idx} className="mb-[20px]">
-                                  <h4 className="text-[16px] text-[#222] font-semibold">{lines[0]}</h4>
-                                  {lines[1] && <div className="text-[#666] text-[14px] mt-[3px]">{lines[1]}</div>}
-                                  {lines[2] && <div className="text-[#666] text-[14px]">{lines[2]}</div>}
-                                  {lines.length > 3 && (
-                                      <div className="text-[#666] text-[14px] mt-[3px] whitespace-pre-line">
-                                          {lines.slice(3).join('\n')}
-                                      </div>
-                                  )}
-                              </div>
-                          );
-                      }) : (
-                          <div className="mb-[20px]">
-                              <h4 className="text-[16px] text-[#222] font-semibold">B.E Computer Engineering</h4>
-                              <div className="text-[#666] text-[14px] mt-[3px]">Gujarat Technological University</div>
-                              <div className="text-[#666] text-[14px]">2016 - 2020</div>
+                </div>
+              ) : (
+                <div className="job-resume-wrapper w-full bg-white text-[#1e293b] h-full min-h-[29.7cm]">
+                  <div className="resume-container">
+                    <div>
+                      {/* ૧. હેડર (Spacious Contact Badges + Optional Photo) */}
+                      <div className="header-container">
+                        <div className="header-left">
+                          <h1 className="candidate-name">{jobData.name || 'DHRUVISHA'}</h1>
+                          <div className="candidate-title">{jobData.jobTitle || 'Software Engineer / Full-Stack & Frontend Developer'}</div>
+                          
+                          {/* Spaced Contact Badges */}
+                          <div className="contact-row">
+                            <div className="contact-badge">📍 {jobData.location || 'Jamnagar / Ahmedabad'}</div>
+                            <div className="contact-badge">📞 {jobData.phone || '+91 98XXX XXXXX'}</div>
+                            <div className="contact-badge">✉️ {jobData.email || 'dhruvisha.work@email.com'}</div>
+                            {jobData.linkedin && <div className="contact-badge">🔗 {jobData.linkedin}</div>}
                           </div>
-                      )}
+                        </div>
+
+                        {/* Optional Photo Box */}
+                        {photoUrl ? (
+                          <div className="header-photo-box">
+                            <img src={photoUrl} alt={jobData.name} className="profile-photo" />
+                          </div>
+                        ) : jobData.showPhotoPlaceholder ? (
+                          <div className="header-photo-box">
+                            <div className="photo-placeholder">PHOTO<br />(Optional)</div>
+                          </div>
+                        ) : null}
+                      </div>
+
+                      {/* ૨. સમરી */}
+                      <div className="section-block">
+                        <div className="section-title">Professional Summary</div>
+                        <p className="summary-text">
+                          {jobData.summary || 'Dynamic and detail-oriented Software Engineer with 2+ years of experience building modern, responsive, and high-performance web applications. Proficient in React.js, TypeScript/JavaScript, RESTful APIs, and automated UI workflows with a strong focus on clean architecture and scalable code.'}
+                        </p>
+                      </div>
+
+                      {/* ૩. વર્ક એક્સપિરિયન્સ */}
+                      <div className="section-block">
+                        <div className="section-title">Work Experience</div>
+                        {(jobData.experienceText ? parseExperience(jobData.experienceText) : [
+                          {
+                            role: "Software Developer",
+                            company: "Tech Solutions Pvt. Ltd.",
+                            duration: "2024 - Present | Hybrid",
+                            points: [
+                              "Developed responsive React SPAs, cutting page load times by 35% through code-splitting and asset optimization.",
+                              "Engineered reusable UI component libraries using Tailwind CSS and modern state management.",
+                              "Integrated REST APIs and dynamic client-side report generation engines with PDF exports."
+                            ]
+                          },
+                          {
+                            role: "Junior Web Developer",
+                            company: "Innovate Tech Labs",
+                            duration: "2022 - 2024 | Ahmedabad",
+                            points: [
+                              "Built interactive dashboards, dynamic table grids, and client webhook integration pipelines.",
+                              "Ensured cross-browser compatibility, WCAG accessibility, and pixel-perfect mobile responsiveness."
+                            ]
+                          }
+                        ]).map((exp, idx) => (
+                          <div key={idx} className="item-card">
+                            <div className="item-header">
+                              <div>
+                                <span className="item-role">{exp.role}</span> &bull; <span className="item-company">{exp.company}</span>
+                              </div>
+                              <span className="item-date">{exp.duration}</span>
+                            </div>
+                            <ul className="clean-list list-disc pl-5">
+                              {exp.points.map((pt, i) => (
+                                <li key={i}>{pt}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* ૪. પ્રોજેક્ટ્સ */}
+                      <div className="section-block">
+                        <div className="section-title">Key Projects</div>
+                        {(jobData.projectsText ? parseProjects(jobData.projectsText) : [
+                          {
+                            title: "Client Automation & Document Generation SaaS",
+                            tech: "React.js • Node.js • Tailwind CSS • REST API",
+                            points: [
+                              "Developed a self-service client dashboard that dynamically compiles user inputs into styled PDF documents with one-click export."
+                            ]
+                          }
+                        ]).map((proj, idx) => (
+                          <div key={idx} className="item-card">
+                            <div className="item-header">
+                              <span className="item-role">{proj.title}</span>
+                              <span className="proj-tech">{proj.tech}</span>
+                            </div>
+                            <ul className="clean-list list-disc pl-5">
+                              {proj.points.map((pt, i) => (
+                                <li key={i}>{pt}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* ૫. ટેકનિકલ સ્કિલ્સ (Horizontal Flowing Pills) */}
+                      <div className="section-block">
+                        <div className="section-title">Technical Skills</div>
+                        <table className="skills-table">
+                          <tbody>
+                            <tr>
+                              <td className="skill-cat-title">Frontend & UI:</td>
+                              <td>
+                                <div className="skill-pills-wrap">
+                                  {(jobData.frontendSkills ? parseCommaSkills(jobData.frontendSkills) : ["React.js", "JavaScript (ES6+)", "TypeScript", "Tailwind CSS", "HTML5 / CSS3", "Bootstrap"]).map((s, i) => (
+                                    <span key={i} className="skill-badge">{s}</span>
+                                  ))}
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td className="skill-cat-title">Backend & Tools:</td>
+                              <td>
+                                <div className="skill-pills-wrap">
+                                  {(jobData.backendSkills ? parseCommaSkills(jobData.backendSkills) : ["Node.js", "REST APIs", "Git / GitHub", "Postman", "Vite / Webpack"]).map((s, i) => (
+                                    <span key={i} className="skill-badge">{s}</span>
+                                  ))}
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      {/* ૬. એજ્યુકેશન */}
+                      <div className="section-block">
+                        <div className="section-title">Education</div>
+                        <div className="item-card">
+                          <div className="item-header">
+                            <div>
+                              <span className="item-role">{jobData.degree || 'B.Tech in Computer Engineering'}</span> &bull; <span className="item-company">{jobData.institute || 'Gujarat Technological University (GTU)'}</span>
+                            </div>
+                            <span className="item-date">{jobData.year || '2018 - 2022'} | {jobData.grade || 'First Class Distinction'}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* ૭. પર્સનલ ડિટેલ્સ (Horizontal 2x2 Grid) */}
+                      <div className="section-block" style={{ marginBottom: 0 }}>
+                        <div className="section-title">Personal Details</div>
+                        <table className="personal-grid-table">
+                          <tbody>
+                            <tr>
+                              <td className="p-head">Date of Birth:</td>
+                              <td className="p-value">{jobData.dob || '15-05-2002'}</td>
+                              <td className="p-head">Languages:</td>
+                              <td className="p-value">{jobData.languages || 'English, Gujarati, Hindi'}</td>
+                            </tr>
+                            <tr>
+                              <td className="p-head">Gender:</td>
+                              <td className="p-value">{jobData.gender || 'Female'}</td>
+                              <td className="p-head">Location:</td>
+                              <td className="p-value">{jobData.personalLocation || 'Jamnagar / Ahmedabad, Gujarat'}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    {/* ૮. ડિક્લેરેશન ફૂટર */}
+                    <div className="declaration-footer">
+                      <span><b>Declaration:</b> I hereby declare that the information provided above is true to the best of my knowledge.</span>
+                      <span><b>{jobData.name || 'DHRUVISHA'}</b></span>
                     </div>
                   </div>
                 </div>

@@ -56,7 +56,9 @@ const TrafficJamHome = () => {
     if (nextIndex < levelsData.length) {
       handleSelectLevel(levelsData[nextIndex]);
     } else {
-      setCurrentLevel(null); // Back to menu
+      // Loop back to a random level to keep the fun going endlessly
+      const randomIndex = Math.floor(Math.random() * levelsData.length);
+      handleSelectLevel(levelsData[randomIndex]);
     }
   };
 

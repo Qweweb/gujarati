@@ -930,7 +930,7 @@ export default function MantraJaapAnushthan() {
   const currentTier = getCertificateTier(mantraTarget);
 
   return (
-    <div className="min-h-screen bg-[#0F172A] text-slate-100 flex flex-col font-sans pb-24 relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#FAF9F5] text-stone-900 flex flex-col font-sans pb-24 relative overflow-x-hidden">
       
       {/* Confetti Cannon on Completion */}
       {showConfetti && (
@@ -943,7 +943,7 @@ export default function MantraJaapAnushthan() {
       )}
 
       {/* --- TOP NAVBAR --- */}
-      <div className="sticky top-0 z-40 bg-[#1E293B]/90 backdrop-blur-md border-b border-slate-700/60 px-4 py-3.5 flex items-center justify-between shadow-lg">
+      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-amber-200/90 px-4 py-3.5 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
           <button 
             onClick={() => {
@@ -956,15 +956,15 @@ export default function MantraJaapAnushthan() {
               }
               else setScreen('deity');
             }}
-            className="h-10 w-10 bg-slate-800 hover:bg-slate-700 active:scale-95 border border-slate-600 rounded-2xl flex items-center justify-center text-slate-200 transition-all"
+            className="h-10 w-10 bg-amber-50 hover:bg-amber-100 active:scale-95 border border-amber-200 rounded-2xl flex items-center justify-center text-amber-900 transition-all cursor-pointer"
           >
             <span className="material-symbols-outlined text-xl">arrow_back</span>
           </button>
           <div>
-            <h1 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-xl text-amber-400 flex items-center gap-2">
+            <h1 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-xl text-amber-900 flex items-center gap-2">
               <span>🕉️</span> મંત્ર જાપ અનુષ્ઠાન
             </h1>
-            <p className="font-gujarati text-[11px] text-slate-400">ઓનલાઇન સાધના અને પ્રમાણપત્ર</p>
+            <p className="font-gujarati text-[11px] text-stone-600 font-bold">ઓનલાઇન સાધના અને પ્રમાણપત્ર</p>
           </div>
         </div>
 
@@ -973,9 +973,9 @@ export default function MantraJaapAnushthan() {
             const el = document.getElementById('sadhana-leaderboard-section');
             if (el) el.scrollIntoView({ behavior: 'smooth' });
           }}
-          className="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 px-3.5 py-1.5 rounded-xl font-gujarati font-bold text-xs flex items-center gap-1.5 transition-all"
+          className="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 px-3.5 py-1.5 rounded-xl font-gujarati font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
         >
-          <span className="material-symbols-outlined text-sm">trophy</span>
+          <span className="material-symbols-outlined text-sm text-amber-700">trophy</span>
           સાધના લીડરબોર્ડ
         </button>
       </div>
@@ -986,13 +986,13 @@ export default function MantraJaapAnushthan() {
         {/* --- SCREEN 1: DEITY SELECTION --- */}
         {screen === 'deity' && (
           <div className="space-y-6 animate-fade-in">
-            <div className="bg-gradient-to-r from-amber-950/40 via-amber-900/20 to-slate-900 border border-amber-500/30 rounded-3xl p-5 text-center space-y-2 relative overflow-hidden">
+            <div className="bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-amber-500/15 border border-amber-300/80 rounded-3xl p-5 text-center space-y-2 relative overflow-hidden shadow-sm">
               <div className="absolute top-0 right-0 transform translate-x-4 -translate-y-4 w-24 h-24 bg-amber-500/10 rounded-full blur-xl pointer-events-none"></div>
-              <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3.5 py-1 rounded-full font-gujarati text-[11px] font-black uppercase tracking-wider inline-block">
+              <span className="bg-amber-500/20 text-amber-900 border border-amber-400/40 px-3.5 py-1 rounded-full font-gujarati text-[11px] font-black uppercase tracking-wider inline-block">
                 ૧. પ્રારંભ
               </span>
-              <h2 className="font-gujarati font-black text-2xl text-amber-300">આપના ઇષ્ટદેવ / દેવી પસંદ કરો</h2>
-              <p className="font-gujarati text-slate-300 text-xs leading-relaxed max-w-sm mx-auto">
+              <h2 className="font-gujarati font-black text-2xl text-amber-950">આપના ઇષ્ટદેવ / દેવી પસંદ કરો</h2>
+              <p className="font-gujarati text-stone-700 text-xs leading-relaxed max-w-sm mx-auto font-medium">
                 શ્રદ્ધાપૂર્વક મંત્ર જાપ અનુષ્ઠાન શરૂ કરવા માટે પવિત્ર નામ પર ક્લિક કરો
               </p>
             </div>
@@ -1002,12 +1002,12 @@ export default function MantraJaapAnushthan() {
                 <button
                   key={deity.id}
                   onClick={() => { setSelectedDeity(deity); setScreen('mantra'); }}
-                  className="bg-slate-800/80 hover:bg-slate-800 border border-slate-700 hover:border-amber-500/60 rounded-3xl p-4 text-center flex flex-col items-center gap-3 transition-all duration-300 group hover:scale-[1.03] active:scale-95 shadow-md cursor-pointer"
+                  className="bg-white hover:bg-amber-50/70 border border-amber-200/90 hover:border-amber-400 rounded-3xl p-4 text-center flex flex-col items-center gap-3 transition-all duration-300 group hover:scale-[1.03] active:scale-95 shadow-sm hover:shadow-md cursor-pointer"
                 >
-                  <div className="h-16 w-16 rounded-full overflow-hidden shadow-lg border-2 border-amber-500/40 group-hover:border-amber-400 group-hover:scale-105 transition-all bg-slate-900">
+                  <div className="h-16 w-16 rounded-full overflow-hidden shadow-md border-2 border-amber-400 group-hover:border-amber-500 group-hover:scale-105 transition-all bg-amber-50">
                     <img src={deity.image} alt={deity.name} className="w-full h-full object-cover" />
                   </div>
-                  <span className="font-gujarati font-black text-sm text-slate-200 group-hover:text-amber-300 transition-colors">
+                  <span className="font-gujarati font-black text-sm text-stone-900 group-hover:text-amber-800 transition-colors">
                     {deity.name}
                   </span>
                 </button>
@@ -1022,13 +1022,13 @@ export default function MantraJaapAnushthan() {
             <div className="flex items-center gap-3">
               <button 
                 onClick={() => { stopMantraAudio(); setScreen('deity'); }}
-                className="h-10 w-10 bg-slate-800 rounded-2xl flex items-center justify-center border border-slate-700 hover:bg-slate-700 active:scale-90 transition-transform"
+                className="h-10 w-10 bg-amber-50 rounded-2xl flex items-center justify-center border border-amber-200 hover:bg-amber-100 active:scale-90 transition-transform text-amber-900 cursor-pointer"
               >
-                <span className="material-symbols-outlined text-sm text-slate-300">arrow_back</span>
+                <span className="material-symbols-outlined text-sm">arrow_back</span>
               </button>
               <div>
-                <h3 className="font-gujarati font-black text-xl text-amber-400">{selectedDeity.name} ના મંત્રો</h3>
-                <p className="font-gujarati text-slate-400 text-xs">૨. આપની આસ્થા મુજબનો પવિત્ર મંત્ર પસંદ કરો</p>
+                <h3 className="font-gujarati font-black text-xl text-amber-950">{selectedDeity.name} ના મંત્રો</h3>
+                <p className="font-gujarati text-stone-600 text-xs font-medium">૨. આપની આસ્થા મુજબનો પવિત્ર મંત્ર પસંદ કરો</p>
               </div>
             </div>
 
@@ -1042,10 +1042,10 @@ export default function MantraJaapAnushthan() {
                     setMantraTarget(mantra.defaultCount);
                     setScreen('target'); 
                   }}
-                  className="bg-slate-800/90 hover:bg-slate-800 border border-slate-700 hover:border-amber-500/60 rounded-3xl p-5 text-left transition-all group hover:scale-[1.01] active:scale-[0.99] shadow-md space-y-2.5 cursor-pointer relative"
+                  className="bg-white hover:bg-amber-50/70 border border-amber-200/90 hover:border-amber-400 rounded-3xl p-5 text-left transition-all group hover:scale-[1.01] active:scale-[0.99] shadow-sm hover:shadow-md space-y-2.5 cursor-pointer relative"
                 >
                   <div className="flex justify-between items-center">
-                    <p style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-base text-amber-400 group-hover:text-amber-300 transition-colors flex items-center gap-2">
+                    <p style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-base text-amber-950 group-hover:text-amber-800 transition-colors flex items-center gap-2">
                       <span>{mantra.name}</span>
                     </p>
 
@@ -1058,8 +1058,8 @@ export default function MantraJaapAnushthan() {
                         }}
                         className={`h-8 w-8 rounded-full flex items-center justify-center transition-transform active:scale-90 border ${
                           isPlayingAudio && selectedMantra?.name === mantra.name 
-                            ? 'bg-amber-500 text-slate-950 border-amber-400 animate-pulse' 
-                            : 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border-amber-500/40'
+                            ? 'bg-amber-500 text-white border-amber-600 animate-pulse' 
+                            : 'bg-amber-100 hover:bg-amber-200 text-amber-900 border-amber-300'
                         }`}
                         title="ઓનલાઇન/ઑફલાઇન મંત્રોચ્ચાર સાંભળો"
                       >
@@ -1074,40 +1074,40 @@ export default function MantraJaapAnushthan() {
                           e.stopPropagation();
                           setInfoModalMantra(mantra);
                         }}
-                        className="h-8 w-8 rounded-full bg-slate-700 hover:bg-slate-600 text-slate-200 flex items-center justify-center transition-transform active:scale-90 border border-slate-600"
+                        className="h-8 w-8 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-900 flex items-center justify-center transition-transform active:scale-90 border border-amber-300"
                         title="મંત્ર માહાત્મ્ય, વિધિ અને ફળશ્રુતિ"
                       >
                         <span className="material-symbols-outlined text-base">info</span>
                       </button>
 
-                      <div className="h-8 w-8 rounded-xl bg-amber-500/10 group-hover:bg-amber-500/20 text-amber-400 flex items-center justify-center transition-all">
+                      <div className="h-8 w-8 rounded-xl bg-amber-100 group-hover:bg-amber-200 text-amber-800 flex items-center justify-center transition-all">
                         <span className="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform">chevron_right</span>
                       </div>
                     </div>
                   </div>
 
                   {/* FULL WRITTEN MANTRA TEXT BOX */}
-                  <div className="p-3 bg-slate-900/90 rounded-2xl border border-amber-500/20">
-                    <p style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-bold text-sm text-amber-200 leading-relaxed">
+                  <div className="p-3.5 bg-amber-50/90 rounded-2xl border border-amber-200/90">
+                    <p style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-bold text-sm text-amber-950 leading-relaxed">
                       {mantra.fullText || mantra.name}
                     </p>
                     {mantra.meaning && (
-                      <p className="text-[11px] text-slate-400 font-gujarati mt-1.5 italic border-t border-slate-800 pt-1">
+                      <p className="text-[11px] text-amber-900/80 font-gujarati mt-1.5 italic border-t border-amber-200/60 pt-1 font-medium">
                         💡 અર્થ: {mantra.meaning}
                       </p>
                     )}
                   </div>
 
                   <div className="flex justify-between items-center pt-0.5 text-[11px] font-gujarati">
-                    <span className="text-slate-400">
-                      સામાન્ય લક્ષ્ય: <b className="text-amber-400">{toGujaratiNum(mantra.defaultCount)} જપ</b>
+                    <span className="text-stone-600 font-medium">
+                      સામાન્ય લક્ષ્ય: <b className="text-amber-900 font-bold">{toGujaratiNum(mantra.defaultCount)} જપ</b>
                     </span>
                     <button 
                       onClick={(e) => {
                         e.stopPropagation();
                         setInfoModalMantra(mantra);
                       }}
-                      className="text-amber-400 hover:text-amber-300 font-bold underline flex items-center gap-0.5"
+                      className="text-amber-800 hover:text-amber-900 font-bold underline flex items-center gap-0.5"
                     >
                       <span>જાપ વિધિ & લાભ જુઓ</span>
                       <span className="material-symbols-outlined text-xs">arrow_forward</span>
@@ -1125,22 +1125,22 @@ export default function MantraJaapAnushthan() {
             <div className="flex items-center gap-3">
               <button 
                 onClick={() => { stopMantraAudio(); setScreen('mantra'); }}
-                className="h-10 w-10 bg-slate-800 rounded-2xl flex items-center justify-center border border-slate-700 hover:bg-slate-700 active:scale-90 transition-transform"
+                className="h-10 w-10 bg-amber-50 rounded-2xl flex items-center justify-center border border-amber-200 hover:bg-amber-100 active:scale-90 transition-transform text-amber-900 cursor-pointer"
               >
-                <span className="material-symbols-outlined text-sm text-slate-300">arrow_back</span>
+                <span className="material-symbols-outlined text-sm">arrow_back</span>
               </button>
               <div className="flex-1 flex items-center justify-between">
                 <div>
-                  <h3 className="font-gujarati font-black text-xl text-amber-400">{selectedMantra.name}</h3>
-                  <p className="font-gujarati text-slate-400 text-xs">૩. જપ કરવા માટે કુલ સંખ્યા નક્કી કરો</p>
+                  <h3 className="font-gujarati font-black text-xl text-amber-950">{selectedMantra.name}</h3>
+                  <p className="font-gujarati text-stone-600 text-xs font-medium">૩. જપ કરવા માટે કુલ સંખ્યા નક્કી કરો</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleToggleMantraAudio(selectedMantra)}
-                    className={`h-9 w-9 rounded-full flex items-center justify-center border ${
+                    className={`h-9 w-9 rounded-full flex items-center justify-center border transition-all cursor-pointer ${
                       isPlayingAudio 
-                        ? 'bg-amber-500 text-slate-950 border-amber-400 animate-pulse' 
-                        : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                        ? 'bg-amber-500 text-white border-amber-600 animate-pulse' 
+                        : 'bg-amber-100 text-amber-900 border-amber-300 hover:bg-amber-200'
                     }`}
                     title="ઓનલાઇન/ઑફલાઇન મંત્રોચ્ચાર સાંભળો"
                   >
@@ -1148,7 +1148,7 @@ export default function MantraJaapAnushthan() {
                   </button>
                   <button
                     onClick={() => setInfoModalMantra(selectedMantra)}
-                    className="h-9 w-9 rounded-full bg-slate-700 text-slate-200 flex items-center justify-center border border-slate-600"
+                    className="h-9 w-9 rounded-full bg-amber-100 text-amber-900 flex items-center justify-center border border-amber-300 hover:bg-amber-200 cursor-pointer"
                     title="મંત્ર માહાત્મ્ય, વિધિ અને ફળશ્રુતિ"
                   >
                     <span className="material-symbols-outlined text-lg">info</span>
@@ -1157,22 +1157,22 @@ export default function MantraJaapAnushthan() {
               </div>
             </div>
 
-            <div className="bg-slate-800/90 rounded-3xl p-6 border border-slate-700 space-y-6 shadow-xl max-w-md mx-auto">
+            <div className="bg-white rounded-3xl p-6 border border-amber-200/90 space-y-6 shadow-sm max-w-md mx-auto">
               
               {/* DISPLAY FULL MANTRA TEXT IN TARGET SCREEN */}
-              <div className="p-4 bg-slate-900/90 rounded-2xl border border-amber-500/30 text-center space-y-1">
-                <span className="text-[10px] font-bold text-amber-400 uppercase tracking-widest font-gujarati">પવિત્ર મંત્ર પાઠ</span>
-                <p style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-base text-amber-300 leading-relaxed">
+              <div className="p-4 bg-amber-50/90 rounded-2xl border border-amber-200/90 text-center space-y-1">
+                <span className="text-[10px] font-bold text-amber-800 uppercase tracking-widest font-gujarati">પવિત્ર મંત્ર પાઠ</span>
+                <p style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-base text-amber-950 leading-relaxed">
                   {selectedMantra.fullText || selectedMantra.name}
                 </p>
               </div>
 
               <div className="text-center space-y-1">
-                <p className="font-gujarati text-xs text-slate-400 uppercase tracking-widest">લક્ષ્ય જપ સંખ્યા</p>
-                <div className="font-headline font-black text-6xl text-amber-400 leading-none">
+                <p className="font-gujarati text-xs text-stone-500 uppercase tracking-widest font-bold">લક્ષ્ય જપ સંખ્યા</p>
+                <div className="font-headline font-black text-6xl text-amber-900 leading-none">
                   {toGujaratiNum(mantraTarget)}
                 </div>
-                <p className="font-gujarati text-xs text-amber-300/80 pt-1 font-bold">
+                <p className="font-gujarati text-xs text-amber-800 pt-1 font-bold">
                   {mantraTarget >= 1008 ? '💎 પરમ સિદ્ધ મહા સાધક પ્રમાણપત્ર' :
                    mantraTarget >= 501 ? '👑 મહા અનુષ્ઠાન સિદ્ધિ પ્રમાણપત્ર' :
                    mantraTarget >= 108 ? '⭐ દિવ્ય સાધક પ્રમાણપત્ર' : '🪔 ભક્તિ રત્ન પ્રમાણપત્ર'}
@@ -1185,7 +1185,7 @@ export default function MantraJaapAnushthan() {
                   <button
                     key={val}
                     onClick={() => setMantraTarget(val)}
-                    className={`py-3.5 rounded-2xl font-gujarati text-xs font-black transition-all border ${mantraTarget === val ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-lg scale-105' : 'bg-slate-900/80 text-slate-300 border-slate-700 hover:bg-slate-700'}`}
+                    className={`py-3.5 rounded-2xl font-gujarati text-xs font-black transition-all border cursor-pointer ${mantraTarget === val ? 'bg-amber-500 text-white border-amber-600 shadow-md scale-105' : 'bg-amber-50/80 text-stone-800 border-amber-200 hover:bg-amber-100'}`}
                   >
                     {toGujaratiNum(val)} જપ
                   </button>
@@ -1193,36 +1193,36 @@ export default function MantraJaapAnushthan() {
               </div>
 
               {/* Custom Count Stepper */}
-              <div className="flex justify-center items-center gap-5 pt-4 border-t border-slate-700">
+              <div className="flex justify-center items-center gap-5 pt-4 border-t border-amber-200/80">
                 <button
                   onClick={() => setMantraTarget(prev => Math.max(1, prev - 1))}
-                  className="h-10 w-10 bg-slate-700 hover:bg-slate-600 rounded-full flex items-center justify-center active:scale-90 transition-transform text-amber-400 font-bold"
+                  className="h-10 w-10 bg-amber-100 hover:bg-amber-200 rounded-full flex items-center justify-center active:scale-90 transition-transform text-amber-900 border border-amber-300 font-bold cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-sm">remove</span>
                 </button>
-                <span className="font-gujarati text-xs text-slate-300 font-bold">કસ્ટમ ગણતરી બદલો</span>
+                <span className="font-gujarati text-xs text-stone-700 font-bold">કસ્ટમ ગણતરી બદલો</span>
                 <button
                   onClick={() => setMantraTarget(prev => prev + 1)}
-                  className="h-10 w-10 bg-slate-700 hover:bg-slate-600 rounded-full flex items-center justify-center active:scale-90 transition-transform text-amber-400 font-bold"
+                  className="h-10 w-10 bg-amber-100 hover:bg-amber-200 rounded-full flex items-center justify-center active:scale-90 transition-transform text-amber-900 border border-amber-300 font-bold cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-sm">add</span>
                 </button>
               </div>
 
               {/* HANDS-FREE AUTO CHANT MODE TOGGLE CARD */}
-              <div className="p-3.5 bg-gradient-to-r from-amber-950/40 to-slate-900 border border-amber-500/40 rounded-2xl flex justify-between items-center gap-3">
+              <div className="p-3.5 bg-gradient-to-r from-amber-500/10 via-orange-500/5 to-amber-500/10 border border-amber-300/80 rounded-2xl flex justify-between items-center gap-3">
                 <div className="text-left">
-                  <span className="font-gujarati font-black text-xs text-amber-300 flex items-center gap-1.5">
-                    <span className="material-symbols-outlined text-base text-amber-400">headphones</span>
+                  <span className="font-gujarati font-black text-xs text-amber-950 flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-base text-amber-700">headphones</span>
                     ઑટો-જપ મોડ (હસ્ત-મુક્ત સંભળાવ)
                   </span>
-                  <p className="text-[10px] text-slate-300 font-gujarati leading-tight mt-0.5">
+                  <p className="text-[10px] text-stone-600 font-gujarati leading-tight mt-0.5 font-medium">
                     મંત્ર {toGujaratiNum(mantraTarget)} વાર આપોઆપ રીપીટ થશે (ટેપ કરવાની જરૂર નથી)
                   </p>
                 </div>
                 <button
                   onClick={() => setAutoChantMode(!autoChantMode)}
-                  className={`w-12 h-7 rounded-full p-1 transition-colors relative flex items-center ${autoChantMode ? 'bg-amber-500 justify-end' : 'bg-slate-700 justify-start'}`}
+                  className={`w-12 h-7 rounded-full p-1 transition-colors relative flex items-center cursor-pointer ${autoChantMode ? 'bg-amber-500 justify-end' : 'bg-stone-300 justify-start'}`}
                 >
                   <div className="h-5 w-5 bg-white rounded-full shadow-md"></div>
                 </button>
@@ -1239,7 +1239,7 @@ export default function MantraJaapAnushthan() {
                     setTimeout(() => handleToggleMantraAudio(selectedMantra, true), 300);
                   }
                 }}
-                className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-gujarati font-black py-4 px-6 rounded-2xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 border-b-4 border-amber-800 text-base cursor-pointer"
+                className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-gujarati font-black py-4 px-6 rounded-2xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-2 text-base cursor-pointer"
               >
                 <span className="material-symbols-outlined text-xl">
                   {autoChantMode ? 'headphones' : 'play_arrow'}
@@ -1257,7 +1257,7 @@ export default function MantraJaapAnushthan() {
             {/* Header info */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-center gap-2">
-                <span className="px-4 py-1 rounded-full text-[11px] font-black tracking-widest uppercase border border-amber-500/40 bg-amber-500/10 text-amber-400 inline-block font-gujarati">
+                <span className="px-4 py-1 rounded-full text-[11px] font-black tracking-widest uppercase border border-amber-300 bg-amber-100 text-amber-900 inline-block font-gujarati shadow-sm">
                   {selectedDeity?.name}
                 </span>
 
@@ -1265,7 +1265,7 @@ export default function MantraJaapAnushthan() {
                 <button
                   onClick={() => handleToggleMantraAudio(selectedMantra)}
                   className={`px-3 py-1 rounded-full text-[11px] font-black font-gujarati flex items-center gap-1 border transition-all cursor-pointer ${
-                    isPlayingAudio ? 'bg-amber-500 text-slate-950 border-amber-400 animate-pulse' : 'bg-amber-500/10 text-amber-300 border-amber-500/30 hover:bg-amber-500/20'
+                    isPlayingAudio ? 'bg-amber-500 text-white border-amber-600 animate-pulse' : 'bg-amber-100 text-amber-900 border-amber-300 hover:bg-amber-200'
                   }`}
                 >
                   <span className="material-symbols-outlined text-xs">volume_up</span>
@@ -1273,35 +1273,35 @@ export default function MantraJaapAnushthan() {
                 </button>
               </div>
 
-              <h3 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-2xl text-amber-300">
+              <h3 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-2xl text-amber-950">
                 {selectedMantra.name}
               </h3>
-              <p className="font-gujarati text-slate-400 text-xs">
-                કુલ લક્ષ્ય: <b className="text-amber-400">{toGujaratiNum(mantraTarget)} જપ</b>
+              <p className="font-gujarati text-stone-600 text-xs font-medium">
+                કુલ લક્ષ્ય: <b className="text-amber-900 font-bold">{toGujaratiNum(mantraTarget)} જપ</b>
               </p>
             </div>
 
             {/* FULL WRITTEN MANTRA TEXT CARD FOR REAL-TIME RECITING */}
-            <div className="bg-[#1E293B] border-2 border-amber-500/50 rounded-3xl p-4 sm:p-5 max-w-md mx-auto shadow-lg space-y-2 text-center relative overflow-hidden">
-              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-500 via-yellow-300 to-amber-500"></div>
+            <div className="bg-white border-2 border-amber-300 rounded-3xl p-4 sm:p-5 max-w-md mx-auto shadow-sm space-y-2 text-center relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-500 via-orange-400 to-amber-500"></div>
               <div className="flex justify-between items-center px-1">
-                <span className="text-[10px] font-black font-gujarati text-amber-400 uppercase tracking-widest bg-amber-500/10 px-3 py-0.5 rounded-full border border-amber-500/30 inline-block">
+                <span className="text-[10px] font-black font-gujarati text-amber-900 uppercase tracking-widest bg-amber-100 px-3 py-0.5 rounded-full border border-amber-300 inline-block">
                   📖 પવિત્ર મંત્ર પાઠ (સાથે બોલતા જાવ)
                 </span>
                 <button 
                   onClick={() => handleToggleMantraAudio(selectedMantra)}
-                  className="text-[11px] text-amber-300 font-bold underline flex items-center gap-1 cursor-pointer"
+                  className="text-[11px] text-amber-900 font-bold underline flex items-center gap-1 cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-xs">volume_up</span>
                   <span>{isPlayingAudio ? 'અટકાવો' : 'સાંભળો'}</span>
                 </button>
               </div>
               
-              <p style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-lg sm:text-xl text-amber-200 leading-relaxed">
+              <p style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-lg sm:text-xl text-amber-950 leading-relaxed">
                 {selectedMantra.fullText || selectedMantra.name}
               </p>
               {selectedMantra.meaning && (
-                <p className="text-xs text-slate-300 font-gujarati italic pt-1.5 border-t border-slate-700/60">
+                <p className="text-xs text-stone-600 font-gujarati italic pt-1.5 border-t border-amber-200/80 font-medium">
                   💡 અર્થ: {selectedMantra.meaning}
                 </p>
               )}
@@ -1310,7 +1310,7 @@ export default function MantraJaapAnushthan() {
             {/* Circular Progress Ring Counter */}
             <div className="relative h-64 w-64 mx-auto flex items-center justify-center">
               <svg className="absolute w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="42" stroke="rgba(255,255,255,0.06)" strokeWidth="6" fill="transparent" />
+                <circle cx="50" cy="50" r="42" stroke="rgba(245,158,11,0.15)" strokeWidth="6" fill="transparent" />
                 <circle 
                   cx="50" 
                   cy="50" 
@@ -1326,20 +1326,20 @@ export default function MantraJaapAnushthan() {
                 <defs>
                   <linearGradient id="japaRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#F59E0B" />
-                    <stop offset="100%" stopColor="#D97706" />
+                    <stop offset="100%" stopColor="#EA580C" />
                   </linearGradient>
                 </defs>
               </svg>
 
               {/* Centered digits */}
               <div className="space-y-1 z-10">
-                <span className="font-gujarati text-[11px] text-amber-400/80 font-bold uppercase tracking-widest block">
+                <span className="font-gujarati text-[11px] text-amber-800 font-bold uppercase tracking-widest block">
                   {autoChantMode ? '🎧 ઓટો રીપીટ જપ' : 'ચાલુ જપ'}
                 </span>
-                <span className="font-headline font-black text-6xl leading-none text-slate-100 block">
+                <span className="font-headline font-black text-6xl leading-none text-stone-900 block">
                   {toGujaratiNum(mantraCount)}
                 </span>
-                <span className="font-gujarati text-xs text-amber-400 font-bold block pt-1">
+                <span className="font-gujarati text-xs text-amber-900 font-bold block pt-1">
                   માળા: {toGujaratiNum(completedMalas)} ({toGujaratiNum(mantraCount)} / {toGujaratiNum(mantraTarget)})
                 </span>
               </div>
@@ -1349,27 +1349,27 @@ export default function MantraJaapAnushthan() {
             <div className="space-y-3">
               <button
                 onClick={incrementJapa}
-                className="h-36 w-36 bg-gradient-to-tr from-amber-600 via-amber-500 to-amber-400 border-4 border-amber-300 shadow-xl shadow-amber-500/20 rounded-full mx-auto flex flex-col items-center justify-center active:scale-90 transition-all hover:scale-[1.03] group relative overflow-hidden cursor-pointer"
+                className="h-36 w-36 bg-gradient-to-tr from-amber-500 via-amber-400 to-orange-400 border-4 border-amber-200 shadow-lg rounded-full mx-auto flex flex-col items-center justify-center active:scale-90 transition-all hover:scale-[1.03] group relative overflow-hidden cursor-pointer"
               >
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.4)_0%,transparent_70%)] pointer-events-none"></div>
-                <span className="material-symbols-outlined text-5xl text-slate-950 animate-pulse group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-5xl text-white animate-pulse group-hover:scale-110 transition-transform">
                   {autoChantMode ? 'headphones' : 'brightness_5'}
                 </span>
-                <span className="font-gujarati font-black text-xs text-slate-950 mt-1 tracking-wider">
+                <span className="font-gujarati font-black text-xs text-white mt-1 tracking-wider">
                   {autoChantMode ? 'હસ્ત-મુક્ત પ્લે' : 'અહીં ટેપ કરો 📿'}
                 </span>
               </button>
-              <p className="font-gujarati text-slate-400 text-xs">
+              <p className="font-gujarati text-stone-600 text-xs font-medium">
                 {autoChantMode ? '🎧 મંત્ર ઓટો રીપીટ મોડ ચાલુ છે. મંત્રોચ્ચાર સાંભળતા જાવ!' : 'મંત્ર પાઠ બોલતા બોલતા ટેપ કરતા જાવ'}
               </p>
             </div>
 
             {/* Auto Mode & Gyro toggles */}
             <div className="grid grid-cols-2 gap-2.5 max-w-sm mx-auto">
-              <div className="p-3 bg-slate-800/80 rounded-2xl border border-slate-700 flex justify-between items-center gap-2">
+              <div className="p-3 bg-white rounded-2xl border border-amber-200/90 shadow-sm flex justify-between items-center gap-2">
                 <div className="text-left">
-                  <span className="font-gujarati font-black text-[11px] text-amber-300 block">🎧 ઓટો જપ રીપીટ</span>
-                  <span className="text-[9px] text-slate-400 font-gujarati block">હસ્ત-મુક્ત ઓડિયો</span>
+                  <span className="font-gujarati font-black text-[11px] text-amber-950 block">🎧 ઓટો જપ રીપીટ</span>
+                  <span className="text-[9px] text-stone-500 font-gujarati block">હસ્ત-મુક્ત ઓડિયો</span>
                 </div>
                 <button
                   onClick={() => {
@@ -1379,20 +1379,20 @@ export default function MantraJaapAnushthan() {
                       handleToggleMantraAudio(selectedMantra, true);
                     }
                   }}
-                  className={`w-10 h-6 rounded-full p-0.5 transition-colors relative flex items-center ${autoChantMode ? 'bg-amber-500 justify-end' : 'bg-slate-700 justify-start'}`}
+                  className={`w-10 h-6 rounded-full p-0.5 transition-colors relative flex items-center cursor-pointer ${autoChantMode ? 'bg-amber-500 justify-end' : 'bg-stone-300 justify-start'}`}
                 >
                   <div className="h-4 w-4 bg-white rounded-full shadow-md"></div>
                 </button>
               </div>
 
-              <div className="p-3 bg-slate-800/80 rounded-2xl border border-slate-700 flex justify-between items-center gap-2">
+              <div className="p-3 bg-white rounded-2xl border border-amber-200/90 shadow-sm flex justify-between items-center gap-2">
                 <div className="text-left">
-                  <span className="font-gujarati font-black text-[11px] text-amber-300 block">📱 મોશન જપ</span>
-                  <span className="text-[9px] text-slate-400 font-gujarati block">મોબાઇલ હલાવીને</span>
+                  <span className="font-gujarati font-black text-[11px] text-amber-950 block">📱 મોશન જપ</span>
+                  <span className="text-[9px] text-stone-500 font-gujarati block">મોબાઇલ હલાવીને</span>
                 </div>
                 <button
                   onClick={() => setMotionActive(!motionActive)}
-                  className={`w-10 h-6 rounded-full p-0.5 transition-colors relative flex items-center ${motionActive ? 'bg-amber-500 justify-end' : 'bg-slate-700 justify-start'}`}
+                  className={`w-10 h-6 rounded-full p-0.5 transition-colors relative flex items-center cursor-pointer ${motionActive ? 'bg-amber-500 justify-end' : 'bg-stone-300 justify-start'}`}
                 >
                   <div className="h-4 w-4 bg-white rounded-full shadow-md"></div>
                 </button>
@@ -1400,19 +1400,19 @@ export default function MantraJaapAnushthan() {
             </div>
 
             {/* Exit controls */}
-            <div className="pt-4 border-t border-slate-800 flex justify-center gap-4 max-w-sm mx-auto">
+            <div className="pt-4 border-t border-amber-200/80 flex justify-center gap-4 max-w-sm mx-auto">
               <button
                 onClick={() => { 
                   stopMantraAudio();
                   if (window.confirm("શું આપ ખરેખર જપ અધૂરા છોડી બહાર જવા માંગો છો?")) setScreen('target'); 
                 }}
-                className="flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 py-3.5 px-4 rounded-2xl font-gujarati font-black text-xs text-slate-300 active:scale-95 transition-transform"
+                className="flex-1 bg-white hover:bg-amber-50 border border-amber-300 py-3.5 px-4 rounded-2xl font-gujarati font-black text-xs text-stone-800 active:scale-95 transition-transform shadow-sm cursor-pointer"
               >
                 🛑 જપ બંધ કરો
               </button>
               <button
                 onClick={incrementJapa}
-                className="flex-1 bg-amber-500 hover:bg-amber-400 py-3.5 px-4 rounded-2xl font-gujarati font-black text-xs text-slate-950 active:scale-95 transition-transform"
+                className="flex-1 bg-amber-500 hover:bg-amber-600 py-3.5 px-4 rounded-2xl font-gujarati font-black text-xs text-white active:scale-95 transition-transform shadow-sm cursor-pointer"
               >
                 📿 આગળ વધો +1
               </button>
@@ -1588,15 +1588,15 @@ export default function MantraJaapAnushthan() {
 
         {/* --- DEDICATED SADHANA LEADERBOARD SECTION --- */}
         <div id="sadhana-leaderboard-section" className="pt-6 space-y-4">
-          <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+          <div className="flex justify-between items-center border-b border-amber-200/80 pb-3">
             <div>
-              <h3 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-xl text-amber-400 flex items-center gap-2">
-                <span className="material-symbols-outlined text-amber-400">social_leaderboard</span>
+              <h3 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-xl text-amber-950 flex items-center gap-2">
+                <span className="material-symbols-outlined text-amber-700">social_leaderboard</span>
                 મંત્ર સાધના લીડરબોર્ડ
               </h3>
-              <p className="font-gujarati text-slate-400 text-xs">સૌથી વધુ જપ કરનાર શીર્ષ સાધકોની યાદી</p>
+              <p className="font-gujarati text-stone-600 text-xs font-medium">સૌથી વધુ જપ કરનાર શીર્ષ સાધકોની યાદી</p>
             </div>
-            <span className="bg-amber-500/10 text-amber-400 border border-amber-500/30 px-3 py-1 rounded-full font-gujarati text-xs font-bold">
+            <span className="bg-amber-100 text-amber-900 border border-amber-300 px-3 py-1 rounded-full font-gujarati text-xs font-bold shadow-sm">
               તમારા કુલ જપ: {toGujaratiNum(userTotalJaaps || parseInt(localStorage.getItem('mantra_total_jaaps') || '0', 10))}
             </span>
           </div>
@@ -1608,33 +1608,33 @@ export default function MantraJaapAnushthan() {
                 key={idx} 
                 className={`flex items-center justify-between p-3.5 rounded-2xl border transition-all ${
                   user.isUser 
-                    ? 'bg-amber-950/40 border-amber-500/60 shadow-lg' 
-                    : 'bg-slate-800/80 border-slate-700 hover:border-slate-600'
+                    ? 'bg-amber-100/90 border-amber-300 shadow-sm' 
+                    : 'bg-white border-amber-200/80 hover:border-amber-300'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <span className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-xs shadow-md ${
-                    idx === 0 ? 'bg-amber-500 text-slate-950' : 
-                    idx === 1 ? 'bg-slate-300 text-slate-950' : 
+                  <span className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-xs shadow-sm ${
+                    idx === 0 ? 'bg-amber-500 text-white' : 
+                    idx === 1 ? 'bg-stone-300 text-stone-900' : 
                     idx === 2 ? 'bg-amber-700 text-white' : 
-                    'bg-slate-700 text-slate-300'
+                    'bg-amber-100 text-amber-900'
                   }`}>
                     {toGujaratiNum(idx + 1)}
                   </span>
                   
-                  <div className="h-9 w-9 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 font-bold text-sm">
+                  <div className="h-9 w-9 rounded-full bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-900 font-bold text-sm">
                     {user.name ? user.name.charAt(0).toUpperCase() : 'સા'}
                   </div>
 
                   <div>
-                    <h4 className="font-black text-sm text-slate-100 flex items-center gap-1.5">
+                    <h4 className="font-black text-sm text-stone-900 flex items-center gap-1.5">
                       {user.name}
-                      {user.isUser && <span className="text-[10px] bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded-md font-bold">તમે</span>}
+                      {user.isUser && <span className="text-[10px] bg-amber-500/20 text-amber-900 px-2 py-0.5 rounded-md font-bold">તમે</span>}
                     </h4>
-                    <div className="flex items-center gap-2 text-[11px] text-slate-400">
-                      <span className="text-amber-400 font-bold">{user.mantra}</span>
+                    <div className="flex items-center gap-2 text-[11px] text-stone-500 font-medium">
+                      <span className="text-amber-900 font-bold">{user.mantra}</span>
                       {user.city && (
-                        <span className="flex items-center gap-0.5 text-slate-400">
+                        <span className="flex items-center gap-0.5 text-stone-500">
                           📍 {user.city}
                         </span>
                       )}
@@ -1643,10 +1643,10 @@ export default function MantraJaapAnushthan() {
                 </div>
 
                 <div className="text-right">
-                  <span className="font-headline font-black text-base text-amber-400 block">
+                  <span className="font-headline font-black text-base text-amber-900 block">
                     {toGujaratiNum(user.score)}
                   </span>
-                  <span className="text-[10px] text-slate-400 font-bold">કુલ જપ</span>
+                  <span className="text-[10px] text-stone-500 font-bold">કુલ જપ</span>
                 </div>
               </div>
             ))}
@@ -1657,34 +1657,34 @@ export default function MantraJaapAnushthan() {
 
       {/* --- MANTRA MAHIMA, VIDHI & BENEFITS MODAL (i) WITH SOOTHING VOICE AUDIO BUTTON --- */}
       {infoModalMantra && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
-          <div className="bg-[#1E293B] border-2 border-amber-500/40 rounded-3xl max-w-lg w-full p-6 space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto font-gujarati text-slate-100">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white border-2 border-amber-300 rounded-3xl max-w-lg w-full p-6 space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto font-gujarati text-stone-900">
             
             {/* Close button */}
             <button 
               onClick={() => { stopMantraAudio(); setInfoModalMantra(null); }}
-              className="absolute top-4 right-4 h-9 w-9 bg-slate-800 hover:bg-slate-700 rounded-full flex items-center justify-center text-slate-300 border border-slate-700 transition-transform active:scale-90 cursor-pointer"
+              className="absolute top-4 right-4 h-9 w-9 bg-amber-100 hover:bg-amber-200 rounded-full flex items-center justify-center text-amber-900 border border-amber-300 transition-transform active:scale-90 cursor-pointer"
             >
               <span className="material-symbols-outlined text-lg">close</span>
             </button>
 
             {/* Header */}
             <div className="space-y-1 pr-8">
-              <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider inline-block">
+              <span className="bg-amber-100 text-amber-900 border border-amber-300 px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider inline-block">
                 📖 મંત્ર મહાત્મ્ય અને જાપ વિધિ
               </span>
-              <h3 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-2xl text-amber-400">
+              <h3 style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-2xl text-amber-950">
                 {infoModalMantra.name}
               </h3>
             </div>
 
             {/* Full Written Mantra Box */}
-            <div className="p-4 bg-slate-900 rounded-2xl border border-amber-500/30 text-center space-y-1.5 shadow-inner">
-              <p style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-lg text-amber-200 leading-relaxed">
+            <div className="p-4 bg-amber-50/90 rounded-2xl border border-amber-200/90 text-center space-y-1.5 shadow-inner">
+              <p style={{ fontFamily: '"Noto Serif Gujarati", serif' }} className="font-black text-lg text-amber-950 leading-relaxed">
                 {infoModalMantra.fullText}
               </p>
               {infoModalMantra.meaning && (
-                <p className="text-xs text-slate-400 italic pt-1.5 border-t border-slate-800">
+                <p className="text-xs text-stone-600 italic pt-1.5 border-t border-amber-200/80 font-medium">
                   💡 અર્થ: {infoModalMantra.meaning}
                 </p>
               )}
@@ -1693,10 +1693,10 @@ export default function MantraJaapAnushthan() {
             {/* SOOTHING VOICE AUDIO BUTTON 🔊 */}
             <button
               onClick={() => handleToggleMantraAudio(infoModalMantra)}
-              className={`w-full py-3.5 px-4 rounded-2xl font-black text-xs flex items-center justify-center gap-2 border transition-all cursor-pointer shadow-md ${
+              className={`w-full py-3.5 px-4 rounded-2xl font-black text-xs flex items-center justify-center gap-2 border transition-all cursor-pointer shadow-sm ${
                 isPlayingAudio 
-                  ? 'bg-amber-500 text-slate-950 border-amber-400 animate-pulse' 
-                  : 'bg-slate-800 hover:bg-slate-700 text-amber-300 border-amber-500/40'
+                  ? 'bg-amber-500 text-white border-amber-600 animate-pulse' 
+                  : 'bg-amber-100 hover:bg-amber-200 text-amber-900 border-amber-300'
               }`}
             >
               <span className="material-symbols-outlined text-lg">volume_up</span>
@@ -1705,51 +1705,51 @@ export default function MantraJaapAnushthan() {
 
             {/* Rules & Vidhi Grid */}
             <div className="grid grid-cols-2 gap-2.5 text-xs">
-              <div className="bg-slate-800/80 p-3.5 rounded-2xl border border-slate-700 space-y-1">
-                <span className="text-amber-400 font-bold block flex items-center gap-1">
+              <div className="bg-amber-50/70 p-3.5 rounded-2xl border border-amber-200/90 space-y-1">
+                <span className="text-amber-900 font-bold block flex items-center gap-1">
                   📿 શ્રેષ્ઠ માળા
                 </span>
-                <p className="text-slate-300 font-medium">{infoModalMantra.mala || 'રુદ્રાક્ષ કે તુલસીની માળા'}</p>
+                <p className="text-stone-800 font-medium">{infoModalMantra.mala || 'રુદ્રાક્ષ કે તુલસીની માળા'}</p>
               </div>
 
-              <div className="bg-slate-800/80 p-3.5 rounded-2xl border border-slate-700 space-y-1">
-                <span className="text-amber-400 font-bold block flex items-center gap-1">
+              <div className="bg-amber-50/70 p-3.5 rounded-2xl border border-amber-200/90 space-y-1">
+                <span className="text-amber-900 font-bold block flex items-center gap-1">
                   🌅 શ્રેષ્ઠ સમય
                 </span>
-                <p className="text-slate-300 font-medium">{infoModalMantra.time || 'સવારે સ્નાન કર્યા પછી કે સંધ્યાકાળે'}</p>
+                <p className="text-stone-800 font-medium">{infoModalMantra.time || 'સવારે સ્નાન કર્યા પછી કે સંધ્યાકાળે'}</p>
               </div>
 
-              <div className="bg-slate-800/80 p-3.5 rounded-2xl border border-slate-700 space-y-1">
-                <span className="text-amber-400 font-bold block flex items-center gap-1">
+              <div className="bg-amber-50/70 p-3.5 rounded-2xl border border-amber-200/90 space-y-1">
+                <span className="text-amber-900 font-bold block flex items-center gap-1">
                   🧭 પૂજા દિશા
                 </span>
-                <p className="text-slate-300 font-medium">{infoModalMantra.direction || 'પૂર્વ કે ઉત્તર દિશા'}</p>
+                <p className="text-stone-800 font-medium">{infoModalMantra.direction || 'પૂર્વ કે ઉત્તર દિશા'}</p>
               </div>
 
-              <div className="bg-slate-800/80 p-3.5 rounded-2xl border border-slate-700 space-y-1">
-                <span className="text-amber-400 font-bold block flex items-center gap-1">
+              <div className="bg-amber-50/70 p-3.5 rounded-2xl border border-amber-200/90 space-y-1">
+                <span className="text-amber-900 font-bold block flex items-center gap-1">
                   🔢 ઉત્તમ ગણતરી
                 </span>
-                <p className="text-slate-300 font-medium">{toGujaratiNum(infoModalMantra.defaultCount || 108)} જપ (અથવા ૧૧, ૨૧, ૫૧)</p>
+                <p className="text-stone-800 font-medium">{toGujaratiNum(infoModalMantra.defaultCount || 108)} જપ (અથવા ૧૧, ૨૧, ૫૧)</p>
               </div>
             </div>
 
             {/* Benefits Section */}
-            <div className="bg-gradient-to-br from-amber-950/40 to-slate-900 p-4 rounded-2xl border border-amber-500/30 space-y-2">
-              <h4 className="font-black text-sm text-amber-300 flex items-center gap-1.5">
+            <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 p-4 rounded-2xl border border-amber-300/80 space-y-2">
+              <h4 className="font-black text-sm text-amber-950 flex items-center gap-1.5">
                 <span>🌺</span> આ મંત્ર જપ કરવાના પવિત્ર લાભ (ફળ શ્રુતિ):
               </h4>
-              <ul className="space-y-1.5 text-xs text-slate-300 pl-1">
+              <ul className="space-y-1.5 text-xs text-stone-800 pl-1 font-medium">
                 {Array.isArray(infoModalMantra.benefits) ? (
                   infoModalMantra.benefits.map((b, i) => (
                     <li key={i} className="flex items-start gap-2">
-                      <span className="text-amber-400 font-bold">•</span>
+                      <span className="text-amber-700 font-bold">•</span>
                       <span className="leading-relaxed">{b}</span>
                     </li>
                   ))
                 ) : (
                   <li className="flex items-start gap-2">
-                    <span className="text-amber-400 font-bold">•</span>
+                    <span className="text-amber-700 font-bold">•</span>
                     <span className="leading-relaxed">{infoModalMantra.benefits || 'મનને શાંતિ અને દૈવી શક્તિઓનો અનુભવ થાય છે.'}</span>
                   </li>
                 )}
@@ -1765,7 +1765,7 @@ export default function MantraJaapAnushthan() {
                 setInfoModalMantra(null);
                 setScreen('target');
               }}
-              className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black py-3.5 px-6 rounded-2xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 border-b-4 border-amber-800 text-sm cursor-pointer"
+              className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black py-3.5 px-6 rounded-2xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-2 text-sm cursor-pointer"
             >
               <span>▶️</span> આ મંત્રનું અનુષ્ઠાન શરૂ કરો
             </button>

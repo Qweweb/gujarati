@@ -744,7 +744,61 @@ export const syncUserProfile = async () => {
   const ward = userLoc ? userLoc.ward : null;
 
   const city = localProfile.city || (userLoc ? userLoc.villageNameGu : null);
-  const challengeStreak = parseInt(localStorage.getItem('otlo_challenge_streak') || '0', 10);
+  const { data: existingUser } = await supabase.from('users').select('streak_count, english_streak, english_xp, challenge_streak, gujarat_coins, traffic_jam_progress, tirandaji_max_level').eq('id', userId).maybeSingle();
+
+  let challengeStreak = parseInt(localStorage.getItem('otlo_challenge_streak') || '0', 10);
+  
+  if (existingUser) {
+    // Restore streaks if DB has a higher value (e.g. after reinstall)
+    const dbStreak = existingUser.streak_count || existingUser.challenge_streak || 0;
+    if (dbStreak > challengeStreak) {
+      challengeStreak = dbStreak;
+      localStorage.setItem('otlo_challenge_streak', challengeStreak.toString());
+    }
+
+    const dbEnglishStreak = existingUser.english_streak || 0;
+    const localEnglishStreak = parseInt(localStorage.getItem('sanskar_english_streak') || '0', 10);
+    if (dbEnglishStreak > localEnglishStreak) {
+      localStorage.setItem('sanskar_english_streak', dbEnglishStreak.toString());
+    }
+
+    const dbEnglishXp = existingUser.english_xp || 0;
+    const localEnglishXp = parseInt(localStorage.getItem('sanskar_english_xp') || '0', 10);
+    if (dbEnglishXp > localEnglishXp) {
+      localStorage.setItem('sanskar_english_xp', dbEnglishXp.toString());
+    }
+
+    const dbCoins = existingUser.gujarat_coins || 0;
+    const localCoins = parseInt(localStorage.getItem('gujarat_coins') || '0', 10);
+    if (dbCoins > localCoins) {
+      localStorage.setItem('gujarat_coins', dbCoins.toString());
+    }
+
+    const dbTirandajiMax = existingUser.tirandaji_max_level || 0;
+    const localTirandajiMax = parseInt(localStorage.getItem('tirandaji_max_level') || '0', 10);
+    if (dbTirandajiMax > localTirandajiMax) {
+      localStorage.setItem('tirandaji_max_level', dbTirandajiMax.toString());
+    }
+
+    if (existingUser.traffic_jam_progress) {
+       const localTjStr = localStorage.getItem('traffic_jam_progress');
+       let shouldRestoreTj = false;
+       if (!localTjStr) {
+           shouldRestoreTj = true;
+       } else {
+           try {
+             const localTj = JSON.parse(localTjStr);
+             const dbTj = typeof existingUser.traffic_jam_progress === 'string' ? JSON.parse(existingUser.traffic_jam_progress) : existingUser.traffic_jam_progress;
+             if (Object.keys(dbTj).length > Object.keys(localTj).length) {
+                 shouldRestoreTj = true;
+             }
+           } catch(e) {}
+       }
+       if (shouldRestoreTj) {
+           localStorage.setItem('traffic_jam_progress', typeof existingUser.traffic_jam_progress === 'string' ? existingUser.traffic_jam_progress : JSON.stringify(existingUser.traffic_jam_progress));
+       }
+    }
+  }
   const email = localProfile.email || user?.email || localStorage.getItem('google_email') || null;
   const gender = localProfile.gender || null;
   const dob = localProfile.dob || null;
@@ -762,6 +816,11 @@ export const syncUserProfile = async () => {
       ward: ward,
       city: city,
       streak_count: challengeStreak,
+      english_streak: parseInt(localStorage.getItem('sanskar_english_streak') || '0', 10),
+      english_xp: parseInt(localStorage.getItem('sanskar_english_xp') || '0', 10),
+      gujarat_coins: parseInt(localStorage.getItem('gujarat_coins') || '0', 10),
+      tirandaji_max_level: parseInt(localStorage.getItem('tirandaji_max_level') || '0', 10),
+      traffic_jam_progress: (() => { try { return JSON.parse(localStorage.getItem('traffic_jam_progress') || '{}'); } catch(e) { return {}; } })(),
       last_active: new Date().toISOString().split('T')[0],
       email: email,
       gender: gender,
@@ -1325,4 +1384,17 @@ export const fetchProfilesForUserIds = async (userIds) => {
   return profileMap;
 };
 
-
+export const syncLiveCoins = async (coins) => {
+  try {
+    const userId = getOrCreateUserId();
+    if (!userId) return;
+    
+    // We update the users table directly with the new coin balance
+    await supabase.from('users').update({
+      gujarat_coins: coins,
+      last_active: new Date().toISOString().split('T')[0]
+    }).eq('id', userId);
+  } catch (e) {
+    console.error("Live Coins sync failed:", e);
+  }
+};

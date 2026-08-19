@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;600;700&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.biodata-wrapper {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 6px;
+  background-color: #fffdfa;
+  font-family: 'Noto Sans Gujarati', sans-serif;
+  color: #2b2016;
+  line-height: 1.42;
+}
+
+.royal-border {
+  border: 2.5px double #b45309;
+  padding: 12px 16px;
+  background: #ffffff;
+  border-radius: 8px;
+  position: relative;
+  min-height: 270mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* કોર્નર ઓર્નામેન્ટ્સ */
+.corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #b45309;
+}
+.c-top-left { top: 3px; left: 3px; border-right: none; border-bottom: none; }
+.c-top-right { top: 3px; right: 3px; border-left: none; border-bottom: none; }
+.c-bottom-left { bottom: 3px; left: 3px; border-right: none; border-top: none; }
+.c-bottom-right { bottom: 3px; right: 3px; border-left: none; border-top: none; }
+
+/* હેડર */
+.bio-header {
+  text-align: center;
+  background: linear-gradient(135deg, #7c1d1d 0%, #991b1b 50%, #b91c1c 100%);
+  color: #ffffff;
+  padding: 8px 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  border: 1.5px solid #d97706;
+}
+
+.bio-om { font-size: 13px; color: #fef08a; font-weight: bold; }
+.bio-main-title { font-size: 17.5px; margin: 2px 0 0 0; color: #fffbeb; }
+
+/* હીરો કાર્ડ */
+.bio-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  background: linear-gradient(to right, #fef3c7, #fffdfa);
+  border: 1px solid #fcd34d;
+  border-radius: 6px;
+  padding: 8px 14px;
+}
+
+.bio-name { font-size: 17px; color: #7c1d1d; margin: 0 0 2px 0; font-weight: bold; }
+.bio-edu-tag { font-size: 13px; color: #92400e; font-weight: 600; }
+.bio-location-tag { font-size: 11.5px; color: #4b5563; margin-top: 2px; }
+
+.bio-photo-placeholder, .bio-img {
+  width: 85px;
+  height: 100px;
+  border: 1.8px dashed #b45309;
+  border-radius: 6px;
+  background-color: #fffbeb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11.5px;
+  color: #b45309;
+  font-weight: 600;
+  object-fit: cover;
+}
+
+/* સેક્શન હેડર */
+.bio-section-title {
+  background: #7c1d1d;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-bottom: 6px;
+  border-left: 4px solid #f59e0b;
+}
+
+.bio-section-title::before {
+  content: "❖ ";
+  color: #fef08a;
+}
+
+/* ડેટા ટેબલ્સ */
+.bio-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 6px;
+  font-size: 12.3px;
+}
+
+.bio-table td {
+  padding: 4px 8px;
+  border: 1px solid #f0e2cd;
+  vertical-align: middle;
+}
+
+.lbl { width: 24%; font-weight: bold; background-color: #fdf5e6; color: #78350f; }
+.val { width: 26%; background-color: #ffffff; color: #1f2937; }
+.lbl-full { width: 24%; font-weight: bold; background-color: #fdf5e6; color: #78350f; }
+.val-full { width: 76%; background-color: #ffffff; color: #1f2937; }
+.val-bold { font-weight: 600; color: #7c1d1d; }
+
+/* કોન્ટેક્ટ કાર્ડ */
+.bio-contact-box {
+  background-color: #fffbeb;
+  border: 1.4px solid #d97706;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-top: 10px;
+}
+
+.bio-contact-title {
+  font-weight: bold;
+  color: #7c1d1d;
+  font-size: 13px;
+  border-bottom: 1px dashed #d97706;
+  padding-bottom: 3px;
+  margin-bottom: 4px;
+}
+
+.bio-contact-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.bio-contact-table td {
+  padding: 2.5px 0;
+}
+
+.footer-note {
+  text-align: center;
+  margin-top: 8px;
+  font-size: 11px;
+  color: #78350f;
+  font-style: italic;
+}
+
+/* પ્રિન્ટ સેટિંગ્સ - Exact 1-Page A4 PDF */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+  body {
+    background-color: #ffffff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .biodata-wrapper {
+    padding: 0;
+    max-width: 100%;
+  }
+}

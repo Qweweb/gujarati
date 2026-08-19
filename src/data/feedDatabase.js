@@ -1,5 +1,6 @@
 export const FEED_CATEGORIES = [
   { id: 'all', label: 'બધું', icon: 'explore' },
+  { id: 'blog', label: 'લેખ & બ્લોગ્સ', icon: 'menu_book' },
   { id: 'suvichar', label: 'સુવિચાર', icon: 'spa' },
   { id: 'bhakti', label: 'ધાર્મિક', icon: 'temple_hindu' },
   { id: 'janva_jevu', label: 'જાણવા જેવું', icon: 'lightbulb' },

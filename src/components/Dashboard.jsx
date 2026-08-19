@@ -21,16 +21,12 @@ const TOOLS = [
   { icon:'temple_hindu',     label:'કુળદેવી',     path:'/kuldevi',             bg:'#FFF7ED', iconBg:'#F97316', iconClr:'#fff' },
   { icon:'explore',          label:'વાસ્તુ',      path:'/vastu',               bg:'#F0FDFA', iconBg:'#14B8A6', iconClr:'#fff' },
   { icon:'calculate',        label:'વ્યાજ ગણક',   path:'/interest-calculator', bg:'#EFF6FF', iconBg:'#3B82F6', iconClr:'#fff' },
-  { icon:'auto_fix_high',    label:'નામકરણ',      path:'/namkaran',            bg:'#FDF4FF', iconBg:'#D946EF', iconClr:'#fff' },
   { icon:'favorite',         label:'સ્વાસ્થ્ય',   path:'/health',              bg:'#F0FDF4', iconBg:'#22C55E', iconClr:'#fff' },
   { icon:'construction',     label:'ટૂલ્સ',       path:'/tools',               bg:'#F9FAFB', iconBg:'#6B7280', iconClr:'#fff' },
   { icon:'badge',            label:'BizCard',     path:'/card',                bg:'#F0F9FF', iconBg:'#0284C7', iconClr:'#fff' },
   { icon:'description',      label:'બાયોડેટા',    path:'/biodata',             bg:'#EFF6FF', iconBg:'#2563EB', iconClr:'#fff' },
   { icon:'frame_person',     label:'કાર્ડ',       path:'/devotional-cards',    bg:'#F5F3FF', iconBg:'#7C3AED', iconClr:'#fff' },
   { icon:'groups',           label:'કોમ્યુ.',     path:'/community',           bg:'#ECFDF5', iconBg:'#059669', iconClr:'#fff' },
-  { icon:'style',            label:'કાર્ડ્સ',     path:'/swipe-cards',         bg:'#F5F3FF', iconBg:'#7C3AED', iconClr:'#fff' },
-  { icon:'map',              label:'સફારી',       path:'/gujarat-safari',      bg:'#F0FDF4', iconBg:'#16A34A', iconClr:'#fff' },
-  { icon:'menu_book',        label:'પાસપોર્ટ',    path:'/passport',            bg:'#EFF6FF', iconBg:'#2563EB', iconClr:'#fff' },
   { icon:'search',           label:'રહસ્યો',      path:'/mysteries',           bg:'#FFF1F2', iconBg:'#BE123C', iconClr:'#fff' },
 ];
 
@@ -489,6 +485,7 @@ const Dashboard = () => {
             display:'flex', alignItems:'center', gap:14, padding:'16px 18px', borderRadius:16,
             background:'linear-gradient(135deg,#1E40AF,#2563EB,#3B82F6)',
             boxShadow:'0 6px 20px rgba(30,64,175,0.35)', textDecoration:'none',
+            marginTop: 12
           }}
         >
           <div style={{ width:48, height:48, borderRadius:14, background:'rgba(255,255,255,0.15)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
@@ -509,7 +506,7 @@ const Dashboard = () => {
       {/* ══════════════════════════════════════════════════════════
           7. 4 GAME CARDS — 2×2 grid
           ══════════════════════════════════════════════════════════ */}
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, marginTop:12 }}>
 
         {/* ખમણ-જલેબી */}
         <Link to="/brick-breaker" className="press" style={{
@@ -578,7 +575,7 @@ const Dashboard = () => {
       </div>
 
       {/* ══════════════════════════════════════════════════════════
-          7.5 MANTRA JAAP ANUSHTHAN ATTRACTIVE LONG HERO BANNER
+          7.5 VIBRANT SAFFRON-GOLD MANTRA JAAP HERO BANNER
           ══════════════════════════════════════════════════════════ */}
       <Link
         to="/mantra-jaap"
@@ -589,18 +586,25 @@ const Dashboard = () => {
           borderRadius: 24,
           overflow: 'hidden',
           position: 'relative',
-          background: 'linear-gradient(135deg, #2E1065, #78350F, #B45309, #D97706)',
-          border: '2px solid rgba(251, 191, 36, 0.6)',
-          boxShadow: '0 10px 30px rgba(180, 83, 9, 0.4)',
+          background: 'linear-gradient(135deg, #F97316 0%, #EA580C 50%, #C2410C 100%)',
+          border: '1.5px solid rgba(254, 215, 170, 0.7)',
+          boxShadow: '0 12px 30px -4px rgba(234, 88, 12, 0.45)',
           padding: '20px 18px',
         }}
       >
-        {/* Background Aura Radial */}
-        <div style={{ position: 'absolute', top: '-40%', right: '-20%', width: 200, height: 200, background: 'radial-gradient(circle, rgba(251,191,36,0.3) 0%, transparent 70%)', borderRadius: '50%', pointerEvents: 'none' }} />
+        {/* Background Ambient Glowing Aura */}
+        <div style={{ position: 'absolute', top: '-30%', right: '-15%', width: 180, height: 180, background: 'radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 70%)', borderRadius: '50%', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '-40%', left: '-10%', width: 160, height: 160, background: 'radial-gradient(circle, rgba(253,230,138,0.2) 0%, transparent 70%)', borderRadius: '50%', pointerEvents: 'none' }} />
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, position: 'relative', zIndex: 1 }}>
+        {/* Sacred Watermark Motif */}
+        <span style={{ position: 'absolute', right: '3%', bottom: '-20px', fontSize: '115px', color: '#FFF', opacity: 0.12, pointerEvents: 'none', fontFamily: 'serif' }}>
+          🕉️
+        </span>
+
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1, minWidth: 0 }}>
-            {/* Glowing Icon Container */}
+            
+            {/* 3D Glowing Avatar Badge Icon */}
             <div style={{
               width: 58, height: 58, borderRadius: 20,
               background: 'linear-gradient(135deg, #FCD34D, #F59E0B)',
@@ -612,23 +616,6 @@ const Dashboard = () => {
             </div>
 
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                <span style={{
-                  background: 'rgba(254, 243, 199, 0.25)',
-                  border: '1px solid rgba(253, 230, 138, 0.5)',
-                  color: '#FEF08A',
-                  fontSize: 10,
-                  fontWeight: 900,
-                  padding: '2px 8px',
-                  borderRadius: 10,
-                  fontFamily: '"Noto Serif Gujarati", serif'
-                }}>
-                  ✨ દિવ્ય સાધના
-                </span>
-                <span style={{ color: '#FDE68A', fontSize: 10, fontWeight: 700, fontFamily: '"Noto Serif Gujarati", serif' }}>
-                  ૨૮+ પવિત્ર મંત્રો
-                </span>
-              </div>
 
               <h3 style={{
                 fontFamily: '"Noto Serif Gujarati", serif',
@@ -695,6 +682,42 @@ const Dashboard = () => {
               </Link>
             );
           })}
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════
+          7.5 BLOG & LITERATURE FEATURED BANNER
+          ══════════════════════════════════════════════════════════ */}
+      <div 
+        onClick={() => navigate('/blogs')}
+        style={{
+          display:'flex', alignItems:'center', justifyBetween:'space-between', padding:'16px 18px', borderRadius:20,
+          background:'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)',
+          border:'1.5px solid #FDBA74', cursor:'pointer', boxShadow:'0 4px 14px rgba(249, 115, 22, 0.12)',
+          transition:'transform 0.2s, box-shadow 0.2s', position:'relative', overflow:'hidden'
+        }}
+        className="hover:scale-[1.01] active:scale-[0.99] group shadow-sm hover:shadow-md"
+      >
+        <div style={{ display:'flex', alignItems:'center', gap:14, flex:1, zIndex:2 }}>
+          <div style={{ 
+            width:46, height:46, borderRadius:16, 
+            background:'linear-gradient(135deg, #EA580C, #C2410C)', 
+            display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
+            boxShadow:'0 4px 10px rgba(234, 88, 12, 0.3)'
+          }}>
+            <span className="material-symbols-outlined" style={{ color:'#fff', fontSize:24, fontVariationSettings:"'FILL' 1" }}>menu_book</span>
+          </div>
+          <div style={{ flex:1 }}>
+            <p className="type-gu-headline" style={{ color:'#7C2D12', fontSize:15, fontWeight:800, margin:0, lineHeight:1.2 }}>
+              ગુજરાતી બ્લોગ અને સાહિત્ય 📰
+            </p>
+            <p style={{ color:'#9A3412', fontSize:11, fontWeight:600, margin:'2px 0 0 0', fontFamily:'inherit' }}>
+              ધર્મ, સંસ્કૃતિ, વાસ્તુ અને આયુર્વેદના વિશિષ્ટ લેખો વાંચો →
+            </p>
+          </div>
+        </div>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'center', width:32, height:32, borderRadius:'50%', background:'rgba(234, 88, 12, 0.15)', color:'#EA580C', flexShrink:0 }}>
+          <span className="material-symbols-outlined" style={{ fontSize:20, fontWeight:700 }}>chevron_right</span>
         </div>
       </div>
 

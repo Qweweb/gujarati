@@ -75,25 +75,38 @@ function getMask(levelIndex, size) {
 
 // Slithering Snake Dense Generation (Reverse Time)
 export function generateLevel(levelIndex) {
-  // Scale size much faster up to a larger max grid (20)
-  const size = Math.min(8 + Math.floor(levelIndex / 2), 20);
+  // Start with a decent size (8) so even Level 1 is fun and engaging, max 18
+  const size = Math.min(8 + Math.floor(levelIndex / 3), 18);
   const mask = getMask(levelIndex, size);
   const grid = Array(size).fill(null).map(() => Array(size).fill(false));
   const shapes = [];
 
-  const maxTries = size * size * 25;
+  const maxTries = size * size * Math.floor(30 + (levelIndex / 2));
   let shapeIdCounter = 1;
 
   for (let i = 0; i < maxTries; i++) {
     // 1. Generate a random local path (contiguous line)
-    // Paths get MUCH longer and more zig-zag at high levels
-    const maxLen = Math.min(5 + Math.floor(levelIndex * 0.8), 40);
+    // Paths get MUCH longer and heavily zig-zag at high levels (Amaze style)
+    // Baseline length is higher (8) so Level 1 is not boring.
+    const maxLen = Math.min(8 + Math.floor(levelIndex * 1.5), 100);
     const targetLength = Math.floor(Math.random() * (maxLen - 2)) + 2;
     const localPath = [{x: 0, y: 0}];
     let cx = 0, cy = 0;
     const localVisited = new Set(['0,0']);
+    let currentDir = null;
+    
+    // Probability to keep moving straight instead of turning (Amaze GO logic)
+    // Starts at 0.1 (random), scales up to 0.9 (mostly straight until blocked)
+    const keepStraightProb = Math.min(0.1 + (levelIndex * 0.015), 0.9);
+
     for(let j=1; j<targetLength; j++) {
-      const dirs = [ {dx: 0, dy: -1}, {dx: 0, dy: 1}, {dx: -1, dy: 0}, {dx: 1, dy: 0} ].sort(() => Math.random() - 0.5);
+      let dirs = [ {dx: 0, dy: -1}, {dx: 0, dy: 1}, {dx: -1, dy: 0}, {dx: 1, dy: 0} ].sort(() => Math.random() - 0.5);
+      
+      if (currentDir && Math.random() < keepStraightProb) {
+        // Bias the current direction to be checked first to form long maze walls
+        dirs = [currentDir, ...dirs.filter(d => d.dx !== currentDir.dx || d.dy !== currentDir.dy)];
+      }
+
       let moved = false;
       for (const d of dirs) {
         const nx = cx + d.dx;
@@ -103,6 +116,7 @@ export function generateLevel(levelIndex) {
           localVisited.add(`${nx},${ny}`);
           cx = nx;
           cy = ny;
+          currentDir = d;
           moved = true;
           break;
         }

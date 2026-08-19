@@ -15,6 +15,15 @@
         .score-box { position: absolute; top: 20px; left: 20px; font-family: "Plus Jakarta Sans", sans-serif; font-size: 24px; font-weight: 800; color: #FFF; text-shadow: 2px 2px 4px #000; }
         .level-box { position: absolute; top: 55px; left: 20px; font-family: "Plus Jakarta Sans", sans-serif; font-size: 16px; font-weight: 800; color: #FF8E1F; text-shadow: 2px 2px 4px #000; }
         .lives-box { position: absolute; top: 20px; right: 20px; font-size: 24px; letter-spacing: 3px; text-shadow: 2px 2px 4px #000; }
+        .slowmo-bar { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); width: 200px; height: 22px; border-radius: 12px; border: 2px solid rgba(255,255,255,0.4); background: rgba(0,0,0,0.5); overflow: hidden; display: none; }
+        .slowmo-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #00BFFF, #00FFFF); transition: width 0.1s linear; }
+        .slowmo-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-family: "Plus Jakarta Sans", sans-serif; font-size: 11px; font-weight: 800; color: #FFF; text-shadow: 1px 1px 2px #000; }
+        .slowmo-count { position: absolute; bottom: 58px; left: 50%; transform: translateX(-50%); font-family: "Plus Jakarta Sans", sans-serif; font-size: 12px; font-weight: 700; color: #87CEEB; text-shadow: 1px 1px 3px #000; display: none; }
+
+        .frenzy-bar { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); width: 200px; height: 22px; border-radius: 12px; border: 2px solid rgba(255,255,255,0.4); background: rgba(0,0,0,0.5); overflow: hidden; display: none; }
+        .frenzy-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #FF8C00, #FFD700); transition: width 0.1s linear; }
+        .frenzy-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-family: "Plus Jakarta Sans", sans-serif; font-size: 11px; font-weight: 800; color: #FFF; text-shadow: 1px 1px 2px #000; }
+        .frenzy-count { position: absolute; bottom: 108px; left: 50%; transform: translateX(-50%); font-family: "Plus Jakarta Sans", sans-serif; font-size: 12px; font-weight: 700; color: #FFA500; text-shadow: 1px 1px 3px #000; display: none; }
         .mode-farasan .score-box {
             top: 36px !important;
             left: 36px !important;
@@ -273,6 +282,16 @@
         <div class="score-box">Score: <span id="score-val">0</span></div>
         <div class="level-box" id="level-val">લેવલ: ૧</div>
         <div class="lives-box" id="lives-val">❤️❤️❤️</div>
+        <div class="slowmo-count" id="slowmo-count"></div>
+        <div class="slowmo-bar" id="slowmo-bar">
+            <div class="slowmo-fill" id="slowmo-fill"></div>
+            <div class="slowmo-text" id="slowmo-text"></div>
+        </div>
+        <div class="frenzy-count" id="frenzy-count"></div>
+        <div class="frenzy-bar" id="frenzy-bar">
+            <div class="frenzy-fill" id="frenzy-fill"></div>
+            <div class="frenzy-text" id="frenzy-text"></div>
+        </div>
         
         <div id="start-screen">
             <div class="menu-card">
@@ -403,7 +422,13 @@
         let level = 1;
         let levelScoreTarget = 150;
         let frenzyTimer = 0;
+        let frenzyUsed = 0;
+        const FRENZY_MAX_PER_LEVEL = 2;
+        const FRENZY_DURATION = 180; // ~6 seconds at 30fps
         let slowMoTimer = 0;
+        let slowMoUsed = 0;
+        const SLOWMO_MAX_PER_LEVEL = 2;
+        const SLOWMO_DURATION = 180; // ~6 seconds at 30fps
         let levelUpBannerTimer = 0;
         let fruits = [];
         let particles = [];
@@ -647,18 +672,38 @@
                         for(let i=0; i<15; i++) particles.push(new Particle(this.x, this.y, '#00FFFF'));
                     }
 
-                    // Trigger Frenzy Mode
+                    // Trigger Frenzy Mode (limited per level)
                     if (this.type === 'frenzy') {
-                        frenzyTimer = 600;
-                        floatingTexts.push(new FloatingText(this.x, this.y - 70, mode === 'farasan' ? `✨ ફાફડા ફ્રેન્ઝી! ✨` : `✨ પતંગ ફ્રેન્ઝી! ✨`, '#FFD700', 26));
-                        playLevelUpSound();
+                        if (frenzyUsed < FRENZY_MAX_PER_LEVEL) {
+                            frenzyTimer = FRENZY_DURATION;
+                            frenzyUsed++;
+                            const remaining = FRENZY_MAX_PER_LEVEL - frenzyUsed;
+                            floatingTexts.push(new FloatingText(this.x, this.y - 70, mode === 'farasan' ? `✨ ફાફડા ફ્રેન્ઝી! (${toGujaratiNum(remaining)} બાકી) ✨` : `✨ પતંગ ફ્રેન્ઝી! (${toGujaratiNum(remaining)} બાકી) ✨`, '#FFD700', 26));
+                            playLevelUpSound();
+                            showFrenzyBar();
+                        } else {
+                            // No more frenzy left, just give bonus points
+                            score += 15;
+                            ui.score.innerText = toGujaratiNum(score);
+                            floatingTexts.push(new FloatingText(this.x, this.y - 70, `+૧૫ બોનસ!`, '#FFD700', 22));
+                        }
                     }
                     
-                    // Trigger Slow Mo Mode
+                    // Trigger Slow Mo Mode (limited per level)
                     if (this.type === 'slowmo') {
-                        slowMoTimer = 300;
-                        floatingTexts.push(new FloatingText(this.x, this.y - 70, `⏳ સ્લો-મોશન! ⏳`, '#00FFFF', 26));
-                        playLevelUpSound();
+                        if (slowMoUsed < SLOWMO_MAX_PER_LEVEL) {
+                            slowMoTimer = SLOWMO_DURATION;
+                            slowMoUsed++;
+                            const remaining = SLOWMO_MAX_PER_LEVEL - slowMoUsed;
+                            floatingTexts.push(new FloatingText(this.x, this.y - 70, `⏳ સ્લો-મોશન! (${toGujaratiNum(remaining)} બાકી) ⏳`, '#00FFFF', 26));
+                            playLevelUpSound();
+                            showSlowMoBar();
+                        } else {
+                            // No more slow-mo left, just give bonus points
+                            score += 15;
+                            ui.score.innerText = toGujaratiNum(score);
+                            floatingTexts.push(new FloatingText(this.x, this.y - 70, `+૧૫ બોનસ!`, '#FFD700', 22));
+                        }
                     }
 
                     // Check Level Up
@@ -667,6 +712,8 @@
                         levelScoreTarget += 150 * level;
                         playLevelUpSound();
                         levelUpBannerTimer = 120;
+                        slowMoUsed = 0; // Reset slow-mo uses for new level
+                        frenzyUsed = 0; // Reset frenzy uses for new level
                         const levelValEl = document.getElementById('level-val');
                         if (levelValEl) levelValEl.innerText = `લેવલ: ${toGujaratiNum(level)}`;
                         
@@ -754,6 +801,60 @@
                 }
                 ui.lives.innerHTML = html;
             }
+        }
+
+        function showSlowMoBar() {
+            const bar = document.getElementById('slowmo-bar');
+            const count = document.getElementById('slowmo-count');
+            if (bar) bar.style.display = 'block';
+            if (count) {
+                count.style.display = 'block';
+                count.innerText = `⏳ સ્લો-મો: ${SLOWMO_MAX_PER_LEVEL - slowMoUsed}/${SLOWMO_MAX_PER_LEVEL} બાકી`;
+            }
+        }
+
+        function updateSlowMoBar() {
+            const fill = document.getElementById('slowmo-fill');
+            const text = document.getElementById('slowmo-text');
+            const pct = (slowMoTimer / SLOWMO_DURATION) * 100;
+            const secs = Math.ceil(slowMoTimer / 30);
+            if (fill) fill.style.width = pct + '%';
+            if (text) text.innerText = `⏳ ${toGujaratiNum(secs)} સેકન્ડ`;
+        }
+
+        function hideSlowMoBar() {
+            const bar = document.getElementById('slowmo-bar');
+            const count = document.getElementById('slowmo-count');
+            if (bar) bar.style.display = 'none';
+            if (count) count.style.display = 'none';
+        }
+
+        function showFrenzyBar() {
+            const bar = document.getElementById('frenzy-bar');
+            const count = document.getElementById('frenzy-count');
+            if (bar) bar.style.display = 'block';
+            if (count) {
+                count.style.display = 'block';
+                count.innerText = mode === 'farasan' 
+                    ? `✨ ફ્રેન્ઝી: ${FRENZY_MAX_PER_LEVEL - frenzyUsed}/${FRENZY_MAX_PER_LEVEL} બાકી`
+                    : `✨ ફ્રેન્ઝી: ${FRENZY_MAX_PER_LEVEL - frenzyUsed}/${FRENZY_MAX_PER_LEVEL} બાકી`;
+            }
+        }
+
+        function updateFrenzyBar() {
+            const fill = document.getElementById('frenzy-fill');
+            const text = document.getElementById('frenzy-text');
+            const pct = (frenzyTimer / FRENZY_DURATION) * 100;
+            const secs = Math.ceil(frenzyTimer / 30);
+            if (fill) fill.style.width = pct + '%';
+            if (text) text.innerText = `✨ ${toGujaratiNum(secs)} સેકન્ડ`;
+        }
+
+        function hideFrenzyBar() {
+            const bar = document.getElementById('frenzy-bar');
+            const count = document.getElementById('frenzy-count');
+            if (bar) bar.style.display = 'none';
+            if (count) count.style.display = 'none';
         }
 
         function loseLife(amount = 1) {
@@ -1110,8 +1211,16 @@
             spawnFruit();
             emblemRotation += 0.003;
             
-            if (frenzyTimer > 0) frenzyTimer--;
-            if (slowMoTimer > 0) slowMoTimer--;
+            if (frenzyTimer > 0) {
+                frenzyTimer--;
+                updateFrenzyBar();
+                if (frenzyTimer <= 0) hideFrenzyBar();
+            }
+            if (slowMoTimer > 0) {
+                slowMoTimer--;
+                updateSlowMoBar();
+                if (slowMoTimer <= 0) hideSlowMoBar();
+            }
             if (levelUpBannerTimer > 0) levelUpBannerTimer--;
             
             if (recentSlices.length > 0 && Date.now() - recentSlices[recentSlices.length - 1].time > 400) {
@@ -1276,6 +1385,11 @@
             level = 1;
             levelScoreTarget = 150;
             frenzyTimer = 0;
+            frenzyUsed = 0;
+            hideFrenzyBar();
+            slowMoTimer = 0;
+            slowMoUsed = 0;
+            hideSlowMoBar();
             levelUpBannerTimer = 0;
             fruits = [];
             particles = [];
@@ -1294,6 +1408,8 @@
 
         function gameOver() {
             state = 'GAMEOVER';
+            hideSlowMoBar();
+            hideFrenzyBar();
             ui.finalScore.innerText = toGujaratiNum(score);
             ui.gameover.classList.remove('hidden');
             

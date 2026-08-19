@@ -225,6 +225,8 @@ export function generateFullKundaliData(fullName, dobStr, tobStr, noTime, coords
   const [hours, minutes] = finalTob.split(":").map(Number);
 
   const dateObj = new Date(Date.UTC(year, month - 1, day, hours - 5, minutes - 30));
+  const julianDate = (dateObj.getTime() / 86400000) + 2440587.5;
+  const d = julianDate - 2451545.0;
 
   const lat = coords ? parseFloat(coords.lat) : 23.0225; // default Ahmedabad
   const lon = coords ? parseFloat(coords.lon) : 72.5714; // default Ahmedabad
