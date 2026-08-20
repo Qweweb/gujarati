@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import LeaderboardUnified from './LeaderboardUnified';
 import { useNavigate } from 'react-router-dom';
 import { GENERATED_QUESTIONS, EXTRACTED_GAMES_QUESTIONS } from '../data/quizQuestions';
+import { downloadAsPDF } from '../utils/downloadHelper';
 
 // Web Audio API Sound Synthesizer for Immersive Quiz Experience
 const playSound = (type) => {
@@ -615,8 +616,18 @@ const KbcQuizGame = ({ initialMode = 'daily', onBack }) => {
     }
   };
 
-  const printCertificate = () => {
-    window.print();
+  const printCertificate = async () => {
+    try {
+      const certElement = document.getElementById('quiz-certificate');
+      if (certElement) {
+        await downloadAsPDF(certElement, `Quiz_Certificate_${score}.pdf`);
+      } else {
+        window.print();
+      }
+    } catch (err) {
+      console.error("Certificate print error:", err);
+      window.print();
+    }
   };
 
   return (
