@@ -773,28 +773,30 @@ const KundaliGenerator = ({ defaultTab = 'kundali' }) => {
             {/* PAGE 2: PLANET POSITIONS & PREDICTIONS */}
             <div className="kundali-page page-break-before">
               <div className="section-title">૩. ગ્રહ સ્પષ્ટ સ્થિતિ કોષ્ટક</div>
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>ગ્રહ (Planet)</th>
-                    <th>રાશિ (Rashi)</th>
-                    <th>રાશિ સ્વામી (Lord)</th>
-                    <th>નક્ષત્ર (Nakshatra)</th>
-                    <th>ચરણ (Pada)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {kundaliData.planetDetailsList.map((p, idx) => (
-                    <tr key={idx}>
-                      <td style={{ color: getPlanetColorForTable(p.key), fontWeight: 'bold' }}>{p.fullName}</td>
-                      <td>{p.rashiName}</td>
-                      <td>{p.rashiLord}</td>
-                      <td>{p.nakshatraName}</td>
-                      <td>{toGujaratiNum(p.pada)}</td>
+              <div className="overflow-x-auto w-full my-3 rounded-2xl border border-[#e5d5b5] shadow-xs">
+                <table className="data-table mb-0 w-full text-xs sm:text-sm min-w-[340px]">
+                  <thead>
+                    <tr className="bg-[#7c1d1d] text-white">
+                      <th className="py-2.5 px-2 text-center whitespace-nowrap text-[11px] sm:text-xs">ગ્રહ (Planet)</th>
+                      <th className="py-2.5 px-2 text-center whitespace-nowrap text-[11px] sm:text-xs">રાશિ (Rashi)</th>
+                      <th className="py-2.5 px-2 text-center whitespace-nowrap text-[11px] sm:text-xs">રાશિ સ્વામી (Lord)</th>
+                      <th className="py-2.5 px-2 text-center whitespace-nowrap text-[11px] sm:text-xs">નક્ષત્ર (Nakshatra)</th>
+                      <th className="py-2.5 px-2 text-center whitespace-nowrap text-[11px] sm:text-xs">ચરણ (Pada)</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {kundaliData.planetDetailsList.map((p, idx) => (
+                      <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-[#fffdf9]'}>
+                        <td className="py-2 px-1.5 text-center font-bold text-[11px] sm:text-xs whitespace-nowrap" style={{ color: getPlanetColorForTable(p.key) }}>{p.fullName}</td>
+                        <td className="py-2 px-1.5 text-center text-[11px] sm:text-xs whitespace-nowrap">{p.rashiName}</td>
+                        <td className="py-2 px-1.5 text-center text-[11px] sm:text-xs whitespace-nowrap">{p.rashiLord}</td>
+                        <td className="py-2 px-1.5 text-center text-[11px] sm:text-xs whitespace-nowrap">{p.nakshatraName}</td>
+                        <td className="py-2 px-1.5 text-center text-[11px] sm:text-xs font-bold whitespace-nowrap">{toGujaratiNum(p.pada)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 
               <div className="section-title">૪. વ્યક્તિગત જ્યોતિષીય વિશ્લેષણ</div>
               <div className="prediction-box">

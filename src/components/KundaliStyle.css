@@ -259,6 +259,28 @@
   break-before: page;
 }
 
+@media screen and (max-width: 640px) {
+  .kundali-page {
+    padding: 14px 10px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+  }
+
+  .info-table, .data-table {
+    font-size: 11px;
+  }
+
+  .info-table td, .data-table td, .data-table th {
+    padding: 6px 3px;
+  }
+
+  .section-title {
+    font-size: 14px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+}
+
 @media print {
   @page {
     size: A4;
