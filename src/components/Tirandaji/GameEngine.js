@@ -153,6 +153,22 @@ export function generateLevel(levelIndex) {
          continue; // Not aligned, reject this placement
       }
 
+      // Check self-intersection: Does head pointing in escapeDir hit any of its OWN body segments?
+      let hitsOwnBody = false;
+      let checkSelfX = head.x + edx;
+      let checkSelfY = head.y + edy;
+      while (!isOutOfBounds(checkSelfX, checkSelfY, size)) {
+        if (shiftedPath.some(seg => seg.x === checkSelfX && seg.y === checkSelfY)) {
+          hitsOwnBody = true;
+          break;
+        }
+        checkSelfX += edx;
+        checkSelfY += edy;
+      }
+      if (hitsOwnBody) {
+        continue; // Foul! Arrow points to its own body, reject placement!
+      }
+
       // Check if it can SLITHER escape through CURRENTLY PLACED shapes (reverse time)
       // Since it slithers, ONLY the straight path from the head in escapeDir must be clear!
       let hitObstacles = false;
@@ -226,10 +242,10 @@ export function canShapeMove(targetShape, allShapes, boardSize) {
   let ty = head.y + dy;
 
   while (!isOutOfBounds(tx, ty, boardSize)) {
-    // Check if any other active shape occupies (tx, ty)
+    // Check if any active shape (including targetShape's own body segments) occupies (tx, ty)
     for (const shape of allShapes) {
-      if (shape.id === targetShape.id) continue;
       for (const seg of shape.segments) {
+        if (shape.id === targetShape.id && seg.x === head.x && seg.y === head.y) continue;
         if (seg.x === tx && seg.y === ty) {
           return false;
         }
