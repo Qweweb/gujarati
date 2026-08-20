@@ -4,6 +4,7 @@ import { useReactToPrint } from 'react-to-print';
 import './KundaliStyle.css';
 import GunMilan from './GunMilan';
 import { generateFullKundaliData } from '../utils/astroEngine';
+import { downloadAsPDF } from '../utils/downloadHelper';
 
 const getPlanetColorForTable = (p) => {
   if (p === "સૂ") return "#ea580c"; // Sun - Orange
@@ -119,6 +120,7 @@ const DASHAS_LIST = ["કેતુ", "શુક્ર", "સૂર્ય", "ચ�
 const KundaliGenerator = ({ defaultTab = 'kundali' }) => {
   const navigate = useNavigate();
   const printRef = useRef(null);
+  const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
 
   // --- STATE DECLARATIONS ---
   const [fullName, setFullName] = useState("");
@@ -496,14 +498,23 @@ const KundaliGenerator = ({ defaultTab = 'kundali' }) => {
     );
   };
 
-  // --- DYNAMIC PDF PRINT TRIGGER (utilizing react-to-print) ---
+  // --- DYNAMIC PDF PRINT TRIGGER ---
   const handlePrint = useReactToPrint({
     contentRef: printRef,
     documentTitle: `Kundali_${fullName || 'Report'}`,
   });
 
-  const triggerPDFDownload = () => {
-    handlePrint();
+  const triggerPDFDownload = async () => {
+    if (!printRef.current) return;
+    setIsDownloadingPDF(true);
+    try {
+      await downloadAsPDF(printRef.current, `Kundali_${fullName || 'Patrika'}.pdf`);
+    } catch (err) {
+      console.error("PDF download error, using fallback print:", err);
+      handlePrint();
+    } finally {
+      setIsDownloadingPDF(false);
+    }
   };
 
   // --- WHATSAPP SHARE GENERATOR ---
@@ -910,11 +921,22 @@ const KundaliGenerator = ({ defaultTab = 'kundali' }) => {
       {isCalculated && (
         <div className="flex flex-wrap gap-3 justify-center pt-4 pb-8 print:hidden">
           <button 
+            type="button"
+            disabled={isDownloadingPDF}
             onClick={triggerPDFDownload}
-            className="bg-[#991b1b] hover:bg-[#7c1d1d] text-white font-gujarati font-black py-3.5 px-6 rounded-2xl shadow-lg flex items-center gap-2 active:scale-95 transition-all text-xs cursor-pointer"
+            className="bg-[#991b1b] hover:bg-[#7c1d1d] disabled:opacity-50 text-white font-gujarati font-black py-3.5 px-6 rounded-2xl shadow-lg flex items-center gap-2 active:scale-95 transition-all text-xs cursor-pointer"
           >
-            <span className="material-symbols-outlined text-lg">download</span>
-            કુંડળી PDF ડાઉનલોડ / પ્રિન્ટ કરો 📥
+            {isDownloadingPDF ? (
+              <>
+                <span className="material-symbols-outlined text-lg animate-spin">progress_activity</span>
+                કુંડળી PDF તૈયાર થઈ રહી છે... ⏳
+              </>
+            ) : (
+              <>
+                <span className="material-symbols-outlined text-lg">download</span>
+                કુંડળી PDF ડાઉનલોડ કરો 📥
+              </>
+            )}
           </button>
           <button 
             onClick={triggerWhatsAppShare}
