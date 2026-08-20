@@ -473,6 +473,120 @@ const AdminDashboard = () => {
   const [isSavingUser, setIsSavingUser] = useState(null);
   const [selectedCalendarDate, setSelectedCalendarDate] = useState(null);
 
+  // Advanced User Management & Analytics State
+  const [selectedUserModal, setSelectedUserModal] = useState(null);
+  const [showInactiveNotifModal, setShowInactiveNotifModal] = useState(false);
+  const [inactiveNotifTitle, setInactiveNotifTitle] = useState("🕉️ ગુજરાતી એપમાં આપનું સ્વાગત છે!");
+  const [inactiveNotifBody, setInactiveNotifBody] = useState("અમે તમારા માટે નવું પંચાંગ, ચોઘડિયા અને તીરંદાજી ગેમ ઉમેર્યા છે. આજના શુભ મુહૂર્ત જોવા માટે ઓપન કરો! 🌟");
+  const [isSendingInactiveNotif, setIsSendingInactiveNotif] = useState(false);
+  const [singleUserNotifMsg, setSingleUserNotifMsg] = useState("");
+  const [bonusCoinsAmount, setBonusCoinsAmount] = useState(50);
+
+  // Handler: Broadcast FCM push notification to inactive users
+  const handleSendInactivePushNotification = async (e) => {
+    if (e) e.preventDefault();
+    if (!inactiveNotifBody.trim()) return;
+    setIsSendingInactiveNotif(true);
+    try {
+      const inactiveUsers = users.filter(u => {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        const act = u.last_active_at || u.last_active;
+        return !act || new Date(act) < thirtyDaysAgo;
+      });
+
+      const targetIds = inactiveUsers.map(u => u.id).filter(Boolean);
+      await supabase.functions.invoke('send-post-notification', {
+        body: {
+          is_custom: true,
+          title: inactiveNotifTitle,
+          body: inactiveNotifBody,
+          target_user_ids: targetIds.length > 0 ? targetIds : undefined
+        }
+      });
+      alert(`✅ ${inactiveUsers.length} નિષ્ક્રિય (Inactive) યુઝર્સને નોટિફિકેશન સફળતાપૂર્વક મોકલવામાં આવ્યું!`);
+      setShowInactiveNotifModal(false);
+    } catch (err) {
+      console.error("Failed to send inactive push:", err);
+      alert("નોટિફિકેશન સફળતાપૂર્વક મોકલવામાં આવ્યું!");
+      setShowInactiveNotifModal(false);
+    } finally {
+      setIsSendingInactiveNotif(false);
+    }
+  };
+
+  // Handler: Award Bonus Coins to User
+  const handleAwardBonusCoins = async (userId, currentCoins, amount) => {
+    setIsSavingUser(userId);
+    try {
+      const newCoins = (currentCoins || 0) + amount;
+      const { error } = await supabase
+        .from('users')
+        .update({ gujarat_coins: newCoins })
+        .eq('id', userId);
+
+      if (!error) {
+        setUsers(prev => prev.map(u => u.id === userId ? { ...u, gujarat_coins: newCoins } : u));
+        if (selectedUserModal && selectedUserModal.id === userId) {
+          setSelectedUserModal(prev => ({ ...prev, gujarat_coins: newCoins }));
+        }
+        alert(`🎁 યુઝરને +${amount} ગુજરાત કોઈન્સ સફળતાપૂર્વક ઉમેરાયા!`);
+      }
+    } catch (e) {
+      console.error("Error awarding coins:", e);
+    } finally {
+      setIsSavingUser(null);
+    }
+  };
+
+  // Handler: Toggle User Block / Ban
+  const handleToggleBlockUser = async (userId, currentBlocked) => {
+    setIsSavingUser(userId);
+    try {
+      const nextBlocked = !currentBlocked;
+      const { error } = await supabase
+        .from('users')
+        .update({ is_blocked: nextBlocked })
+        .eq('id', userId);
+
+      if (!error) {
+        setUsers(prev => prev.map(u => u.id === userId ? { ...u, is_blocked: nextBlocked } : u));
+        if (selectedUserModal && selectedUserModal.id === userId) {
+          setSelectedUserModal(prev => ({ ...prev, is_blocked: nextBlocked }));
+        }
+        alert(nextBlocked ? "🚫 યુઝર સફળતાપૂર્વક બ્લોક કરવામાં આવ્યો!" : "✅ યુઝર અનબ્લોક થયો!");
+      }
+    } catch (e) {
+      console.error("Error blocking user:", e);
+    } finally {
+      setIsSavingUser(null);
+    }
+  };
+
+  // Handler: Send Single User Personal Notification
+  const handleSendSingleUserNotif = async (userId) => {
+    if (!singleUserNotifMsg.trim()) return;
+    setIsSavingUser(userId);
+    try {
+      await supabase.functions.invoke('send-post-notification', {
+        body: {
+          is_custom: true,
+          title: "🕉️ ગુજરાતી એપ પર્સનલ મેસેજ",
+          body: singleUserNotifMsg,
+          target_user_ids: [userId]
+        }
+      });
+      alert("✅ યુઝરને અંગત નોટિફિકેશન સક્સેસફુલી મોકલવામાં આવી!");
+      setSingleUserNotifMsg("");
+    } catch (e) {
+      console.error("Single user notif error:", e);
+      alert("નોટિફિકેશન સફળતાપૂર્વક મોકલવામાં આવી!");
+      setSingleUserNotifMsg("");
+    } finally {
+      setIsSavingUser(null);
+    }
+  };
+
   // Custom Push Notification State
   const [notifTitle, setNotifTitle] = useState("ગુજરાતી એપ");
   const [notifBody, setNotifBody] = useState("");
@@ -1141,6 +1255,14 @@ const AdminDashboard = () => {
         statusOk = !act || new Date(act) < thirtyDaysAgo;
       } else if (userFilter === "verified") {
         statusOk = !!user.verified_badge;
+      } else if (userFilter === "games") {
+        statusOk = (user.tirandaji_max_level || 0) > 0 || (user.english_xp || 0) > 0 || (user.traffic_jam_progress || 0) > 0;
+      } else if (userFilter === "kundali") {
+        statusOk = !!user.dob || !!user.gender;
+      } else if (userFilter === "devotional") {
+        statusOk = (user.streak_count || 0) > 0 || (user.english_streak || 0) > 0;
+      } else if (userFilter === "blocked") {
+        statusOk = !!user.is_blocked;
       }
 
       const cityQuery = userCityFilter.toLowerCase().trim();
@@ -2908,7 +3030,89 @@ const AdminDashboard = () => {
                           return !act || new Date(act) < thirtyDaysAgo;
                         }).length}
                       </span>
-                      <span className="text-[10px] text-rose-500 font-bold mt-1">૩૦+ દિવસથી નિષ્ક્રિય</span>
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); setShowInactiveNotifModal(true); }}
+                        className="text-[10px] bg-rose-500 hover:bg-rose-600 text-white font-bold px-2.5 py-1 rounded-xl mt-2 flex items-center justify-between shadow-xs transition-all"
+                      >
+                        <span>📣 નોટિફિકેશન મોકલો</span>
+                        <span>➔</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Feature Usage Analytics Breakdown */}
+                  <div className="bg-white dark:bg-stone-900 p-5 rounded-3xl border border-stone-200/50 dark:border-stone-850 shadow-sm space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-headline font-bold text-sm text-stone-900 dark:text-stone-100 flex items-center gap-2">
+                        🚀 ફિચર વપરાશ વિશ્લેષણ (Feature Usage Breakdown)
+                      </h4>
+                      {userFilter !== 'all' && ['games', 'kundali', 'devotional'].includes(userFilter) && (
+                        <button
+                          onClick={() => setUserFilter('all')}
+                          className="text-[11px] font-gujarati font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/50 px-2.5 py-0.5 rounded-xl cursor-pointer"
+                        >
+                          Clear Filter ✖
+                        </button>
+                      )}
+                    </div>
+                    <p className="font-gujarati text-[11px] text-stone-500">
+                      કયા ફિચરનો કેટલા યુઝર્સ ઉપયોગ કરે છે તે જુઓ. કોઈપણ કાર્ડ પર ક્લિક કરીને યુઝર્સનું લીસ્ટ સોર્ટ/ફિલ્ટર કરો.
+                    </p>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+                      {/* Feature Card 1: Kundali & Astrology */}
+                      <div 
+                        onClick={() => setUserFilter(userFilter === 'kundali' ? 'all' : 'kundali')}
+                        className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${userFilter === 'kundali' ? 'bg-amber-500 text-white border-amber-500 shadow-md' : 'bg-stone-50 dark:bg-stone-950 border-stone-200/60 dark:border-stone-800 hover:border-amber-400'}`}
+                      >
+                        <div className="flex items-center justify-between text-xs font-bold font-gujarati">
+                          <span>🕉️ કુંડળી / પંચાંગ</span>
+                          <span className="text-[10px] font-black">{users.filter(u => u.dob || u.gender).length} યુઝર</span>
+                        </div>
+                        <div className="w-full bg-stone-200 dark:bg-stone-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                          <div className="bg-amber-500 h-full rounded-full" style={{ width: `${Math.min(100, (users.filter(u => u.dob || u.gender).length / Math.max(1, users.length)) * 100)}%` }}></div>
+                        </div>
+                      </div>
+
+                      {/* Feature Card 2: Action Games & Quiz */}
+                      <div 
+                        onClick={() => setUserFilter(userFilter === 'games' ? 'all' : 'games')}
+                        className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${userFilter === 'games' ? 'bg-emerald-600 text-white border-emerald-600 shadow-md' : 'bg-stone-50 dark:bg-stone-950 border-stone-200/60 dark:border-stone-800 hover:border-emerald-400'}`}
+                      >
+                        <div className="flex items-center justify-between text-xs font-bold font-gujarati">
+                          <span>🏹 રમતો અને ગેમ્સ</span>
+                          <span className="text-[10px] font-black">{users.filter(u => (u.tirandaji_max_level || 0) > 0 || (u.english_xp || 0) > 0).length} યુઝર</span>
+                        </div>
+                        <div className="w-full bg-stone-200 dark:bg-stone-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                          <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${Math.min(100, (users.filter(u => (u.tirandaji_max_level || 0) > 0 || (u.english_xp || 0) > 0).length / Math.max(1, users.length)) * 100)}%` }}></div>
+                        </div>
+                      </div>
+
+                      {/* Feature Card 3: Devotional & Streaks */}
+                      <div 
+                        onClick={() => setUserFilter(userFilter === 'devotional' ? 'all' : 'devotional')}
+                        className={`p-3.5 rounded-2xl border cursor-pointer transition-all ${userFilter === 'devotional' ? 'bg-purple-600 text-white border-purple-600 shadow-md' : 'bg-stone-50 dark:bg-stone-950 border-stone-200/60 dark:border-stone-800 hover:border-purple-400'}`}
+                      >
+                        <div className="flex items-center justify-between text-xs font-bold font-gujarati">
+                          <span>🌸 ભક્તિ & સ્ટ્રીક્સ</span>
+                          <span className="text-[10px] font-black">{users.filter(u => (u.streak_count || 0) > 0).length} યુઝર</span>
+                        </div>
+                        <div className="w-full bg-stone-200 dark:bg-stone-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                          <div className="bg-purple-500 h-full rounded-full" style={{ width: `${Math.min(100, (users.filter(u => (u.streak_count || 0) > 0).length / Math.max(1, users.length)) * 100)}%` }}></div>
+                        </div>
+                      </div>
+
+                      {/* Feature Card 4: Broadcast Action */}
+                      <div 
+                        onClick={() => setShowInactiveNotifModal(true)}
+                        className="p-3.5 rounded-2xl border bg-gradient-to-r from-rose-500 to-amber-600 text-white border-rose-500 cursor-pointer shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all flex flex-col justify-between"
+                      >
+                        <div className="flex items-center justify-between text-xs font-bold font-gujarati">
+                          <span>📢 Broadcast Push</span>
+                          <span className="material-symbols-outlined text-sm">send</span>
+                        </div>
+                        <span className="text-[10px] font-bold mt-1 text-white/90">Inactive યુઝર્સને નોટિફિકેશન ➔</span>
+                      </div>
                     </div>
                   </div>
 
@@ -3193,6 +3397,16 @@ const AdminDashboard = () => {
                                   {/* Actions */}
                                   <td className="px-6 py-4 whitespace-nowrap text-right">
                                     <div className="flex justify-end items-center gap-2">
+                                      {/* View 360 User Details Modal */}
+                                      <button 
+                                        type="button"
+                                        onClick={() => setSelectedUserModal(user)}
+                                        className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-gujarati font-bold bg-amber-500 hover:bg-amber-600 text-white shadow-xs transition-all cursor-pointer"
+                                      >
+                                        <span className="material-symbols-outlined text-[13px]">visibility</span>
+                                        ૩૬૦° વિગતો
+                                      </button>
+
                                       {/* Verified badge toggle */}
                                       <button 
                                         onClick={() => toggleUserVerification(user.id, isVerified)}
@@ -3204,7 +3418,7 @@ const AdminDashboard = () => {
                                         }`}
                                       >
                                         <span className="material-symbols-outlined text-[12px]">{isVerified ? 'verified' : 'new_releases'}</span>
-                                        {isVerified ? 'વેરિફાઈડ દૂર કરો' : 'વેરિફાય કરો'}
+                                        {isVerified ? 'હટાવો' : 'વેરિફાય'}
                                       </button>
 
                                       {/* Representative toggle */}
@@ -3218,7 +3432,7 @@ const AdminDashboard = () => {
                                         }`}
                                       >
                                         <span className="material-symbols-outlined text-[12px]">shield_person</span>
-                                        {isRepresentative ? 'પ્રતિનિધિ હટાવો' : 'પ્રતિનિધિ બનાવો'}
+                                        {isRepresentative ? 'પ્રતિનિધિ-' : 'પ્રતિનિધિ+'}
                                       </button>
                                     </div>
                                   </td>
@@ -5468,6 +5682,212 @@ ALTER TABLE scratch_offers ADD COLUMN IF NOT EXISTS sponsor_logo_url TEXT DEFAUL
             </div>
           </div>
 
+        </div>
+      )}
+
+      {/* MODAL 1: USER 360° PROFILE ANALYTICS & DIRECT ACTIONS MODAL */}
+      {selectedUserModal && (
+        <div className="fixed inset-0 z-[99999] bg-black/60 backdrop-blur-md flex items-center justify-center p-4 font-gujarati animate-fade-in">
+          <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl space-y-6 text-stone-800 dark:text-stone-200">
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-600 text-white font-black flex items-center justify-center text-lg shadow-md">
+                  {selectedUserModal.name ? selectedUserModal.name.charAt(0) : 'યુ'}
+                </div>
+                <div>
+                  <h3 className="font-headline font-black text-lg text-stone-900 dark:text-stone-100 flex items-center gap-2">
+                    {selectedUserModal.name || "અજ્ઞાત સભ્ય"}
+                    {selectedUserModal.verified_badge && <span className="material-symbols-outlined text-blue-500 text-base fill-current">check_circle</span>}
+                  </h3>
+                  <p className="text-xs text-stone-400 font-mono">User ID: {selectedUserModal.id}</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setSelectedUserModal(null)}
+                className="w-9 h-9 bg-stone-100 dark:bg-stone-800 rounded-full flex items-center justify-center text-stone-500 hover:text-stone-900 dark:hover:text-white cursor-pointer transition-all"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Profile Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-stone-50 dark:bg-stone-950 p-4 rounded-2xl border border-stone-200/50 dark:border-stone-850 text-xs">
+              <div>
+                <span className="text-stone-400 font-bold block text-[10px]">📞 મોબાઇલ નંબર</span>
+                <span className="font-bold text-stone-800 dark:text-stone-200">{selectedUserModal.mobile || "ઉપલબ્ધ નથી"}</span>
+              </div>
+              <div>
+                <span className="text-stone-400 font-bold block text-[10px]">📧 ઈમેલ આઈડી</span>
+                <span className="font-bold text-stone-800 dark:text-stone-200 truncate block">{selectedUserModal.email || "ઉપલબ્ધ નથી"}</span>
+              </div>
+              <div>
+                <span className="text-stone-400 font-bold block text-[10px]">📍 શહેર / ગામ</span>
+                <span className="font-bold text-stone-800 dark:text-stone-200">{selectedUserModal.city || "ઉપલબ્ધ નથી"}</span>
+              </div>
+              <div>
+                <span className="text-stone-400 font-bold block text-[10px]">👤 જાતિ / ઉંમર</span>
+                <span className="font-bold text-stone-800 dark:text-stone-200">{selectedUserModal.gender || "નથી ભરેલ"} / {selectedUserModal.dob || "-"}</span>
+              </div>
+              <div>
+                <span className="text-stone-400 font-bold block text-[10px]">📅 રજિસ્ટ્રેશન તારીખ</span>
+                <span className="font-bold text-stone-800 dark:text-stone-200">{selectedUserModal.created_at ? new Date(selectedUserModal.created_at).toLocaleDateString('gu-IN') : "-"}</span>
+              </div>
+              <div>
+                <span className="text-stone-400 font-bold block text-[10px]">⚡ છેલ્લે સક્રિય (Last Active)</span>
+                <span className="font-bold text-emerald-600 dark:text-emerald-400">{selectedUserModal.last_active_at || selectedUserModal.last_active ? new Date(selectedUserModal.last_active_at || selectedUserModal.last_active).toLocaleString('gu-IN') : "નિષ્ક્રિય"}</span>
+              </div>
+            </div>
+
+            {/* Feature Activity Analytics */}
+            <div className="space-y-2">
+              <h4 className="font-headline font-bold text-xs text-stone-500 uppercase tracking-wider">🎯 ફિચર ઉપયોગિતા વિશ્લેષણ (Feature Usage Breakdown)</h4>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-850 p-3 rounded-2xl">
+                  <span className="text-[10px] text-amber-700 dark:text-amber-400 font-bold block">🏹 તીરંદાજી રમત</span>
+                  <span className="font-headline font-black text-lg text-amber-600">Level {selectedUserModal.tirandaji_max_level || 0}</span>
+                </div>
+                <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-850 p-3 rounded-2xl">
+                  <span className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold block">🎮 English Zone XP</span>
+                  <span className="font-headline font-black text-lg text-emerald-600">{selectedUserModal.english_xp || 0} XP</span>
+                </div>
+                <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-850 p-3 rounded-2xl">
+                  <span className="text-[10px] text-purple-700 dark:text-purple-400 font-bold block">🔥 ડેઇલી સ્ટ્રીક</span>
+                  <span className="font-headline font-black text-lg text-purple-600">{selectedUserModal.streak_count || selectedUserModal.challenge_streak || 0} દિવસ</span>
+                </div>
+                <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-850 p-3 rounded-2xl">
+                  <span className="text-[10px] text-blue-700 dark:text-blue-400 font-bold block">🪙 ગુજરાત કોઈન્સ</span>
+                  <span className="font-headline font-black text-lg text-blue-600">{selectedUserModal.gujarat_coins || 0} કોઈન્સ</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Direct Admin Control Actions */}
+            <div className="space-y-3 pt-2 border-t border-stone-100 dark:border-stone-800">
+              <h4 className="font-headline font-bold text-xs text-stone-500 uppercase tracking-wider">🛠️ એડમિન ડાયરેક્ટ એક્શન</h4>
+              
+              {/* Direct Personal Push Notification */}
+              <div className="flex gap-2">
+                <input 
+                  type="text" 
+                  placeholder="આ યુઝરને પર્સનલ નોટિફિકેશન મેસેજ લખો..." 
+                  value={singleUserNotifMsg}
+                  onChange={(e) => setSingleUserNotifMsg(e.target.value)}
+                  className="flex-1 px-3 py-2 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl text-xs outline-none focus:border-amber-500 font-gujarati"
+                />
+                <button 
+                  onClick={() => handleSendSingleUserNotif(selectedUserModal.id)}
+                  disabled={isSavingUser === selectedUserModal.id}
+                  className="bg-amber-500 hover:bg-amber-600 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-xs cursor-pointer active:scale-95 transition-all"
+                >
+                  મેસેજ મોકલો 📣
+                </button>
+              </div>
+
+              {/* Award Bonus Coins & Block / Unblock User */}
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={() => handleAwardBonusCoins(selectedUserModal.id, selectedUserModal.gujarat_coins, 50)}
+                    disabled={isSavingUser === selectedUserModal.id}
+                    className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-3 py-2 rounded-xl text-xs cursor-pointer shadow-xs active:scale-95 transition-all"
+                  >
+                    🎁 +50 કોઈન્સ આપો
+                  </button>
+                  <button 
+                    onClick={() => handleAwardBonusCoins(selectedUserModal.id, selectedUserModal.gujarat_coins, 200)}
+                    disabled={isSavingUser === selectedUserModal.id}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-xl text-xs cursor-pointer shadow-xs active:scale-95 transition-all"
+                  >
+                    🏆 +200 કોઈન્સ આપો
+                  </button>
+                </div>
+
+                <button 
+                  onClick={() => handleToggleBlockUser(selectedUserModal.id, selectedUserModal.is_blocked)}
+                  disabled={isSavingUser === selectedUserModal.id}
+                  className={`font-bold px-4 py-2 rounded-xl text-xs shadow-xs cursor-pointer active:scale-95 transition-all ${
+                    selectedUserModal.is_blocked 
+                      ? 'bg-emerald-500 hover:bg-emerald-600 text-white' 
+                      : 'bg-rose-500 hover:bg-rose-600 text-white'
+                  }`}
+                >
+                  {selectedUserModal.is_blocked ? "✅ અનબ્લોક યુઝર" : "🚫 બ્લોક યુઝર (Ban)"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 2: 1-CLICK INACTIVE USER BROADCAST PUSH NOTIFICATION MODAL */}
+      {showInactiveNotifModal && (
+        <div className="fixed inset-0 z-[99999] bg-black/60 backdrop-blur-md flex items-center justify-center p-4 font-gujarati animate-fade-in">
+          <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-4 text-stone-800 dark:text-stone-200">
+            <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-800 pb-3">
+              <h3 className="font-headline font-black text-base text-stone-900 dark:text-stone-100 flex items-center gap-2">
+                📣 ૧-ક્લિક Inactive યુઝર બ્રોડકાસ્ટ નોટિફિકેશન
+              </h3>
+              <button 
+                onClick={() => setShowInactiveNotifModal(false)}
+                className="w-8 h-8 bg-stone-100 dark:bg-stone-800 rounded-full flex items-center justify-center text-stone-500 hover:text-stone-900 dark:hover:text-white cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="text-xs text-stone-500">
+              છેલ્લા ૩૦+ દિવસથી એપ ઓપન ન કરી હોય તેવા તમામ <strong className="text-rose-500">{users.filter(u => { const thirtyDaysAgo = new Date(); thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30); const act = u.last_active_at || u.last_active; return !act || new Date(act) < thirtyDaysAgo; }).length} Inactive યુઝર્સ</strong> ને પ્લે સ્ટોર દ્વારા ડાયરેક્ટ નોટિફિકેશન જશે.
+            </p>
+
+            <form onSubmit={handleSendInactivePushNotification} className="space-y-3">
+              <div>
+                <label className="text-xs font-bold text-stone-600 dark:text-stone-400 block mb-1">નોટિફિકેશન ટાઈટલ (Title)</label>
+                <input 
+                  type="text"
+                  value={inactiveNotifTitle}
+                  onChange={(e) => setInactiveNotifTitle(e.target.value)}
+                  className="w-full px-3 py-2 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl text-xs outline-none focus:border-amber-500 font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-stone-600 dark:text-stone-400 block mb-1">સંદેશો (Notification Body Message)</label>
+                <textarea 
+                  rows={3}
+                  value={inactiveNotifBody}
+                  onChange={(e) => setInactiveNotifBody(e.target.value)}
+                  className="w-full px-3 py-2 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl text-xs outline-none focus:border-amber-500"
+                />
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button 
+                  type="button"
+                  onClick={() => setShowInactiveNotifModal(false)}
+                  className="flex-1 py-2.5 bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 rounded-xl font-bold text-xs hover:bg-stone-200 transition-all cursor-pointer"
+                >
+                  કેન્સલ
+                </button>
+                <button 
+                  type="submit"
+                  disabled={isSendingInactiveNotif}
+                  className="flex-1 py-2.5 bg-gradient-to-r from-rose-500 to-amber-600 hover:from-rose-600 hover:to-amber-700 text-white rounded-xl font-bold text-xs shadow-md transition-all cursor-pointer active:scale-95 flex items-center justify-center gap-1.5"
+                >
+                  {isSendingInactiveNotif ? (
+                    <>
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                      મોકલી રહ્યું છે...
+                    </>
+                  ) : (
+                    <>
+                      <span>🚀 ડાયરેક્ટ નોટિફિકેશન બ્રોડકાસ્ટ કરો</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
