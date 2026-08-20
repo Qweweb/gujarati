@@ -216,7 +216,7 @@ const GlobalAppGuard = ({ isLoggedIn, handleLogin, children }) => {
   }
 
   const isPublicCardRoute = currentPath === '/c' || currentPath.startsWith('/c/') || (currentPath.startsWith('/card/') && currentPath !== '/card') || currentPath.startsWith('/vcard/');
-  const isAdminRoute = currentPath.startsWith('/gujarati-admin');
+  const isAdminRoute = currentPath.startsWith('/gujarati-admin') || currentPath.startsWith('/admin') || currentPath.startsWith('/gujaratiadmin') || currentPath.startsWith('/admin-dashboard');
   const isPrivacyRoute = currentPath.startsWith('/privacy-policy') || currentPath.startsWith('/privacypolicy');
   const isBlogRoute = currentPath === '/blogs' || currentPath.startsWith('/blog/') || currentPath === '/blog';
 
@@ -516,6 +516,10 @@ function App() {
         <Routes>
           {/* Standalone Admin Route (No App Layout) */}
           <Route path="/gujarati-admin/*" element={<AdminDashboard />} />
+          <Route path="/admin/*" element={<AdminDashboard />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/gujaratiadmin/*" element={<AdminDashboard />} />
+          <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
           
           {/* Standalone Public vCard & Blog Routes */}
           <Route path="/vcard/:slug" element={<VCardPublic />} />
